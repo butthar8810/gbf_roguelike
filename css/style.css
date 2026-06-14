@@ -1,0 +1,724 @@
+/*****************************************************************************/
+/* 共通要素
+/*****************************************************************************/
+body{
+	background-color: black;
+}
+*{
+	box-sizing: border-box;
+	padding: 0;
+	margin: 0;
+	user-select: none;
+	font-family: "Skip Std B", "Skip ProN B", "Skip Pro B", sans-serif;
+}
+
+.back{
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100lvh;
+	object-fit: cover;
+	opacity: 0.7;
+	z-index: -1;
+}
+
+.hidden{
+	display: none !important;
+}
+
+.setting-btn{
+	width: 250px;
+	margin: 10px 20px;
+	text-decoration: none;
+	position: relative;
+}
+
+.setting-btn:active{
+	transform: scale(0.95) translateY(3px);
+}
+.setting-btn span{
+	width: 100%;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -60%);
+	text-align: center;
+	font-size: 18px;
+	font-weight: 900;
+	color: white;
+	text-shadow: 1px 1px 3px black;
+}
+.gran-card{
+	background-color: #5b80cc;
+}
+.djeeta-card{
+	background-color: #cd7a89;
+}
+.nomal-card{
+	background-color: #f3f0e8;
+}
+.empty{
+	opacity: 0.3;
+}
+/*****************************************************************************/
+/* main要素
+/*****************************************************************************/
+.main{
+	width: 100%;
+	max-width: 900px;
+	height: 100vh;
+	position: relative;
+	margin: 0 auto;
+}
+.game-logo{
+	width: 100%;
+	height: 600px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.game-logo img{
+	width: 500px;
+}
+.start-btn-area{
+	height: 100px;
+	width: 100%;
+	position: absolute;
+	bottom: 100px;
+	left: 50%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	transform: translateX(-50%);
+	display: flex;
+}
+
+.start-btn-area a{
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-decoration: none;
+	width: 200px;
+	height: 50px;
+	margin: 0 10px;
+}
+.start-btn-area a:active{
+	transform: scale(0.95) translate(0,2px);
+}
+
+.start-btn-area a span{
+	position: absolute;
+	color: white;
+	font-size: 24px;
+	font-weight: 900;
+	text-shadow: 1px 1px 3px #895d34, -1px -1px 3px #895d34;
+}
+
+/*****************************************************************************/
+/* select-modal: キャラセレクトモーダルの設定
+/*****************************************************************************/
+.select-modal{
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+	background: rgba(0,0,0,0.5);
+	visibility: hidden;
+	transition: all .3s;
+	box-sizing: border-box;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+/*モーダル本体に「active」クラス付与した時のスタイル*/
+.select-modal.active{
+	visibility: visible;
+}
+.select-modal-body{
+	position: relative;
+	width: 700px;
+	height: 400px;
+	background-image: linear-gradient(90deg, #94b7be, #cfe7ea 10%, #d1dad7 85%, #b2c3c3);;
+	border: 3px solid #432d23;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	z-index: 2000;
+}
+
+
+.select-modal-title{
+	width: 100%;
+	height: 50px;
+	font-size: 20px;
+	font-weight: 900;
+	color: white;
+	background-color: #5e1917;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+}
+/*モーダル内のコンテンツの指定*/
+.select-modal-content{
+	width: 100%;
+	height: calc(100% - 50px);
+
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	position: relative;
+}
+.select-chara-area{
+	margin: 30px 0;
+}
+.select-chara-area img{
+	border: 2px solid rgba(0, 0, 0, 0);
+	margin: 0 30px;
+	cursor: pointer;
+}
+
+.select-chara-area img:hover{
+	border: 2px dotted white;
+}
+.select-chara-area img.select{
+	border: 2px solid white;
+}
+
+
+.select-btn-area{
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+/*****************************************************************************/
+/* infomation-modal: Info用モーダルの設定
+/*****************************************************************************/
+.infomation-modal{
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+	visibility: hidden;
+	transition: all .3s;
+	box-sizing: border-box;
+	margin-top: 20px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+/*モーダル本体に「active」クラス付与した時のスタイル*/
+.infomation-modal.active{
+	visibility: visible;
+}
+
+.infomation-modal-body{
+	position: relative;
+	width: 900px;
+	height: 800px;
+	background-color: #eee9d8;
+	border: 3px solid #432d23;
+	padding: 0 40px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	z-index: 2000;
+}
+.close-infomation-modal-btn{
+	position: absolute;
+	top: -2px;
+	right: -2px;
+	width: 30px;
+	height: 30px;
+	font-size: 24px;
+	font-weight: 900;
+	color: white;
+	background-color: black;
+	border: 2px solid #432d23;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.close-infomation-modal-btn:active{
+	transform: scale(0.95);
+}
+
+.infomation-modal-body h1{
+	width: 100%;
+	text-align: left;
+	line-height: 40px;
+	margin-top: 20px;
+}
+.infomation-modal-body p{
+	width: 100%;
+	text-align: left;
+	font-size: 24px;
+}
+.infomation-modal-body ul,
+.infomation-modal-body ol{
+	width: 100%;
+	text-align: left;
+	padding-left: 20px;
+}
+.infomation-modal-body ul li,
+.infomation-modal-body ol li{
+	text-align: left;
+	font-size: 24px;
+}
+
+/*****************************************************************************/
+/* header 要素
+/*****************************************************************************/
+header{
+	width: 100%;
+	height: 50px;
+	display: flex;
+	justify-content: center;
+	background-color: #e4e1d6;
+}
+.header-area{
+	width: 100%;
+	max-width: 900px;
+	height: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+.status-area{
+	height: 100%;
+	display: flex;
+	align-items: center;
+}
+.name-space{
+	font-size: 24px;
+	font-weight: 900;
+	width: 100px;
+}
+.HP-space{
+	font-size: 24px;
+	font-weight: 900;
+	color: #41a429;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin: 0 40px;
+
+}
+.HP-space img {
+	width: 50px;
+}
+.money-space{
+	font-size: 24px;
+	font-weight: 900;
+	color: #f4ca36;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-shadow: 1px 1px 3px black;
+}
+.money-space img {
+	width: 40px;
+	margin-right: 10px;
+}
+/*****************************************************************************/
+/* stage-area: ステージエリア要素
+/*****************************************************************************/
+.stage-area{
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.rest-area{
+	height: 500px;
+	position: relative;
+}
+.rest-area img {
+	height: 100%;
+}
+.rest-area .player-character{
+	height: 250px !important;
+	position: absolute;
+	bottom: 40px;
+	left: 100px;
+}
+
+.battle-area{
+	height: 500px;
+	position: relative;
+}
+.battle-area>img {
+	height: 100%;
+}
+.player-status{
+	height: 250px;
+	position: absolute;
+	bottom: 30px;
+	right: 100px;
+}
+.player-status img{
+	height: 100%;
+}
+.player-status>div{
+	width: 100%;
+	display: flex;
+	justify-content: flex-end;
+}
+.player-hp-container {
+	position: relative;
+	margin-top: -20px;
+	width: 70%;
+	height: 10px;
+	background-color: rgba(0, 0, 0, 0.5); /* 減った分の背景色 */
+	border-radius: 4px;
+	box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+.player-hp-container p{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	font-size: 18px;
+	color: white;
+	font-weight: 900;
+	text-stroke: 1px #751f24;
+	-webkit-text-stroke: 1px #751f24;
+}
+.player-hp-bar {
+	height: 100%;
+	background-color: #cc0c0c; /* 現在のHPの色（例：緑） */
+	border-radius: 4px;
+	transition: width 0.3s ease; /* HPが減る時のアニメーション */
+}
+
+.enemies-status{
+	height: 222px;
+	width: 650px;
+	position: absolute;
+	bottom: 40px;
+	left: 0px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.enemy-status{
+	height: 100%;
+	width: 180px;
+	margin: 0 5px;
+}
+.enemy-status img{
+	height: 100%;
+}
+
+.enemy-hp-container {
+	position: relative;
+	margin-top: -20px;
+	width: 100%;
+	height: 10px;
+	background-color: rgba(0, 0, 0, 0.5); /* 減った分の背景色 */
+	border-radius: 4px;
+	box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+.enemy-hp-container p{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	font-size: 18px;
+	color: white;
+	font-weight: 900;
+	text-stroke: 1px #751f24;
+	-webkit-text-stroke: 1px #751f24;
+}
+.enemy-hp-bar {
+	height: 100%;
+	background-color: #cc0c0c; /* 現在のHPの色（例：緑） */
+	border-radius: 4px;
+	transition: width 0.3s ease; /* HPが減る時のアニメーション */
+}
+
+
+
+/*****************************************************************************/
+/* info-area: インフォメーション要素
+/*****************************************************************************/
+.info-area{
+	width: 100%;
+	max-width: 940px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin: 0 auto;
+}
+
+.right-area{
+	width: 10%;
+	max-width: 55px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+/*****************************************************************************/
+/* info-area: 手札の要素
+/*****************************************************************************/
+.hand-area{
+	width: 90%;
+	height: 200px;
+	margin: 0 auto;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+}
+
+.hand-card{
+	font-size: 14px;
+	color: white;
+	width: 150px;
+	aspect-ratio: 3 / 4;
+	border: 2px solid white;
+	border-radius: 5px;
+	text-align: center;
+	box-shadow: 1px 1px 5px black;
+	margin-right: -3rem;
+	position: relative;
+}
+.hand-card:hover{
+	transform: translateY(-30px);
+	z-index: 1000;
+}
+.hand-card.select{
+	transform: translateY(-30px);
+	background-color: rgba(254, 197, 105);
+	box-shadow: 1px 1px 5px red;
+}
+.hand-card.available{
+	box-shadow: -5px -5px 15px 5px rgb(112, 253, 24), 5px 5px 15px 7px rgb(112, 253, 24) !important;
+}
+.hand-card img{
+	width: 100%;
+}
+.hand-card div{
+	width: 30px;
+	height: 30px;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	background-color: white;
+	border-radius: 50%;
+	color: black;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.hand-card p{
+	font-size: 12px;
+	width: 100%;
+	padding: 0 5px;
+}
+
+
+/*****************************************************************************/
+/* deck-area: デッキの要素
+/*****************************************************************************/
+.deck-area{
+	width: 50px;
+	aspect-ratio: 114 / 176;
+	margin-top: 5px;
+	margin-right: 5px;
+	position: relative;
+}
+.deck-area img{
+	width: 100%;
+	z-index: -1;
+}
+.deck-count{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 35px;
+	height: 35px;
+	color: black;
+	font-size: 20px;
+	font-weight: 900;
+	background-color: #a71b1c;
+	border-radius: 50%;
+	text-stroke: 1px white;
+	-webkit-text-stroke: 1px white;
+	position: absolute;
+	top: 45%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+
+/*****************************************************************************/
+/* trash-area: 捨て札の要素
+/*****************************************************************************/
+.trash-area{
+	width: 50px;
+	aspect-ratio: 7 / 10;
+	margin-top: 10px;
+	position: relative;
+}
+.trash-area img{
+	width: 100%;
+	z-index: -1;
+}
+.trash-count{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: absolute;
+	top: 47%;
+	left: 47%;
+	transform: translate(-50%, -50%);
+	width: 35px;
+	height: 35px;
+	color: black;
+	font-size: 20px;
+	font-weight: 900;
+	background-color: black;
+	border-radius: 50%;
+	text-stroke: 1px white;
+	-webkit-text-stroke: 1px white;
+	margin: 0 2px;
+}
+/*****************************************************************************/
+/* talk-area: 会話の要素
+/*****************************************************************************/
+.talk-area{
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	transition: all 0.5s ease;
+}
+.talking-btn{
+	width: 450px;
+	margin: 5px 0px;
+	text-decoration: none;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+}
+.talking-btn img{
+	width: 100%;
+}
+.talking-btn:active{
+	transform: scale(0.95) translateY(3px);
+}
+.talking-btn span{
+	width: 100%;
+	position: absolute;
+	top: 40%;
+	left: 50%;
+	transform: translate(-50%, -60%);
+	text-align: center;
+	font-size: 18px;
+	font-weight: 900;
+	color: white;
+	text-shadow: 1px 1px 3px black;
+}
+
+
+/*****************************************************************************/
+/* talk-area: 会話の要素
+/*****************************************************************************/
+.map-modal{
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+	visibility: hidden;
+	transition: all .3s;
+	box-sizing: border-box;
+	margin-top: 20px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	animation-duration: 0.3s;
+	animation-name: fade-out;
+}
+
+/*モーダル本体に「active」クラス付与した時のスタイル*/
+.map-modal.active{
+	visibility: visible;
+	animation-duration: 0.3s;
+	animation-name: fade-in;
+}
+
+.map-modal-body{
+	position: relative;
+	width: 900px;
+	height: 800px;
+	background-color: #eee9d8;
+	border: 3px solid #432d23;
+	padding: 0 5px;
+	z-index: 2000;
+	overflow-y: scroll;
+	
+	display: grid;
+	grid-template-columns: repeat(11, 1fr);
+	grid-template-rows: repeat(16, 80px);
+	gap: 2px;
+	padding-bottom: 300px;
+}
+.stage{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.stage.choices{
+	box-shadow: -5px -5px 15px 5px rgb(112, 253, 24), 5px 5px 15px 7px rgb(112, 253, 24) !important;
+}
+.stage img{
+	width: 100%;
+}
+@keyframes fade-in {
+	0% {
+		visibility: hidden;
+		opacity: 0;
+	}
+
+	50% {
+		visibility: visible;
+		opacity: 0.5;
+	}
+
+	100% {
+		visibility: visible;
+		opacity: 1;
+	}
+	}
+	@keyframes fade-out {
+	0% {
+		visibility: visible;
+		opacity: 1;
+	}
+
+	50% {
+		visibility: visible;
+		opacity: 0.5;
+	}
+
+	100% {
+		visibility: hidden;
+		opacity: 0;
+	}
+}

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!-- meta(SEO対策) -->
+	<meta name="author" content="Butthar8810">
+	<meta name="keywords" content="グランブルーファンタジー, GRANBLUE FANTASY, スレイザスパイア, Slay the Spire">
+	<meta name="description" content="グラブルの皮をかぶったSlay the Spire">
+	<meta name="robots" content="index, follow">
+	<meta property="og:title" content="バブ・イールの塔壊すべし">
+	<meta property="og:description" content="グラブルの皮をかぶったSlay the Spire">
+	<meta property="og:image" content="images/icon.jpg">
+	<meta property="og:url" content="https://butthar8810.github.io/gbf-dominion/">
+	<meta property="og:site_name" content="バブ・イールの塔壊すべし" />
+	<meta property="og:locale" content="ja_JP" />
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:site" content="@Butthar_8810">
+	<meta name="twitter:title" content="バブ・イールの塔壊すべし">
+	<meta name="twitter:description" content="グラブルの皮をかぶったSlay the Spire">
+	<meta name="twitter:image" content="images/icon.jpg">
+
+	<link rel="stylesheet" href="css/style.css">
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js"
+		integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+	<script src="https://magicant.github.io/sjavascript/mt.js"></script>
+    <!-- Swiper CDN読み込み -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css" />
+    <script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
+	<script src="js/parameter.js"></script>
+	<script src="js/system.js"></script>
+	<script src="js/readyBonuses.js"></script>
+	<script src="js/outGame.js"></script>
+	<script src="js/inGame.js"></script>
+	<script src="js/cardEffect.js"></script>
+
+	<link rel="icon" href="images/icon.jpg">
+	<title>バブ・イールの塔壊すべし</title>
+</head>
+<body onload="startGame()">
+	<header>
+		<div class="header-area">
+			<div class="status-area">
+				<div class="name-space">ジータ</div>
+				<div class="HP-space">
+					<img src="images/infomation/hp.png">
+					<span class="remainHp"></span>/
+					<span class="maxHp"></span> 
+				</div>
+				<div class="money-space">
+					<img src="images/infomation/money.jpg">
+					<span class="remainMoney"></span>
+				</div>
+			</div>
+			<div>
+			</div>
+		</div>
+	</header>
+	<div class="stage-area">
+		<div class="rest-area hidden">
+			<img src="images/stage_rest.jpg" alt="リスポーン">
+			<img class="player-character" src='' alt="プレイヤーキャラ">
+		</div>
+		<div class="battle-area hidden">
+			<img src="images/stage3.jpg" alt="バトルステージ">
+			<div class="player-status"></div>
+			<div class="enemies-status"></div>
+
+		</div>
+	</div>
+	<div class="info-area">
+		<div class="hand-area hidden"></div>
+		<div class="right-area">
+			<div class="deck-area">
+				<img src="images/infomation/deck.png" alt="デッキ">
+				<div class="deck-count"></div>
+			</div>
+			<div class="trash-area">
+				<img src="images/infomation/trash.png" alt="廃棄">
+				<div class="trash-count">0</div>
+			</div>
+		</div>
+	</div>
+	<div class="talk-area hidden"></div>
+	<div class="map-modal">
+		<div class="map-modal-body">
+		</div>
+	</div>
+</body>
+</html>
