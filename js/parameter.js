@@ -34,69 +34,6 @@ const djeetaCardList = {
 	Pulverizer: {name: 'パルバライザー', class: cardClass.djeeta, cost: 1, rarity: rarity.starter, type: type.skill, effect: '8ブロックを得る。カードを1枚捨てる。', func: 'effectPulverizer', image:'images/card/djeeta_Pulverizer.jpg'}
 };
 
-
-/*****************************************************************************/
-/* エネミー情報
-/*****************************************************************************/
-const enemyList = {
-	slime:{
-		name: 'スライム', 
-		minHP: 8, 
-		maxHP: 12, 
-		image: 'images/enemy/kingbronze.gif', 
-		action: [
-			{
-				weight: 25,
-				func: '',
-				damage: 6,
-				image, ''
-			}
-		],
-		currentStatus:{
-			remainHP: 0, 
-			maxHP: 0, 
-			status: [], 
-			nextAction: ''
-		}
-	},
-	silver:{name: 'シルバースライム', minHP: 28, maxHP: 32,  image: 'images/enemy/kingsilver.gif', currentStatus:{remainHP: 0, maxHP: 0, status: [], nextAction: ''}},
-	golem:{name: 'ゴーレム', minHP: 48, maxHP: 55, image: 'images/enemy/golem.png', currentStatus:{remainHP: 0, maxHP: 0, status: [], nextAction: ''}},
-	zombie:{name: 'ゾンビ', minHP: 40, maxHP: 44, image: 'images/enemy/zombie.png', currentStatus:{remainHP: 0, maxHP: 0, status: [], nextAction: ''}},
-	imp:{name: 'インプ', minHP: 10, maxHP: 17, image: 'images/enemy/imp.png', currentStatus:{remainHP: 0, maxHP: 0, status: [], nextAction: ''}},
-
-	angelcore:{name: 'エンジェル・コア', minHP: 8, maxHP: 12, image: 'images/enemy/angelcore.png', currentStatus:{remainHP: 0, maxHP: 0, status: [], nextAction: ''}},
-	bee:{name: 'キラービー', minHP: 8, maxHP: 12, image: 'images/enemy/bee.png', currentStatus:{remainHP: 0, maxHP: 0, status: [], nextAction: ''}},
-	baru:{name: 'バル・ザレニア', minHP: 8, maxHP: 12, image: 'images/enemy/baru.png', currentStatus:{remainHP: 0, maxHP: 0, status: [], nextAction: ''}},
-	ghost:{name: 'ゴースト', minHP: 8, maxHP: 12, image: 'images/enemy/ghost.png', currentStatus:{remainHP: 0, maxHP: 0, status: [], nextAction: ''}},
-	hellhound:{name: 'ヘルハウンド', minHP: 8, maxHP: 12, image: 'images/enemy/hellhound.png', currentStatus:{remainHP: 0, maxHP: 0, status: [], nextAction: ''}},
-	jerry:{name: 'ジェリー', minHP: 8, maxHP: 12, image: 'images/enemy/jerry.png', currentStatus:{remainHP: 0, maxHP: 0, status: [], nextAction: ''}},
-	rafflesia:{name: 'ラフレシア', minHP: 8, maxHP: 12, image: 'images/enemy/rafflesia.png', currentStatus:{remainHP: 0, maxHP: 0, status: [], nextAction: ''}},
-	agnu:{name: '火霊・アーグヌ', minHP: 8, maxHP: 12, image: 'images/enemy/agnu.png', currentStatus:{remainHP: 0, maxHP: 0, status: [], nextAction: ''}},
-	shell:{name: 'シェル', minHP: 8, maxHP: 12, image: 'images/enemy/shell.png', currentStatus:{remainHP: 0, maxHP: 0, status: [], nextAction: ''}},
-	snipper:{name: 'スニッパー', minHP: 8, maxHP: 12, image: 'images/enemy/snipper.png', currentStatus:{remainHP: 0, maxHP: 0, status: [], nextAction: ''}},
-	wita:{name: '水霊・ウィタ', minHP: 8, maxHP: 12, image: 'images/enemy/wita.png', currentStatus:{remainHP: 0, maxHP: 0, status: [], nextAction: ''}},
-	goblin:{name: 'ゴブリン戦士', minHP: 8, maxHP: 12, image: 'images/enemy/goblin.png', currentStatus:{remainHP: 0, maxHP: 0, status: [], nextAction: ''}},
-	wolf:{name: 'ウルフ', minHP: 8, maxHP: 12, image: 'images/enemy/wolf.png', currentStatus:{remainHP: 0, maxHP: 0, status: [], nextAction: ''}},
-};
-const bossEnemyList = {
-	kinggold:{name: 'キングゴールドスライム', minHP: 8, maxHP: 12, image: 'images/enemy/kinggold.gif', currentStatus:{remainHP: 0, maxHP: 0, status: [], nextAction: ''}},
-	juanitta:{name: 'ジュアニッタ', minHP: 8, maxHP: 12, image: 'images/enemy/juanitta.png', currentStatus:{remainHP: 0, maxHP: 0, status: [], nextAction: ''}},
-};
-const easyEnemies = [
-	{weight: 25, enemies: [enemyList.slime, enemyList.silver]},
-	{weight: 25, enemies: [enemyList.golem]},
-	{weight: 25, enemies: [enemyList.zombie]},
-	{weight: 25, enemies: [enemyList.imp, enemyList.imp]},
-];
-const strongEnemies = [
-
-];
-
-
-
-
-
-
 /*****************************************************************************/
 /* グローバル定数
 /*****************************************************************************/
@@ -104,6 +41,7 @@ const fixedStageBoss = 0;
 const fixedStageGift = 7;
 const fixedStageNomal = 15;
 const initialHandNum = 5;
+const initialEnergy = 3;
 const drowWatiTime = 400;
 const initialMap = {row: 16, column: 5};
 const mapColumns = 11;
@@ -127,6 +65,8 @@ const keyContinueDiscard = 'Babu.Continue.Discard';
 const keyContinueTemporary = 'Babu.Continue.Temporary';
 const keyContinueStack = 'Babu.Continue.Stack';
 const keyContinueEnergy = 'Babu.Continue.Energy';
+const keyContinueMaxEnergy = 'Babu.Continue.Max.Energy';
+const keyContinueTurn = 'Babu.Continue.Turn';
 const keyContinueEnemy = 'Babu.Continue.Enemy';
 
 
@@ -149,6 +89,7 @@ let myDeck = [];
 let myHand = [];
 let myTrash = [];
 let myEnergy = 0;
+let maxEnergy = 3;
 let discard = [];
 let tmpArea =[];
 let stackCard = [];

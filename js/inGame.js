@@ -1,3 +1,6 @@
+/*************************************************************************************/
+/* 初期設定
+/*************************************************************************************/
 /*******************************************************/
 /* startNomalButtle：通常戦闘を開始する
 /*******************************************************/
@@ -34,8 +37,11 @@ function continueBattle(){
 	setupEnemy();
 	setupBtn();
 
+
 	updateDeckDom();
 	updateTrashDom();
+	updateEnergyDom();
+	updateEnemyStatus();
 	$('.battle-area').removeClass('hidden');
 	$('.info-area').removeClass('hidden');
 }
@@ -46,14 +52,19 @@ function continueBattle(){
 function continueCount(){
 	const lastTrash = getLocalStorage(keyContinueTrash);
 	const lastEnergy = getLocalStorage(keyContinueEnergy);
+	const lastMaxEnergy = getLocalStorage(keyContinueMaxEnergy);
 	const lastDiscard = getLocalStorage(keyContinueDiscard);
 	const lastTemporary = getLocalStorage(keyContinueTemporary);
 	const lastStack = getLocalStorage(keyContinueStack);
+	const lastTurn = getLocalStorage(keyContinueTurn);
 	if (lastTrash) {
 		myTrash = lastTrash;
 	}
 	if (lastEnergy) {
 		myEnergy = lastEnergy;
+	}
+	if (lastMaxEnergy) {
+		maxEnergy = lastMaxEnergy;
 	}
 	if (lastDiscard) {
 		discard = lastDiscard;
@@ -64,34 +75,91 @@ function continueCount(){
 	if (lastStack) {
 		stackCard = lastStack;
 	}
+	if (lastTurn) {
+		currentTurn = lastTurn;
+	}
 }
+/*******************************************************/
+/* initializeQueue：キューの初期化
+/*******************************************************/
+function initializeQueue(){
+	deletAllDeck();
+	deletAllHand();
+	deletAllTrash();
+	deletAllDiscard();
+	deletAllTemporaryArea();
+	deletAllStackCard();
+	currentTurn = 0;
+}
+/*******************************************************/
+/* readyDeck：初期デッキとなる10枚のカードを配る
+/*******************************************************/
+function readyDeck(){
+	const continueBattleFlag = getLocalStorage(keyContinueBattleFlag);
+	const lastDeck = getLocalStorage(keyContinueDeck);
+	if(lastDeck !== null && continueBattleFlag){
+		// 続きからの場合
+		myDeck = lastDeck;
+	} else {
+		myDeck = deepCopyCard(myOriginalDeck);
+		myDeck = shuffleArray(myDeck);
+		setLocalStorage(keyContinueDeck, myDeck);
+	}
+	
+}
+/*******************************************************/
+/* setupHandCard：初期手札となる5枚のカードを引く
+/*******************************************************/
+function setupHandCard(){
+	const continueBattleFlag = getLocalStorage(keyContinueBattleFlag);
+	const lastHand = getLocalStorage(keyContinueHand);
+	if(lastHand !== null && continueBattleFlag){
+		// 続きからの場合
+		myHand = lastHand;
+	}
+	updateHandDom();
+}
+
+/*******************************************************/
+/* setupBtn：各種ボタンの初期設定
+/*******************************************************/
+function setupBtn(){
+	$('.end-btn').click((e) => {
+		console.log('click end-btn');
+		$('.end-btn').prop('disabled', true);
+		startCleanup();
+	});
+}
+
+/*************************************************************************************/
+/* プレイヤー処理関連
+/*************************************************************************************/
 /*******************************************************/
 /* startTurn：ターン開始処理を行う
 /*******************************************************/
 function startTurn(){
 	currentTurn++;
-	myEnergy = 3;
+	console.log(`turn: ${currentTurn}`);
+	myEnergy = maxEnergy;
+	drawCardFromDeck(initialHandNum);
+	//敵の次行動予測を決定する
+	decideNextAction();
+
+	updateHandDom();
 	updateDeckDom();
 	updateTrashDom();
+	updateEnergyDom();
+	updateEnemyStatus();
+
+	setLocalStorage(keyContinueTurn, currentTurn);
+	setLocalStorage(keyContinueEnergy, myEnergy);
+	setLocalStorage(keyContinueHand, myHand);
+	setLocalStorage(keyContinueEnemy, currnetEnemies);
 	
-	//敵の次行動予測を表示する
+
 }
 
-/*******************************************************/
-/* startTurn：敵のターン処理を行う
-/*******************************************************/
-function startEnemiesTurn(){
-	// 敵の予測攻撃を行う
-	currnetEnemies.forEach((enemy) => {
-		const nextAction = enemy.currentStatus.nextAction;
-		if (nextAction !== '') {
-			const storedFunc = globalThis[nextAction];
-			if( typeof storedFunc === 'function'){
-				ret = storedFunc();
-			} 
-		}
-	});
-}
+
 /*******************************************************/
 /* startCleanup：ターン終了処理を行う
 /*******************************************************/
@@ -106,6 +174,50 @@ function startCleanup(){
 	updateTrashDom();
 
 	startEnemiesTurn();
+}
+
+
+/*******************************************************/
+/* drawDeckCard：デッキからカードをドローする
+/*******************************************************/
+function drawCardFromDeck(count = 1){
+	for(let i = 0; i < count; i++){
+		if (myDeck.length <= 0) {
+			// 捨て札をデッキに再構築する
+			reconfigureDeck();
+		}
+		// デッキから手札へカードを引く
+		const card = shiftDeck();
+		if (card !== undefined){
+			pushHand(card);
+		}else{
+			console.log("shiftDeck undefined");
+			break;
+		}
+	}
+	updateDeckDom();
+	// デッキと手札をローカルストレージに記憶
+	setLocalStorage(keyContinueDeck, myDeck);
+	setLocalStorage(keyContinueHand, myHand);
+	setTimeout(() => {
+		updateHandDom();
+	}, drowWatiTime);
+}
+/*******************************************************/
+/* reconfigureDeck：捨て札のカードをデッキに再構成する
+/*******************************************************/
+function reconfigureDeck(){
+	// 捨て札をデッキに格納
+	deletAllTrash().forEach((card) => {
+		pushDeck(card);
+	});
+	//デッキをシャッフル
+	myDeck = shuffleArray(myDeck);
+	// DOM要素を更新
+	updateDeckDom();
+	updateTrashDom();
+	setLocalStorage(keyContinueDeck, myDeck);
+	setLocalStorage(keyContinueTrash, myTrash);
 }
 /*******************************************************/
 /* playHandCard：カードをプレイする
@@ -142,41 +254,31 @@ function endAction(){
 	setLocalStorage(keyContinueStack, stackCard);
 	return ret;
 }
+/*******************************************************/
+/* clickHandProcess：クリック時の処理
+/*******************************************************/
+function clickHandProcess(handCardDiv, hand){
 
+	if (myEnergy >= hand.cost) {
+		const index = findIndexHand('id', hand.id);
+		myEnergy -= hand.cost;
+		updateEnergyDom();
+		playHandCard(index);
+		setLocalStorage(keyContinueEnergy, myEnergy);
+	} else {
+		console.log("エネルギーが足りません");
+		deletAllTemporaryArea();
+		setLocalStorage(keyContinueTemporary, tmpArea);
+		return false;
+	}
+	return true;
+}
 
+/*************************************************************************************/
+/* エネミー関連
+/*************************************************************************************/
 /*******************************************************/
-/* readyDeck：初期デッキとなる10枚のカードを配る
-/*******************************************************/
-function readyDeck(){
-	const continueBattleFlag = getLocalStorage(keyContinueBattleFlag);
-	const lastDeck = getLocalStorage(keyContinueDeck);
-	if(lastDeck !== null && continueBattleFlag){
-		// 続きからの場合
-		myDeck = lastDeck;
-	} else {
-		myDeck = deepCopyCard(myOriginalDeck);
-		myDeck = shuffleArray(myDeck);
-		setLocalStorage(keyContinueDeck, myDeck);
-	}
-	
-}
-/*******************************************************/
-/* setupHandCard：初期手札となる5枚のカードを引く
-/*******************************************************/
-function setupHandCard(){
-	const continueBattleFlag = getLocalStorage(keyContinueBattleFlag);
-	const lastHand = getLocalStorage(keyContinueHand);
-	if(lastHand !== null && continueBattleFlag){
-		// 続きからの場合
-		myHand = lastHand;
-	} else {
-		// カードを5枚引く
-		drawCardFromDeck(initialHandNum);
-	}
-	updateHandDom();
-}
-/*******************************************************/
-/* setupHandCard：初期手札となる5枚のカードを引く
+/* setupEnemy：出現した敵をレベルごとに決める
 /*******************************************************/
 function setupEnemy(level = stageLevel.normal){
 	const mt = new MersenneTwister();
@@ -209,109 +311,49 @@ function setupEnemy(level = stageLevel.normal){
 			enemy.currentStatus.maxHP = randomHP;
 			enemy.currentStatus.remainHP = randomHP;
 		});
-		
 		setLocalStorage(keyContinueEnemy, currnetEnemies);
 	}
 	currnetTarget = currnetEnemies[0];
 	console.log(currnetEnemies);
-	updateEnemyStatus();
-}
-
-/*******************************************************/
-/* setupBtn：各種ボタンの初期設定
-/*******************************************************/
-function setupBtn(){
-	$('.end-btn').click((e) => {
-		$('.end-btn').prop('disabled', true);
-		startCleanup();
-	});
 }
 /*******************************************************/
-/* initializeQueue：キューの初期化
+/* startEnemiesTurn：敵のターン処理を行う
 /*******************************************************/
-function initializeQueue(){
-	deletAllDeck();
-	deletAllHand();
-	deletAllTrash();
-	deletAllDiscard();
-	deletAllTemporaryArea();
-	deletAllStackCard();
-	currentTurn = 0;
-	
-//	updateHandDom();
-}
-/*******************************************************/
-/* drawDeckCard：デッキからカードをドローする
-/*******************************************************/
-function drawCardFromDeck(count = 1){
-	if (myDeck.length < count) {
-		// 捨て札をデッキに再構築する
-		reconfigureDeck();
-	} 
-
-	for(let i = 0; i < count; i++){
-		if(myDeck.length > 0){
-			// デッキから手札へカードを引く
-			const card = shiftDeck();
-			if (card !== undefined){
-				pushHand(card);
-			}else{
-				console.log("shiftDeck undefined");
-				break;
-			}
-		} else {
-			break;
+function startEnemiesTurn(){
+	// 敵の予測した攻撃を行う
+	currnetEnemies.forEach((enemy) => {
+		const nextAction = enemy.currentStatus.nextAction;
+		console.log(nextAction);
+		if (nextAction !== '') {
+			const storedFunc = globalThis[nextAction.func];
+			if( typeof storedFunc === 'function'){
+				ret = storedFunc();
+			} 
 		}
-	}
-//	updateDeckDom();
-	// デッキと手札をローカルストレージに記憶
-	setLocalStorage(keyContinueDeck, myDeck);
-	setLocalStorage(keyContinueHand, myHand);
-	setTimeout(() => {
-		updateHandDom();
-	}, drowWatiTime);
-}
-/*******************************************************/
-/* reconfigureDeck：捨て札のカードをデッキに再構成する
-/*******************************************************/
-function reconfigureDeck(){
-	// 捨て札をデッキに格納
-	deletAllTrash().forEach((card) => {
-		pushDeck(card);
 	});
-	//デッキをシャッフル
-	myDeck = shuffleArray(myDeck);
-	// DOM要素を更新
-	updateDeckDom();
-	updateTrashDom();
-	setLocalStorage(keyContinueDeck, myDeck);
-	setLocalStorage(keyContinueTrash, myTrash);
+
+	startTurn();
 }
 /*******************************************************/
-/* clickHandProcess：クリック時の処理
+/* decideNextAction：敵の次の行動を決める
 /*******************************************************/
-function clickHandProcess(handCardDiv, hand){
-
-	if (myEnergy >= hand.cost) {
-		const index = findIndexHand('id', hand.id);
-		myEnergy -= hand.cost;
-		updateEnergyDom();
-		playHandCard(index);
-		setLocalStorage(keyContinueEnergy, myEnergy);
-	} else {
-		console.log("エネルギーが足りません");
-		deletAllTemporaryArea();
-		setLocalStorage(keyContinueTemporary, tmpArea);
-		return false;
-	}
-	return true;
+function decideNextAction(){
+	currnetEnemies.forEach((enemy) => {
+		const actionFunc = enemy.actionAlgorithm;
+		if (actionFunc !== '') {
+			const storedFunc = globalThis[actionFunc];
+			if( typeof storedFunc === 'function'){
+				enemy.currentStatus.nextAction = storedFunc();
+				console.log(enemy.currentStatus.nextAction);
+			} 
+		}
+	});
 }
 
 /***************************************************************************************/
 /* DOM要素の更新処理
 /***************************************************************************************/
 function updateDeckDom(){
-	console.log(`Deck:${myDeck.length}`);
 	const deckImage = $(`.deck-area`).children('img');
 	if(myDeck.length <= 0){
 		deckImage.addClass('empty');
@@ -321,7 +363,6 @@ function updateDeckDom(){
 	$(`.deck-count`).html(`${myDeck.length}`);
 }
 function updateTrashDom(){
-	console.log(`Trash:${myTrash.length}`);
 	const trashImage = $(`.trash-area`).children('img');
 	if(myTrash.length <= 0){
 		trashImage.addClass('empty');
@@ -331,8 +372,7 @@ function updateTrashDom(){
 	$(`.trash-count`).html(`${myTrash.length}`);
 }
 function updateEnergyDom(){
-	console.log(`Energy::${myEnergy}`);
-
+	$(`.energy-count`).html(`${myEnergy}/${maxEnergy}`);
 }
 function updateHandDom(){
 	$(`.hand-area`).html('');
@@ -396,6 +436,10 @@ function updatePlayerStatus(){
 function updateEnemyStatus(){
 	$(`.enemies-status`).html('');
 	currnetEnemies.forEach((enemy, i) => {
+		// 敵立ち絵要素
+		const enemyImage = $('<img>')
+			.attr('src', enemy.image);
+		// 残りHP要素
 		const remainHP = 100 * (enemy.currentStatus.remainHP / enemy.currentStatus.maxHP);
 		const hpBerDiv = $('<div>')
 			.addClass('enemy-hp-bar')
@@ -406,19 +450,35 @@ function updateEnemyStatus(){
 			.addClass('enemy-hp-container')
 			.append(hpBerDiv)
 			.append(hpParagraph);
-		const enemyImage = $('<img>')
-			.attr('src', enemy.image);
+		// 予測攻撃の要素
+		const nextActionImage = $('<img>')
+			.attr('src', enemy.currentStatus.nextAction.image);
+		const omenInnerDiv = $('<div>')
+			.addClass('omen-inner')
+			.append(nextActionImage);
+		if(enemy.currentStatus.nextAction.damage > 0){
+			const damageDiv = $('<div>')
+				.addClass('damage')
+				.html(enemy.currentStatus.nextAction.damage);
+			omenInnerDiv.append(damageDiv);
+		}
+		const omenDiv = $('<div>')
+			.addClass('omen')
+			.append(omenInnerDiv);
+		// 「enemy-status」要素
 		const enemyStatusDiv = $('<div>')
 			.attr('id', `enemy${i}`)
 			.addClass('enemy-status')
 			.append(enemyImage)
 			.append(hpContainerDiv)
+			.append(omenDiv)
 			.click(enemy, (e) => {
 				$('.enemy-status').removeClass('select');
 				enemyStatusDiv.addClass('select');
 				currnetTarget = enemy;
 			});
 		$(`.enemies-status`).append(enemyStatusDiv);
+
 	});
 }
 /***************************************************************************************/

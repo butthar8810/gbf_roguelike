@@ -33,6 +33,7 @@
 	<script src="js/outGame.js"></script>
 	<script src="js/inGame.js"></script>
 	<script src="js/cardEffect.js"></script>
+	<script src="js/enemies.js"></script>
 
 	<link rel="icon" href="images/icon.jpg">
 	<title>バブ・イールの塔壊すべし</title>
@@ -65,24 +66,30 @@
 			<img src="images/stage3.jpg" alt="バトルステージ">
 			<div class="player-status"></div>
 			<div class="enemies-status"></div>
-			<div class="btn-area">
-				<div class="end-btn">
-					<img src="images/btn3.png" alt="">
-					<span>ターン終了</span>
-				</div>
-			</div>
 		</div>
 	</div>
 	<div class="info-area hidden">
-		<div class="hand-area"></div>
-		<div class="right-area">
+		<div class="left-area">
+			<div class="energy-area">
+				<img src="images/infomation/action.jpg" alt="デッキ">
+				<div class="energy-count">0/0</div>
+			</div>
 			<div class="deck-area">
 				<img src="images/infomation/deck.png" alt="デッキ">
 				<div class="deck-count"></div>
 			</div>
-			<div class="trash-area">
-				<img src="images/infomation/trash.png" alt="廃棄">
-				<div class="trash-count">0</div>
+		</div>
+		<div class="hand-area"></div>
+		<div class="right-area">
+			<div class="end-btn">
+				<img src="images/btn5.png" alt="">
+				<span>ターン終了</span>
+			</div>
+			<div class="trash">
+				<div class="trash-area">
+					<img src="images/infomation/trash.png" alt="廃棄">
+					<div class="trash-count">0</div>
+				</div>
 			</div>
 		</div>
 	</div>

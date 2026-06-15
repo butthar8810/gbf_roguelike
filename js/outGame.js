@@ -37,6 +37,7 @@ function setupCharaStatus(){
 	const remainHp = getLocalStorage(keyContinueRemainHp);
 	const maxHp = getLocalStorage(keyContinueMaxHp);
 	const remainMoney = getLocalStorage(keyContinueMoney);
+	const lastMaxEnergy = getLocalStorage(keyContinueMaxEnergy);
 
 	if (selectChara) {
 		$('.name-space').html(selectChara);
@@ -93,6 +94,12 @@ function setupCharaStatus(){
 			$('.remainMoney').html(selectCharacter.djeeta.money);
 			setLocalStorage(keyContinueMoney, selectCharacter.djeeta.money);
 		}
+	}
+	if (maxEnergy && continueFlag) {
+		maxEnergy = lastMaxEnergy;
+	} else{
+		maxEnergy = initialEnergy;
+		setLocalStorage(keyContinueMaxEnergy, maxEnergy);
 	}
 }
 /*******************************************************/

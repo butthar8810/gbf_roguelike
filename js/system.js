@@ -31,6 +31,7 @@ function deepCopyEnemies(arrayEnemies){
 		cloneOjt.image = EnemyOjt.image;
 		cloneOjt.minHP = EnemyOjt.minHP;
 		cloneOjt.maxHP = EnemyOjt.maxHP;
+		cloneOjt.actionAlgorithm = EnemyOjt.actionAlgorithm;
 		const cloneCurrentStatus = {};
 		cloneCurrentStatus.remainHP = EnemyOjt.currentStatus.remainHP;
 		cloneCurrentStatus.maxHP = EnemyOjt.currentStatus.maxHP;

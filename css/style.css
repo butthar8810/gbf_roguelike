@@ -2,7 +2,7 @@
 /* 共通要素
 /*****************************************************************************/
 body{
-	background-color: black;
+	background-image: linear-gradient(90deg, #94b7be, #cfe7ea 10%, #d1dad7 85%, #b2c3c3);;
 }
 *{
 	box-sizing: border-box;
@@ -418,6 +418,7 @@ header{
 	width: 180px;
 	margin: 0 5px;
 	border: 1px dotted rgba(0, 0, 0, 0);
+	position: relative;
 }
 .enemy-status:hover{
 	border: 1px dotted white;
@@ -456,32 +457,34 @@ header{
 	transition: width 0.3s ease; /* HPが減る時のアニメーション */
 }
 
-.btn-area{
+.omen{
+	width: 50px;
 	position: absolute;
-	bottom: 0px;
-	right: 0px;
+	top: -50px;
+	left: 50%;
+	transform: translateX(-50%);
+}
+.omen-inner{
+	width: 50px;
+	position: relative;
+}
+.omen-inner img{
+	width: 100%;
+	z-index: -1;
+}
+.damage{
 	display: flex;
 	justify-content: center;
 	align-items: center;
-}
-.end-btn{
-	position: relative;
-	width: 160px;
-}
-.end-btn:active{
-	transform: scale(0.95) translateY(3px);
-}
-.end-btn img{
-	width: 100%;
-}
-.end-btn span{
+	color: black;
+	font-size: 22px;
+	font-weight: 900;
+	text-stroke: 1px white;
+	-webkit-text-stroke: 1px white;
 	position: absolute;
-	top: 47%;
+	top: 45%;
 	left: 50%;
 	transform: translate(-50%, -50%);
-	font-size: 16px;
-	color: white;
-	font-weight: 900;
 }
 /*****************************************************************************/
 /* info-area: インフォメーション要素
@@ -491,26 +494,82 @@ header{
 	max-width: 940px;
 	display: flex;
 	justify-content: space-between;
-	align-items: center;
 	margin: 0 auto;
 }
 
-.right-area{
-	width: 10%;
-	max-width: 55px;
+/*****************************************************************************/
+/* left-area: info-areaの左部分の要素
+/*****************************************************************************/
+.left-area{
+	width: 50px;
+}
+/*****************************************************************************/
+/* energy-area: エネルギーカウントの要素
+/*****************************************************************************/
+.energy-area{
+	width: 50px;
+	position: relative;
+}
+.energy-area img{
+	width: 100%;
+	z-index: -1;
+}
+.energy-count{
 	display: flex;
-	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+	color: black;
+	font-size: 22px;
+	font-weight: 900;
+	text-stroke: 1px white;
+	-webkit-text-stroke: 1px white;
+	position: absolute;
+	top: 45%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 }
+
+
+.deck-area{
+	width: 50px;
+	aspect-ratio: 114 / 176;
+	margin-top: 5px;
+	margin-right: 5px;
+	position: relative;
+}
+.deck-area img{
+	width: 100%;
+	z-index: -1;
+}
+.deck-count{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 35px;
+	height: 35px;
+	color: black;
+	font-size: 20px;
+	font-weight: 900;
+	background-color: #a71b1c;
+	border-radius: 50%;
+	text-stroke: 1px white;
+	-webkit-text-stroke: 1px white;
+	position: absolute;
+	top: 45%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+
 
 /*****************************************************************************/
 /* info-area: 手札の要素
 /*****************************************************************************/
 .hand-area{
-	width: 90%;
+	width: calc(100% - 50px - 120px - 50px - 5px);
 	height: 200px;
-	margin: 0 auto;
+	margin-left: 5px;
+	margin-right: 50px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -565,42 +624,45 @@ header{
 
 
 /*****************************************************************************/
-/* deck-area: デッキの要素
+/* right-area: デッキの要素
 /*****************************************************************************/
-.deck-area{
-	width: 50px;
-	aspect-ratio: 114 / 176;
-	margin-top: 5px;
-	margin-right: 5px;
-	position: relative;
-}
-.deck-area img{
-	width: 100%;
-	z-index: -1;
-}
-.deck-count{
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	width: 35px;
-	height: 35px;
-	color: black;
-	font-size: 20px;
-	font-weight: 900;
-	background-color: #a71b1c;
-	border-radius: 50%;
-	text-stroke: 1px white;
-	-webkit-text-stroke: 1px white;
-	position: absolute;
-	top: 45%;
-	left: 50%;
-	transform: translate(-50%, -50%);
+.right-area{
+	width: 120px;
 }
 
+/*****************************************************************************/
+/* end-btn: ターン終了ボタンの要素
+/*****************************************************************************/
+.end-btn{
+	position: relative;
+	width: 120px;
+}
+.end-btn:active{
+	transform: scale(0.95) translateY(3px);
+}
+.end-btn img{
+	width: 100%;
+}
+.end-btn span{
+	width: 100%;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	font-size: 16px;
+	color: white;
+	font-weight: 900;
+	text-align: center;
+}
 
 /*****************************************************************************/
 /* trash-area: 捨て札の要素
 /*****************************************************************************/
+.trash{
+	display: flex;
+	justify-content: flex-end;
+}
+
 .trash-area{
 	width: 50px;
 	aspect-ratio: 7 / 10;
