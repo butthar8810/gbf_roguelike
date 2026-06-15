@@ -395,9 +395,12 @@ header{
 }
 .player-hp-bar {
 	height: 100%;
-	background-color: #cc0c0c; /* 現在のHPの色（例：緑） */
+	background-color: #cc0c0c;
 	border-radius: 4px;
-	transition: width 0.3s ease; /* HPが減る時のアニメーション */
+	transition: width 0.3s ease;
+}
+.player-hp-bar.block {
+	background-color: blue; /* 現在のHPの色（例：緑） */
 }
 
 .enemies-status{
@@ -414,6 +417,13 @@ header{
 	height: 100%;
 	width: 180px;
 	margin: 0 5px;
+	border: 1px dotted rgba(0, 0, 0, 0);
+}
+.enemy-status:hover{
+	border: 1px dotted white;
+}
+.enemy-status.select{
+	border: 1px solid white;
 }
 .enemy-status img{
 	height: 100%;

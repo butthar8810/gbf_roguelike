@@ -1,7 +1,7 @@
 /*****************************************************************************/
 /* ステージ情報
 /*****************************************************************************/
-const stageLevel = {boss: 3, special: 2, nomal:1}
+const stageLevel = {boss: 3, special: 2, normal:1}
 const stages = {
 	boss: { name: 'ボス戦闘', weight: 0, image: 'images/map/boss.png' },
 	gift: { name: '宝箱', weight: 0, image: 'images/map/gift.jpg' },
@@ -104,6 +104,8 @@ const keyContinueDeck = 'Babu.Continue.Deck';
 const keyContinueOriginalDeck = 'Babu.Continue.Original.Deck';
 const keyContinueHand = 'Babu.Continue.Hand';
 const keyContinueTrash = 'Babu.Continue.Trash';
+const keyContinueDiscard = 'Babu.Continue.Discard';
+const keyContinueTemporary = 'Babu.Continue.Temporary';
 const keyContinueStack = 'Babu.Continue.Stack';
 const keyContinueEnemy = 'Babu.Continue.Enemy';
 
@@ -116,6 +118,7 @@ const keyContinueEnemy = 'Babu.Continue.Enemy';
 /*****************************************************************************/
 let myRemainHP = 0;
 let myMaxHP = 0;
+let myMoney = 0;
 // アウトゲーム
 let currnetMap = {};
 let map = [];
@@ -130,5 +133,5 @@ let discard = [];
 let tmpArea =[];
 let stackCard = [];
 let currentTurn = 0;
-let currnetEnemies = {};
+let currnetEnemies = [];
 let currnetTarget = {};

@@ -46,6 +46,7 @@ function setupCharaStatus(){
 			$('.player-character').attr('src', 'images/gifs/djeeta_idle.gif');
 		} else {
 			alert('別キャラが選択されています。');
+			window.location.href = 'index.html';
 		}
 	} else{
 		alert('キャラが選択されていません。');
@@ -80,12 +81,15 @@ function setupCharaStatus(){
 		}
 	}
 	if (remainMoney && continueFlag) {
+		myMoney = remainMoney;
 		$('.remainMoney').html(remainMoney);
 	} else{
 		if (selectChara == selectCharacter.gran.name){
+			myMoney = selectCharacter.gran.money;
 			$('.remainMoney').html(selectCharacter.gran.money);
 			setLocalStorage(keyContinueMoney, selectCharacter.gran.money);
 		} else if (selectChara == selectCharacter.djeeta.name){
+			myMoney = selectCharacter.djeeta.money;
 			$('.remainMoney').html(selectCharacter.djeeta.money);
 			setLocalStorage(keyContinueMoney, selectCharacter.djeeta.money);
 		}

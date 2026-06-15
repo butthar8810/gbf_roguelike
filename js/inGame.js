@@ -3,13 +3,11 @@
 /*******************************************************/
 function startButtle(level){
 	$('.battle-area').removeClass('hidden');
-	$('.hand-area').removeClass('hidden');
+	$('.info-area').removeClass('hidden');
 	// 各キューの初期化
 	initializeQueue();
 	currentTurn = 0;
 	updatePlayerStatus();
-	updateDeckDom();
-	updateTrashDom();
 	// デッキの準備
 	readyDeck();
 	// デッキとした後にそこからカードを5枚引き、手札とする。
@@ -17,31 +15,77 @@ function startButtle(level){
 	setupEnemy(level);
 
 	setLocalStorage(keyContinueBattleFlag, true);
+
+	startTurn();
 }
 
 
 /*******************************************************/
-/* playHandCard：BOSS戦闘を開始する
+/* continueBattle：戦闘を再開する
 /*******************************************************/
 function continueBattle(){
+	continueCount();
 	$('.battle-area').removeClass('hidden');
-	$('.hand-area').removeClass('hidden');
+	$('.info-area').removeClass('hidden');
+	
 	updatePlayerStatus();
-	updateDeckDom();
-	updateTrashDom();
 	// デッキの準備
 	readyDeck();
 	// デッキとした後にそこからカードを5枚引き、手札とする。
 	setupHandCard();
-
 	setupEnemy();
-
+	
+	startTurn();
 }
 
+/*******************************************************/
+/* continueBattle：戦闘を再開する
+/*******************************************************/
+function continueCount(){
+	const lastTrash = getLocalStorage(keyContinueTrash);
+	const lastEnergy = getLocalStorage(keyContinueEnergy);
+	const lastDiscard = getLocalStorage(keyContinueDiscard);
+	const lastTemporary = getLocalStorage(keyContinueTemporary);
+	const lastStack = getLocalStorage(keyContinueStack);
+	if (lastTrash) {
+		myTrash = lastTrash;
+	}
+	if (lastEnergy) {
+		myEnergy = lastEnergy;
+	}
+	if (lastDiscard) {
+		discard = lastDiscard;
+	}
+	if (lastTemporary) {
+		tmpArea = lastTemporary;
+	}
+	if (lastStack) {
+		stackCard = lastStack;
+	}
+}
+/*******************************************************/
+/* startTurn：ターン開始処理を行う
+/*******************************************************/
+function startTurn(){
+	currentTurn++;
+	myEnergy = 3;
+	updateDeckDom();
+	updateTrashDom();
+}
 /*******************************************************/
 /* playHandCard：カードをプレイする
 /*******************************************************/
 function playHandCard(index){
+	const card = spliceHand(index);
+	// 手札表示の更新
+	updateHandDom();
+	pushTrash(card);
+	pushStackCard(card.func);
+	updateTrashDom();
+
+	setLocalStorage(keyContinueHand, myHand);
+	setLocalStorage(keyContinueTrash, myTrash);
+	setLocalStorage(keyContinueStack, stackCard);
 
 	endAction();
 }
@@ -77,6 +121,7 @@ function readyDeck(){
 	} else {
 		myDeck = deepCopyCard(myOriginalDeck);
 		myDeck = shuffleArray(myDeck);
+		setLocalStorage(keyContinueDeck, myDeck);
 	}
 	
 }
@@ -98,15 +143,15 @@ function setupHandCard(){
 /*******************************************************/
 /* setupHandCard：初期手札となる5枚のカードを引く
 /*******************************************************/
-function setupEnemy(level = 1){
+function setupEnemy(level = stageLevel.normal){
+	const mt = new MersenneTwister();
 	const battleFlag = getLocalStorage(keyContinueBattleFlag);
 	const lastEnemyGroup = getLocalStorage(keyContinueEnemy);
 	if (lastEnemyGroup && battleFlag) {
 		currnetEnemies = lastEnemyGroup;
 	} else {
 		switch(level) {
-			case stageLevel.nopmal:
-				const mt = new MersenneTwister();
+			case stageLevel.normal:
 				const totalWeight = easyEnemies.reduce((sum, item) => sum + item.weight, 0);
 				let enemyGroupWeight = mt.nextInt(0, totalWeight);
 				for (const enemy of Object.values(easyEnemies)) {
@@ -129,10 +174,10 @@ function setupEnemy(level = 1){
 			enemy.currentStatus.maxHP = randomHP;
 			enemy.currentStatus.remainHP = randomHP;
 		});
-		currnetTarget = currnetEnemies[0];
 		
 		setLocalStorage(keyContinueEnemy, currnetEnemies);
 	}
+	currnetTarget = currnetEnemies[0];
 	console.log(currnetEnemies);
 	updateEnemyStatus();
 }
@@ -192,8 +237,8 @@ function reconfigureDeck(){
 	//デッキをシャッフル
 	myDeck = shuffleArray(myDeck);
 	// DOM要素を更新
-//	updateDeckDom();
-//	updateTrashDom();
+	updateDeckDom();
+	updateTrashDom();
 	setLocalStorage(keyContinueDeck, myDeck);
 	setLocalStorage(keyContinueTrash, myTrash);
 }
@@ -201,8 +246,19 @@ function reconfigureDeck(){
 /* clickHandProcess：クリック時の処理
 /*******************************************************/
 function clickHandProcess(handCardDiv, hand){
-	console.log(handCardDiv);
-	console.log(hand);
+
+	if (myEnergy >= hand.cost) {
+		const index = findIndexHand('id', hand.id);
+		myEnergy -= hand.cost;
+		updateEnergyDom();
+		playHandCard(index);
+		setLocalStorage(keyContinueEnergy, myEnergy);
+	} else {
+		console.log("エネルギーが足りません");
+		deletAllTemporaryArea();
+		setLocalStorage(keyContinueTemporary, tmpArea);
+		return false;
+	}
 	return true;
 }
 
@@ -210,6 +266,7 @@ function clickHandProcess(handCardDiv, hand){
 /* DOM要素の更新処理
 /***************************************************************************************/
 function updateDeckDom(){
+	console.log(`Deck:${myDeck.length}`);
 	const deckImage = $(`.deck-area`).children('img');
 	if(myDeck.length <= 0){
 		deckImage.addClass('empty');
@@ -219,6 +276,7 @@ function updateDeckDom(){
 	$(`.deck-count`).html(`${myDeck.length}`);
 }
 function updateTrashDom(){
+	console.log(`Trash:${myTrash.length}`);
 	const trashImage = $(`.trash-area`).children('img');
 	if(myTrash.length <= 0){
 		trashImage.addClass('empty');
@@ -226,6 +284,10 @@ function updateTrashDom(){
 		trashImage.removeClass('empty');
 	}
 	$(`.trash-count`).html(`${myTrash.length}`);
+}
+function updateEnergyDom(){
+	console.log(`Energy::${myEnergy}`);
+
 }
 function updateHandDom(){
 	$(`.hand-area`).html('');
@@ -279,6 +341,7 @@ function updatePlayerStatus(){
 		playerImage.attr('src', 'images/gifs/djeeta_idle.gif');
 	} else {
 		alert('別キャラが選択されています。');
+		window.location.href = 'index.html';
 	}
 	$(`.player-status`)
 		.append(playerImage)
@@ -304,7 +367,12 @@ function updateEnemyStatus(){
 			.attr('id', `enemy${i}`)
 			.addClass('enemy-status')
 			.append(enemyImage)
-			.append(hpContainerDiv);
+			.append(hpContainerDiv)
+			.click(enemy, (e) => {
+				$('.enemy-status').removeClass('select');
+				enemyStatusDiv.addClass('select');
+				currnetTarget = enemy;
+			});
 		$(`.enemies-status`).append(enemyStatusDiv);
 	});
 }
