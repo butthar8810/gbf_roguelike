@@ -2,20 +2,22 @@
 /* startNomalButtle：通常戦闘を開始する
 /*******************************************************/
 function startButtle(level){
-	$('.battle-area').removeClass('hidden');
-	$('.info-area').removeClass('hidden');
 	// 各キューの初期化
 	initializeQueue();
 	currentTurn = 0;
-	updatePlayerStatus();
 	// デッキの準備
 	readyDeck();
 	// デッキとした後にそこからカードを5枚引き、手札とする。
 	setupHandCard();
+	// 自分・敵のUIをセットアップする
+	updatePlayerStatus();
 	setupEnemy(level);
 
+	setupBtn();
 	setLocalStorage(keyContinueBattleFlag, true);
 
+	$('.battle-area').removeClass('hidden');
+	$('.info-area').removeClass('hidden');
 	startTurn();
 }
 
@@ -25,17 +27,17 @@ function startButtle(level){
 /*******************************************************/
 function continueBattle(){
 	continueCount();
-	$('.battle-area').removeClass('hidden');
-	$('.info-area').removeClass('hidden');
-	
-	updatePlayerStatus();
 	// デッキの準備
 	readyDeck();
-	// デッキとした後にそこからカードを5枚引き、手札とする。
 	setupHandCard();
+	updatePlayerStatus();
 	setupEnemy();
-	
-	startTurn();
+	setupBtn();
+
+	updateDeckDom();
+	updateTrashDom();
+	$('.battle-area').removeClass('hidden');
+	$('.info-area').removeClass('hidden');
 }
 
 /*******************************************************/
@@ -71,6 +73,39 @@ function startTurn(){
 	myEnergy = 3;
 	updateDeckDom();
 	updateTrashDom();
+	
+	//敵の次行動予測を表示する
+}
+
+/*******************************************************/
+/* startTurn：敵のターン処理を行う
+/*******************************************************/
+function startEnemiesTurn(){
+	// 敵の予測攻撃を行う
+	currnetEnemies.forEach((enemy) => {
+		const nextAction = enemy.currentStatus.nextAction;
+		if (nextAction !== '') {
+			const storedFunc = globalThis[nextAction];
+			if( typeof storedFunc === 'function'){
+				ret = storedFunc();
+			} 
+		}
+	});
+}
+/*******************************************************/
+/* startCleanup：ターン終了処理を行う
+/*******************************************************/
+function startCleanup(){
+	// 手札を捨て札エリアに格納
+	deletAllHand().forEach((card) => {
+		pushTrash(card);
+	});
+	setLocalStorage(keyContinueHand, myHand);
+	setLocalStorage(keyContinueTrash, myTrash);
+	updateHandDom();
+	updateTrashDom();
+
+	startEnemiesTurn();
 }
 /*******************************************************/
 /* playHandCard：カードをプレイする
@@ -180,6 +215,16 @@ function setupEnemy(level = stageLevel.normal){
 	currnetTarget = currnetEnemies[0];
 	console.log(currnetEnemies);
 	updateEnemyStatus();
+}
+
+/*******************************************************/
+/* setupBtn：各種ボタンの初期設定
+/*******************************************************/
+function setupBtn(){
+	$('.end-btn').click((e) => {
+		$('.end-btn').prop('disabled', true);
+		startCleanup();
+	});
 }
 /*******************************************************/
 /* initializeQueue：キューの初期化

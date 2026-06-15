@@ -363,7 +363,7 @@ header{
 	height: 250px;
 	position: absolute;
 	bottom: 30px;
-	right: 100px;
+	right: 120px;
 }
 .player-status img{
 	height: 100%;
@@ -375,7 +375,7 @@ header{
 }
 .player-hp-container {
 	position: relative;
-	margin-top: -20px;
+	margin-top: -30px;
 	width: 70%;
 	height: 10px;
 	background-color: rgba(0, 0, 0, 0.5); /* 減った分の背景色 */
@@ -456,8 +456,33 @@ header{
 	transition: width 0.3s ease; /* HPが減る時のアニメーション */
 }
 
-
-
+.btn-area{
+	position: absolute;
+	bottom: 0px;
+	right: 0px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.end-btn{
+	position: relative;
+	width: 160px;
+}
+.end-btn:active{
+	transform: scale(0.95) translateY(3px);
+}
+.end-btn img{
+	width: 100%;
+}
+.end-btn span{
+	position: absolute;
+	top: 47%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	font-size: 16px;
+	color: white;
+	font-weight: 900;
+}
 /*****************************************************************************/
 /* info-area: インフォメーション要素
 /*****************************************************************************/

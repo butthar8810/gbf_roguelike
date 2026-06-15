@@ -39,7 +39,26 @@ const djeetaCardList = {
 /* エネミー情報
 /*****************************************************************************/
 const enemyList = {
-	slime:{name: 'スライム', minHP: 8, maxHP: 12, image: 'images/enemy/kingbronze.gif', currentStatus:{remainHP: 0, maxHP: 0, status: [], nextAction: ''}},
+	slime:{
+		name: 'スライム', 
+		minHP: 8, 
+		maxHP: 12, 
+		image: 'images/enemy/kingbronze.gif', 
+		action: [
+			{
+				weight: 25,
+				func: '',
+				damage: 6,
+				image, ''
+			}
+		],
+		currentStatus:{
+			remainHP: 0, 
+			maxHP: 0, 
+			status: [], 
+			nextAction: ''
+		}
+	},
 	silver:{name: 'シルバースライム', minHP: 28, maxHP: 32,  image: 'images/enemy/kingsilver.gif', currentStatus:{remainHP: 0, maxHP: 0, status: [], nextAction: ''}},
 	golem:{name: 'ゴーレム', minHP: 48, maxHP: 55, image: 'images/enemy/golem.png', currentStatus:{remainHP: 0, maxHP: 0, status: [], nextAction: ''}},
 	zombie:{name: 'ゾンビ', minHP: 40, maxHP: 44, image: 'images/enemy/zombie.png', currentStatus:{remainHP: 0, maxHP: 0, status: [], nextAction: ''}},
@@ -107,6 +126,7 @@ const keyContinueTrash = 'Babu.Continue.Trash';
 const keyContinueDiscard = 'Babu.Continue.Discard';
 const keyContinueTemporary = 'Babu.Continue.Temporary';
 const keyContinueStack = 'Babu.Continue.Stack';
+const keyContinueEnergy = 'Babu.Continue.Energy';
 const keyContinueEnemy = 'Babu.Continue.Enemy';
 
 
