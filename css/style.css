@@ -359,16 +359,31 @@ header{
 .battle-area>img {
 	height: 100%;
 }
-.player-status{
+.front-effect{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-image: radial-gradient(transparent, transparent 30%, #f75d5d);
+	opacity: 0;
+}
+
+
+
+/*****************************************************************************/
+/* player-status: プレイヤー情報要素
+/*****************************************************************************/
+.player-area{
 	height: 250px;
 	position: absolute;
 	bottom: 30px;
 	right: 120px;
 }
-.player-status img{
+.player-area img{
 	height: 100%;
 }
-.player-status>div{
+.player-area>div{
 	width: 100%;
 	display: flex;
 	justify-content: flex-end;
@@ -402,8 +417,41 @@ header{
 .player-hp-bar.block {
 	background-color: blue; /* 現在のHPの色（例：緑） */
 }
+.player-statuses{
+	width: 100%;
+	height: 30px;
+	position: absolute;
+	top: 220px;
+	left: 50%;
+	transform: translateX(-50%);
+	display: flex;
+	justify-content: flex-start;
+}
+.player-status{
+	width: 30px;
+	height: 30px;
+	position: relative;
+}
+.player-status img{
+	height: 100%;
+}
+.player-status-amount{
+	position: absolute;
+	bottom: 2px;
+	left: -2px;
+	font-size: 12px;
+	font-weight: 900;
+	color: black;
+	text-stroke: 1px white;
+	-webkit-text-stroke: 1px white;
 
-.enemies-status{
+}
+
+
+/*****************************************************************************/
+/* enemies-status: エネミー情報要素
+/*****************************************************************************/
+.enemies-area{
 	height: 222px;
 	width: 650px;
 	position: absolute;
@@ -413,7 +461,7 @@ header{
 	justify-content: center;
 	align-items: center;
 }
-.enemy-status{
+.enemy-area{
 	height: 100%;
 	width: 180px;
 	margin: 0 5px;
@@ -425,13 +473,13 @@ header{
 .defeated{
 	opacity: 0;
 }
-.enemy-status:hover{
+.enemy-area:hover{
 	border: 1px dotted white;
 }
-.enemy-status.select{
+.enemy-area.select{
 	border: 1px solid white;
 }
-.enemy-status>img{
+.enemy-area>img{
 	height: 100%;
 	position: absolute;
 	top: 0px;
@@ -470,6 +518,36 @@ header{
 	transition: width 0.3s ease; /* HPが減る時のアニメーション */
 }
 
+.statuses{
+	width: 100%;
+	height: 30px;
+	position: absolute;
+	top: 220px;
+	left: 50%;
+	transform: translateX(-50%);
+	display: flex;
+	justify-content: flex-start;
+}
+.status{
+	width: 30px;
+	height: 30px;
+	position: relative;
+}
+.status img{
+	height: 100%;
+}
+.amount{
+	position: absolute;
+	bottom: 2px;
+	left: -2px;
+	font-size: 12px;
+	font-weight: 900;
+	color: black;
+	text-stroke: 1px white;
+	-webkit-text-stroke: 1px white;
+
+}
+
 .omen{
 	width: 50px;
 	height: 50px;
@@ -491,7 +569,7 @@ header{
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	color: black;
+	color: #bd2b12;
 	font-size: 22px;
 	font-weight: 900;
 	text-stroke: 1px white;

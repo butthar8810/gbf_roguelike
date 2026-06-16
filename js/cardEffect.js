@@ -1,42 +1,69 @@
 function effectDammy(){}
 
-
+/*************************************************************************************/
+/* 各カード効果関数
+/*************************************************************************************/
 function effectStrike(){
+	// 6のダメージを与える。
 	console.log('effectStrike');
-	animatePlayerAttack();
-	currnetTarget.currentStatus.remainHP -= 6;
-	setLocalStorage(keyContinueEnemy, currnetEnemies);
+	actionAttack(6);
+	actionStatusDebuf(debufStatus.attackDown, 2);
 	return true;
 }
 function effectDefense(){
+	// 5ブロックを得る。
 	console.log('effectDefense');
-	statusBlock(5);
+	actionBlock(5);
 }
 function effectPowerswing(){
+	// 8のダメージを与える。弱体2を与える。
 	console.log('effectPowerswing');
-	animatePlayerAttack();
-	currnetTarget.currentStatus.remainHP -= 8;
-	setLocalStorage(keyContinueEnemy, currnetEnemies);
-
+	actionAttack(8);
+	actionStatusDebuf(debufStatus.defenseDown, 2);
 }
 function effectFast(){
+	// 3ダメージを与える。脱力1を与える。
 	console.log('effectFast');
-	animatePlayerAttack();
-	currnetTarget.currentStatus.remainHP -= 3;
-	setLocalStorage(keyContinueEnemy, currnetEnemies);
+	actionAttack(3);
+	actionStatusDebuf(debufStatus.attackDown, 1);
 
 }
 function effectPulverizer(){
+	// 8ブロックを得る。カードを1枚捨てる。
 	console.log('effectPulverizer');
-	statusBlock(8);
+	actionBlock(8);
 }
 
 
 
+/*************************************************************************************/
+/* カードアクション用システム関数
+/*************************************************************************************/
 /*******************************************************/
-/* カードエフェクト用システム関数
+/* 与ダメージ関数
 /*******************************************************/
-function statusBlock(blockCount){
-	$('.player-hp-bar').addClass('block');
+function actionAttack(attackCount){
 
+	animatePlayerAttack();
+	currentTarget.currentStatus.remainHP -= attackCount;
+	setLocalStorage(keyContinueEnemy, currentEnemies);
+}
+/*******************************************************/
+/* ブロック関数
+/*******************************************************/
+function actionBlock(blockCount){
+	$('.player-hp-bar').addClass('block');
+}
+/*******************************************************/
+/* 状態異常を与える関数
+/*******************************************************/
+function actionStatusDebuf(debuf, amountCount){
+	console.log('actionStatusDebuf');
+	// すでに同じデバフがかかってないか確認
+	const targetStatus = currentTarget.currentStatus.status.filter((status) => {
+		return status.name !== debuf.name
+	});
+	const receivedDebuf = {...debuf};
+	receivedDebuf.amount = amountCount;
+	targetStatus.push(receivedDebuf);
 }

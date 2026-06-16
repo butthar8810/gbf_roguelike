@@ -41,12 +41,12 @@ function animatePlayerdamage(){
 			playerImage.attr('src', 'images/gifs/gran_dmg.gif');
 			setTimeout(() => {
 				playerImage.attr('src', 'images/gifs/gran_idle.gif');
-			}, playerAttackWaitTime);
+			}, playerDamageWaitTime);
 		} else if (selectChara == selectCharacter.djeeta.name){
 			playerImage.attr('src', 'images/gifs/djeeta_dmg.gif');
 			setTimeout(() => {
 				playerImage.attr('src', 'images/gifs/djeeta_idle.gif');
-			}, playerAttackWaitTime);
+			}, playerDamageWaitTime);
 		} else {
 			alert('別キャラが選択されています。');
 			window.location.href = 'index.html';
@@ -60,20 +60,49 @@ function animatePlayerdamage(){
 /*******************************************************/
 /* animatePlayerAttack：エネミーが攻撃する
 /*******************************************************/
-function animateEnemyAttack(animateDiv){
-	console.log(`animateEnemyAttack`);
-	animateDiv.children('img')
-		.animate({ left: '100px' }, 1000)
-		.animate({ left: '0px' }, 1000);
+function animateEnemyAttack(animateEnemy){
+	$(`#${animateEnemy.currentStatus.divId}`).children('img')
+		.animate({ left: '50px' }, 500, "easeInQuart")
+		.animate({ left: '0px' }, 500, "easeOutQuart");
+	$('.front-effect')
+		.animate({ opacity: '0' }, 400, "easeInQuart")
+		.animate({ opacity: '1' }, 10, "easeInQuart")
+		.animate({ opacity: '0' }, 600, "easeInQuart");
 }
-
+/*******************************************************/
+/* animatePlayerAttack：エネミーがダメージを受ける
+/*******************************************************/
+function animateEnemydamage(animateEnemy){
+	$(`#${animateEnemy.currentStatus.divId}`).children('img')
+		.animate({ left: '5px' }, 25, "linear")
+		.animate({ left: '-5px' }, 50, "linear")
+		.animate({ left: '5px' }, 50, "linear")
+		.animate({ left: '-5px' }, 50, "linear")
+		.animate({ left: '5px' }, 50, "linear")
+		.animate({ left: '-5px' }, 50, "linear")
+		.animate({ left: '5px' }, 50, "linear")
+		.animate({ left: '-5px' }, 50, "linear")
+		.animate({ left: '5px' }, 50, "linear")
+		.animate({ left: '-5px' }, 50, "linear")
+		.animate({ left: '5px' }, 50, "linear")
+		.animate({ left: '-5px' }, 50, "linear")
+		.animate({ left: '5px' }, 50, "linear")
+		.animate({ left: '-5px' }, 50, "linear")
+		.animate({ left: '5px' }, 50, "linear")
+		.animate({ left: '-5px' }, 50, "linear")
+		.animate({ left: '5px' }, 50, "linear")
+		.animate({ left: '-5px' }, 50, "linear")
+		.animate({ left: '5px' }, 50, "linear")
+		.animate({ left: '-5px' }, 50, "linear")
+		.animate({ left: '5px' }, 50, "linear")
+		.animate({ left: '-5px' }, 50, "linear");
+}
 
 /*******************************************************/
 /* animateDefeated：敵が倒されてフェードアウトする
 /*******************************************************/
-function animateDefeated(animateDiv){
-	console.log(`animateDefeated`);
-	console.log(animateDiv);
+function animateDefeated(animateEnemy){
+	const animateDiv = $(`#${animateEnemy.currentStatus.divId}`);
 	animateDiv.animate({ 
 		opacity: 0
 	}, defeatedWaitTime);

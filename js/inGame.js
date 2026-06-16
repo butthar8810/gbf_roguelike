@@ -13,7 +13,7 @@ function startButtle(level){
 	// デッキとした後にそこからカードを5枚引き、手札とする。
 	setupHandCard();
 	// 自分・敵のUIをセットアップする
-	updatePlayerStatus();
+	updatePlayerAreaDom();
 	setupEnemy(level);
 
 	setupBtn();
@@ -33,7 +33,7 @@ function continueBattle(){
 	// デッキの準備
 	readyDeck();
 	setupHandCard();
-	updatePlayerStatus();
+	updatePlayerAreaDom();
 	setupEnemy();
 	setupBtn();
 
@@ -41,7 +41,7 @@ function continueBattle(){
 	updateDeckDom();
 	updateTrashDom();
 	updateEnergyDom();
-	updateEnemyStatus();
+	updateEnemyAreaDom(true);
 	$('.battle-area').removeClass('hidden');
 	$('.info-area').removeClass('hidden');
 }
@@ -57,6 +57,7 @@ function continueCount(){
 	const lastTemporary = getLocalStorage(keyContinueTemporary);
 	const lastStack = getLocalStorage(keyContinueStack);
 	const lastTurn = getLocalStorage(keyContinueTurn);
+	const lastStatus = getLocalStorage(keyContinueStatus);
 	if (lastTrash) {
 		myTrash = lastTrash;
 	}
@@ -77,6 +78,9 @@ function continueCount(){
 	}
 	if (lastTurn) {
 		currentTurn = lastTurn;
+	}
+	if (lastStatus) {
+		currentMyStatus = lastStatus;
 	}
 }
 /*******************************************************/
@@ -143,21 +147,20 @@ function startTurn(){
 	myEnergy = maxEnergy;
 	drawCardFromDeck(initialHandNum);
 	//敵の次行動予測を決定する
-	decideNextAction();
 
 	updateHandDom();
 	updateDeckDom();
 	updateTrashDom();
 	updateEnergyDom();
-	setTimeout(() => {
-		updateEnemyStatus();
-	}, 3000);
-	
+	updateEnemyAreaDom(false);
+	decideNextAction();
+	fadeInEnemyOmenDom();
 
 	setLocalStorage(keyContinueTurn, currentTurn);
 	setLocalStorage(keyContinueEnergy, myEnergy);
 	setLocalStorage(keyContinueHand, myHand);
-	setLocalStorage(keyContinueEnemy, currnetEnemies);
+	setLocalStorage(keyContinueStatus, currentMyStatus);
+	setLocalStorage(keyContinueEnemy, currentEnemies);
 	
 
 }
@@ -289,7 +292,7 @@ function setupEnemy(level = stageLevel.normal){
 	const battleFlag = getLocalStorage(keyContinueBattleFlag);
 	const lastEnemyGroup = getLocalStorage(keyContinueEnemy);
 	if (lastEnemyGroup && battleFlag) {
-		currnetEnemies = lastEnemyGroup;
+		currentEnemies = lastEnemyGroup;
 	} else {
 		switch(level) {
 			case stageLevel.normal:
@@ -297,7 +300,7 @@ function setupEnemy(level = stageLevel.normal){
 				let enemyGroupWeight = mt.nextInt(0, totalWeight);
 				for (const enemy of Object.values(easyEnemies)) {
 					if (enemyGroupWeight < enemy.weight) {
-						currnetEnemies = deepCopyEnemies(enemy.enemies);
+						currentEnemies = deepCopyEnemies(enemy.enemies);
 						break;
 					}
 					enemyGroupWeight -= enemy.weight;
@@ -310,23 +313,23 @@ function setupEnemy(level = stageLevel.normal){
 			default:
 				break;
 		}
-		currnetEnemies.forEach((enemy, i) => {
+		currentEnemies.forEach((enemy, i) => {
 			const randomHP = mt.nextInt(enemy.minHP, enemy.maxHP);
 			enemy.currentStatus.maxHP = randomHP;
 			enemy.currentStatus.remainHP = randomHP;
 			enemy.currentStatus.divId = `enemy${i}`;
 		});
-		setLocalStorage(keyContinueEnemy, currnetEnemies);
+		setLocalStorage(keyContinueEnemy, currentEnemies);
 	}
-	currnetTarget = currnetEnemies[0];
-	console.log(currnetEnemies);
+	targetingEnemy();
+	console.log(currentEnemies);
 }
 /*******************************************************/
 /* startEnemiesTurn：敵のターン処理を行う
 /*******************************************************/
-function startEnemiesTurn(){
+async function startEnemiesTurn(){
 	// 敵の予測した攻撃を行う
-	currnetEnemies.forEach((enemy) => {
+	for (const enemy of currentEnemies) {
 		if(!enemy.currentStatus.status.includes('dead')){
 			const nextAction = enemy.currentStatus.nextAction;
 			console.log(nextAction);
@@ -334,27 +337,39 @@ function startEnemiesTurn(){
 				const storedFunc = globalThis[nextAction.func];
 				if( typeof storedFunc === 'function'){
 					ret = storedFunc();
-					animateEnemyAttack($(`#${enemy.currentStatus.divId}`));
-					animatePlayerdamage();
 				} 
 			}
 		}
-	});
-
+	}
+	setLocalStorage(keyContinueRemainHp, myRemainHP);
+	// 攻撃のアニメーションを行う
+	for (const enemy of currentEnemies) {
+		if(!enemy.currentStatus.status.includes('dead')){
+			const nextAction = enemy.currentStatus.nextAction;
+			if (nextAction !== '') {
+				fadeOutEnemyOmenDom(enemy);
+				await sleep(omenFadeOutWaitTime);
+				if (nextAction.damage > 0){
+					animateEnemyAttack(enemy);
+					animatePlayerdamage();
+				}
+				await sleep(1200);
+			}
+		}
+	}
 	startTurn();
 }
 /*******************************************************/
 /* decideNextAction：敵の次の行動を決める
 /*******************************************************/
 function decideNextAction(){
-	currnetEnemies.forEach((enemy) => {
+	currentEnemies.forEach((enemy) => {
 		if(!enemy.currentStatus.status.includes('dead')){
 			const actionFunc = enemy.actionAlgorithm;
 			if (actionFunc !== '') {
 				const storedFunc = globalThis[actionFunc];
 				if( typeof storedFunc === 'function'){
 					enemy.currentStatus.nextAction = storedFunc();
-					console.log(enemy.currentStatus.nextAction);
 				} 
 			}
 		}
@@ -368,10 +383,11 @@ function decideNextAction(){
 function checkEnemydefeated(){
 	defeatedFlag = false;
 	allDefeatedFlag = true;
-	currnetEnemies.forEach((enemy, i) => {
+	currentEnemies.forEach((enemy, i) => {
 		if(!enemy.currentStatus.status.includes('dead')){
 			if(enemy.currentStatus.remainHP <= 0){
-				animateDefeated($(`#enemy${i}`));
+				animateDefeated(enemy);
+				animateEnemydamage(enemy);
 				enemy.currentStatus.status.splice(0);
 				enemy.currentStatus.status.push('dead');
 				targetingEnemy();
@@ -381,25 +397,29 @@ function checkEnemydefeated(){
 			}
 		}
 	});
+	setLocalStorage(keyContinueEnemy, currentEnemies);
 	if (defeatedFlag){
 		setTimeout(() => {
-			updateEnemyStatus();
+			updateEnemyAreaDom(true);
 			if (allDefeatedFlag){
 				allEnemiesdefeated();
 			}
 		}, defeatedWaitTime);
 	} else {
-		updateEnemyStatus();
+		updateEnemyAreaDom(true);
 		if (allDefeatedFlag){
 			allEnemiesdefeated();
 		}
 	}
 }
 
+/*******************************************************/
+/* targetingEnemy：自動でターゲッティングする
+/*******************************************************/
 function targetingEnemy(){
-	currnetEnemies.forEach((enemy) => {
+	currentEnemies.forEach((enemy) => {
 		if (!enemy.currentStatus.status.includes('dead')) {
-			currnetTarget = enemy;
+			currentTarget = enemy;
 		}
 	});
 }
@@ -465,9 +485,10 @@ function updateHandDom(){
 		$(`.hand-area`).append(handCardDiv);
 	});
 }
-function updatePlayerStatus(){
+function updatePlayerAreaDom(){
 	const selectChara = getLocalStorage(keySelectChara);
-	$(`.player-status`).html('');
+	$(`.player-area`).html('');
+	// HPバー[player-hp-container]の要素
 	const remainHP = 100 * ( myRemainHP / myMaxHP );
 	const hpBerDiv = $('<div>')
 		.addClass('player-hp-bar')
@@ -478,8 +499,10 @@ function updatePlayerStatus(){
 		.addClass('player-hp-container')
 		.append(hpBerDiv)
 		.append(hpParagraph);
+	// innerDivの要素
 	const innerDiv = $('<div>')
 		.append(hpContainerDiv);
+	// プレイヤー立ち絵の要素
 	const playerImage = $('<img>');
 	if (selectChara == selectCharacter.gran.name){
 		playerImage.attr('src', 'images/gifs/gran_idle.gif');
@@ -489,18 +512,35 @@ function updatePlayerStatus(){
 		alert('別キャラが選択されています。');
 		window.location.href = 'index.html';
 	}
-	$(`.player-status`)
+	// ステータス[status]の要素
+	const statusesDiv = $('<div>')
+		.addClass('player-statuses');
+	console.log(currentMyStatus);
+	currentMyStatus.forEach((status) => {
+		const statusImage = $('<img>')
+			.attr('src', status.image);
+		const amountSpan = $('<span>')
+			.addClass('player-status-amount')
+			.html(status.amount);
+		const statusDiv = $('<div>')
+			.addClass('player-status')
+			.append(statusImage)
+			.append(amountSpan);
+		statusesDiv.append(statusDiv);
+	});
+
+	$(`.player-area`)
 		.append(playerImage)
 		.append(innerDiv);
 
 }
-function updateEnemyStatus(){
-	$(`.enemies-status`).html('');
-	currnetEnemies.forEach((enemy) => {
+function updateEnemyAreaDom(omenFlag = false){
+	$(`.enemies-area`).html('');
+	currentEnemies.forEach((enemy) => {
 		// 敵立ち絵要素
 		const enemyImage = $('<img>')
 			.attr('src', enemy.image);
-		// 残りHP要素
+		// 残りHP[enemy-hp-container]要素
 		const remainHP = 100 * (enemy.currentStatus.remainHP / enemy.currentStatus.maxHP);
 		const hpBerDiv = $('<div>')
 			.addClass('enemy-hp-bar')
@@ -514,7 +554,61 @@ function updateEnemyStatus(){
 		const hpContainerDiv = $('<div>')
 			.addClass('enemy-hp-container')
 			.append(hpContainerInnerDiv);
-		// 予測攻撃の要素
+		// ステータス[status]の要素
+		const statusesDiv = $('<div>')
+			.addClass('statuses');
+		enemy.currentStatus.status.forEach((status) => {
+			const statusImage = $('<img>')
+				.attr('src', status.image);
+			const amountSpan = $('<span>')
+				.addClass('amount')
+				.html(status.amount);
+			const statusDiv = $('<div>')
+				.addClass('status')
+				.append(statusImage)
+				.append(amountSpan);
+			statusesDiv.append(statusDiv);
+		});
+		// 「enemy-area」要素
+		const enemyAreaDiv = $('<div>')
+			.attr('id', enemy.currentStatus.divId)
+			.addClass('enemy-area')
+			.append(enemyImage)
+			.append(hpContainerDiv)
+			.append(statusesDiv);
+		if (omenFlag){
+			// 予測攻撃[omen]の要素
+			const nextActionImage = $('<img>')
+				.attr('src', enemy.currentStatus.nextAction.image);
+			const omenInnerDiv = $('<div>')
+				.addClass('omen-inner')
+				.append(nextActionImage);
+			if(enemy.currentStatus.nextAction.damage > 0){
+				const damageDiv = $('<div>')
+					.addClass('damage')
+					.html(enemy.currentStatus.nextAction.damage);
+				omenInnerDiv.append(damageDiv);
+			}
+			const omenDiv = $('<div>')
+				.addClass('omen')
+				.append(omenInnerDiv);
+			enemyAreaDiv.append(omenDiv);
+		}
+		$(`.enemies-area`).append(enemyAreaDiv);
+		if (enemy.currentStatus.status.includes('dead')) {
+			enemyAreaDiv.addClass('defeated');
+		} else {
+			enemyAreaDiv.click(enemy, (e) => {
+				$('.enemy-area').removeClass('select');
+				enemyAreaDiv.addClass('select');
+				currentTarget = enemy;
+			});
+		}
+	});
+}
+function fadeInEnemyOmenDom(){
+	currentEnemies.forEach((enemy) => {
+		// 予測攻撃[omen]の要素
 		const nextActionImage = $('<img>')
 			.attr('src', enemy.currentStatus.nextAction.image);
 		const omenInnerDiv = $('<div>')
@@ -527,28 +621,23 @@ function updateEnemyStatus(){
 			omenInnerDiv.append(damageDiv);
 		}
 		const omenDiv = $('<div>')
+			.css('opacity', 0)
 			.addClass('omen')
 			.append(omenInnerDiv);
-		// 「enemy-status」要素
-		const enemyStatusDiv = $('<div>')
-			.attr('id', enemy.currentStatus.divId)
-			.addClass('enemy-status')
-			.append(enemyImage)
-			.append(hpContainerDiv)
-			.append(omenDiv);
-			
-		$(`.enemies-status`).append(enemyStatusDiv);
-		if (enemy.currentStatus.status.includes('dead')) {
-			enemyStatusDiv.addClass('defeated');
-		} else {
-			enemyStatusDiv.click(enemy, (e) => {
-				$('.enemy-status').removeClass('select');
-				enemyStatusDiv.addClass('select');
-				currnetTarget = enemy;
-			});
-		}
+		console.log($(`#${enemy.currentStatus.divId}`));
+		$(`#${enemy.currentStatus.divId}`).append(omenDiv);
 
+		omenDiv.animate({ opacity: '1' }, omenFadeInWaitTime, "easeInQuart");
 	});
+}
+function fadeOutEnemyOmenDom(enemy){
+	// 予測攻撃[omen]の要素
+	$(`#${enemy.currentStatus.divId}`).children('.omen')
+		.animate({ 
+			opacity: '0',
+			top: '50px'
+		}, omenFadeOutWaitTime, "linear");
+	
 }
 /***************************************************************************************/
 /* モーダル要素の更新処理

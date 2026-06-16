@@ -179,8 +179,8 @@ function getReadyOK(){
 function climbTowerStart(){
 	const mt = new MersenneTwister();
 	const totalWeight = Object.values(stages).reduce((sum, item) => sum + item.weight, 0);
-	currnetMap = initialMap;
-	setLocalStorage(keyContinueCurrentMap, currnetMap);
+	currentMap = initialMap;
+	setLocalStorage(keyContinueCurrentMap, currentMap);
 	//ステージを生成する
 	for(let row = 0; row < mapRows; row++){
 		const mapRows = [];
@@ -222,15 +222,15 @@ function climbTowerStart(){
 				}
 			}
 			if (
-				row === currnetMap.row - 1 &&
-				column >= currnetMap.column - 1 &&
-				column <= currnetMap.column + 1
+				row === currentMap.row - 1 &&
+				column >= currentMap.column - 1 &&
+				column <= currentMap.column + 1
 			) {
 				mapDiv.addClass('choices');
 				mapDiv.click((e) => {
 					console.log(selectStage.name);
-					currnetMap.row = row;
-					currnetMap.column = column;
+					currentMap.row = row;
+					currentMap.column = column;
 					admissionStage(selectStage);
 				});
 			}
@@ -249,7 +249,7 @@ function climbTowerStart(){
 function climbTowerContinue(){
 	const lastCurrentMap = getLocalStorage(keyContinueCurrentMap);
 	if (lastCurrentMap) {
-		currnetMap = lastCurrentMap;
+		currentMap = lastCurrentMap;
 	} else {
 		alert('マップが保存されていません');
 	}
@@ -266,15 +266,15 @@ function climbTowerContinue(){
 				continue;
 			}
 			if (
-				row === currnetMap.row - 1 &&
-				column >= currnetMap.column - 1 &&
-				column <= currnetMap.column + 1
+				row === currentMap.row - 1 &&
+				column >= currentMap.column - 1 &&
+				column <= currentMap.column + 1
 			) {
 				mapDiv.addClass('choices');
 				mapDiv.click((e) => {
 					console.log(map[row][column].name);
-					currnetMap.row = row;
-					currnetMap.column = column;
+					currentMap.row = row;
+					currentMap.column = column;
 					admissionStage(map[row][column]);
 				});
 			}
