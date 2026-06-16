@@ -61,9 +61,12 @@ function actionStatusDebuf(debuf, amountCount){
 	console.log('actionStatusDebuf');
 	// すでに同じデバフがかかってないか確認
 	const targetStatus = currentTarget.currentStatus.status.filter((status) => {
-		return status.name !== debuf.name
+		console.log(status.name);
+		console.log(debuf.name);
+		return status.name !== debuf.name;
 	});
 	const receivedDebuf = {...debuf};
 	receivedDebuf.amount = amountCount;
 	targetStatus.push(receivedDebuf);
+	currentTarget.currentStatus.status = targetStatus;
 }
