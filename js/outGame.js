@@ -51,6 +51,7 @@ function setupCharaStatus(){
 		}
 	} else{
 		alert('キャラが選択されていません。');
+		window.location.href = 'index.html';
 	}
 
 	if (remainHp && continueFlag) {
@@ -95,11 +96,12 @@ function setupCharaStatus(){
 			setLocalStorage(keyContinueMoney, selectCharacter.djeeta.money);
 		}
 	}
-	if (maxEnergy && continueFlag) {
+	if (lastMaxEnergy && continueFlag) {
 		maxEnergy = lastMaxEnergy;
 	} else{
 		maxEnergy = initialEnergy;
 		setLocalStorage(keyContinueMaxEnergy, maxEnergy);
+		console.log(`maxEnergy: ${maxEnergy}`);
 	}
 }
 /*******************************************************/

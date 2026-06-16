@@ -149,7 +149,10 @@ function startTurn(){
 	updateDeckDom();
 	updateTrashDom();
 	updateEnergyDom();
-	updateEnemyStatus();
+	setTimeout(() => {
+		updateEnemyStatus();
+	}, 3000);
+	
 
 	setLocalStorage(keyContinueTurn, currentTurn);
 	setLocalStorage(keyContinueEnergy, myEnergy);
@@ -251,6 +254,7 @@ function endAction(){
 			ret = storedFunc();
 		} 
 	}
+	checkEnemydefeated();
 	setLocalStorage(keyContinueStack, stackCard);
 	return ret;
 }
@@ -306,10 +310,11 @@ function setupEnemy(level = stageLevel.normal){
 			default:
 				break;
 		}
-		currnetEnemies.forEach((enemy) => {
+		currnetEnemies.forEach((enemy, i) => {
 			const randomHP = mt.nextInt(enemy.minHP, enemy.maxHP);
 			enemy.currentStatus.maxHP = randomHP;
 			enemy.currentStatus.remainHP = randomHP;
+			enemy.currentStatus.divId = `enemy${i}`;
 		});
 		setLocalStorage(keyContinueEnemy, currnetEnemies);
 	}
@@ -322,13 +327,17 @@ function setupEnemy(level = stageLevel.normal){
 function startEnemiesTurn(){
 	// 敵の予測した攻撃を行う
 	currnetEnemies.forEach((enemy) => {
-		const nextAction = enemy.currentStatus.nextAction;
-		console.log(nextAction);
-		if (nextAction !== '') {
-			const storedFunc = globalThis[nextAction.func];
-			if( typeof storedFunc === 'function'){
-				ret = storedFunc();
-			} 
+		if(!enemy.currentStatus.status.includes('dead')){
+			const nextAction = enemy.currentStatus.nextAction;
+			console.log(nextAction);
+			if (nextAction !== '') {
+				const storedFunc = globalThis[nextAction.func];
+				if( typeof storedFunc === 'function'){
+					ret = storedFunc();
+					animateEnemyAttack($(`#${enemy.currentStatus.divId}`));
+					animatePlayerdamage();
+				} 
+			}
 		}
 	});
 
@@ -339,15 +348,67 @@ function startEnemiesTurn(){
 /*******************************************************/
 function decideNextAction(){
 	currnetEnemies.forEach((enemy) => {
-		const actionFunc = enemy.actionAlgorithm;
-		if (actionFunc !== '') {
-			const storedFunc = globalThis[actionFunc];
-			if( typeof storedFunc === 'function'){
-				enemy.currentStatus.nextAction = storedFunc();
-				console.log(enemy.currentStatus.nextAction);
-			} 
+		if(!enemy.currentStatus.status.includes('dead')){
+			const actionFunc = enemy.actionAlgorithm;
+			if (actionFunc !== '') {
+				const storedFunc = globalThis[actionFunc];
+				if( typeof storedFunc === 'function'){
+					enemy.currentStatus.nextAction = storedFunc();
+					console.log(enemy.currentStatus.nextAction);
+				} 
+			}
 		}
 	});
+}
+
+
+/*******************************************************/
+/* decideNextAction：敵が倒されたかチェックする
+/*******************************************************/
+function checkEnemydefeated(){
+	defeatedFlag = false;
+	allDefeatedFlag = true;
+	currnetEnemies.forEach((enemy, i) => {
+		if(!enemy.currentStatus.status.includes('dead')){
+			if(enemy.currentStatus.remainHP <= 0){
+				animateDefeated($(`#enemy${i}`));
+				enemy.currentStatus.status.splice(0);
+				enemy.currentStatus.status.push('dead');
+				targetingEnemy();
+				defeatedFlag = true;
+			} else {
+				allDefeatedFlag = false;
+			}
+		}
+	});
+	if (defeatedFlag){
+		setTimeout(() => {
+			updateEnemyStatus();
+			if (allDefeatedFlag){
+				allEnemiesdefeated();
+			}
+		}, defeatedWaitTime);
+	} else {
+		updateEnemyStatus();
+		if (allDefeatedFlag){
+			allEnemiesdefeated();
+		}
+	}
+}
+
+function targetingEnemy(){
+	currnetEnemies.forEach((enemy) => {
+		if (!enemy.currentStatus.status.includes('dead')) {
+			currnetTarget = enemy;
+		}
+	});
+}
+/*******************************************************/
+/* decideNextAction：敵がすべて倒された時の処理
+/*******************************************************/
+function allEnemiesdefeated(){
+	alert('全滅');
+
 }
 
 /***************************************************************************************/
@@ -435,7 +496,7 @@ function updatePlayerStatus(){
 }
 function updateEnemyStatus(){
 	$(`.enemies-status`).html('');
-	currnetEnemies.forEach((enemy, i) => {
+	currnetEnemies.forEach((enemy) => {
 		// 敵立ち絵要素
 		const enemyImage = $('<img>')
 			.attr('src', enemy.image);
@@ -446,10 +507,13 @@ function updateEnemyStatus(){
 			.css('width', `${remainHP}%`);
 		const hpParagraph = $('<p>')
 			.html(`${enemy.currentStatus.remainHP}/${enemy.currentStatus.maxHP}`);
-		const hpContainerDiv = $('<div>')
-			.addClass('enemy-hp-container')
+		const hpContainerInnerDiv = $('<div>')
+			.addClass('enemy-hp-container-inner')
 			.append(hpBerDiv)
 			.append(hpParagraph);
+		const hpContainerDiv = $('<div>')
+			.addClass('enemy-hp-container')
+			.append(hpContainerInnerDiv);
 		// 予測攻撃の要素
 		const nextActionImage = $('<img>')
 			.attr('src', enemy.currentStatus.nextAction.image);
@@ -467,17 +531,22 @@ function updateEnemyStatus(){
 			.append(omenInnerDiv);
 		// 「enemy-status」要素
 		const enemyStatusDiv = $('<div>')
-			.attr('id', `enemy${i}`)
+			.attr('id', enemy.currentStatus.divId)
 			.addClass('enemy-status')
 			.append(enemyImage)
 			.append(hpContainerDiv)
-			.append(omenDiv)
-			.click(enemy, (e) => {
+			.append(omenDiv);
+			
+		$(`.enemies-status`).append(enemyStatusDiv);
+		if (enemy.currentStatus.status.includes('dead')) {
+			enemyStatusDiv.addClass('defeated');
+		} else {
+			enemyStatusDiv.click(enemy, (e) => {
 				$('.enemy-status').removeClass('select');
 				enemyStatusDiv.addClass('select');
 				currnetTarget = enemy;
 			});
-		$(`.enemies-status`).append(enemyStatusDiv);
+		}
 
 	});
 }

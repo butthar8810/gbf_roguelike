@@ -3,27 +3,26 @@ function effectDammy(){}
 
 function effectStrike(){
 	console.log('effectStrike');
+	animatePlayerAttack();
 	currnetTarget.currentStatus.remainHP -= 6;
-	updateEnemyStatus();
 	setLocalStorage(keyContinueEnemy, currnetEnemies);
 	return true;
 }
 function effectDefense(){
 	console.log('effectDefense');
 	statusBlock(5);
-	
 }
 function effectPowerswing(){
 	console.log('effectPowerswing');
+	animatePlayerAttack();
 	currnetTarget.currentStatus.remainHP -= 8;
-	updateEnemyStatus();
 	setLocalStorage(keyContinueEnemy, currnetEnemies);
 
 }
 function effectFast(){
 	console.log('effectFast');
+	animatePlayerAttack();
 	currnetTarget.currentStatus.remainHP -= 3;
-	updateEnemyStatus();
 	setLocalStorage(keyContinueEnemy, currnetEnemies);
 
 }

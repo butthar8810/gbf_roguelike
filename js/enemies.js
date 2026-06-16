@@ -13,7 +13,8 @@ const enemyList = {
 			remainHP: 0, 
 			maxHP: 0, 
 			status: [], 
-			nextAction: ''
+			nextAction: '',
+			divId: ''
 		}
 	},
 	silver:{
@@ -26,7 +27,8 @@ const enemyList = {
 			remainHP: 0, 
 			maxHP: 0, 
 			status: [], 
-			nextAction: ''
+			nextAction: '',
+			divId: ''
 		}
 	},
 	golem:{
@@ -39,7 +41,8 @@ const enemyList = {
 			remainHP: 0, 
 			maxHP: 0, 
 			status: [], 
-			nextAction: ''
+			nextAction: '',
+			divId: ''
 		}
 	},
 	zombie:{
@@ -52,7 +55,8 @@ const enemyList = {
 			remainHP: 0, 
 			maxHP: 0, 
 			status: [], 
-			nextAction: ''
+			nextAction: '',
+			divId: ''
 		}
 	},
 	imp:{
@@ -65,7 +69,8 @@ const enemyList = {
 			remainHP: 0, 
 			maxHP: 0, 
 			status: [], 
-			nextAction: ''
+			nextAction: '',
+			divId: ''
 		}
 	},
 
@@ -117,6 +122,7 @@ function actionSlime(){
 }
 function slimeAttack(){
 	alert('6点ダメージ');
+	
 }
 function slimeStrategy(){
 	alert('脱力1を付与');
@@ -130,7 +136,7 @@ function actionSilver(){
 	const actions = [
 		{weight: 40, omen:{func: 'silverAttack', damage: 10, image: 'images/enemy/omen/Attack.png'}},
 		{weight: 30, omen:{func: 'silverMucus', damage: 8, image: 'images/enemy/omen/poison.png'}},
-		{weight: 30, omen:{func: 'silverStrategy', damage: 10, image: 'images/enemy/omen/Weakness1.png'}},
+		{weight: 30, omen:{func: 'silverStrategy', damage: 0, image: 'images/enemy/omen/Weakness1.png'}},
 	];
 	const totalWeight = actions.reduce((sum, item) => sum + item.weight, 0);
 	let random = mt.nextInt(0, totalWeight);
@@ -161,9 +167,9 @@ function actionGolem(){
 		{weight: 0, omen:{func: 'golemAttack', damage: 6, image: 'images/enemy/omen/Attack.png'}},
 	];
 	if (currentTurn === 1){// 1ターン目に必ず使用する。
-		return action.omen;
+		return actions[0].omen;
 	} else {
-		return action.omen;
+		return actions[1].omen;
 	}
 }
 function golemSpell(){
@@ -232,3 +238,8 @@ function impGrowth(){
 function impWeb(){
 	alert('脱力2を付与');
 }
+
+
+
+
+

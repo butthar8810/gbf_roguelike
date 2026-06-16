@@ -46,6 +46,8 @@ const drowWatiTime = 400;
 const initialMap = {row: 16, column: 5};
 const mapColumns = 11;
 const mapRows = 16;
+const playerAttackWaitTime = 1500;
+const defeatedWaitTime = 1000;
 /*****************************************************************************/
 /* ローカルストレージのキー
 /*****************************************************************************/

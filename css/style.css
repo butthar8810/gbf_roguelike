@@ -419,6 +419,11 @@ header{
 	margin: 0 5px;
 	border: 1px dotted rgba(0, 0, 0, 0);
 	position: relative;
+	transition: opacity all 1.0s;
+	opacity: 1;
+}
+.defeated{
+	opacity: 0;
 }
 .enemy-status:hover{
 	border: 1px dotted white;
@@ -426,13 +431,21 @@ header{
 .enemy-status.select{
 	border: 1px solid white;
 }
-.enemy-status img{
+.enemy-status>img{
 	height: 100%;
+	position: absolute;
+	top: 0px;
+	left: 0px;
 }
 
 .enemy-hp-container {
+	width: 100%;
+	position: absolute;
+	top: 205px;
+	left: 0px;
+}
+.enemy-hp-container-inner {
 	position: relative;
-	margin-top: -20px;
 	width: 100%;
 	height: 10px;
 	background-color: rgba(0, 0, 0, 0.5); /* 減った分の背景色 */
@@ -459,13 +472,15 @@ header{
 
 .omen{
 	width: 50px;
+	height: 50px;
 	position: absolute;
 	top: -50px;
 	left: 50%;
 	transform: translateX(-50%);
 }
 .omen-inner{
-	width: 50px;
+	width: 100%;
+	height: 100%;
 	position: relative;
 }
 .omen-inner img{

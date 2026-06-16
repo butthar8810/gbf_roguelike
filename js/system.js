@@ -37,6 +37,7 @@ function deepCopyEnemies(arrayEnemies){
 		cloneCurrentStatus.maxHP = EnemyOjt.currentStatus.maxHP;
 		cloneCurrentStatus.status = EnemyOjt.currentStatus.status;
 		cloneCurrentStatus.nextAction = EnemyOjt.currentStatus.nextAction;
+		cloneCurrentStatus.divId = EnemyOjt.currentStatus.divId;
 		cloneOjt.currentStatus = cloneCurrentStatus;
 		cloneArray.push(cloneOjt);
 	});
@@ -320,3 +321,8 @@ function setLocalStorage(key, value) {
 function removeLocalStorage(key) {
 	localStorage.removeItem(key);
 }
+
+/*******************************************************/
+/* sleep：スリープ関数
+/*******************************************************/
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
