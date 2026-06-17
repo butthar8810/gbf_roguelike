@@ -44,30 +44,48 @@ function effectPulverizer(){
 /* 与ダメージ関数
 /*******************************************************/
 function actionAttack(attackCount){
-
+	let totalAttack = attackCount;
+	const enemyBlock = currentTarget.currentStatus.block;
+	if(enemyBlock > 0){
+		if(enemyBlock >= attackCount){
+			currentTarget.currentStatus.block -= attackCount;
+			totalAttack = 0;
+		} else if (enemyBlock < attackCount){
+			currentTarget.currentStatus.block = 0;
+			totalAttack = attackCount - enemyBlock;
+		}
+	}
 	animatePlayerAttack();
-	currentTarget.currentStatus.remainHP -= attackCount;
+	actionWaitFlag = true;
+	currentTarget.currentStatus.remainHP -= totalAttack;
 	setLocalStorage(keyContinueEnemy, currentEnemies);
 }
 /*******************************************************/
 /* ブロック関数
 /*******************************************************/
 function actionBlock(blockCount){
-	$('.player-hp-bar').addClass('block');
+	myBlock += blockCount;
+	setLocalStorage(keyContinueBlock, myBlock);
 }
 /*******************************************************/
 /* バフを与える関数
 /*******************************************************/
 function actionStatusBuf(buf, amountCount){
 	console.log('actionStatusBuf');
-	// すでに同じデバフがかかってないか確認
-	const myStatus = currentMyStatus.filter((status) => {
-		return status.name !== buf.name;
-	});
-	const receivedBuf = {...buf};
-	receivedBuf.amount = amountCount;
-	myStatus.push(receivedBuf);
-	currentMyStatus = myStatus;
+	let sameBufFlag = false;
+	// すでに同じバフがかかってないか確認
+	// 同じバフは累積する
+	for (const status of currentMyStatus) {
+		if (status.name == buf.name) {
+			status.amount += amountCount;
+			sameBufFlag = true;
+		}
+	}
+	if (!sameBufFlag) {
+		const receivedBuf = {...buf};
+		receivedBuf.amount = amountCount;
+		currentMyStatus.push(receivedBuf);
+	}
 	setLocalStorage(keyContinueStatus, currentMyStatus);
 }
 /*******************************************************/
@@ -76,14 +94,20 @@ function actionStatusBuf(buf, amountCount){
 function actionStatusDebuf(debuf, amountCount){
 	console.log('actionStatusDebuf');
 	// すでに同じデバフがかかってないか確認
-	const targetStatus = currentTarget.currentStatus.status.filter((status) => {
-		console.log(status.name);
-		console.log(debuf.name);
-		return status.name !== debuf.name;
-	});
-	const receivedDebuf = {...debuf};
-	receivedDebuf.amount = amountCount;
-	targetStatus.push(receivedDebuf);
-	currentTarget.currentStatus.status = targetStatus;
+	// 同じデバフは累積する
+	let sameDebufFlag = false;
+	// すでに同じバフがかかってないか確認
+	// 同じバフは累積する
+	for (const status of currentTarget.currentStatus.status) {
+		if (status.name == debuf.name) {
+			status.amount += amountCount;
+			sameDebufFlag = true;
+		}
+	}
+	if (!sameDebufFlag) {
+		const receivedDebuf = {...debuf};
+		receivedDebuf.amount = amountCount;
+		currentTarget.currentStatus.status.push(receivedDebuf);
+	}
 	setLocalStorage(keyContinueEnemy, currentEnemies);
 }

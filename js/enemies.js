@@ -3,6 +3,21 @@
 /* エネミー情報
 /*****************************************************************************/
 const enemyList = {
+	test:{
+		name: 'TESTSLIME', 
+		minHP: 99, 
+		maxHP: 199, 
+		image: 'images/enemy/kingbronze.gif',
+		actionAlgorithm: 'actionTEST', 
+		currentStatus:{
+			remainHP: 0, 
+			maxHP: 0, 
+			block: 0,
+			status: [], 
+			nextAction: '',
+			divId: ''
+		}
+	},
 	slime:{
 		name: 'スライム', 
 		minHP: 8, 
@@ -12,6 +27,7 @@ const enemyList = {
 		currentStatus:{
 			remainHP: 0, 
 			maxHP: 0, 
+			block: 0,
 			status: [], 
 			nextAction: '',
 			divId: ''
@@ -26,6 +42,7 @@ const enemyList = {
 		currentStatus:{
 			remainHP: 0, 
 			maxHP: 0, 
+			block: 0,
 			status: [], 
 			nextAction: '',
 			divId: ''
@@ -40,6 +57,7 @@ const enemyList = {
 		currentStatus:{
 			remainHP: 0, 
 			maxHP: 0, 
+			block: 0,
 			status: [], 
 			nextAction: '',
 			divId: ''
@@ -54,6 +72,7 @@ const enemyList = {
 		currentStatus:{
 			remainHP: 0, 
 			maxHP: 0, 
+			block: 0,
 			status: [], 
 			nextAction: '',
 			divId: ''
@@ -68,6 +87,7 @@ const enemyList = {
 		currentStatus:{
 			remainHP: 0, 
 			maxHP: 0, 
+			block: 0,
 			status: [], 
 			nextAction: '',
 			divId: ''
@@ -92,6 +112,9 @@ const bossEnemyList = {
 	kinggold:{name: 'キングゴールドスライム', minHP: 8, maxHP: 12, image: 'images/enemy/kinggold.gif', currentStatus:{remainHP: 0, maxHP: 0, status: [], nextAction: ''}},
 	juanitta:{name: 'ジュアニッタ', minHP: 8, maxHP: 12, image: 'images/enemy/juanitta.png', currentStatus:{remainHP: 0, maxHP: 0, status: [], nextAction: ''}},
 };
+const testEnemies = [
+	{weight: 100, enemies: [enemyList.test, enemyList.test, enemyList.test]},
+];
 const easyEnemies = [
 	{weight: 25, enemies: [enemyList.slime, enemyList.silver]},
 	{weight: 25, enemies: [enemyList.golem]},
@@ -102,17 +125,55 @@ const strongEnemies = [
 
 ];
 
+const enemyActionType = {
+	attack: 'アタック',
+	block: 'ブロック',
+	buff: 'バフ',
+	debuff: 'デバフ',
+	both: 'ブロックとアタック',
+};
 /*****************************************************************************/
 /* エネミーアクション
 /*****************************************************************************/
+function actionTEST(){
+	const mt = new MersenneTwister();
+	const actions = [
+		{weight: 30, omen:{name: 'Test1', func: 'testAttack', type: enemyActionType.attack, damage: 6, image: 'images/enemy/omen/Attack.png'}},
+		{weight: 30, omen:{name: 'Test2', func: 'testStrategy', type: enemyActionType.debuff, damage: 0, image: 'images/enemy/omen/Weakness1.png'}},
+		{weight: 30, omen:{name: 'Test3', func: 'testSpell', type: enemyActionType.buff, damage: 0, image: 'images/enemy/omen/Weakness1.png'}},
+	];
+	const totalWeight = actions.reduce((sum, item) => sum + item.weight, 0);
+	let random = mt.nextInt(0, totalWeight);
+	for (const action of actions) {
+		if (random < action.weight) {
+			return action.omen;
+		}
+		random -= action.weight;
+	}
+	return false;
+}
+function testAttack(enemyInfo){
+	alert('6点ダメージ、脱力1を付与');
+	enemyAttack(6);
+	enemyStatusDebuf(debufStatus.weak, 1);
+}
+function testStrategy(enemyInfo){
+	alert('防御ダウン1を付与');
+	enemyStatusDebuf(debufStatus.defenseDown, 1);
+}
+function testSpell(enemyInfo){
+	alert('攻撃力アップ2、ブロックを5を自身に付与');
+	enemyStatusBuf(enemyInfo, bufStatus.attackUp, 2);
+	enemyBlock(enemyInfo, 5);
+}
 /*******************************************************/
 /* スライム
 /*******************************************************/
 function actionSlime(){
 	console.log('actionSlime');
 	const actions = [
-		{weight: 0, omen:{func: 'slimeAttack', damage: 6, image: 'images/enemy/omen/Attack.png'}},
-		{weight: 0, omen:{func: 'slimeStrategy', damage: 0, image: 'images/enemy/omen/Weakness1.png'}},
+		{weight: 0, omen:{name: '', func: 'slimeAttack', damage: 6, image: 'images/enemy/omen/Attack.png'}},
+		{weight: 0, omen:{name: '', func: 'slimeStrategy', damage: 0, image: 'images/enemy/omen/Weakness1.png'}},
 	];
 	if (0 === currentTurn % 2){// 1ターン目に必ず使用する。
 		return actions[0].omen;
@@ -136,9 +197,9 @@ function actionSilver(){
 	console.log('actionSilver');
 	const mt = new MersenneTwister();
 	const actions = [
-		{weight: 40, omen:{func: 'silverAttack', damage: 10, image: 'images/enemy/omen/Attack.png'}},
-		{weight: 30, omen:{func: 'silverMucus', damage: 8, image: 'images/enemy/omen/poison.png'}},
-		{weight: 30, omen:{func: 'silverStrategy', damage: 0, image: 'images/enemy/omen/Weakness1.png'}},
+		{weight: 40, omen:{name: '', func: 'silverAttack', damage: 10, image: 'images/enemy/omen/Attack.png'}},
+		{weight: 30, omen:{name: '', func: 'silverMucus', damage: 8, image: 'images/enemy/omen/poison.png'}},
+		{weight: 30, omen:{name: '', func: 'silverStrategy', damage: 0, image: 'images/enemy/omen/Weakness1.png'}},
 	];
 	const totalWeight = actions.reduce((sum, item) => sum + item.weight, 0);
 	let random = mt.nextInt(0, totalWeight);
@@ -168,8 +229,8 @@ function silverStrategy(enemyInfo){
 function actionGolem(enemyInfo){
 	console.log('actionGolem');
 	const actions = [
-		{weight: 0, omen:{func: 'golemSpell', damage: 0, image: 'images/enemy/omen/Power1.png'}},
-		{weight: 0, omen:{func: 'golemAttack', damage: 6, image: 'images/enemy/omen/Attack.png'}},
+		{weight: 0, omen:{name: '', func: 'golemSpell', damage: 0, image: 'images/enemy/omen/Power1.png'}},
+		{weight: 0, omen:{name: '', func: 'golemAttack', damage: 6, image: 'images/enemy/omen/Attack.png'}},
 	];
 	if (currentTurn === 1){// 1ターン目に必ず使用する。
 		return actions[0].omen;
@@ -192,9 +253,9 @@ function actionZombie(){
 	console.log('actionZombie');
 	const mt = new MersenneTwister();
 	const actions = [
-		{weight: 25, omen:{func: 'zombieAttack', damage: 11, image: 'images/enemy/omen/Attack.png'}},
-		{weight: 30, omen:{func: 'zombieAttackAndDefence', damage: 7, image: 'images/enemy/omen/PowerAttack.png'}},
-		{weight: 45, omen:{func: 'zombieDefence', damage: 0, image: 'images/enemy/omen/Defence1.png'}},
+		{weight: 25, omen:{name: '', func: 'zombieAttack', damage: 11, image: 'images/enemy/omen/Attack.png'}},
+		{weight: 30, omen:{name: '', func: 'zombieAttackAndDefence', damage: 7, image: 'images/enemy/omen/PowerAttack.png'}},
+		{weight: 45, omen:{name: '', func: 'zombieDefence', damage: 0, image: 'images/enemy/omen/Defence1.png'}},
 	];
 	const totalWeight = actions.reduce((sum, item) => sum + item.weight, 0);
 	let random = mt.nextInt(0, totalWeight);
@@ -213,11 +274,11 @@ function zombieAttack(enemyInfo){
 function zombieAttackAndDefence(enemyInfo){
 	alert('7点ダメージ+5ブロック');
 	enemyAttack(7);
-	enemyBlock(5);
+	enemyBlock(enemyInfo, 5);
 }
 function zombieDefence(enemyInfo){
 	alert('6ブロック+攻撃力アップ3');
-	enemyBlock(6);
+	enemyBlock(enemyInfo, 6);
 	enemyStatusBuf(enemyInfo, bufStatus.attackUp, 3);
 
 }
@@ -228,9 +289,9 @@ function actionImp(){
 	console.log('actionImp');
 	const mt = new MersenneTwister();
 	const actions = [
-		{weight: 70, omen:{func: 'impAttack', damage: 6, image: 'images/enemy/omen/Attack.png'}},
-		{weight: 15, omen:{func: 'impGrowth', damage: 0, image: 'images/enemy/omen/Power1.png'}},
-		{weight: 15, omen:{func: 'impWeb', damage: 0, image: 'images/enemy/omen/Weakness1.png'}},
+		{weight: 70, omen:{name: '', func: 'impAttack', damage: 6, image: 'images/enemy/omen/Attack.png'}},
+		{weight: 15, omen:{name: '', func: 'impGrowth', damage: 0, image: 'images/enemy/omen/Power1.png'}},
+		{weight: 15, omen:{name: '', func: 'impWeb', damage: 0, image: 'images/enemy/omen/Weakness1.png'}},
 	];
 	const totalWeight = actions.reduce((sum, item) => sum + item.weight, 0);
 	let random = mt.nextInt(0, totalWeight);
@@ -266,14 +327,27 @@ function impWeb(enemyInfo){
 /* 与ダメージ関数
 /*******************************************************/
 function enemyAttack(attackCount){
-	myRemainHP -= attackCount;
+	let totalAttack = attackCount;
+	if(myBlock > 0){
+		if(myBlock >= attackCount){
+			myBlock -= attackCount;
+			totalAttack = 0;
+		} else if (myBlock < attackCount){
+			myBlock = 0;
+			totalAttack = attackCount - myBlock;
+		}
+	}
+	myRemainHP -= totalAttack;
+	setLocalStorage(keyContinueBlock, myBlock);
 	setLocalStorage(keyContinueRemainHp, myRemainHP);
 }
 /*******************************************************/
 /* ブロック関数
 /*******************************************************/
-function enemyBlock(blockCount){
-	
+function enemyBlock(enemyInfo, blockCount){
+	enemyInfo.currentStatus.block += blockCount;
+	setLocalStorage(keyContinueEnemy, currentEnemies);
+
 }
 /*******************************************************/
 /* バフを与える関数
@@ -281,13 +355,21 @@ function enemyBlock(blockCount){
 function enemyStatusBuf(enemyInfo, buf, amountCount){
 	console.log('enemyStatusBuf');
 	// すでに同じデバフがかかってないか確認
-	const targetStatus = enemyInfo.currentStatus.status.filter((status) => {
-		return status.name !== buf.name;
-	});
-	const receivedBuf = {...buf};
-	receivedBuf.amount = amountCount;
-	targetStatus.push(receivedBuf);
-	enemyInfo.currentStatus.status = targetStatus;
+	// 同じデバフは累積する
+	let sameBufFlag = false;
+	// すでに同じバフがかかってないか確認
+	// 同じバフは累積する
+	for (const status of enemyInfo.currentStatus.status) {
+		if (status.name == buf.name) {
+			status.amount += amountCount;
+			sameBufFlag = true;
+		}
+	}
+	if (!sameBufFlag) {
+		const receivedBuf = {...buf};
+		receivedBuf.amount = amountCount;
+		enemyInfo.currentStatus.status.push(receivedBuf);
+	}
 	setLocalStorage(keyContinueEnemy, currentEnemies);
 }
 /*******************************************************/
@@ -295,13 +377,19 @@ function enemyStatusBuf(enemyInfo, buf, amountCount){
 /*******************************************************/
 function enemyStatusDebuf(debuf, amountCount){
 	console.log('enemyStatusDebuf');
+	let sameDebufFlag = false;
 	// すでに同じデバフがかかってないか確認
-	const myStatus = currentMyStatus.filter((status) => {
-		return status.name !== debuf.name;
-	});
-	const receivedDebuf = {...debuf};
-	receivedDebuf.amount = amountCount;
-	myStatus.push(receivedDebuf);
-	currentMyStatus = myStatus;
+	// 同じデバフは累積する
+	for (const status of currentMyStatus) {
+		if (status.name == debuf.name) {
+			status.amount += amountCount;
+			sameDebufFlag = true;
+		}
+	}
+	if (!sameDebufFlag) {
+		const receivedDebuf = {...debuf};
+		receivedDebuf.amount = amountCount;
+		currentMyStatus.push(receivedDebuf);
 	setLocalStorage(keyContinueStatus, currentMyStatus);
+	}
 }

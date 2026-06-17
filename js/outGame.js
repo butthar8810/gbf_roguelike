@@ -208,7 +208,8 @@ function climbTowerStart(){
 			} else if (row === fixedStageNomal){
 				mapDiv.html(`<img src='${stages.nomal.image}'>`);
 				mapRows.push(stages.nomal);
-				selectStage = stages.nomal;
+//				selectStage = stages.nomal;
+				selectStage = stages.test;
 			} else {
 				let randomMap = mt.nextInt(0, totalWeight);
 				for (const stage of Object.values(stages)) {
@@ -316,6 +317,7 @@ function admissionStage(stageInfo){
 			startButtle(stageLevel.nomal);
 			break;
 		default:
+			startButtle(stageLevel.test);
 			break;
 	}
 }

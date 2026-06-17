@@ -1,7 +1,7 @@
 /*****************************************************************************/
 /* ステージ情報
 /*****************************************************************************/
-const stageLevel = {boss: 3, special: 2, normal:1}
+const stageLevel = {boss: 3, special: 2, normal:1, test: 0}
 const stages = {
 	boss: { name: 'ボス戦闘', weight: 0, image: 'images/map/boss.png' },
 	gift: { name: '宝箱', weight: 0, image: 'images/map/gift.jpg' },
@@ -10,6 +10,7 @@ const stages = {
 	event: { name: 'イベント', weight: 22, image: 'images/map/event.png' },
 	special: { name: '強敵戦闘', weight: 8, image: 'images/map/special.png' },
 	nomal: { name: '通常戦闘', weight: 53, image: 'images/map/nomal.png' },
+	test: { name: 'TEST戦闘', weight: 0, image: 'images/map/test.png' },
 };
 
 
@@ -103,6 +104,7 @@ const keyContinueTrash = 'Babu.Continue.Trash';
 const keyContinueDiscard = 'Babu.Continue.Discard';
 const keyContinueTemporary = 'Babu.Continue.Temporary';
 const keyContinueStack = 'Babu.Continue.Stack';
+const keyContinueBlock = 'Babu.Continue.Block';
 const keyContinueEnergy = 'Babu.Continue.Energy';
 const keyContinueMaxEnergy = 'Babu.Continue.Max.Energy';
 const keyContinueTurn = 'Babu.Continue.Turn';
@@ -132,9 +134,11 @@ let myEnergy = 0;
 let maxEnergy = 3;
 let discard = [];
 let tmpArea =[];
-let myBlock = -1;
 let stackCard = [];
+let myBlock = 0;
 let currentTurn = 0;
 let currentEnemies = [];
 let currentTarget = {};
 let currentMyStatus = [];
+//各種フラグ
+let actionWaitFlag = false;
