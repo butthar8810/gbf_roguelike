@@ -152,6 +152,7 @@ function startTurn(){
 	updateDeckDom();
 	updateTrashDom();
 	updateEnergyDom();
+	updatePlayerAreaDom()
 	updateEnemyAreaDom(false);
 	decideNextAction();
 	fadeInEnemyOmenDom();
@@ -259,6 +260,9 @@ function endAction(){
 	}
 	checkEnemydefeated();
 	setLocalStorage(keyContinueStack, stackCard);
+	setTimeout(() => {
+		updatePlayerAreaDom();
+	},playerAttackWaitTime);
 	return ret;
 }
 /*******************************************************/
@@ -336,12 +340,13 @@ async function startEnemiesTurn(){
 			if (nextAction !== '') {
 				const storedFunc = globalThis[nextAction.func];
 				if( typeof storedFunc === 'function'){
-					ret = storedFunc();
+					ret = storedFunc(enemy);
 				} 
 			}
 		}
 	}
 	setLocalStorage(keyContinueRemainHp, myRemainHP);
+	setLocalStorage(keyContinueStatus, currentMyStatus);
 	// 攻撃のアニメーションを行う
 	for (const enemy of currentEnemies) {
 		if(!enemy.currentStatus.status.includes('dead')){
@@ -501,6 +506,7 @@ function updatePlayerAreaDom(){
 		.append(hpParagraph);
 	// innerDivの要素
 	const innerDiv = $('<div>')
+		.addClass('player-hp')
 		.append(hpContainerDiv);
 	// プレイヤー立ち絵の要素
 	const playerImage = $('<img>');
@@ -528,10 +534,13 @@ function updatePlayerAreaDom(){
 			.append(amountSpan);
 		statusesDiv.append(statusDiv);
 	});
-
-	$(`.player-area`)
+	const playerAreaInnerDiv = $('<div>')
+		.addClass(`player-area-inner`)
 		.append(playerImage)
-		.append(innerDiv);
+		.append(innerDiv)
+		.append(statusesDiv);
+	$(`.player-area`)
+		.append(playerAreaInnerDiv);
 
 }
 function updateEnemyAreaDom(omenFlag = false){
@@ -624,7 +633,6 @@ function fadeInEnemyOmenDom(){
 			.css('opacity', 0)
 			.addClass('omen')
 			.append(omenInnerDiv);
-		console.log($(`#${enemy.currentStatus.divId}`));
 		$(`#${enemy.currentStatus.divId}`).append(omenDiv);
 
 		omenDiv.animate({ opacity: '1' }, omenFadeInWaitTime, "easeInQuart");

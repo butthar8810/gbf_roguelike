@@ -120,12 +120,14 @@ function actionSlime(){
 		return actions[1].omen;
 	}
 }
-function slimeAttack(){
+function slimeAttack(enemyInfo){
 	alert('6点ダメージ');
+	enemyAttack(6);
 	
 }
-function slimeStrategy(){
+function slimeStrategy(enemyInfo){
 	alert('脱力1を付与');
+	enemyStatusDebuf(debufStatus.weak, 1);
 }
 /*******************************************************/
 /* シルバースライム
@@ -148,19 +150,22 @@ function actionSilver(){
 	}
 	return false;
 }
-function silverAttack(){
+function silverAttack(enemyInfo){
 	alert('10点ダメージ');
+	enemyAttack(10);
 }
-function silverMucus(){
+function silverMucus(enemyInfo){
 	alert('8ダメージ+粘液1枚を捨て札に加える');
+	enemyAttack(8);
 }
-function silverStrategy(){
+function silverStrategy(enemyInfo){
 	alert('脱力1を付与');
+	enemyStatusDebuf(debufStatus.weak, 1);
 }
 /*******************************************************/
 /* ゴーレム
 /*******************************************************/
-function actionGolem(){
+function actionGolem(enemyInfo){
 	console.log('actionGolem');
 	const actions = [
 		{weight: 0, omen:{func: 'golemSpell', damage: 0, image: 'images/enemy/omen/Power1.png'}},
@@ -172,11 +177,13 @@ function actionGolem(){
 		return actions[1].omen;
 	}
 }
-function golemSpell(){
-	alert('強化を自身に付与');
+function golemSpell(enemyInfo){
+	alert('攻撃力アップ2を自身に付与');
+	enemyStatusBuf(enemyInfo, bufStatus.attackUp, 2);
 }
-function golemAttack(){
+function golemAttack(enemyInfo){
 	alert('6点ダメージ');
+	enemyAttack(6);
 }
 /*******************************************************/
 /* ゾンビ
@@ -199,14 +206,20 @@ function actionZombie(){
 	}
 	return false;
 }
-function zombieAttack(){
+function zombieAttack(enemyInfo){
 	alert('11点ダメージ');
+	enemyAttack(11);
 }
-function zombieAttackAndDefence(){
+function zombieAttackAndDefence(enemyInfo){
 	alert('7点ダメージ+5ブロック');
+	enemyAttack(7);
+	enemyBlock(5);
 }
-function zombieDefence(){
-	alert('6ブロック+筋力3');
+function zombieDefence(enemyInfo){
+	alert('6ブロック+攻撃力アップ3');
+	enemyBlock(6);
+	enemyStatusBuf(enemyInfo, bufStatus.attackUp, 3);
+
 }
 /*******************************************************/
 /* インプ
@@ -229,17 +242,66 @@ function actionImp(){
 	}
 	return false;
 }
-function impAttack(){
+function impAttack(enemyInfo){
 	alert('6点ダメージ');
+	enemyAttack(6);
 }
-function impGrowth(){
-	alert('筋力3を付与');
+function impGrowth(enemyInfo){
+	alert('攻撃力アップ3を付与');
+	enemyStatusBuf(enemyInfo, bufStatus.attackUp, 3);
 }
-function impWeb(){
+function impWeb(enemyInfo){
 	alert('脱力2を付与');
+	enemyStatusDebuf(debufStatus.weak, 2);
 }
 
 
 
 
 
+/*************************************************************************************/
+/* カードアクション用システム関数
+/*************************************************************************************/
+/*******************************************************/
+/* 与ダメージ関数
+/*******************************************************/
+function enemyAttack(attackCount){
+	myRemainHP -= attackCount;
+	setLocalStorage(keyContinueRemainHp, myRemainHP);
+}
+/*******************************************************/
+/* ブロック関数
+/*******************************************************/
+function enemyBlock(blockCount){
+	
+}
+/*******************************************************/
+/* バフを与える関数
+/*******************************************************/
+function enemyStatusBuf(enemyInfo, buf, amountCount){
+	console.log('enemyStatusBuf');
+	// すでに同じデバフがかかってないか確認
+	const targetStatus = enemyInfo.currentStatus.status.filter((status) => {
+		return status.name !== buf.name;
+	});
+	const receivedBuf = {...buf};
+	receivedBuf.amount = amountCount;
+	targetStatus.push(receivedBuf);
+	enemyInfo.currentStatus.status = targetStatus;
+	setLocalStorage(keyContinueEnemy, currentEnemies);
+}
+/*******************************************************/
+/* 状態異常を与える関数
+/*******************************************************/
+function enemyStatusDebuf(debuf, amountCount){
+	console.log('enemyStatusDebuf');
+	// すでに同じデバフがかかってないか確認
+	const myStatus = currentMyStatus.filter((status) => {
+		return status.name !== debuf.name;
+	});
+	const receivedDebuf = {...debuf};
+	receivedDebuf.amount = amountCount;
+	myStatus.push(receivedDebuf);
+	currentMyStatus = myStatus;
+	setLocalStorage(keyContinueStatus, currentMyStatus);
+}

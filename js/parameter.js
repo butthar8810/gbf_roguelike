@@ -132,6 +132,7 @@ let myEnergy = 0;
 let maxEnergy = 3;
 let discard = [];
 let tmpArea =[];
+let myBlock = -1;
 let stackCard = [];
 let currentTurn = 0;
 let currentEnemies = [];

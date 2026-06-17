@@ -4,7 +4,7 @@
 function animatePlayerAttack(){
 	console.log(`animatePlayerAttack`);
 	const selectChara = getLocalStorage(keySelectChara);
-	const playerImage = $('.player-status').children('img');
+	const playerImage = $('.player-area-inner').children('img');
 	
 	if (selectChara) {
 		$('.name-space').html(selectChara);
@@ -33,7 +33,7 @@ function animatePlayerAttack(){
 function animatePlayerdamage(){
 	console.log(`animatePlayerAttack`);
 	const selectChara = getLocalStorage(keySelectChara);
-	const playerImage = $('.player-status').children('img');
+	const playerImage = $('.player-area-inner').children('img');
 	
 	if (selectChara) {
 		$('.name-space').html(selectChara);

@@ -7,6 +7,7 @@ function effectStrike(){
 	// 6のダメージを与える。
 	console.log('effectStrike');
 	actionAttack(6);
+	actionStatusBuf(bufStatus.attackUp, 2);
 	actionStatusDebuf(debufStatus.attackDown, 2);
 	return true;
 }
@@ -55,6 +56,21 @@ function actionBlock(blockCount){
 	$('.player-hp-bar').addClass('block');
 }
 /*******************************************************/
+/* バフを与える関数
+/*******************************************************/
+function actionStatusBuf(buf, amountCount){
+	console.log('actionStatusBuf');
+	// すでに同じデバフがかかってないか確認
+	const myStatus = currentMyStatus.filter((status) => {
+		return status.name !== buf.name;
+	});
+	const receivedBuf = {...buf};
+	receivedBuf.amount = amountCount;
+	myStatus.push(receivedBuf);
+	currentMyStatus = myStatus;
+	setLocalStorage(keyContinueStatus, currentMyStatus);
+}
+/*******************************************************/
 /* 状態異常を与える関数
 /*******************************************************/
 function actionStatusDebuf(debuf, amountCount){
@@ -69,4 +85,5 @@ function actionStatusDebuf(debuf, amountCount){
 	receivedDebuf.amount = amountCount;
 	targetStatus.push(receivedDebuf);
 	currentTarget.currentStatus.status = targetStatus;
+	setLocalStorage(keyContinueEnemy, currentEnemies);
 }
