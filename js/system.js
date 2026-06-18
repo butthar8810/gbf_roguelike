@@ -37,7 +37,7 @@ function deepCopyEnemies(arrayEnemies){
 		cloneCurrentStatus.maxHP = EnemyOjt.currentStatus.maxHP;
 		cloneCurrentStatus.block = EnemyOjt.currentStatus.block;
 		cloneCurrentStatus.status = EnemyOjt.currentStatus.status.concat();
-		cloneCurrentStatus.nextAction = EnemyOjt.currentStatus.nextAction.concat();
+		cloneCurrentStatus.nextAction = {...EnemyOjt.currentStatus.nextAction};
 		cloneCurrentStatus.divId = EnemyOjt.currentStatus.divId;
 		cloneOjt.currentStatus = cloneCurrentStatus;
 		cloneArray.push(cloneOjt);

@@ -13,8 +13,9 @@ function startButtle(level){
 	// デッキとした後にそこからカードを5枚引き、手札とする。
 	setupHandCard();
 	// 自分・敵のUIをセットアップする
-	updatePlayerAreaDom();
+	updatePlayerAreaDom(myRemainHP, myMaxHP, myBlock, currentMyStatus);
 	setupEnemy(level);
+	decideNextAction();
 
 	setupBtn();
 	setLocalStorage(keyContinueBattleFlag, true);
@@ -33,15 +34,16 @@ function continueBattle(){
 	// デッキの準備
 	readyDeck();
 	setupHandCard();
-	updatePlayerAreaDom();
+	updatePlayerAreaDom(myRemainHP, myMaxHP, myBlock, currentMyStatus);
 	setupEnemy();
 	setupBtn();
 
 
 	updateDeckDom();
 	updateTrashDom();
+	updateHandDom();
 	updateEnergyDom();
-	updateEnemyAreaDom(true);
+	updateEnemyAreaDom(currentEnemies, true);
 	$('.battle-area').removeClass('hidden');
 	$('.info-area').removeClass('hidden');
 }
@@ -127,8 +129,8 @@ function setupHandCard(){
 		myHand = lastHand;
 	} else {
 		drawCardFromDeck(initialHandNum);
+		setLocalStorage(keyContinueHand, myHand);
 	}
-	updateHandDom();
 }
 
 /*******************************************************/
@@ -136,7 +138,6 @@ function setupHandCard(){
 /*******************************************************/
 function setupBtn(){
 	$('.end-btn').click((e) => {
-		console.log('click end-btn');
 		$('.end-btn').prop('disabled', true);
 		startCleanup();
 	});
@@ -148,17 +149,13 @@ function setupBtn(){
 /*******************************************************/
 /* startTurn：ターン開始処理を行う
 /*******************************************************/
-function startTurn(){
+async function startTurn(){
 	console.log(`turn: ${currentTurn}`);
-	//敵の次行動予測を決定する
-	updateHandDom();
-	updateDeckDom();
 	updateTrashDom();
 	updateEnergyDom();
-	updatePlayerAreaDom()
-	decideNextAction();
+	updatePlayerAreaDom(myRemainHP, myMaxHP, myBlock, currentMyStatus);
 	fadeInEnemyOmenDom();
-	updateEnemyAreaDom(true);
+	updateEnemyAreaDom(currentEnemies, true);
 
 	setLocalStorage(keyContinueTurn, currentTurn);
 	setLocalStorage(keyContinueEnergy, myEnergy);
@@ -166,6 +163,13 @@ function startTurn(){
 	setLocalStorage(keyContinueStatus, currentMyStatus);
 	setLocalStorage(keyContinueBlock, myBlock);
 	setLocalStorage(keyContinueEnemy, currentEnemies);
+
+	for(const hand of myHand){
+		await animateDrowDeck(hand);
+	}
+	updateHandDom();
+	disabledMyHand(false);
+	updateDeckDom();
 }
 /*******************************************************/
 /* endTurn：ターン終了処理を行う
@@ -174,7 +178,7 @@ function endTurn(){
 	console.log(`endTurn`);
 	// ターン制の状態変化のターンを進める
 	// プレイヤーの状態変化処理
-	currentMyStatus.forEach((status) => {
+	currentMyStatus.forEach((status, index) => {
 		switch(status.name){
 			case bufStatus.defenseUp.name:
 			case bufStatus.phantasmal.name:
@@ -183,13 +187,19 @@ function endTurn(){
 			case debufStatus.weak.name:
 			case debufStatus.noBlock.name:
 			case debufStatus.Fading.name:
-				console.log(status.name);
 				status.amount--;
+				if (status.amount <= 0){
+
+				}
 				break;
 			default:
 				break;
 		}
 	});
+	// 効果が切れた状態変化を削除する
+	currentMyStatus = currentMyStatus.filter((status) => {
+		return status.amount > 0;
+	})
 	setLocalStorage(keyContinueStatus, currentMyStatus);
 	// エネミーの状態変化処理
 	currentEnemies.forEach((enemy) => {
@@ -202,14 +212,18 @@ function endTurn(){
 				case debufStatus.weak.name:
 				case debufStatus.noBlock.name:
 				case debufStatus.Fading.name:
-					console.log(status.name);
 					status.amount--;
 					break;
 				default:
 					break;
 			}
 		});
+		// 効果が切れた状態変化を削除する
+		enemy.currentStatus.status = enemy.currentStatus.status.filter((status) => {
+			return status.amount > 0;
+		})
 	});
+	decideNextAction();
 	setLocalStorage(keyContinueEnemy, currentEnemies);
 	// カードを5枚引く
 	drawCardFromDeck(initialHandNum);
@@ -220,19 +234,26 @@ function endTurn(){
 	myEnergy = maxEnergy;
 	setLocalStorage(keyContinueEnergy, myEnergy);
 
+
 }
 
 /*******************************************************/
 /* startCleanup：ターン終了処理を行う
 /*******************************************************/
-function startCleanup(){
+async function startCleanup(){
+	// カードに触れれなくする
+	disabledMyHand(true);
+	for(const hand of myHand){
+		await animateHnadToTrash(hand);
+	}
 	// 手札を捨て札エリアに格納
 	deletAllHand().forEach((card) => {
 		pushTrash(card);
 	});
-	
 	setLocalStorage(keyContinueHand, myHand);
 	setLocalStorage(keyContinueTrash, myTrash);
+
+	await sleep(trashWatiTime);
 	updateHandDom();
 	updateTrashDom();
 
@@ -258,7 +279,6 @@ function drawCardFromDeck(count = 1){
 			break;
 		}
 	}
-	updateDeckDom();
 	// デッキと手札をローカルストレージに記憶
 	setLocalStorage(keyContinueDeck, myDeck);
 	setLocalStorage(keyContinueHand, myHand);
@@ -273,9 +293,6 @@ function reconfigureDeck(){
 	});
 	//デッキをシャッフル
 	myDeck = shuffleArray(myDeck);
-	// DOM要素を更新
-	updateDeckDom();
-	updateTrashDom();
 	setLocalStorage(keyContinueDeck, myDeck);
 	setLocalStorage(keyContinueTrash, myTrash);
 }
@@ -315,10 +332,10 @@ function endAction(){
 	setLocalStorage(keyContinueStack, stackCard);
 	if (actionWaitFlag) {
 		setTimeout(() => {
-			updatePlayerAreaDom();
+			updatePlayerAreaDom(myRemainHP, myMaxHP, myBlock, currentMyStatus);
 		},playerAttackWaitTime);
 	} else {
-		updatePlayerAreaDom();
+		updatePlayerAreaDom(myRemainHP, myMaxHP, myBlock, currentMyStatus);
 	}
 	actionWaitFlag = false;
 	return ret;
@@ -342,7 +359,12 @@ function clickHandProcess(handCardDiv, hand){
 	}
 	return true;
 }
-
+/*******************************************************/
+/* clickHandProcess：クリック時の処理
+/*******************************************************/
+function disabledMyHand(flag){
+	return $('.hand-area').prop('disabled', flag);
+}
 /*************************************************************************************/
 /* エネミー関連
 /*************************************************************************************/
@@ -385,14 +407,15 @@ function setupEnemy(level = stageLevel.normal){
 		setLocalStorage(keyContinueEnemy, currentEnemies);
 	}
 	targetingEnemy();
-	updateEnemyAreaDom(false);
+	updateEnemyAreaDom(currentEnemies, false);
 	console.log(currentEnemies);
 }
 /*******************************************************/
 /* startEnemiesTurn：敵のターン処理を行う
 /*******************************************************/
 async function startEnemiesTurn(){
-	// 敵の予測した攻撃を行う
+	const animateCurrentEnemies = deepCopyEnemies(currentEnemies);
+	// 敵の予測した攻撃を内部的に行う
 	for (const enemy of currentEnemies) {
 		if(!enemy.currentStatus.status.includes('dead')){
 			const nextAction = enemy.currentStatus.nextAction;
@@ -401,7 +424,7 @@ async function startEnemiesTurn(){
 				const storedFunc = globalThis[nextAction.func];
 				if( typeof storedFunc === 'function'){
 					ret = storedFunc(enemy);
-				} 
+				}
 			}
 		}
 	}
@@ -409,12 +432,17 @@ async function startEnemiesTurn(){
 	setLocalStorage(keyContinueStatus, currentMyStatus);
 	endTurn();
 	// 攻撃のアニメーションを行う
-	for (const enemy of currentEnemies) {
+	for (const enemy of animateCurrentEnemies) {
 		if(!enemy.currentStatus.status.includes('dead')){
 			const nextAction = enemy.currentStatus.nextAction;
-			if (nextAction !== '') {
+			console.log(nextAction);
+			if (Object.keys(nextAction).length > 0) {
 				fadeOutEnemyOmenDom(enemy);
 				await sleep(omenFadeOutWaitTime);
+				enemy.currentStatus.nextAction = {};
+				if( typeof storedFunc === 'function'){
+					ret = storedFunc(enemy);
+				}
 				if (nextAction.damage > 0){
 					animateEnemyAttack(enemy);
 					animatePlayerdamage();
@@ -422,6 +450,7 @@ async function startEnemiesTurn(){
 				await sleep(1200);
 			}
 		}
+		updateEnemyAreaDom(animateCurrentEnemies, true)
 	}
 	startTurn();
 }
@@ -466,13 +495,13 @@ function checkEnemydefeated(){
 	setLocalStorage(keyContinueEnemy, currentEnemies);
 	if (defeatedFlag){
 		setTimeout(() => {
-			updateEnemyAreaDom(true);
+			updateEnemyAreaDom(currentEnemies, true);
 			if (allDefeatedFlag){
 				allEnemiesdefeated();
 			}
 		}, defeatedWaitTime);
 	} else {
-		updateEnemyAreaDom(true);
+		updateEnemyAreaDom(currentEnemies, true);
 		if (allDefeatedFlag){
 			allEnemiesdefeated();
 		}
@@ -577,27 +606,33 @@ function updateHandDom(){
 		$(`.hand-area`).append(handCardDiv);
 	});
 }
-function updatePlayerAreaDom(){
+/*
+myRemainHP
+myMaxHP
+myBlock
+currentMyStatus
+*/
+function updatePlayerAreaDom(argRemainHP, argMaxHP, argBlock, argMyStatus){
 	const selectChara = getLocalStorage(keySelectChara);
 	$(`.player-area`).html('');
 	// HPバー[player-hp-container]の要素
-	const remainHP = 100 * ( myRemainHP / myMaxHP );
+	const remainHP = 100 * ( argRemainHP / argMaxHP );
 	const hpBerDiv = $('<div>')
 		.addClass('player-hp-bar')
 		.css('width', `${remainHP}%`);
 	const hpParagraph = $('<p>')
-		.html(`${myRemainHP}/${myMaxHP}`);
+		.html(`${argRemainHP}/${argMaxHP}`);
 	const hpContainerDiv = $('<div>')
 		.addClass('player-hp-container')
 		.append(hpBerDiv)
 		.append(hpParagraph);
-	if (myBlock > 0) {
+	if (argBlock > 0) {
 		hpContainerDiv.addClass('block');
 		const blockImage = $('<img>')
 			.attr('src', 'images/status/block.png');
 		const blockCountSpan = $('<span>')
 			.addClass('block-count')
-			.html(myBlock);
+			.html(argBlock);
 		const blockInnerDiv = $('<div>')
 			.addClass('block-inner')
 			.append(blockImage)
@@ -632,7 +667,7 @@ function updatePlayerAreaDom(){
 		.hover(() => {
 			modalsDiv.addClass('hidden');
 		}, () => {});
-	currentMyStatus.forEach((status) => {
+	argMyStatus.forEach((status) => {
 		// ステータス[status]の要素
 		const statusImage = $('<img>')
 			.attr('src', status.image);
@@ -672,9 +707,9 @@ function updatePlayerAreaDom(){
 	// マウスオーバー時の処理を追加
 	playerAreaInnerDiv
 }
-function updateEnemyAreaDom(omenFlag = false){
+function updateEnemyAreaDom(argEnemies, omenFlag = false){
 	$(`.enemies-area`).html('');
-	currentEnemies.forEach((enemy) => {
+	argEnemies.forEach((enemy) => {
 		// 敵立ち絵要素
 		const enemyImage = $('<img>')
 			.attr('src', enemy.image);
@@ -766,7 +801,7 @@ function updateEnemyAreaDom(omenFlag = false){
 			}, () => {
 				modalsDiv.addClass('hidden');
 			});
-		if (omenFlag){
+		if (omenFlag || Object.keys(enemy.currentStatus.nextAction).length === 0){
 			// 予測攻撃[omen]の要素
 			const nextActionImage = $('<img>')
 				.attr('src', enemy.currentStatus.nextAction.image);

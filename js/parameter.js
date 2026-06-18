@@ -77,15 +77,11 @@ const fixedStageGift = 7;
 const fixedStageNomal = 15;
 const initialHandNum = 5;
 const initialEnergy = 3;
-const drowWatiTime = 400;
 const initialMap = {row: 16, column: 5};
 const mapColumns = 11;
 const mapRows = 16;
-const playerAttackWaitTime = 2000;
-const playerDamageWaitTime = 1000;
 const omenFadeInWaitTime = 1000;
 const omenFadeOutWaitTime = 1000;
-const defeatedWaitTime = 1000;
 /*****************************************************************************/
 /* ローカルストレージのキー
 /*****************************************************************************/

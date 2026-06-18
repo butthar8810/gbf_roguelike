@@ -1,8 +1,82 @@
+/*************************************************************************************/
+/* アニメーション用変数関連
+/*************************************************************************************/
+const coordinateDeckForHandArea = {top: '40px', left: '-70px', width: '80px', size: '10px'};
+const coordinateHnadForHandArea = {top: '0px', left: '350px', width: '150px', size: '16px'};
+const coordinateTrashForHandArea = {top: '50px', left: '820px', width: '80px', size: '10px'};
+
+const playerAttackWaitTime = 2000;
+const playerDamageWaitTime = 1000;
+const defeatedWaitTime = 1000;
+const drowWatiTime = 300;
+const trashWatiTime = 300;
+/*************************************************************************************/
+/* カード移動処理関連
+/*************************************************************************************/
+/*******************************************************/
+/* animateDrowDeck：ドローのアニメーション
+/*******************************************************/
+async function animateDrowDeck(card){
+	// カード内容を形成
+	const costDiv = $('<div>')
+		.html(card.cost);
+	const cardImage = $('<img>')
+		.attr('src', card.image);
+	const drowCardDiv = $('<div>')
+		.addClass('hand-card')
+		.html(`${card.name}`)
+		.append(cardImage)
+		.append(costDiv)
+		.prop('disabled', true)
+		.css('position', 'absolute')
+		.css('font-size', coordinateDeckForHandArea.size)
+		.css('width', coordinateDeckForHandArea.width)
+		.css('top', coordinateDeckForHandArea.top)
+		.css('left', coordinateDeckForHandArea.left);
+	if (card.class == cardClass.gran) {
+		drowCardDiv.addClass('gran-card');
+	} else if (card.class == cardClass.djeeta) {
+		drowCardDiv.addClass('djeeta-card');
+	} else if (card.class == cardClass.normal) {
+		drowCardDiv.addClass('normal-card');
+	}
+	$('.hand-area').append(drowCardDiv);
+
+	drowCardDiv.animate({
+		left: coordinateHnadForHandArea.left, 
+		top: coordinateHnadForHandArea.top,
+		width: coordinateHnadForHandArea.width,
+		fontSize: coordinateHnadForHandArea.size
+	}, drowWatiTime);
+	await sleep(drowWatiTime);
+}
+/*******************************************************/
+/* animateHnadToTrash：捨て札に捨てるアニメーション
+/*******************************************************/
+function animateHnadToTrash(card){
+	const handCardDiv = $(`#hand-card${card.id}`);
+	handCardDiv
+		.prop('disabled', true)
+		.css('position', 'absolute')
+		.css('top', coordinateHnadForHandArea.top)
+		.css('left', coordinateHnadForHandArea.left);
+
+	handCardDiv.animate({
+		left: coordinateTrashForHandArea.left, 
+		top: coordinateTrashForHandArea.top,
+		width: coordinateTrashForHandArea.width,
+		fontSize: coordinateTrashForHandArea.size
+	}, trashWatiTime);
+}
+
+
+/*************************************************************************************/
+/* バトルアニメーション処理関連
+/*************************************************************************************/
 /*******************************************************/
 /* animatePlayerAttack：プレイヤーが攻撃する
 /*******************************************************/
 function animatePlayerAttack(){
-	console.log(`animatePlayerAttack`);
 	const selectChara = getLocalStorage(keySelectChara);
 	const playerImage = $('.player-area-inner').children('img');
 	
@@ -31,7 +105,6 @@ function animatePlayerAttack(){
 /* animatePlayerAttack：プレイヤーが攻撃を受ける
 /*******************************************************/
 function animatePlayerdamage(){
-	console.log(`animatePlayerAttack`);
 	const selectChara = getLocalStorage(keySelectChara);
 	const playerImage = $('.player-area-inner').children('img');
 	
@@ -107,3 +180,5 @@ function animateDefeated(animateEnemy){
 		opacity: 0
 	}, defeatedWaitTime);
 }
+
+

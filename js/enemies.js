@@ -14,7 +14,7 @@ const enemyList = {
 			maxHP: 0, 
 			block: 0,
 			status: [], 
-			nextAction: '',
+			nextAction: {},
 			divId: ''
 		}
 	},
@@ -29,7 +29,7 @@ const enemyList = {
 			maxHP: 0, 
 			block: 0,
 			status: [], 
-			nextAction: '',
+			nextAction: {},
 			divId: ''
 		}
 	},
@@ -44,7 +44,7 @@ const enemyList = {
 			maxHP: 0, 
 			block: 0,
 			status: [], 
-			nextAction: '',
+			nextAction: {},
 			divId: ''
 		}
 	},
@@ -59,7 +59,7 @@ const enemyList = {
 			maxHP: 0, 
 			block: 0,
 			status: [], 
-			nextAction: '',
+			nextAction: {},
 			divId: ''
 		}
 	},
@@ -74,7 +74,7 @@ const enemyList = {
 			maxHP: 0, 
 			block: 0,
 			status: [], 
-			nextAction: '',
+			nextAction: {},
 			divId: ''
 		}
 	},
@@ -89,7 +89,7 @@ const enemyList = {
 			maxHP: 0, 
 			block: 0,
 			status: [], 
-			nextAction: '',
+			nextAction: {},
 			divId: ''
 		}
 	},
@@ -136,14 +136,13 @@ const enemyActionType = {
 /* エネミーアクション
 /*****************************************************************************/
 function actionTEST(){
-	const mt = new MersenneTwister();
 	const actions = [
 		{weight: 30, omen:{name: 'Test1', func: 'testAttack', type: enemyActionType.attack, damage: 6, image: 'images/enemy/omen/Attack.png'}},
 		{weight: 30, omen:{name: 'Test2', func: 'testStrategy', type: enemyActionType.debuff, damage: 0, image: 'images/enemy/omen/Weakness1.png'}},
-		{weight: 30, omen:{name: 'Test3', func: 'testSpell', type: enemyActionType.buff, damage: 0, image: 'images/enemy/omen/Weakness1.png'}},
+		{weight: 30, omen:{name: 'Test3', func: 'testSpell', type: enemyActionType.buff, damage: 0, image: 'images/enemy/omen/Power2.png'}},
 	];
 	const totalWeight = actions.reduce((sum, item) => sum + item.weight, 0);
-	let random = mt.nextInt(0, totalWeight);
+	let random = Math.floor(Math.random() * totalWeight);
 	for (const action of actions) {
 		if (random < action.weight) {
 			return action.omen;
@@ -153,16 +152,12 @@ function actionTEST(){
 	return false;
 }
 function testAttack(enemyInfo){
-	alert('6点ダメージ、脱力1を付与');
 	enemyAttack(6);
-	enemyStatusDebuf(debufStatus.weak, 1);
 }
 function testStrategy(enemyInfo){
-	alert('防御ダウン1を付与');
-	enemyStatusDebuf(debufStatus.defenseDown, 1);
+	enemyStatusDebuf(debufStatus.defenseDown, 2);
 }
 function testSpell(enemyInfo){
-	alert('攻撃力アップ2、ブロックを5を自身に付与');
 	enemyStatusBuf(enemyInfo, bufStatus.attackUp, 2);
 	enemyBlock(enemyInfo, 5);
 }
@@ -195,14 +190,13 @@ function slimeStrategy(enemyInfo){
 /*******************************************************/
 function actionSilver(){
 	console.log('actionSilver');
-	const mt = new MersenneTwister();
 	const actions = [
 		{weight: 40, omen:{name: '', func: 'silverAttack', damage: 10, image: 'images/enemy/omen/Attack.png'}},
 		{weight: 30, omen:{name: '', func: 'silverMucus', damage: 8, image: 'images/enemy/omen/poison.png'}},
 		{weight: 30, omen:{name: '', func: 'silverStrategy', damage: 0, image: 'images/enemy/omen/Weakness1.png'}},
 	];
 	const totalWeight = actions.reduce((sum, item) => sum + item.weight, 0);
-	let random = mt.nextInt(0, totalWeight);
+	let random = Math.floor(Math.random() * totalWeight);
 	for (const action of actions) {
 		if (random < action.weight) {
 			return action.omen;
@@ -251,14 +245,13 @@ function golemAttack(enemyInfo){
 /*******************************************************/
 function actionZombie(){
 	console.log('actionZombie');
-	const mt = new MersenneTwister();
 	const actions = [
 		{weight: 25, omen:{name: '', func: 'zombieAttack', damage: 11, image: 'images/enemy/omen/Attack.png'}},
 		{weight: 30, omen:{name: '', func: 'zombieAttackAndDefence', damage: 7, image: 'images/enemy/omen/PowerAttack.png'}},
 		{weight: 45, omen:{name: '', func: 'zombieDefence', damage: 0, image: 'images/enemy/omen/Defence1.png'}},
 	];
 	const totalWeight = actions.reduce((sum, item) => sum + item.weight, 0);
-	let random = mt.nextInt(0, totalWeight);
+	let random = Math.floor(Math.random() * totalWeight);
 	for (const action of actions) {
 		if (random < action.weight) {
 			return action.omen;
@@ -287,14 +280,13 @@ function zombieDefence(enemyInfo){
 /*******************************************************/
 function actionImp(){
 	console.log('actionImp');
-	const mt = new MersenneTwister();
 	const actions = [
 		{weight: 70, omen:{name: '', func: 'impAttack', damage: 6, image: 'images/enemy/omen/Attack.png'}},
 		{weight: 15, omen:{name: '', func: 'impGrowth', damage: 0, image: 'images/enemy/omen/Power1.png'}},
 		{weight: 15, omen:{name: '', func: 'impWeb', damage: 0, image: 'images/enemy/omen/Weakness1.png'}},
 	];
 	const totalWeight = actions.reduce((sum, item) => sum + item.weight, 0);
-	let random = mt.nextInt(0, totalWeight);
+	let random = Math.floor(Math.random() * totalWeight);
 	for (const action of actions) {
 		if (random < action.weight) {
 			return action.omen;
@@ -353,7 +345,6 @@ function enemyBlock(enemyInfo, blockCount){
 /* バフを与える関数
 /*******************************************************/
 function enemyStatusBuf(enemyInfo, buf, amountCount){
-	console.log('enemyStatusBuf');
 	// すでに同じデバフがかかってないか確認
 	// 同じデバフは累積する
 	let sameBufFlag = false;
@@ -376,7 +367,6 @@ function enemyStatusBuf(enemyInfo, buf, amountCount){
 /* 状態異常を与える関数
 /*******************************************************/
 function enemyStatusDebuf(debuf, amountCount){
-	console.log('enemyStatusDebuf');
 	let sameDebufFlag = false;
 	// すでに同じデバフがかかってないか確認
 	// 同じデバフは累積する

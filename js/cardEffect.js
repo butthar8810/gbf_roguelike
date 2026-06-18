@@ -45,6 +45,7 @@ function effectPulverizer(){
 /*******************************************************/
 function actionAttack(attackCount){
 	let totalAttack = attackCount;
+	// 
 	const enemyBlock = currentTarget.currentStatus.block;
 	if(enemyBlock > 0){
 		if(enemyBlock >= attackCount){
@@ -71,7 +72,6 @@ function actionBlock(blockCount){
 /* バフを与える関数
 /*******************************************************/
 function actionStatusBuf(buf, amountCount){
-	console.log('actionStatusBuf');
 	let sameBufFlag = false;
 	// すでに同じバフがかかってないか確認
 	// 同じバフは累積する
@@ -92,11 +92,10 @@ function actionStatusBuf(buf, amountCount){
 /* 状態異常を与える関数
 /*******************************************************/
 function actionStatusDebuf(debuf, amountCount){
-	console.log('actionStatusDebuf');
 	// すでに同じデバフがかかってないか確認
 	// 同じデバフは累積する
 	let sameDebufFlag = false;
-	// すでに同じバフがかかってないか確認
+	// すでに同じデバフがかかってないか確認
 	// 同じバフは累積する
 	for (const status of currentTarget.currentStatus.status) {
 		if (status.name == debuf.name) {
