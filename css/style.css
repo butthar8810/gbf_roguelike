@@ -520,7 +520,35 @@ header{
 	text-stroke: 1px white;
 	-webkit-text-stroke: 1px white;
 }
-
+.player-abnormality{
+	width: 250px;
+	position: absolute;
+	top: 0;
+	left: 65%;
+	transform: translateX(-50%);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: white;
+}
+.player-abnormality img{
+	width: 40px;
+}
+.player-abnormality p{
+	font-size: 20px;
+	font-weight: 900;
+	text-stroke: 1px gray;
+	-webkit-text-stroke: 1px gray;
+}
+.player-block{
+	height: 100px !important;
+	aspect-ratio: 1/1;
+	position: absolute;
+	top: 0;
+	left: 65%;
+	transform: translateX(-50%);
+	opacity: 0;
+}
 /*****************************************************************************/
 /* enemies-status: エネミー情報要素
 /*****************************************************************************/
@@ -721,6 +749,36 @@ header{
 	top: 45%;
 	left: 50%;
 	transform: translate(-50%, -50%);
+}
+.abnormality{
+	width: 250px;
+	position: absolute;
+	top: 0;
+	left: 50%;
+	transform: translateX(-50%);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: white;
+}
+.abnormality img{
+	width: 40px;
+}
+.abnormality p{
+	font-size: 20px;
+	font-weight: 900;
+	text-stroke: 1px gray;
+	-webkit-text-stroke: 1px gray;
+
+}
+.enemy-block{
+	height: 100px !important;
+	aspect-ratio: 1/1;
+	position: absolute;
+	top: 0;
+	left: 50% !important;
+	transform: translateX(-50%);
+	opacity: 0;
 }
 /*****************************************************************************/
 /* info-area: インフォメーション要素

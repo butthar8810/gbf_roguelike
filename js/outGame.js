@@ -34,10 +34,7 @@ function continueGame(){
 function setupCharaStatus(){
 	const continueFlag = getLocalStorage(keyContinueFlag);
 	const selectChara = getLocalStorage(keySelectChara);
-	const remainHp = getLocalStorage(keyContinueRemainHp);
-	const maxHp = getLocalStorage(keyContinueMaxHp);
-	const remainMoney = getLocalStorage(keyContinueMoney);
-	const lastMaxEnergy = getLocalStorage(keyContinueMaxEnergy);
+	const lastPlayerStatus = getLocalStorage(keyContinuePlayerStatus);
 
 	if (selectChara) {
 		$('.name-space').html(selectChara);
@@ -54,54 +51,32 @@ function setupCharaStatus(){
 		window.location.href = 'index.html';
 	}
 
-	if (remainHp && continueFlag) {
-		myRemainHP = remainHp;
-		$('.remainHp').html(remainHp);
+	if (lastPlayerStatus && continueFlag) {
+		playerStatus.remainHP = lastPlayerStatus.remainHP;
+		playerStatus.maxHP = lastPlayerStatus.maxHP;
+		playerStatus.money = lastPlayerStatus.money;
+		playerStatus.maxEnergy = lastPlayerStatus.maxEnergy;
+		$('.remainHp').html(playerStatus.remainHP);
+		$('.maxHp').html(playerStatus.maxHP);
+		$('.remainMoney').html(playerStatus.money);
 	} else{
-		if (selectChara == selectCharacter.gran.name){
-			myRemainHP = selectCharacter.gran.maxHP;
+		if (selectChara == selectCharacter.gran.name){// グランの場合
+			playerStatus.remainHP = selectCharacter.gran.maxHP;
+			playerStatus.maxHP = selectCharacter.gran.maxHP;
+			playerStatus.money = selectCharacter.gran.money;
 			$('.remainHp').html(selectCharacter.gran.maxHP);
-			setLocalStorage(keyContinueRemainHp, selectCharacter.gran.maxHP);
-		} else if (selectChara == selectCharacter.djeeta.name){
-			myRemainHP = selectCharacter.djeeta.maxHP;
-			$('.remainHp').html(selectCharacter.djeeta.maxHP);
-			setLocalStorage(keyContinueRemainHp, selectCharacter.djeeta.maxHP);
-		}
-	}
-	if (maxHp && continueFlag) {
-		myMaxHP = maxHp;
-		$('.maxHp').html(maxHp);
-	} else{
-		if (selectChara == selectCharacter.gran.name){
-			myMaxHP = selectCharacter.gran.maxHP;
 			$('.maxHp').html(selectCharacter.gran.maxHP);
-			setLocalStorage(keyContinueMaxHp, selectCharacter.gran.maxHP);
-		} else if (selectChara == selectCharacter.djeeta.name){
-			myMaxHP = selectCharacter.djeeta.maxHP;
-			$('.maxHp').html(selectCharacter.djeeta.maxHP);
-			setLocalStorage(keyContinueMaxHp, selectCharacter.djeeta.maxHP);
-		}
-	}
-	if (remainMoney && continueFlag) {
-		myMoney = remainMoney;
-		$('.remainMoney').html(remainMoney);
-	} else{
-		if (selectChara == selectCharacter.gran.name){
-			myMoney = selectCharacter.gran.money;
 			$('.remainMoney').html(selectCharacter.gran.money);
-			setLocalStorage(keyContinueMoney, selectCharacter.gran.money);
-		} else if (selectChara == selectCharacter.djeeta.name){
-			myMoney = selectCharacter.djeeta.money;
+		} else if (selectChara == selectCharacter.djeeta.name){// ジータの場合
+			playerStatus.remainHP = selectCharacter.djeeta.maxHP;
+			playerStatus.maxHP = selectCharacter.djeeta.maxHP;
+			playerStatus.money = selectCharacter.djeeta.money;
+			playerStatus.remainEnergy = initialEnergy;
+			$('.remainHp').html(selectCharacter.djeeta.maxHP);
+			$('.maxHp').html(selectCharacter.djeeta.maxHP);
 			$('.remainMoney').html(selectCharacter.djeeta.money);
-			setLocalStorage(keyContinueMoney, selectCharacter.djeeta.money);
 		}
-	}
-	if (lastMaxEnergy && continueFlag) {
-		maxEnergy = lastMaxEnergy;
-	} else{
-		maxEnergy = initialEnergy;
-		setLocalStorage(keyContinueMaxEnergy, maxEnergy);
-		console.log(`maxEnergy: ${maxEnergy}`);
+		setLocalStorage(keyContinuePlayerStatus, playerStatus);
 	}
 }
 /*******************************************************/
@@ -110,7 +85,7 @@ function setupCharaStatus(){
 function setupDeck(){
 	const continueFlag = getLocalStorage(keyContinueFlag);
 	const selectChara = getLocalStorage(keySelectChara);
-	const lastDeck = getLocalStorage(keyContinueOriginalDeck);
+	const lastDeck = getLocalStorage(keyContinueDeck);
 	const lastOriginalDeck = getLocalStorage(keyContinueOriginalDeck);
 
 	if(lastDeck !== null && continueFlag){

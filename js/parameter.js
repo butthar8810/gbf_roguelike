@@ -17,6 +17,7 @@ const stages = {
 /*****************************************************************************/
 /* ステータス情報
 /*****************************************************************************/
+// バフ
 const bufStatus = {
 	attackUp: {name: '攻撃力アップ', amount: '',effect: '攻撃ダメージが+X。',image: 'images/status/status_1001.png'},
 	defenseUp: {name: '防御力アップ', amount: '', effect: 'アタックで受けるダメージが50%減少。Xターン有効。',image: 'images/status/status_1019.png'},
@@ -33,6 +34,7 @@ const bufStatus = {
 	drawCard: {name: 'ヘイスト', amount: '', effect: '次のターン開始時、X枚のカードを引く。', image: 'images/status/status_1058.png'},
 	nextTurnBlock: {name: '次ターンブロック', amount: '', effect: '次ターン開始時、ブロックXを得る。', image: 'images/status/status_1075.png'},
 };
+// デバフ
 const debufStatus = {
 	attackDown: {name: '攻撃力ダウン', amount: '', effect: '攻撃ダメージが-X。', image: 'images/status/status_1010.png'},
 	defenseDown: {name: '防御力ダウン', amount: '', effect: 'アタックで受けるダメージが50%増加。Xターン有効。', image: 'images/status/status_1020.png'},
@@ -46,7 +48,8 @@ const debufStatus = {
 	noBlock: {name: 'ブロック不可能', amount: '', effect: 'カードからブロックを得られない。Xターン有効。', image: 'images/status/status_6765.png'},
 	Fading: {name: '死の宣告', amount: '', effect: 'Xターン経過後、死亡する。', image: 'images/status/status_100.png'},
 };
-
+// ステータス：志望
+const dead = {name: '死亡', amount: 1, effect: '死亡状態',image: ''};
 /*****************************************************************************/
 /* プレイヤー情報
 /*****************************************************************************/
@@ -88,9 +91,7 @@ const omenFadeOutWaitTime = 1000;
 const keySelectChara = 'Babu.Select.Chara';
 const keyContinueFlag = 'Babu.Continue.Flag';// 途中プレイがあるかのフラグ
 const keyContinueBattleFlag = 'Babu.Continue.Battle.Flag';// 途中戦闘があるかのフラグ
-const keyContinueRemainHp = 'Babu.Continue.Remain.HP';
-const keyContinueMaxHp = 'Babu.Continue.MAX.HP';
-const keyContinueMoney = 'Babu.Continue.Remain.Money';
+const keyContinuePlayerStatus = 'Babu.Continue.Player.Status';
 const keyContinueMap = 'Babu.Continue.Map';
 const keyContinueCurrentMap = 'Babu.Continue.Current.Map';
 const keyContinueDeck = 'Babu.Continue.Deck';
@@ -100,12 +101,8 @@ const keyContinueTrash = 'Babu.Continue.Trash';
 const keyContinueDiscard = 'Babu.Continue.Discard';
 const keyContinueTemporary = 'Babu.Continue.Temporary';
 const keyContinueStack = 'Babu.Continue.Stack';
-const keyContinueBlock = 'Babu.Continue.Block';
-const keyContinueEnergy = 'Babu.Continue.Energy';
-const keyContinueMaxEnergy = 'Babu.Continue.Max.Energy';
 const keyContinueTurn = 'Babu.Continue.Turn';
 const keyContinueEnemy = 'Babu.Continue.Enemy';
-const keyContinueStatus = 'Babu.Continue.Status';
 
 
 
@@ -114,20 +111,24 @@ const keyContinueStatus = 'Babu.Continue.Status';
 /*****************************************************************************/
 /* グローバル変数
 /*****************************************************************************/
-let myRemainHP = 0;
-let myMaxHP = 0;
-let myMoney = 0;
 // アウトゲーム
 let currentMap = {};
 let map = [];
 let myOriginalDeck = [];
 const mapHistory = [];
 // インゲーム
+const playerStatus = {
+	remainHP: 0,
+	maxHP: 0,
+	money: 0,
+	remainEnergy: 0,
+	maxEnergy: 3,
+	block: 0,
+	statuses: [],
+};
 let myDeck = [];
 let myHand = [];
 let myTrash = [];
-let myEnergy = 0;
-let maxEnergy = 3;
 let discard = [];
 let tmpArea =[];
 let stackCard = [];
@@ -135,6 +136,8 @@ let myBlock = 0;
 let currentTurn = 0;
 let currentEnemies = [];
 let currentTarget = {};
-let currentMyStatus = [];
 //各種フラグ
-let actionWaitFlag = false;
+let actionWaitFlagForPlayer = false;
+let actionWaitFlagForEnemy = false;
+let enemyAttackWaitFlag = false;
+let allDefeatedFlag = false;

@@ -5,8 +5,8 @@
 const enemyList = {
 	test:{
 		name: 'TESTSLIME', 
-		minHP: 99, 
-		maxHP: 199, 
+		minHP: 1, 
+		maxHP: 6, 
 		image: 'images/enemy/kingbronze.gif',
 		actionAlgorithm: 'actionTEST', 
 		currentStatus:{
@@ -151,15 +151,16 @@ function actionTEST(){
 	}
 	return false;
 }
-function testAttack(enemyInfo){
-	enemyAttack(6);
+function testAttack(enemyInfo, playerInfo, animationFlag){
+	enemyAttack(enemyInfo, playerInfo, animationFlag, 6);
+	enemyStatusDebuf(enemyInfo, playerInfo, animationFlag, debufStatus.poison, 2);
 }
-function testStrategy(enemyInfo){
-	enemyStatusDebuf(debufStatus.defenseDown, 2);
+function testStrategy(enemyInfo, playerInfo, animationFlag){
+	enemyStatusDebuf(enemyInfo, playerInfo, animationFlag, debufStatus.defenseDown, 2);
 }
-function testSpell(enemyInfo){
-	enemyStatusBuf(enemyInfo, bufStatus.attackUp, 2);
-	enemyBlock(enemyInfo, 5);
+function testSpell(enemyInfo, playerInfo, animationFlag){
+	enemyStatusBuf(enemyInfo, animationFlag, bufStatus.attackUp, 2);
+	enemyBlock(enemyInfo, animationFlag, 5);
 }
 /*******************************************************/
 /* スライム
@@ -176,14 +177,13 @@ function actionSlime(){
 		return actions[1].omen;
 	}
 }
-function slimeAttack(enemyInfo){
+function slimeAttack(enemyInfo, playerInfo, animationFlag){
 	alert('6点ダメージ');
-	enemyAttack(6);
-	
+	enemyAttack(enemyInfo, playerInfo, animationFlag, 6);
 }
-function slimeStrategy(enemyInfo){
+function slimeStrategy(enemyInfo, playerInfo, animationFlag){
 	alert('脱力1を付与');
-	enemyStatusDebuf(debufStatus.weak, 1);
+	enemyStatusDebuf(enemyInfo, playerInfo, animationFlag, debufStatus.weak, 1);
 }
 /*******************************************************/
 /* シルバースライム
@@ -205,22 +205,22 @@ function actionSilver(){
 	}
 	return false;
 }
-function silverAttack(enemyInfo){
+function silverAttack(enemyInfo, playerInfo, animationFlag){
 	alert('10点ダメージ');
-	enemyAttack(10);
+	enemyAttack(enemyInfo, playerInfo, animationFlag, 10);
 }
-function silverMucus(enemyInfo){
+function silverMucus(enemyInfo, playerInfo, animationFlag){
 	alert('8ダメージ+粘液1枚を捨て札に加える');
-	enemyAttack(8);
+	enemyAttack(enemyInfo, playerInfo, animationFlag, 8);
 }
-function silverStrategy(enemyInfo){
+function silverStrategy(enemyInfo, playerInfo, animationFlag){
 	alert('脱力1を付与');
-	enemyStatusDebuf(debufStatus.weak, 1);
+	enemyStatusDebuf(enemyInfo, playerInfo, animationFlag, debufStatus.weak, 1);
 }
 /*******************************************************/
 /* ゴーレム
 /*******************************************************/
-function actionGolem(enemyInfo){
+function actionGolem(){
 	console.log('actionGolem');
 	const actions = [
 		{weight: 0, omen:{name: '', func: 'golemSpell', damage: 0, image: 'images/enemy/omen/Power1.png'}},
@@ -232,13 +232,13 @@ function actionGolem(enemyInfo){
 		return actions[1].omen;
 	}
 }
-function golemSpell(enemyInfo){
+function golemSpell(enemyInfo, playerInfo, animationFlag){
 	alert('攻撃力アップ2を自身に付与');
-	enemyStatusBuf(enemyInfo, bufStatus.attackUp, 2);
+	enemyStatusBuf(enemyInfo, animationFlag, bufStatus.attackUp, 2);
 }
-function golemAttack(enemyInfo){
+function golemAttack(enemyInfo, playerInfo, animationFlag){
 	alert('6点ダメージ');
-	enemyAttack(6);
+	enemyAttack(enemyInfo, playerInfo, animationFlag, 6);
 }
 /*******************************************************/
 /* ゾンビ
@@ -260,18 +260,18 @@ function actionZombie(){
 	}
 	return false;
 }
-function zombieAttack(enemyInfo){
+function zombieAttack(enemyInfo, playerInfo, animationFlag){
 	alert('11点ダメージ');
-	enemyAttack(11);
+	enemyAttack(enemyInfo, playerInfo, animationFlag, 11);
 }
-function zombieAttackAndDefence(enemyInfo){
+function zombieAttackAndDefence(enemyInfo, playerInfo, animationFlag){
 	alert('7点ダメージ+5ブロック');
-	enemyAttack(7);
-	enemyBlock(enemyInfo, 5);
+	enemyAttack(enemyInfo, playerInfo, animationFlag, 7);
+	enemyBlock(enemyInfo, animationFlag, 5);
 }
-function zombieDefence(enemyInfo){
+function zombieDefence(enemyInfo, playerInfo, animationFlag){
 	alert('6ブロック+攻撃力アップ3');
-	enemyBlock(enemyInfo, 6);
+	enemyBlock(enemyInfo, animationFlag, 6);
 	enemyStatusBuf(enemyInfo, bufStatus.attackUp, 3);
 
 }
@@ -295,17 +295,17 @@ function actionImp(){
 	}
 	return false;
 }
-function impAttack(enemyInfo){
+function impAttack(enemyInfo, playerInfo, animationFlag){
 	alert('6点ダメージ');
-	enemyAttack(6);
+	enemyAttack(enemyInfo, playerInfo, animationFlag, 6);
 }
-function impGrowth(enemyInfo){
+function impGrowth(enemyInfo, playerInfo, animationFlag){
 	alert('攻撃力アップ3を付与');
-	enemyStatusBuf(enemyInfo, bufStatus.attackUp, 3);
+	enemyStatusBuf(enemyInfo, animationFlag, bufStatus.attackUp, 3);
 }
-function impWeb(enemyInfo){
+function impWeb(enemyInfo, playerInfo, animationFlag){
 	alert('脱力2を付与');
-	enemyStatusDebuf(debufStatus.weak, 2);
+	enemyStatusDebuf(enemyInfo, playerInfo, animationFlag, debufStatus.weak, 2);
 }
 
 
@@ -318,33 +318,36 @@ function impWeb(enemyInfo){
 /*******************************************************/
 /* 与ダメージ関数
 /*******************************************************/
-function enemyAttack(attackCount){
+function enemyAttack(enemyInfo, playerInfo, animationFlag, attackCount){
 	let totalAttack = attackCount;
-	if(myBlock > 0){
-		if(myBlock >= attackCount){
-			myBlock -= attackCount;
+	if(playerInfo.block > 0){
+		if(playerInfo.block >= attackCount){
+			playerInfo.block -= attackCount;
 			totalAttack = 0;
-		} else if (myBlock < attackCount){
-			myBlock = 0;
-			totalAttack = attackCount - myBlock;
+		} else if (playerInfo.block < attackCount){
+			playerInfo.block = 0;
+			totalAttack = attackCount - playerInfo.block;
 		}
 	}
-	myRemainHP -= totalAttack;
-	setLocalStorage(keyContinueBlock, myBlock);
-	setLocalStorage(keyContinueRemainHp, myRemainHP);
+	playerInfo.remainHP -= totalAttack;
+
+	if(animationFlag){
+		enemyAttackWaitFlag = true;
+	}
 }
 /*******************************************************/
 /* ブロック関数
 /*******************************************************/
-function enemyBlock(enemyInfo, blockCount){
+function enemyBlock(enemyInfo, animationFlag, blockCount){
 	enemyInfo.currentStatus.block += blockCount;
-	setLocalStorage(keyContinueEnemy, currentEnemies);
-
+	if(animationFlag){
+		animateEnemyBlocked(enemyInfo);
+	}
 }
 /*******************************************************/
 /* バフを与える関数
 /*******************************************************/
-function enemyStatusBuf(enemyInfo, buf, amountCount){
+function enemyStatusBuf(enemyInfo, animationFlag, buf, amountCount){
 	// すでに同じデバフがかかってないか確認
 	// 同じデバフは累積する
 	let sameBufFlag = false;
@@ -356,30 +359,37 @@ function enemyStatusBuf(enemyInfo, buf, amountCount){
 			sameBufFlag = true;
 		}
 	}
+	const receivedBuf = {...buf};
+	receivedBuf.amount = amountCount;
 	if (!sameBufFlag) {
-		const receivedBuf = {...buf};
-		receivedBuf.amount = amountCount;
 		enemyInfo.currentStatus.status.push(receivedBuf);
 	}
-	setLocalStorage(keyContinueEnemy, currentEnemies);
+	if(animationFlag){
+		animateEnemyAbnormality(enemyInfo, receivedBuf);
+	}
 }
 /*******************************************************/
 /* 状態異常を与える関数
 /*******************************************************/
-function enemyStatusDebuf(debuf, amountCount){
+function enemyStatusDebuf(enemyInfo, playerInfo, animationFlag, debuf, amountCount){
 	let sameDebufFlag = false;
 	// すでに同じデバフがかかってないか確認
 	// 同じデバフは累積する
-	for (const status of currentMyStatus) {
+	for (const status of playerInfo.statuses) {
 		if (status.name == debuf.name) {
 			status.amount += amountCount;
 			sameDebufFlag = true;
 		}
 	}
+	const receivedDebuf = {...debuf};
+	receivedDebuf.amount = amountCount;
 	if (!sameDebufFlag) {
-		const receivedDebuf = {...debuf};
-		receivedDebuf.amount = amountCount;
-		currentMyStatus.push(receivedDebuf);
-	setLocalStorage(keyContinueStatus, currentMyStatus);
+		playerInfo.statuses.push(receivedDebuf);
+	}
+	if(animationFlag){
+		enemyAttackWaitFlag = true;
+		setTimeout(() => {
+			animatePlayerAbnormality(receivedDebuf);
+		},enemyAttackGoWaitTime);
 	}
 }

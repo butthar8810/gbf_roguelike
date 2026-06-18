@@ -5,24 +5,26 @@ const coordinateDeckForHandArea = {top: '40px', left: '-70px', width: '80px', si
 const coordinateHnadForHandArea = {top: '0px', left: '350px', width: '150px', size: '16px'};
 const coordinateTrashForHandArea = {top: '50px', left: '820px', width: '80px', size: '10px'};
 
-const playerAttackWaitTime = 2000;
+const playerAttackWaitTime = 1500;
 const playerDamageWaitTime = 1000;
 const defeatedWaitTime = 1000;
-const drowWatiTime = 300;
-const trashWatiTime = 300;
+const drawWatiTime = 300;
+const trashWatiTime = 500;
+const enemyAttackGoWaitTime = 500;
+const enemyAttackReturnWaitTime = 500;
 /*************************************************************************************/
 /* カード移動処理関連
 /*************************************************************************************/
 /*******************************************************/
-/* animateDrowDeck：ドローのアニメーション
+/* animateDrawDeck：ドローのアニメーション
 /*******************************************************/
-async function animateDrowDeck(card){
+async function animateDrawDeck(card){
 	// カード内容を形成
 	const costDiv = $('<div>')
 		.html(card.cost);
 	const cardImage = $('<img>')
 		.attr('src', card.image);
-	const drowCardDiv = $('<div>')
+	const drawCardDiv = $('<div>')
 		.addClass('hand-card')
 		.html(`${card.name}`)
 		.append(cardImage)
@@ -34,21 +36,21 @@ async function animateDrowDeck(card){
 		.css('top', coordinateDeckForHandArea.top)
 		.css('left', coordinateDeckForHandArea.left);
 	if (card.class == cardClass.gran) {
-		drowCardDiv.addClass('gran-card');
+		drawCardDiv.addClass('gran-card');
 	} else if (card.class == cardClass.djeeta) {
-		drowCardDiv.addClass('djeeta-card');
+		drawCardDiv.addClass('djeeta-card');
 	} else if (card.class == cardClass.normal) {
-		drowCardDiv.addClass('normal-card');
+		drawCardDiv.addClass('normal-card');
 	}
-	$('.hand-area').append(drowCardDiv);
+	$('.hand-area').append(drawCardDiv);
 
-	drowCardDiv.animate({
+	drawCardDiv.animate({
 		left: coordinateHnadForHandArea.left, 
 		top: coordinateHnadForHandArea.top,
 		width: coordinateHnadForHandArea.width,
 		fontSize: coordinateHnadForHandArea.size
-	}, drowWatiTime);
-	await sleep(drowWatiTime);
+	}, drawWatiTime);
+	await sleep(drawWatiTime - 100);
 }
 /*******************************************************/
 /* animateHnadToTrash：捨て札に捨てるアニメーション
@@ -129,14 +131,47 @@ function animatePlayerdamage(){
 		window.location.href = 'index.html';
 	}
 }
+/*******************************************************/
+/* animatePlayerAbnormality：プレイヤーが状態変化を受ける
+/*******************************************************/
+function animatePlayerAbnormality(abnormality){
+	console.log(abnormality);
+	const abnormalityImage = $('<img>')
+		.attr('src', abnormality.image);
+	const nameParagraph = $('<p>')
+		.html(`${abnormality.name}+${abnormality.amount}`);
+	const abnormalityDiv = $('<div>')
+		.addClass('player-abnormality')
+		.append(abnormalityImage)
+		.append(nameParagraph);
+	$('.player-area-inner').append(abnormalityDiv);
 
+	abnormalityDiv
+		.animate({ top: '-30px' },1000, "easeOutQuart")
+		.animate({ opacity: 0 },500, "easeOutQuart");
+
+		$('.player-area-inner').remove(abnormalityDiv);
+}
+/*******************************************************/
+/* animatePlayerBlocked：プレイヤーがブロックを得る
+/*******************************************************/
+function animatePlayerBlocked(){
+	console.log('animatePlayerBlocked');
+	const blockImage = $('<img>')
+		.addClass('player-block')
+		.attr('src', 'images/status/block.png');
+	$('.player-area-inner').append(blockImage);
+	blockImage
+		.animate({ opacity: 1, top: '100px' },1000, "easeOutQuart")
+		.animate({ opacity: 0 },500, "easeOutQuart");
+}
 /*******************************************************/
 /* animatePlayerAttack：エネミーが攻撃する
 /*******************************************************/
 function animateEnemyAttack(animateEnemy){
 	$(`#${animateEnemy.currentStatus.divId}`).children('img')
-		.animate({ left: '50px' }, 500, "easeInQuart")
-		.animate({ left: '0px' }, 500, "easeOutQuart");
+		.animate({ left: '50px' }, enemyAttackGoWaitTime, "easeInQuart")
+		.animate({ left: '0px' }, enemyAttackReturnWaitTime, "easeOutQuart");
 	$('.front-effect')
 		.animate({ opacity: '0' }, 400, "easeInQuart")
 		.animate({ opacity: '1' }, 10, "easeInQuart")
@@ -170,13 +205,45 @@ function animateEnemydamage(animateEnemy){
 		.animate({ left: '5px' }, 50, "linear")
 		.animate({ left: '-5px' }, 50, "linear");
 }
+/*******************************************************/
+/* animateEnemyAbnormality：エネミーが状態変化を受ける
+/*******************************************************/
+function animateEnemyAbnormality(animateEnemy, abnormality){
+	console.log(abnormality);
+	const abnormalityImage = $('<img>')
+		.attr('src', abnormality.image);
+	const nameParagraph = $('<p>')
+		.html(`${abnormality.name}+${abnormality.amount}`);
+	const abnormalityDiv = $('<div>')
+		.addClass('abnormality')
+		.append(abnormalityImage)
+		.append(nameParagraph);
+	$(`#${animateEnemy.currentStatus.divId}`).append(abnormalityDiv);
 
+	abnormalityDiv
+		.animate({ top: '-30px' },1000, "easeOutQuart")
+		.animate({ opacity: 0 },500, "easeOutQuart");
+	$(`#${animateEnemy.currentStatus.divId}`).remove(abnormalityDiv);
+}
+/*******************************************************/
+/* animateEnemyBlocked：エネミーがブロックを得る
+/*******************************************************/
+function animateEnemyBlocked(animateEnemy){
+	console.log('animateEnemyBlocked');
+	const blockImage = $('<img>')
+		.addClass('enemy-block')
+		.attr('src', 'images/status/block.png');
+	$(`#${animateEnemy.currentStatus.divId}`).append(blockImage);
+	blockImage
+		.animate({ opacity: 1, top: '80px' },1000, "easeOutQuart")
+		.animate({ opacity: 0 },500, "easeOutQuart");
+}
 /*******************************************************/
 /* animateDefeated：敵が倒されてフェードアウトする
 /*******************************************************/
 function animateDefeated(animateEnemy){
-	const animateDiv = $(`#${animateEnemy.currentStatus.divId}`);
-	animateDiv.animate({ 
+	const animateEnemyDiv = $(`#${animateEnemy.currentStatus.divId}`);
+	animateEnemyDiv.animate({ 
 		opacity: 0
 	}, defeatedWaitTime);
 }

@@ -21,6 +21,21 @@ function deepCopyCard(arraycard){
 	return cloneArray;
 }
 /*******************************************************/
+/* deepCopyEnemies：プレイヤー配列をディープコピーする
+/*******************************************************/
+function deepCopyPlayerStatus(player){
+	const cloneOjt = {};
+	cloneOjt.remainHP = player.remainHP;
+	cloneOjt.maxHP = player.maxHP;
+	cloneOjt.money = player.money;
+	cloneOjt.remainEnergy = player.remainEnergy;
+	cloneOjt.maxEnergy = player.maxEnergy;
+	cloneOjt.block = player.block;
+	cloneOjt.statuses = player.statuses.concat();
+
+	return cloneOjt;
+}
+/*******************************************************/
 /* deepCopyEnemies：エネミー配列をディープコピーする
 /*******************************************************/
 function deepCopyEnemies(arrayEnemies){
