@@ -44,7 +44,7 @@ async function animateDrawDeck(card){
 	}
 	$('.hand-area').append(drawCardDiv);
 
-	drawCardDiv.animate({
+	cardDrawPromise = drawCardDiv.animate({
 		left: coordinateHnadForHandArea.left, 
 		top: coordinateHnadForHandArea.top,
 		width: coordinateHnadForHandArea.width,
@@ -63,7 +63,7 @@ function animateHnadToTrash(card){
 		.css('top', coordinateHnadForHandArea.top)
 		.css('left', coordinateHnadForHandArea.left);
 
-	handCardDiv.animate({
+	cardTrashPromise = handCardDiv.animate({
 		left: coordinateTrashForHandArea.left, 
 		top: coordinateTrashForHandArea.top,
 		width: coordinateTrashForHandArea.width,
@@ -146,11 +146,11 @@ function animatePlayerAbnormality(abnormality){
 		.append(nameParagraph);
 	$('.player-area-inner').append(abnormalityDiv);
 
-	abnormalityDiv
+	playerAbnormalityPromise = abnormalityDiv
 		.animate({ top: '-30px' },1000, "easeOutQuart")
 		.animate({ opacity: 0 },500, "easeOutQuart");
 
-		$('.player-area-inner').remove(abnormalityDiv);
+	$('.player-area-inner').remove(abnormalityDiv);
 }
 /*******************************************************/
 /* animatePlayerBlocked：プレイヤーがブロックを得る
@@ -161,7 +161,7 @@ function animatePlayerBlocked(){
 		.addClass('player-block')
 		.attr('src', 'images/status/block.png');
 	$('.player-area-inner').append(blockImage);
-	blockImage
+	playerGetBlockPromise = blockImage
 		.animate({ opacity: 1, top: '100px' },1000, "easeOutQuart")
 		.animate({ opacity: 0 },500, "easeOutQuart");
 }
@@ -169,7 +169,7 @@ function animatePlayerBlocked(){
 /* animatePlayerAttack：エネミーが攻撃する
 /*******************************************************/
 function animateEnemyAttack(animateEnemy){
-	$(`#${animateEnemy.currentStatus.divId}`).children('img')
+	enemyAttackPromise = $(`#${animateEnemy.currentStatus.divId}`).children('img')
 		.animate({ left: '50px' }, enemyAttackGoWaitTime, "easeInQuart")
 		.animate({ left: '0px' }, enemyAttackReturnWaitTime, "easeOutQuart");
 	$('.front-effect')
@@ -220,7 +220,7 @@ function animateEnemyAbnormality(animateEnemy, abnormality){
 		.append(nameParagraph);
 	$(`#${animateEnemy.currentStatus.divId}`).append(abnormalityDiv);
 
-	abnormalityDiv
+	enemyAbnormalityPromise = abnormalityDiv
 		.animate({ top: '-30px' },1000, "easeOutQuart")
 		.animate({ opacity: 0 },500, "easeOutQuart");
 	$(`#${animateEnemy.currentStatus.divId}`).remove(abnormalityDiv);
@@ -234,7 +234,7 @@ function animateEnemyBlocked(animateEnemy){
 		.addClass('enemy-block')
 		.attr('src', 'images/status/block.png');
 	$(`#${animateEnemy.currentStatus.divId}`).append(blockImage);
-	blockImage
+	enemyGetBlockPromise = blockImage
 		.animate({ opacity: 1, top: '80px' },1000, "easeOutQuart")
 		.animate({ opacity: 0 },500, "easeOutQuart");
 }
@@ -243,7 +243,7 @@ function animateEnemyBlocked(animateEnemy){
 /*******************************************************/
 function animateDefeated(animateEnemy){
 	const animateEnemyDiv = $(`#${animateEnemy.currentStatus.divId}`);
-	animateEnemyDiv.animate({ 
+	enemyDefeatedPromise = animateEnemyDiv.animate({ 
 		opacity: 0
 	}, defeatedWaitTime);
 }

@@ -62,7 +62,6 @@ function actionAttack(attackCount){
 	currentTarget.currentStatus.remainHP -= totalAttack;
 	// アニメーション
 	animatePlayerAttack();
-	actionWaitFlagForEnemy = true;
 }
 /*******************************************************/
 /* ブロック関数
@@ -71,7 +70,6 @@ function actionBlock(blockCount){
 	playerStatus.block += blockCount;
 	// アニメーション
 	animatePlayerBlocked();
-	actionWaitFlagForPlayer = true;
 }
 /*******************************************************/
 /* バフを与える関数
@@ -93,7 +91,6 @@ function actionStatusBuf(buf, amountCount){
 	}
 	// アニメーション
 	animatePlayerAbnormality(receivedBuf);
-	actionWaitFlagForPlayer = true;
 }
 /*******************************************************/
 /* 状態異常を与える関数
@@ -117,5 +114,4 @@ function actionStatusDebuf(debuf, amountCount){
 	}
 	// アニメーション
 	animateEnemyAbnormality(currentTarget, receivedDebuf);
-	actionWaitFlagForEnemy = true;
 }

@@ -5,8 +5,8 @@
 const enemyList = {
 	test:{
 		name: 'TESTSLIME', 
-		minHP: 1, 
-		maxHP: 6, 
+		minHP: 100, 
+		maxHP: 160, 
 		image: 'images/enemy/kingbronze.gif',
 		actionAlgorithm: 'actionTEST', 
 		currentStatus:{

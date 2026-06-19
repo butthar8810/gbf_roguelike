@@ -5,6 +5,7 @@ function startGame(){
 	// セットアップ
 	setupCharaStatus();
 	setupDeck();
+	setupArtifact();
 	if (getLocalStorage(keyContinueBattleFlag)) {
 		console.log('戦闘再開');
 		continueBattle();
@@ -105,7 +106,6 @@ function setupDeck(){
 			addCardToOriginalDeck(djeetaCardList.Pulverizer, 1);
 		}
 	}
-	
 }
 
 /*******************************************************/

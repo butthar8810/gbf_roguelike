@@ -21,7 +21,7 @@ const stages = {
 const bufStatus = {
 	attackUp: {name: '攻撃力アップ', amount: '',effect: '攻撃ダメージが+X。',image: 'images/status/status_1001.png'},
 	defenseUp: {name: '防御力アップ', amount: '', effect: 'アタックで受けるダメージが50%減少。Xターン有効。',image: 'images/status/status_1019.png'},
-	penetration: {name: '貫通', amount: '', effect: '攻撃ダメージがブロックを無視する。', image: 'images/status/status_1240.png'},
+	penetration: {name: '貫通', amount: '', effect: '攻撃ダメージがブロックを無視する。Xターン有効。', image: 'images/status/status_1240.png'},
 	mount: {name: '弱体無効', amount: '', effect: 'デバフをX回無効化。', image: 'images/status/status_1003.png'},
 	metallicize: {name: '金属化', amount: '', effect: 'ターン終了時、Xブロックを得る。', image: 'images/status/status_6549.png'},
 	phantasmal: {name: '幻影', amount: '', effect: '次のターン開始時、ダブルダメージを得る。Xターン有効。', image: 'images/status/status_1313.png'},
@@ -50,6 +50,9 @@ const debufStatus = {
 };
 // ステータス：志望
 const dead = {name: '死亡', amount: 1, effect: '死亡状態',image: ''};
+
+
+
 /*****************************************************************************/
 /* プレイヤー情報
 /*****************************************************************************/
@@ -91,6 +94,7 @@ const omenFadeOutWaitTime = 1000;
 const keySelectChara = 'Babu.Select.Chara';
 const keyContinueFlag = 'Babu.Continue.Flag';// 途中プレイがあるかのフラグ
 const keyContinueBattleFlag = 'Babu.Continue.Battle.Flag';// 途中戦闘があるかのフラグ
+const keyContinueArtifact = 'Babu.Continue.Artifact';
 const keyContinuePlayerStatus = 'Babu.Continue.Player.Status';
 const keyContinueMap = 'Babu.Continue.Map';
 const keyContinueCurrentMap = 'Babu.Continue.Current.Map';
@@ -111,6 +115,7 @@ const keyContinueEnemy = 'Babu.Continue.Enemy';
 /*****************************************************************************/
 /* グローバル変数
 /*****************************************************************************/
+let myArtifact = [];
 // アウトゲーム
 let currentMap = {};
 let map = [];
@@ -137,7 +142,15 @@ let currentTurn = 0;
 let currentEnemies = [];
 let currentTarget = {};
 //各種フラグ
-let actionWaitFlagForPlayer = false;
-let actionWaitFlagForEnemy = false;
 let enemyAttackWaitFlag = false;
 let allDefeatedFlag = false;
+
+// promiseオブジェクト
+let cardDrawPromise = Promise.resolve();
+let cardTrashPromise = Promise.resolve();
+let playerAbnormalityPromise = Promise.resolve();
+let playerGetBlockPromise = Promise.resolve();
+let enemyAttackPromise = Promise.resolve();
+let enemyAbnormalityPromise = Promise.resolve();
+let enemyGetBlockPromise = Promise.resolve();
+let enemyDefeatedPromise = Promise.resolve();

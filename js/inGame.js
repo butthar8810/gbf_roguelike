@@ -15,6 +15,7 @@ function startButtle(level){
 	// 自分・敵のUIをセットアップする
 	updatePlayerAreaDom(playerStatus);
 	setupEnemy(level);
+	// 初めの敵予兆を決定する
 	decideNextAction();
 
 	setupBtn();
@@ -27,7 +28,8 @@ function startButtle(level){
 	setLocalStorage(keyContinueTurn, currentTurn);
 	setLocalStorage(keyContinueEnemy, currentEnemies);
 	setLocalStorage(keyContinuePlayerStatus, playerStatus);
-	startTurn();
+	startAbility();
+	startTurn();// 非同期関数
 }
 
 
@@ -146,24 +148,55 @@ function setupBtn(){
 /* プレイヤー処理関連
 /*************************************************************************************/
 /*******************************************************/
+/* startAbility：敵やAFの開始時効果処理を行う
+/*******************************************************/
+function startAbility(){
+	console.log(myArtifact);
+	myArtifact.forEach((artifact) => {
+		switch(artifact.name){
+			case starterArtifact.recovery.name:
+			case starterArtifact.startDraw.name:
+			case nomalArtifact.agility.name:
+			case nomalArtifact.strength.name:
+			case nomalArtifact.normalRecovery.name:
+			case nomalArtifact.block.name:
+				if (artifact.func !== '') {
+					const storedFunc = globalThis[artifact.func];
+					if( typeof storedFunc === 'function'){
+						ret = storedFunc();
+					} 
+				}
+				break;
+			default:
+				break;
+		}
+	});
+}
+/*******************************************************/
 /* startTurn：ターン開始処理を行う
 /*******************************************************/
 async function startTurn(){
 	console.log(`turn: ${currentTurn}`);
 	updateTrashDom();
 	updateEnergyDom();
-	updatePlayerAreaDom(playerStatus);
 	fadeInEnemyOmenDom();
 	updateEnemyAreaDom(currentEnemies, true);
 
-
+	$.when(
+		playerAbnormalityPromise,
+		playerGetBlockPromise
+	).done(() => {
+		updatePlayerAreaDom(playerStatus);
+	});
 	for(const hand of myHand){
 		await animateDrawDeck(hand);
 	}
-	await sleep(100);
-	updateHandDom();
-	disabledMyHand(false);
-	updateDeckDom();
+	$.when(cardDrawPromise).done(() => {
+		updateHandDom();
+		disabledMyHand(false);
+		updateDeckDom();
+	});
+	
 }
 /*******************************************************/
 /* endTurn：ターン終了処理を行う
@@ -175,6 +208,7 @@ function endTurn(){
 	playerStatus.statuses.forEach((status, index) => {
 		switch(status.name){
 			case bufStatus.defenseUp.name:
+			case bufStatus.penetration.name:
 			case bufStatus.phantasmal.name:
 			case debufStatus.defenseDown.name:
 			case debufStatus.frail.name:
@@ -182,9 +216,6 @@ function endTurn(){
 			case debufStatus.noBlock.name:
 			case debufStatus.Fading.name:
 				status.amount--;
-				if (status.amount <= 0){
-
-				}
 				break;
 			default:
 				break;
@@ -216,6 +247,8 @@ function endTurn(){
 			return status.amount > 0;
 		})
 	});
+	// ブロックを解除する
+	playerStatus.block = 0;
 	// 次の予測を決定する
 	decideNextAction();
 	// カードを5枚引く
@@ -229,19 +262,21 @@ function endTurn(){
 /*******************************************************/
 /* startCleanup：ターン終了処理を行う
 /*******************************************************/
-async function startCleanup(){
+function startCleanup(){
 	// カードに触れれなくする
 	disabledMyHand(true);
 	for(const hand of myHand){
-		await animateHnadToTrash(hand);
+		animateHnadToTrash(hand);
 	}
 	// 手札を捨て札エリアに格納
 	deletAllHand().forEach((card) => {
 		pushTrash(card);
 	});
-	await sleep(trashWatiTime);
-	updateHandDom();
-	updateTrashDom();
+	// トラッシュアニメーションが完了したら
+	$.when(cardTrashPromise).done(() => {
+		hiddenHandDom();
+		updateTrashDom();
+	});
 
 	startEnemiesTurn();
 }
@@ -251,6 +286,7 @@ async function startCleanup(){
 /* drawDeckCard：デッキからカードをドローする
 /*******************************************************/
 function drawCardFromDeck(count = 1){
+	const drawCards = [];
 	for(let i = 0; i < count; i++){
 		if (myDeck.length <= 0) {
 			// 捨て札をデッキに再構築する
@@ -260,6 +296,7 @@ function drawCardFromDeck(count = 1){
 		const card = shiftDeck();
 		if (card !== undefined){
 			pushHand(card);
+			drawCards.push(card);
 		}else{
 			console.log("shiftDeck undefined");
 			break;
@@ -268,6 +305,7 @@ function drawCardFromDeck(count = 1){
 	// デッキと手札をローカルストレージに記憶
 	setLocalStorage(keyContinueDeck, myDeck);
 	setLocalStorage(keyContinueHand, myHand);
+	return drawCards;
 }
 /*******************************************************/
 /* reconfigureDeck：捨て札のカードをデッキに再構成する
@@ -322,24 +360,15 @@ async function endAction(){
 	setLocalStorage(keyContinueStack, stackCard);
 	setLocalStorage(keyContinuePlayerStatus, playerStatus);
 	setLocalStorage(keyContinueEnemy, currentEnemies);
-	if (actionWaitFlagForPlayer) {
-		setTimeout(() => {
-			updatePlayerAreaDom(playerStatus);
-		},playerAttackWaitTime);
-	} else {
+	$.when(
+		playerGetBlockPromise,
+		playerAbnormalityPromise
+	).done(() => {
 		updatePlayerAreaDom(playerStatus);
-	}
-	if (actionWaitFlagForEnemy) {
-		setTimeout(() => {
-			updateEnemyAreaDom(currentEnemies, true);
-		},playerAttackWaitTime);
-	} else {
+	});
+	$.when(enemyAbnormalityPromise).done(() => {
 		updateEnemyAreaDom(currentEnemies, true);
-	}
-
-
-	actionWaitFlagForPlayer = false;
-	actionWaitFlagForEnemy = false;
+	});
 	
 	if (allDefeatedFlag){
 		allEnemiesdefeated();
@@ -607,6 +636,9 @@ function updateHandDom(){
 			}
 		$(`.hand-area`).append(handCardDiv);
 	});
+}
+function hiddenHandDom(){
+	$(`.hand-area`).html('');
 }
 function updatePlayerAreaDom(argPlayerStatus){
 	console.log('updatePlayerAreaDom');
