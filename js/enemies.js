@@ -9,6 +9,7 @@ const enemyList = {
 		maxHP: 160, 
 		image: 'images/enemy/kingbronze.gif',
 		actionAlgorithm: 'actionTEST', 
+		actionFirst: 'testFirst',
 		currentStatus:{
 			remainHP: 0, 
 			maxHP: 0, 
@@ -24,6 +25,7 @@ const enemyList = {
 		maxHP: 12, 
 		image: 'images/enemy/kingbronze.gif',
 		actionAlgorithm: 'actionSlime', 
+		actionFirst: '',
 		currentStatus:{
 			remainHP: 0, 
 			maxHP: 0, 
@@ -39,6 +41,7 @@ const enemyList = {
 		maxHP: 32, 
 		image: 'images/enemy/kingsilver.gif', 
 		actionAlgorithm: 'actionSilver', 
+		actionFirst: '',
 		currentStatus:{
 			remainHP: 0, 
 			maxHP: 0, 
@@ -54,6 +57,7 @@ const enemyList = {
 		maxHP: 55, 
 		image: 'images/enemy/golem.png', 
 		actionAlgorithm: 'actionGolem', 
+		actionFirst: '',
 		currentStatus:{
 			remainHP: 0, 
 			maxHP: 0, 
@@ -69,6 +73,7 @@ const enemyList = {
 		maxHP: 44, 
 		image: 'images/enemy/zombie.png', 
 		actionAlgorithm: 'actionZombie', 
+		actionFirst: '',
 		currentStatus:{
 			remainHP: 0, 
 			maxHP: 0, 
@@ -84,6 +89,7 @@ const enemyList = {
 		maxHP: 17, 
 		image: 'images/enemy/imp.png', 
 		actionAlgorithm: 'actionImp', 
+		actionFirst: '',
 		currentStatus:{
 			remainHP: 0, 
 			maxHP: 0, 
@@ -130,7 +136,9 @@ const enemyActionType = {
 	block: 'ブロック',
 	buff: 'バフ',
 	debuff: 'デバフ',
-	both: 'ブロックとアタック',
+	blockAndAttack: 'ブロックとアタック',
+	buffAndAttack: 'デバフとアタック',
+	debuffAndAttack: 'バフとアタック',
 };
 /*****************************************************************************/
 /* エネミーアクション
@@ -161,6 +169,10 @@ function testStrategy(enemyInfo, playerInfo, animationFlag){
 function testSpell(enemyInfo, playerInfo, animationFlag){
 	enemyStatusBuf(enemyInfo, animationFlag, bufStatus.attackUp, 2);
 	enemyBlock(enemyInfo, animationFlag, 5);
+}
+function testFirst(enemyInfo, playerInfo, animationFlag){
+	console.log(testFirst);
+	enemyStatusBuf(enemyInfo, animationFlag, bufStatus.metallicize, 2);
 }
 /*******************************************************/
 /* スライム

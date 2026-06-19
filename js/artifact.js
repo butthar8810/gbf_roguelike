@@ -2,18 +2,18 @@
 /* アーティファクト情報
 /*****************************************************************************/
 const starterArtifact = {
-	recovery: {name: '癒しのガントレット', effect: '戦闘終了時、HP6回復。', image: '', func: 'artifactRecovery'},
-	startDraw: {name: '速攻の指輪', effect: '戦闘開始時、カード2枚を追加で引く。', image: '', func: 'artifactStartDraw'},
+	recovery: {name: '剣闘士の証', effect: '戦闘終了時、HP6回復。', image: 'images/artifact/gladiator.png', func: 'artifactRecovery'},
+	startDraw: {name: '魔剣士の証', effect: '戦闘開始時、カード2枚を追加で引く。', image: 'images/artifact/swordsman.png', func: 'artifactStartDraw'},
 };
 
 const nomalArtifact = {
-	agility: {name: '癒しのガントレット', effect: '戦闘開始時、敏捷性1を得る。', image: '', func: 'artifactAgility'},
-	hitPoint: {name: '速攻の指輪', effect: '最大HPが増加:7', image: '', func: 'artifactHitPoint'},
-	strength: {name: '筋力の指輪', effect: '戦闘開始時、攻撃力アップ1獲得。', image: '', func: 'artifactStrength'},
-	attackUpGrade: {name: 'ギガス鋼', effect: '獲得時に、ランダムな2枚の「アタック」をアップグレードする。', image: '', func: 'artifactAttackUpGrade'},
-	skillUpGrade: {name: '玉鋼', effect: '獲得時に、ランダムな2枚の「スキル」をアップグレードする。', image: '', func: 'artifactSkillUpGrade'},
-	normalRecovery: {name: 'バンドエイド', effect: '戦闘開始時、HP2回復。', image: '', func: 'artifactNormalRecovery'},
-	block: {name: '盾', effect: '戦闘開始時に10ブロックを得る。', image: '', func: 'artifactBlock'},
+	agility: {name: '金華羽飾', effect: '戦闘開始時、敏捷性1を得る。', image: 'images/artifact/feather.png', func: 'artifactAgility'},
+	hitPoint: {name: '古代布', effect: '最大HPが増加:7', image: 'images/artifact/cloth.png', func: 'artifactHitPoint'},
+	strength: {name: '栄華の指輪', effect: '戦闘開始時、攻撃力アップ1獲得。', image: 'images/artifact/crown.png', func: 'artifactStrength'},
+	attackUpGrade: {name: 'ギガス鋼', effect: '獲得時に、ランダムな2枚の「アタック」をアップグレードする。', image: 'images/artifact/Gigas.png', func: 'artifactAttackUpGrade'},
+	skillUpGrade: {name: '玉鋼', effect: '獲得時に、ランダムな2枚の「スキル」をアップグレードする。', image: 'images/artifact/Tamahagane.png', func: 'artifactSkillUpGrade'},
+	normalRecovery: {name: 'オミナス・ゴブレット', effect: '戦闘開始時、HP2回復。', image: 'images/artifact/goblet.png', func: 'artifactNormalRecovery'},
+	block: {name: 'サント・キャスク', effect: '戦闘開始時に10ブロックを得る。', image: 'images/artifact/cask.png', func: 'artifactBlock'},
 };
 
 /*******************************************************/
@@ -32,10 +32,45 @@ function setupArtifact(){
 		if (selectChara == selectCharacter.gran.name){
 			myArtifact.push(starterArtifact.recovery);
 		} else if (selectChara == selectCharacter.djeeta.name){
-			myArtifact.push(starterArtifact.startDraw);
+			myArtifact.push(nomalArtifact.agility);
 		}
 		setLocalStorage(keyContinueArtifact, myArtifact);
 	}
+	updateArtifactDom();
+}
+/*******************************************************/
+/* setupDeck：初期アーティファクトを配る
+/*******************************************************/
+function updateArtifactDom(){
+	$('.artifact-area').html('');
+	myArtifact.forEach((artifact) => {
+		const modalName = $('<p>')
+			.append(artifact.name);
+		const modalDiv = $('<div>')
+			.addClass('artifact-modal')
+			.append(modalName)
+			.append(artifact.effect);
+		const modalsDiv = $('<div>')
+			.addClass('artifact-modals')
+			.addClass('hidden')
+			.append(modalDiv)
+			.hover(() => {
+				modalsDiv.addClass('hidden');
+			}, () => {});
+		const artifactImage = $('<img>')
+			.attr('src', artifact.image);
+		const artifactDiv = $('<div>')
+			.addClass('artifact')
+			.append(artifactImage)
+			.append(modalsDiv)
+			.hover(() => {
+				modalsDiv.removeClass('hidden');
+			}, () => {
+				modalsDiv.addClass('hidden');
+			});
+		$('.artifact-area')
+			.append(artifactDiv)
+	});
 }
 /*****************************************************************************/
 /* アーティファクト効果
@@ -69,7 +104,8 @@ function artifactStartDraw(){
 /*******************************************************/
 function artifactAgility(){
 	console.log('artifactAgility');
-	console.log(artifactRecovery);
+	
+	actionStatusBuf(bufStatus.dexterity, 1);
 	
 	return true;
 }
@@ -79,6 +115,8 @@ function artifactAgility(){
 function artifactStrength(){
 	console.log('artifactStrength');
 	
+	actionStatusBuf(bufStatus.attackUp, 1);
+
 	return true;
 }
 /*******************************************************/
@@ -86,7 +124,12 @@ function artifactStrength(){
 /*******************************************************/
 function artifactNormalRecovery(){
 	console.log('artifactNormalRecovery');
-	
+	const recoveryHP = playerStatus.remainHP + 2;
+	if (playerStatus.maxHP < recoveryHP){
+		playerStatus.remainHP = playerStatus.maxHP;
+	} else {
+		playerStatus.remainHP = recoveryHP;
+	}
 	return true;
 }
 /*******************************************************/

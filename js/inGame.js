@@ -20,6 +20,7 @@ function startButtle(level){
 
 	setupBtn();
 
+	startAbility();
 	$('.battle-area').removeClass('hidden');
 	$('.info-area').removeClass('hidden');
 	setLocalStorage(keyContinueBattleFlag, true);
@@ -28,7 +29,6 @@ function startButtle(level){
 	setLocalStorage(keyContinueTurn, currentTurn);
 	setLocalStorage(keyContinueEnemy, currentEnemies);
 	setLocalStorage(keyContinuePlayerStatus, playerStatus);
-	startAbility();
 	startTurn();// 非同期関数
 }
 
@@ -152,6 +152,7 @@ function setupBtn(){
 /*******************************************************/
 function startAbility(){
 	console.log(myArtifact);
+	// アーティファクトの効果を発動
 	myArtifact.forEach((artifact) => {
 		switch(artifact.name){
 			case starterArtifact.recovery.name:
@@ -171,6 +172,16 @@ function startAbility(){
 				break;
 		}
 	});
+	currentEnemies.forEach((enemy) => {
+		console.log(enemy.actionFirst);
+		if (enemy.actionFirst !== '') {
+			const storedFunc = globalThis[enemy.actionFirst];
+			if( typeof storedFunc === 'function'){
+				ret = storedFunc(enemy, playerStatus, true);
+			} 
+		}
+	});
+		
 }
 /*******************************************************/
 /* startTurn：ターン開始処理を行う
@@ -179,9 +190,13 @@ async function startTurn(){
 	console.log(`turn: ${currentTurn}`);
 	updateTrashDom();
 	updateEnergyDom();
-	fadeInEnemyOmenDom();
-	updateEnemyAreaDom(currentEnemies, true);
-
+	$.when(
+		enemyGetBlockPromise,
+		enemyAbnormalityPromise
+	).done(() => {
+		fadeInEnemyOmenDom();
+		updateEnemyAreaDom(currentEnemies, true);
+	});
 	$.when(
 		playerAbnormalityPromise,
 		playerGetBlockPromise
@@ -567,8 +582,14 @@ function omenText(omenAction){
 		case enemyActionType.debuff:
 			return omenText + omenAction.type + 'を与えること。';
 			break;
-		case enemyActionType.both:
+		case enemyActionType.blockAndAttack:
 			return omenText + omenAction.type + 'を' + omenAction.damage +'ダメージ。';
+			break;
+		case enemyActionType.buffAndAttack:
+			return omenText + 'バフを使用し、アタックを' + omenAction.damage +'ダメージ。';
+			break;
+		case enemyActionType.debuffAndAttack:
+			return omenText + 'デバフを与え、アタックを' + omenAction.damage +'ダメージ。';
 			break;
 		default:
 			return omenText + '不明です';
