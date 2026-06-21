@@ -1,6 +1,8 @@
 /*************************************************************************************/
 /* 各カード情報
 /*************************************************************************************/
+const cardClass = {gran: 'グラン', djeeta: 'ジータ', common: '共通', abnormal: '状態異常'};
+
 const granCardList = {
 	Wide: {name: 'ワイドブレード', class: cardClass.gran, cost: 1, rarity: rarity.starter, type: type.attack, effect: '6のダメージを与える。', func: 'effectStrike', image:'images/card/gran_Wide.jpg', discard: false},
 	PowerSwing: {name: 'パワースウィング', class: cardClass.gran, cost: 2, rarity: rarity.starter, type: type.attack, effect: `8のダメージを与える。${debufStatus.defenseDown.name}2を与える。`, func: 'effectPowerSwing', image:'images/card/gran_PowerSwing.jpg', discard: false},
@@ -57,6 +59,18 @@ const djeetaCardList = {
 	Petrification: {name: 'フルグライト', class: cardClass.djeeta, cost: 'X', rarity: rarity.rare, type: type.skill, effect: `敵は筋力Xを失う。脱力Xを与える。廃棄。`, func: 'effectFast', image:'images/card/djeeta_Petrification.jpg', discard: true},
 	Bailout: {name: 'ベイルアウト', class: cardClass.djeeta, cost: 3, rarity: rarity.rare, type: type.skill, effect: `このターン、カードを引くことができない。このターン、あなたの手札のコストは0になる。`, func: 'effectFast', image:'images/card/djeeta_Bailout.jpg', discard: false},
 	Record: {name: 'シーイング・レコード', class: cardClass.djeeta, cost: 0, rarity: rarity.rare, type: type.skill, effect: `1エナジーを得る。カードを2枚引く。廃棄`, func: 'effectFast', image:'images/card/djeeta_Record.jpg', discard: true},
+};
+
+const commonCardList = {
+
+};
+
+const abnormalCardList = {
+	Mucus: {name: '粘液', class: cardClass.abnormal, cost: 1, rarity: rarity.common, type: type.skill, effect: `廃棄。`, func: '', image:'images/card/abnormal_Mucus.jpg', discard: true},
+	Injury: {name: '負傷', class: cardClass.abnormal, cost: 99, rarity: rarity.common, type: type.skill, effect: `使用不可。`, func: '', image:'images/card/abnormal_Injury.jpg', discard: true},
+	Curse: {name: '呪いの紋章', class: cardClass.abnormal, cost: 99, rarity: rarity.common, type: type.skill, effect: `使用不可。このカードを引いたとき、エナジーを1失う。エセリアル。`, func: '', image:'images/card/abnormal_Curse.jpg', discard: true},
+	Burn: {name: '火傷', class: cardClass.abnormal, cost: 99, rarity: rarity.common, type: type.skill, effect: `使用不可。ターン終了時に2ダメージを受ける。`, func: '', image:'images/card/abnormal_Burn.jpg', discard: true},
+	
 };
 /*************************************************************************************/
 /* カード報酬抽選
