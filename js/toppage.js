@@ -4,10 +4,10 @@
 function loadTopPage(){
 	// Infoモーダルの設定
 	$('.toppage-credit-btn').click((e) => {
-		$('.infomation-modal').addClass('active');
+		$('.information-modal').addClass('active');
 	});
-	$('.close-infomation-modal-btn').click((e) => {
-		$('.infomation-modal').removeClass('active');
+	$('.close-information-modal-btn').click((e) => {
+		$('.information-modal').removeClass('active');
 	});
 	// モーダルの設定
 	$('.toppage-play-btn').click((e) => {

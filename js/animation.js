@@ -53,9 +53,9 @@ async function animateDrawDeck(card){
 	await sleep(drawWatiTime - 100);
 }
 /*******************************************************/
-/* animateHnadToTrash：捨て札に捨てるアニメーション
+/* animateHandToTrash：捨て札に捨てるアニメーション
 /*******************************************************/
-function animateHnadToTrash(card){
+function animateHandToTrash(card){
 	const handCardDiv = $(`#hand-card${card.id}`);
 	handCardDiv
 		.prop('disabled', true)
@@ -106,7 +106,7 @@ function animatePlayerAttack(){
 /*******************************************************/
 /* animatePlayerAttack：プレイヤーが攻撃を受ける
 /*******************************************************/
-function animatePlayerdamage(){
+function animatePlayerDamage(){
 	const selectChara = getLocalStorage(keySelectChara);
 	const playerImage = $('.player-area-inner').children('img');
 	

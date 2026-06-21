@@ -2,9 +2,10 @@
 /* 初期設定
 /*************************************************************************************/
 /*******************************************************/
-/* startNomalButtle：通常戦闘を開始する
+/* startBattle：戦闘を開始する
 /*******************************************************/
-function startButtle(level){
+function startBattle(){
+	console.log(`currentLevel: ${currentLevel}`);
 	// 各キューの初期化
 	initialize();
 	currentTurn = 0;
@@ -14,7 +15,7 @@ function startButtle(level){
 	setupHandCard();
 	// 自分・敵のUIをセットアップする
 	updatePlayerAreaDom(playerStatus);
-	setupEnemy(level);
+	setupEnemy();
 	// 初めの敵予兆を決定する
 	decideNextAction();
 
@@ -31,20 +32,47 @@ function startButtle(level){
 	setLocalStorage(keyContinuePlayerStatus, playerStatus);
 	startTurn();// 非同期関数
 }
+/*******************************************************/
+/* endBattle：戦闘の終了処理を開始する
+/*******************************************************/
+function endBattle(){
+	removeLocalStorage(keyContinueBattleFlag);
+	removeLocalStorage(keyContinueDeck);
+	removeLocalStorage(keyContinueHand);
+	removeLocalStorage(keyContinueTrash);
+	removeLocalStorage(keyContinueDiscard);
+	removeLocalStorage(keyContinueTemporary);
+	removeLocalStorage(keyContinueStack);
+	removeLocalStorage(keyContinueTurn);
+	removeLocalStorage(keyContinueEnemy);
+	removeLocalStorage(keyContinueLevel);
+	removeLocalStorage(keyContinueReward);
+	initialize();
+	$('.result-modal').removeClass('active');
+	$('.battle-area').addClass('hidden');
+	$('.info-area').addClass('hidden');
+	$('hand-area').html('');
 
+	playerStatus.block = 0;
+	playerStatus.statuses = [];
+	
+	map = getLocalStorage(keyContinueMap);
+	climbTowerContinue();
+}
 
 /*******************************************************/
 /* continueBattle：戦闘を再開する
 /*******************************************************/
 function continueBattle(){
 	continueCount();
+	console.log(`currentLevel: ${currentLevel}`);
 	// デッキの準備
 	readyDeck();
 	setupHandCard();
 	updatePlayerAreaDom(playerStatus);
 	setupEnemy();
 	setupBtn();
-
+	checkEnemyDefeated(currentEnemies);
 
 	updateDeckDom();
 	updateTrashDom();
@@ -53,10 +81,20 @@ function continueBattle(){
 	updateEnemyAreaDom(currentEnemies, true);
 	$('.battle-area').removeClass('hidden');
 	$('.info-area').removeClass('hidden');
+	if (allDefeatedFlag){
+		allEnemiesDefeated();
+	}
+	// フェイズ開始
+	if (currentPhase !== null){
+		startPhase(currentPhase);
+	} else {
+		console.log('lastPhase == null');
+		startPhase(phase.action);
+	}
 }
 
 /*******************************************************/
-/* continueBattle：戦闘を再開する
+/* continueCount: 各種保存された情報を獲得する
 /*******************************************************/
 function continueCount(){
 	const lastTrash = getLocalStorage(keyContinueTrash);
@@ -65,6 +103,9 @@ function continueCount(){
 	const lastStack = getLocalStorage(keyContinueStack);
 	const lastTurn = getLocalStorage(keyContinueTurn);
 	const lastPlayerStatus = getLocalStorage(keyContinuePlayerStatus);
+	const lastLevel = getLocalStorage(keyContinueLevel);
+	const lastPhase = getLocalStorage(keyContinuePhase);
+	const lastDecide = getLocalStorage(keyContinueDecide);
 	if (lastTrash) {
 		myTrash = lastTrash;
 	}
@@ -80,6 +121,15 @@ function continueCount(){
 	if (lastTurn) {
 		currentTurn = lastTurn;
 	}
+	if (lastLevel) {
+		currentLevel = lastLevel;
+	}
+	if (lastPhase) {
+		currentPhase = lastPhase;
+	}
+	if (lastDecide) {
+		decideFunc = lastDecide;
+	}
 	if (lastPlayerStatus) {
 		playerStatus.remainHP = lastPlayerStatus.remainHP;
 		playerStatus.maxHP = lastPlayerStatus.maxHP;
@@ -89,17 +139,18 @@ function continueCount(){
 		playerStatus.block = lastPlayerStatus.block;
 		playerStatus.statuses = lastPlayerStatus.statuses;
 	}
+
 }
 /*******************************************************/
 /* initializeQueue：キューの初期化
 /*******************************************************/
 function initialize(){
-	deletAllDeck();
-	deletAllHand();
-	deletAllTrash();
-	deletAllDiscard();
-	deletAllTemporaryArea();
-	deletAllStackCard();
+	deleteAllDeck();
+	deleteAllHand();
+	deleteAllTrash();
+	deleteAllDiscard();
+	deleteAllTemporaryArea();
+	deleteAllStackCard();
 	currentTurn = 1;
 	playerStatus.remainEnergy = playerStatus.maxEnergy;
 }
@@ -139,8 +190,18 @@ function setupHandCard(){
 /*******************************************************/
 function setupBtn(){
 	$('.end-btn').click((e) => {
-		$('.end-btn').prop('disabled', true);
-		startCleanup();
+		startPhase(phase.enemy);
+	});
+	$('.skip-btn').click((e) => {
+		endBattle();
+	});
+	$('.decide-btn').click((e) => {
+		if (decideFunc !== '') {
+			const storedFunc = globalThis[decideFunc];
+			if( typeof storedFunc === 'function'){
+				ret = storedFunc();
+			}
+		}
 	});
 }
 
@@ -157,12 +218,12 @@ function startAbility(){
 		switch(artifact.name){
 			case starterArtifact.recovery.name:
 			case starterArtifact.startDraw.name:
-			case nomalArtifact.agility.name:
-			case nomalArtifact.strength.name:
-			case nomalArtifact.normalRecovery.name:
-			case nomalArtifact.block.name:
-				if (artifact.func !== '') {
-					const storedFunc = globalThis[artifact.func];
+			case normalArtifact.agility.name:
+			case normalArtifact.strength.name:
+			case normalArtifact.normalRecovery.name:
+			case normalArtifact.block.name:
+				if (artifact.firstFunc !== '') {
+					const storedFunc = globalThis[artifact.firstFunc];
 					if( typeof storedFunc === 'function'){
 						ret = storedFunc();
 					} 
@@ -211,7 +272,7 @@ async function startTurn(){
 		disabledMyHand(false);
 		updateDeckDom();
 	});
-	
+	startPhase(phase.action);
 }
 /*******************************************************/
 /* endTurn：ターン終了処理を行う
@@ -275,16 +336,50 @@ function endTurn(){
 }
 
 /*******************************************************/
+/* startPhase: 各フェイズを開始する
+/*******************************************************/
+function startPhase(ph){
+	console.log(ph);
+	currentPhase = ph;
+	setLocalStorage(keyContinuePhase, currentPhase);
+	switch(ph){
+		case phase.action:
+			disabledEndBtn(false);
+			break;
+		case phase.enemy:
+			disabledEndBtn(true);
+			startCleanup();
+			break;
+		case phase.trash:
+			disabledEndBtn(true);
+			disabledMyHand(false);
+			updateHandDom();
+			updateDecideTitle('捨てるカードを選んでください')
+			$.when(
+				playerAbnormalityPromise,
+				playerGetBlockPromise,
+				enemyAbnormalityPromise,
+			).done(() => {
+				$('.decide-area').addClass('active');
+				$('.hand-area').addClass('front');
+			});
+			break;
+		default:
+			break;
+	}
+
+}
+/*******************************************************/
 /* startCleanup：ターン終了処理を行う
 /*******************************************************/
 function startCleanup(){
 	// カードに触れれなくする
 	disabledMyHand(true);
 	for(const hand of myHand){
-		animateHnadToTrash(hand);
+		animateHandToTrash(hand);
 	}
 	// 手札を捨て札エリアに格納
-	deletAllHand().forEach((card) => {
+	deleteAllHand().forEach((card) => {
 		pushTrash(card);
 	});
 	// トラッシュアニメーションが完了したら
@@ -327,7 +422,7 @@ function drawCardFromDeck(count = 1){
 /*******************************************************/
 function reconfigureDeck(){
 	// 捨て札をデッキに格納
-	deletAllTrash().forEach((card) => {
+	deleteAllTrash().forEach((card) => {
 		pushDeck(card);
 	});
 	//デッキをシャッフル
@@ -342,7 +437,12 @@ function playHandCard(index){
 	const card = spliceHand(index);
 	// 手札表示の更新
 	updateHandDom();
-	pushTrash(card);
+	if(card.discard){
+		console.log('廃棄');
+		pushDiscard(card);
+	} else {
+		pushTrash(card);
+	}
 	pushStackCard(card.func);
 	updateTrashDom();
 
@@ -371,10 +471,14 @@ async function endAction(){
 			ret = storedFunc();
 		} 
 	}
-	checkEnemydefeated(currentEnemies);
+	checkEnemyDefeated(currentEnemies);
 	setLocalStorage(keyContinueStack, stackCard);
 	setLocalStorage(keyContinuePlayerStatus, playerStatus);
 	setLocalStorage(keyContinueEnemy, currentEnemies);
+	// ステータス部分だけ更新する
+	updatePlayerStatusDom(playerStatus);
+	updateEnemyStatusDom(currentEnemies);
+	// 攻撃アニメーションの完了を待ち、DOM更新する
 	$.when(
 		playerGetBlockPromise,
 		playerAbnormalityPromise
@@ -386,26 +490,56 @@ async function endAction(){
 	});
 	
 	if (allDefeatedFlag){
-		allEnemiesdefeated();
+		console.log('全滅');
+		$.when(
+			enemyDefeatedPromise
+		).done(() => {
+			allEnemiesDefeated();
+		});
 	}
 	return ret;
 }
 /*******************************************************/
-/* clickHandProcess：クリック時の処理
+/* clickHandProcess：手札クリック時の処理
 /*******************************************************/
 function clickHandProcess(handCardDiv, hand){
-
-	if (playerStatus.remainEnergy >= hand.cost) {
-		const index = findIndexHand('id', hand.id);
-		playerStatus.remainEnergy -= hand.cost;
-		updateEnergyDom();
-		playHandCard(index);
-		setLocalStorage(keyContinuePlayerStatus, playerStatus);
-	} else {
-		console.log("エネルギーが足りません");
-		deletAllTemporaryArea();
-		setLocalStorage(keyContinueTemporary, tmpArea);
-		return false;
+	const index = findIndexTemporaryArea('id', hand.id);
+	switch(currentPhase) {
+		case phase.action:
+			if (playerStatus.remainEnergy >= hand.cost) {
+				const index = findIndexHand('id', hand.id);
+				playerStatus.remainEnergy -= hand.cost;
+				updateEnergyDom();
+				playHandCard(index);
+				setLocalStorage(keyContinuePlayerStatus, playerStatus);
+			} else {
+				console.log("エネルギーが足りません");
+				deleteAllTemporaryArea();
+				setLocalStorage(keyContinueTemporary, tmpArea);
+				return false;
+			}
+			break;
+		case phase.enemy:
+			break;
+		case phase.trash:
+			if (index === -1) {
+				if (tmpArea.length < 1){
+					pushTemporaryArea(hand);
+					handCardDiv.addClass("select");
+				} else {
+					spliceTemporaryArea(index);
+					$('.hand-card').removeClass("select");
+					pushTemporaryArea(hand);
+					handCardDiv.addClass("select");
+				}
+			} else {
+				spliceTemporaryArea(index);
+				handCardDiv.removeClass("select");
+			}
+			console.log(tmpArea);
+			break;
+		default:
+			break;
 	}
 	return true;
 }
@@ -415,20 +549,32 @@ function clickHandProcess(handCardDiv, hand){
 function disabledMyHand(flag){
 	return $('.hand-area').prop('disabled', flag);
 }
+/*******************************************************/
+/* disabledMyHand：手札のdisabled化
+/*******************************************************/
+function disabledEndBtn(flag){
+	if (flag) {
+		$('.end-btn').css('opacity', 0);
+	} else {
+		$('.end-btn').css('opacity', 1);
+	}
+	return $('.end-btn').prop('disabled', flag);
+}
+
 /*************************************************************************************/
 /* エネミー関連
 /*************************************************************************************/
 /*******************************************************/
 /* setupEnemy：出現した敵をレベルごとに決める
 /*******************************************************/
-function setupEnemy(level = stageLevel.normal){
+function setupEnemy(){
 	const mt = new MersenneTwister();
 	const battleFlag = getLocalStorage(keyContinueBattleFlag);
 	const lastEnemyGroup = getLocalStorage(keyContinueEnemy);
 	if (lastEnemyGroup && battleFlag) {
 		currentEnemies = lastEnemyGroup;
 	} else {
-		switch(level) {
+		switch(currentLevel) {
 			case stageLevel.normal:
 				const totalWeight = easyEnemies.reduce((sum, item) => sum + item.weight, 0);
 				let enemyGroupWeight = mt.nextInt(0, totalWeight);
@@ -454,6 +600,8 @@ function setupEnemy(level = stageLevel.normal){
 			enemy.currentStatus.remainHP = randomHP;
 			enemy.currentStatus.divId = `enemy${i}`;
 		});
+		console.log(`currentLevel: ${currentLevel}`);
+		setLocalStorage(keyContinueLevel, currentLevel);
 		setLocalStorage(keyContinueEnemy, currentEnemies);
 	}
 	targetingEnemy();
@@ -480,13 +628,15 @@ async function startEnemiesTurn(){
 		}
 	}
 	endTurn();
+	currentPhase = phase.action;
+	setLocalStorage(keyContinuePhase, currentPhase);
 	setLocalStorage(keyContinueDeck, myDeck);
 	setLocalStorage(keyContinueHand, myHand);
 	setLocalStorage(keyContinueTrash, myTrash);
 	setLocalStorage(keyContinueTurn, currentTurn);
 	setLocalStorage(keyContinueEnemy, currentEnemies);
 	setLocalStorage(keyContinuePlayerStatus, playerStatus);
-
+	
 	// 攻撃のアニメーションを行う
 	for (const enemy of animateCurrentEnemies) {
 		if(!enemy.currentStatus.status.some(status => status.name === dead.name)){
@@ -499,10 +649,12 @@ async function startEnemiesTurn(){
 				if( typeof storedFunc === 'function'){
 					ret = await storedFunc(enemy, animatePlayerStatus, true);
 				}
+				updateEnemyStatusDom(animateCurrentEnemies);
 				if (enemyAttackWaitFlag){
 					animateEnemyAttack(enemy);
 					await sleep(enemyAttackGoWaitTime);
-					animatePlayerdamage();
+					animatePlayerDamage();
+					updatePlayerStatusDom(animatePlayerStatus);
 				}
 				await sleep(1500);
 				enemy.currentStatus.nextAction = {};
@@ -533,10 +685,9 @@ function decideNextAction(){
 
 
 /*******************************************************/
-/* checkEnemydefeated：敵が倒されたかチェックする
+/* checkEnemyDefeated：敵が倒されたかチェックする
 /*******************************************************/
-function checkEnemydefeated(Enemies){
-	let enemyDefeatedFlag = false;
+function checkEnemyDefeated(Enemies){
 	allDefeatedFlag = true;
 	Enemies.forEach((enemy, i) => {
 		if(!enemy.currentStatus.status.some(status => status.name === dead.name)){
@@ -585,6 +736,10 @@ function omenText(omenAction){
 		case enemyActionType.blockAndAttack:
 			return omenText + omenAction.type + 'を' + omenAction.damage +'ダメージ。';
 			break;
+		case enemyActionType.blockAndBuff:
+			return omenText + omenAction.type + 'の使用。';
+			break;
+
 		case enemyActionType.buffAndAttack:
 			return omenText + 'バフを使用し、アタックを' + omenAction.damage +'ダメージ。';
 			break;
@@ -597,13 +752,65 @@ function omenText(omenAction){
 	}
 }
 /*******************************************************/
-/* allEnemiesdefeated：敵がすべて倒された時の処理
+/* allEnemiesDefeated：敵がすべて倒された時の処理
 /*******************************************************/
-function allEnemiesdefeated(){
-	alert('全滅');
+function allEnemiesDefeated(){
+	console.log('allEnemiesDefeated');
+	const lastReward = getLocalStorage(keyContinueReward);
+	$('result-content').html('');
+	console.log(lastReward);
+	if (lastReward) {
+		rewards = lastReward;
+	} else {
+		// コイン報酬
+		const decidedMoneyReward = decideMoneyReward();
+		rewards.push(decidedMoneyReward);
 
+		// 武器報酬
+		const selectCards = decideCardReward();
+		rewards.push(selectCards);
+
+		// アーティファクト報酬
+		switch (currentLevel) {
+			case stageLevel.test:
+			case stageLevel.special:
+			case stageLevel.boss:
+				break;
+			default:
+				break;
+		}
+
+		setLocalStorage(keyContinueReward, rewards);
+	}
+	updateResultContent();
+	
+	$('.result-modal').addClass('active');
 }
-
+/*******************************************************/
+/* decideMoneyReward：コイン報酬の設定
+/*******************************************************/
+function decideMoneyReward(){
+	const mt = new MersenneTwister();
+	let money = 0;
+	console.log(`currentLevel: ${currentLevel}`);
+	switch(currentLevel){
+		case stageLevel.test:
+			money = mt.nextInt(moneyReward.normal.min, moneyReward.normal.max);
+			break;
+		case stageLevel.normal:
+			money = mt.nextInt(moneyReward.normal.min, moneyReward.normal.max);
+			break;
+		case stageLevel.special:
+			money = mt.nextInt(moneyReward.special.min, moneyReward.special.max);
+			break;
+		case stageLevel.boss:
+			money = mt.nextInt(moneyReward.boss.min, moneyReward.boss.max);
+			break;
+		default:
+			break;
+	}
+	return {type: 'money', getFlag: true, amount: money};
+}
 /***************************************************************************************/
 /* DOM要素の更新処理
 /***************************************************************************************/
@@ -648,13 +855,13 @@ function updateHandDom(){
 			.click(hand ,() => {
 				clickHandProcess(handCardDiv, hand);
 			});
-			if (hand.class == cardClass.gran) {
-				handCardDiv.addClass('gran-card');
-			} else if (hand.class == cardClass.djeeta) {
-				handCardDiv.addClass('djeeta-card');
-			} else if (hand.class == cardClass.normal) {
-				handCardDiv.addClass('normal-card');
-			}
+		if (hand.class == cardClass.gran) {
+			handCardDiv.addClass('gran-card');
+		} else if (hand.class == cardClass.djeeta) {
+			handCardDiv.addClass('djeeta-card');
+		} else if (hand.class == cardClass.normal) {
+			handCardDiv.addClass('normal-card');
+		}
 		$(`.hand-area`).append(handCardDiv);
 	});
 }
@@ -756,6 +963,66 @@ function updatePlayerAreaDom(argPlayerStatus){
 		.append(playerAreaInnerDiv);
 	// マウスオーバー時の処理を追加
 	playerAreaInnerDiv
+}
+function updatePlayerStatusDom(argPlayerStatus){
+	$('.player-hp').html('');
+	// HPバー[player-hp-container]の要素
+	const remainHP = 100 * ( argPlayerStatus.remainHP / argPlayerStatus.maxHP );
+	const hpBerDiv = $('<div>')
+		.addClass('player-hp-bar')
+		.css('width', `${remainHP}%`);
+	const hpParagraph = $('<p>')
+		.html(`${argPlayerStatus.remainHP}/${argPlayerStatus.maxHP}`);
+	const hpContainerDiv = $('<div>')
+		.addClass('player-hp-container')
+		.append(hpBerDiv)
+		.append(hpParagraph);
+	if (argPlayerStatus.block > 0) {
+		hpContainerDiv.addClass('block');
+		const blockImage = $('<img>')
+			.attr('src', 'images/status/block.png');
+		const blockCountSpan = $('<span>')
+			.addClass('block-count')
+			.html(argPlayerStatus.block);
+		const blockInnerDiv = $('<div>')
+			.addClass('block-inner')
+			.append(blockImage)
+			.append(blockCountSpan);
+		const blockDiv = $('<div>')
+			.addClass('block-container')
+			.append(blockInnerDiv);
+		hpContainerDiv
+			.append(blockDiv);
+	}
+	$('.player-hp').append(hpContainerDiv);
+
+	// ステータス[status]の要素
+	$('.player-statuses').html('');
+	$('.player-modals').html('');
+	argPlayerStatus.statuses.forEach((status) => {
+		// ステータス[status]の要素
+		const statusImage = $('<img>')
+			.attr('src', status.image);
+		const amountSpan = $('<span>')
+			.addClass('player-status-amount')
+			.html(status.amount);
+		const statusDiv = $('<div>')
+			.addClass('player-status')
+			.append(statusImage)
+			.append(amountSpan);
+		$('.player-statuses').append(statusDiv);
+		// 状態変化モーダルの枠
+		const modalImage = $('<img>')
+			.attr('src', status.image);
+		const modalName = $('<p>')
+			.append(status.name)
+			.append(modalImage);
+		const modalDiv = $('<div>')
+			.addClass('player-modal')
+			.append(modalName)
+			.append(status.effect.replace('X', `<span>${status.amount}</span>`));
+		$('.player-modals').append(modalDiv);
+	});
 }
 function updateEnemyAreaDom(argEnemies, omenFlag = false){
 	console.log('updateEnemyAreaDom');
@@ -883,6 +1150,84 @@ function updateEnemyAreaDom(argEnemies, omenFlag = false){
 		$(`#${enemy.currentStatus.divId}`)
 	});
 }
+function updateEnemyStatusDom(argEnemies){
+	argEnemies.forEach((enemy) => {
+		// 残りHP[enemy-hp-container]要素
+		const hpContainerDiv = 
+			$(`#${enemy.currentStatus.divId}`).children('.enemy-hp-container');
+		hpContainerDiv.html('');
+		const remainHP = 100 * (enemy.currentStatus.remainHP / enemy.currentStatus.maxHP);
+		const hpBerDiv = $('<div>')
+			.addClass('enemy-hp-bar')
+			.css('width', `${remainHP}%`);
+		const hpParagraph = $('<p>')
+			.html(`${enemy.currentStatus.remainHP}/${enemy.currentStatus.maxHP}`);
+		const hpContainerInnerDiv = $('<div>')
+			.addClass('enemy-hp-container-inner')
+			.append(hpBerDiv)
+			.append(hpParagraph);
+		hpContainerDiv.append(hpContainerInnerDiv);
+		if (enemy.currentStatus.block > 0) {
+			hpContainerDiv.addClass('block');
+			const blockImage = $('<img>')
+				.attr('src', 'images/status/block.png');
+			const blockCountSpan = $('<span>')
+				.addClass('enemy-block-count')
+				.html(enemy.currentStatus.block);
+			const blockInnerDiv = $('<div>')
+				.addClass('enemy-block-inner')
+				.append(blockImage)
+				.append(blockCountSpan);
+			const blockDiv = $('<div>')
+				.addClass('enemy-block-container')
+				.append(blockInnerDiv);
+			hpContainerDiv
+				.append(blockDiv);
+		}
+		// ステータス[status]の要素
+		const statusesDiv = 
+			$(`#${enemy.currentStatus.divId}`).children('.statuses');
+		statusesDiv.html('');
+		// 状態変化モーダルの枠
+		const modalsDiv = 
+			$(`#${enemy.currentStatus.divId}`).children('.enemy-modals');
+		modalsDiv.html('');
+		const omenModalImage = $('<img>')
+			.attr('src', enemy.currentStatus.nextAction.image);
+		const omenName = $('<p>')
+			.append(enemy.currentStatus.nextAction.name)
+			.append(omenModalImage);
+		const omenModalDiv = $('<div>')
+			.addClass('enemy-modal')
+			.append(omenName)
+			.append(omenText(enemy.currentStatus.nextAction));
+		modalsDiv.append(omenModalDiv);
+		enemy.currentStatus.status.forEach((status) => {
+			// ステータス[status]の要素
+			const statusImage = $('<img>')
+				.attr('src', status.image);
+			const amountSpan = $('<span>')
+				.addClass('amount')
+				.html(status.amount);
+			const statusDiv = $('<div>')
+				.addClass('status')
+				.append(statusImage)
+				.append(amountSpan);
+			statusesDiv.append(statusDiv);
+			// 状態変化モーダルの枠
+			const modalImage = $('<img>')
+				.attr('src', status.image);
+			const modalName = $('<p>')
+				.append(status.name)
+				.append(modalImage);
+			const modalDiv = $('<div>')
+				.addClass('enemy-modal')
+				.append(modalName)
+				.append(status.effect.replace('X', `<span>${status.amount}</span>`));
+			modalsDiv.append(modalDiv);
+		});
+	});
+}
 
 function fadeInEnemyOmenDom(){
 	currentEnemies.forEach((enemy) => {
@@ -916,6 +1261,70 @@ function fadeOutEnemyOmenDom(enemy){
 		}, omenFadeOutWaitTime, "linear");
 	
 }
+function updateResultContent(){
+	let rewardFlag = false;
+	$('.result-content').html('');
+	rewards.forEach((reward) => {
+		if(reward.getFlag){
+			switch(reward.type){
+				case 'money':
+					moneyRewardDOM(reward);
+					break;
+				case 'card':
+					cardRewardDOM(reward);
+					break;
+				default:
+					break;
+			}
+			rewardFlag = true;
+		}
+	});
+	if (rewardFlag) {
+		$('.skip-btn').children('p').html('スキップ');
+	} else {
+		$('.skip-btn').children('p').html('進む');
+	}
+}
+function moneyRewardDOM(money){
+	// コイン報酬
+	const rewardImage = $('<img>')
+		.attr('src', 'images/information/money.png');
+	const rewardParagraph = $('<p>')
+		.html(`黄金の古紋 ${money.amount}枚`);
+	const rewardDiv = $('<div>')
+		.addClass('reward')
+		.append(rewardImage)
+		.append(rewardParagraph)
+		.click(() => {
+			playerStatus.money += money.amount;
+			rewardDiv.remove();
+			money.getFlag = false;
+			updateMoney();
+			setLocalStorage(keyContinuePlayerStatus, playerStatus);
+			setLocalStorage(keyContinueReward, rewards);
+		});
+	$('.result-content').append(rewardDiv);
+
+}
+function cardRewardDOM(rewardCards){
+	// 武器報酬
+	const rewardImage = $('<img>')
+		.attr('src', 'images/information/card.png');
+	const rewardParagraph = $('<p>')
+		.html(`武器を入手`);
+	const rewardDiv = $('<div>')
+		.addClass('reward')
+		.append(rewardImage)
+		.append(rewardParagraph)
+		.click(() => {
+			selectCardReward(rewardCards);
+		});
+	$('.result-content').append(rewardDiv);
+}
+
+function updateDecideTitle(text){
+	$('.decide-title').html(text);
+}
 /***************************************************************************************/
 /* モーダル要素の更新処理
 /***************************************************************************************/
@@ -946,7 +1355,7 @@ function openExplanationModalDom(card){
 	} else if (card.class == cardClass.djeeta) {
 		explanationModal.addClass('djeeta-card');
 	} else if (card.class == cardClass.normal) {
-		explanationModal.addClass('nomal-card');
+		explanationModal.addClass('normal-card');
 	}
 	explanationModal.addClass('explanation-modal-card');
 	$('.explanation-modal-body').append(explanationModal);

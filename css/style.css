@@ -55,7 +55,7 @@ body{
 .djeeta-card{
 	background-color: #cd7a89;
 }
-.nomal-card{
+.normal-card{
 	background-color: #f3f0e8;
 }
 .empty{
@@ -197,9 +197,9 @@ body{
 	align-items: center;
 }
 /*****************************************************************************/
-/* infomation-modal: Info用モーダルの設定
+/* information-modal: Info用モーダルの設定
 /*****************************************************************************/
-.infomation-modal{
+.information-modal{
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -216,11 +216,11 @@ body{
 }
 
 /*モーダル本体に「active」クラス付与した時のスタイル*/
-.infomation-modal.active{
+.information-modal.active{
 	visibility: visible;
 }
 
-.infomation-modal-body{
+.information-modal-body{
 	position: relative;
 	width: 900px;
 	height: 800px;
@@ -232,7 +232,7 @@ body{
 	align-items: center;
 	z-index: 2000;
 }
-.close-infomation-modal-btn{
+.close-information-modal-btn{
 	position: absolute;
 	top: -2px;
 	right: -2px;
@@ -247,29 +247,29 @@ body{
 	justify-content: center;
 	align-items: center;
 }
-.close-infomation-modal-btn:active{
+.close-information-modal-btn:active{
 	transform: scale(0.95);
 }
 
-.infomation-modal-body h1{
+.information-modal-body h1{
 	width: 100%;
 	text-align: left;
 	line-height: 40px;
 	margin-top: 20px;
 }
-.infomation-modal-body p{
+.information-modal-body p{
 	width: 100%;
 	text-align: left;
 	font-size: 24px;
 }
-.infomation-modal-body ul,
-.infomation-modal-body ol{
+.information-modal-body ul,
+.information-modal-body ol{
 	width: 100%;
 	text-align: left;
 	padding-left: 20px;
 }
-.infomation-modal-body ul li,
-.infomation-modal-body ol li{
+.information-modal-body ul li,
+.information-modal-body ol li{
 	text-align: left;
 	font-size: 24px;
 }
@@ -339,7 +339,7 @@ header{
 	position: absolute;
 	bottom: -50px;
 	left: 0;
-	z-index: 9999;
+	z-index: 2000;
 	padding: 0 10px;
 }
 .artifact{
@@ -921,7 +921,9 @@ header{
 	align-items: center;
 	position: relative;
 }
-
+.hand-area.front{
+	z-index: 3001;
+}
 .hand-card{
 	font-size: 14px;
 	color: white;
@@ -1079,7 +1081,60 @@ header{
 
 
 /*****************************************************************************/
-/* talk-area: 会話の要素
+/* background: 黒背景の要素
+/*****************************************************************************/
+.decide-area{
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+	background: rgba(0,0,0,0.8);
+	visibility: hidden;
+	opacity: 0;
+	z-index: 3000;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+.decide-area.active{
+	visibility: visible;
+	opacity: 1;
+}
+.decide-title{
+	font-size: 28px;
+	color: white;
+	font-weight: 900;
+	text-stroke: 1px gray;
+	-webkit-text-stroke: 1px gray;
+
+}
+.decide-btn{
+	position: relative;
+	width: 200px;
+}
+.decide-btn:active{
+	transform: scale(0.95) translateY(3px);
+}
+.decide-btn img{
+	width: 100%;
+}
+.decide-btn span{
+	width: 100%;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	font-size: 20px;
+	color: white;
+	font-weight: 900;
+	text-shadow: 1px 1px 3px black;
+	text-align: center;
+}
+/*****************************************************************************/
+/* map-modal: マップ表示モーダルの要素
 /*****************************************************************************/
 .map-modal{
 	position: fixed;
@@ -1148,8 +1203,8 @@ header{
 		visibility: visible;
 		opacity: 1;
 	}
-	}
-	@keyframes fade-out {
+}
+@keyframes fade-out {
 	0% {
 		visibility: visible;
 		opacity: 1;
@@ -1164,4 +1219,224 @@ header{
 		visibility: hidden;
 		opacity: 0;
 	}
+}
+/*****************************************************************************/
+/* result-modal: 戦闘結果の要素
+/*****************************************************************************/
+.result-modal{
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+	background: rgba(0,0,0,0.8);
+	padding: 40px 20px;
+	overflow: auto;
+	opacity: 0;
+	visibility: hidden;
+	transition: all .3s;
+	box-sizing: border-box;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	z-index: 3000;
+	animation-duration: 0.3s;
+	animation-name: fade-out;
+}
+
+/*モーダル本体に「active」クラス付与した時のスタイル*/
+.result-modal.active{
+	visibility: visible;
+	opacity: 1;
+	animation-duration: 0.3s;
+	animation-name: fade-in;
+}
+
+.result-modal-body{
+	position: relative;
+	width: 500px;
+	height: 80vh;
+	background-color: #eee9d8;
+	border: 3px solid #432d23;
+	z-index: 2000;
+}
+.result-title{
+	width: 100%;
+	height: 60px;
+	font-size: 40px;
+	font-weight: 900;
+	text-stroke: 2px gray;
+	-webkit-text-stroke: 2px gray;
+	color: white;
+	background-color: #5e1917;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.result-content{
+	width: 100%;
+	height: calc(100% - 60px - 90px);
+	padding: 30px 20px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+.reward{
+	margin: 10px auto;
+	height: 60px;
+	width: 450px;
+	display: flex;
+	align-items: center;
+	background-color: #8b887d;
+	border-radius: 5px;
+}
+.reward:hover{
+	background-color: #8b846a;
+}
+.reward img{
+	height: 50%;
+	margin-left: 20px;
+	margin-right: 20px;
+
+}
+.reward p{
+	color: white;
+	font-size: 20px;
+	font-weight: 900;
+	text-shadow: 1px 1px 3px black;
+	text-stroke: 1px gray;
+	-webkit-text-stroke: 1px gray;
+}
+.reward:hover p{
+	color: #e5c150;
+}
+.skip{
+	width: 100%;
+	height: 90px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.skip-btn{
+	width: 200px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+}
+.skip-btn:active{
+	transform: scale(0.95) translate(0,2px);
+}
+.skip-btn img{
+	width: 100%;
+}
+.skip-btn p{
+	color: white;
+	font-size: 20px;
+	font-weight: 900;
+	text-shadow: 1px 1px 3px black;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	text-align: center;
+}
+
+.card-select{
+	width: 900px;
+	height: 600px;
+}
+.card-select-title{
+	width: 100%;
+	height: 90px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	font-size: 40px;
+	color: white;
+	text-stroke: 1px gray;
+	-webkit-text-stroke: 1px gray;
+
+}
+
+.select-cards-area{
+	width: 100%;
+	height: calc(100% - 90px - 90px);
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+
+}
+
+.select-card{
+	font-size: 18px;
+	color: white;
+	width: 210px;
+	height: 280px;
+	aspect-ratio: 3 / 4;
+	border: 2px solid white;
+	border-radius: 10px;
+	text-align: center;
+	box-shadow: 1px 1px 5px black;
+	position: relative;
+}
+.select-card:hover{
+	transform: scale(1.3);
+}
+.select-card img{
+	width: 100%;
+}
+.select-card div{
+	width: 30px;
+	height: 30px;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	background-color: white;
+	border-radius: 50%;
+	color: black;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.select-card p{
+	font-size: 16px;
+	width: 100%;
+	padding: 0 5px;
+}
+
+
+
+.select-skip{
+	width: 100%;
+	height: 90px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.select-skip-btn{
+	width: 200px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+}
+.select-skip-btn:active{
+	transform: scale(0.95) translate(0,2px);
+}
+.select-skip-btn img{
+	width: 100%;
+}
+.select-skip-btn p{
+	color: white;
+	font-size: 20px;
+	font-weight: 900;
+	text-shadow: 1px 1px 3px black;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	text-align: center;
 }

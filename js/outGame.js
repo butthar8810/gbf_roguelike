@@ -57,28 +57,22 @@ function setupCharaStatus(){
 		playerStatus.maxHP = lastPlayerStatus.maxHP;
 		playerStatus.money = lastPlayerStatus.money;
 		playerStatus.maxEnergy = lastPlayerStatus.maxEnergy;
-		$('.remainHp').html(playerStatus.remainHP);
-		$('.maxHp').html(playerStatus.maxHP);
-		$('.remainMoney').html(playerStatus.money);
 	} else{
 		if (selectChara == selectCharacter.gran.name){// グランの場合
 			playerStatus.remainHP = selectCharacter.gran.maxHP;
 			playerStatus.maxHP = selectCharacter.gran.maxHP;
 			playerStatus.money = selectCharacter.gran.money;
-			$('.remainHp').html(selectCharacter.gran.maxHP);
-			$('.maxHp').html(selectCharacter.gran.maxHP);
-			$('.remainMoney').html(selectCharacter.gran.money);
+			
 		} else if (selectChara == selectCharacter.djeeta.name){// ジータの場合
 			playerStatus.remainHP = selectCharacter.djeeta.maxHP;
 			playerStatus.maxHP = selectCharacter.djeeta.maxHP;
 			playerStatus.money = selectCharacter.djeeta.money;
 			playerStatus.remainEnergy = initialEnergy;
-			$('.remainHp').html(selectCharacter.djeeta.maxHP);
-			$('.maxHp').html(selectCharacter.djeeta.maxHP);
-			$('.remainMoney').html(selectCharacter.djeeta.money);
 		}
 		setLocalStorage(keyContinuePlayerStatus, playerStatus);
 	}
+	updateHP();
+	updateMoney();
 }
 /*******************************************************/
 /* setupDeck：初期デッキとなる10枚のカードを配る
@@ -98,7 +92,7 @@ function setupDeck(){
 		if (selectChara == selectCharacter.gran.name){
 			addCardToOriginalDeck(granCardList.Wide, 5);
 			addCardToOriginalDeck(granCardList.Defense, 4);
-			addCardToOriginalDeck(granCardList.Powerswing, 1);
+			addCardToOriginalDeck(granCardList.PowerSwing, 1);
 		} else if (selectChara == selectCharacter.djeeta.name){
 			addCardToOriginalDeck(djeetaCardList.Wide, 5);
 			addCardToOriginalDeck(djeetaCardList.Defense, 5);
@@ -157,6 +151,7 @@ function climbTowerStart(){
 	currentMap = initialMap;
 	setLocalStorage(keyContinueCurrentMap, currentMap);
 	//ステージを生成する
+	$('.map-modal-body').html('');
 	for(let row = 0; row < mapRows; row++){
 		const mapRows = [];
 		for(let column = 0; column < mapColumns; column++){
@@ -180,10 +175,10 @@ function climbTowerStart(){
 				mapDiv.html(`<img src='${stages.gift.image}'>`);
 				mapRows.push(stages.gift);
 				selectStage = stages.gift;
-			} else if (row === fixedStageNomal){
-				mapDiv.html(`<img src='${stages.nomal.image}'>`);
-				mapRows.push(stages.nomal);
-//				selectStage = stages.nomal;
+			} else if (row === fixedStageNormal){
+				mapDiv.html(`<img src='${stages.normal.image}'>`);
+				mapRows.push(stages.normal);
+//				selectStage = stages.normal;
 				selectStage = stages.test;
 			} else {
 				let randomMap = mt.nextInt(0, totalWeight);
@@ -204,9 +199,11 @@ function climbTowerStart(){
 			) {
 				mapDiv.addClass('choices');
 				mapDiv.click((e) => {
-					console.log(selectStage.name);
+					console.log(`row:[${row}] column:[${column}]`);
+					console.log(selectStage);
 					currentMap.row = row;
 					currentMap.column = column;
+					setLocalStorage(keyContinueCurrentMap, currentMap);
 					admissionStage(selectStage);
 				});
 			}
@@ -229,6 +226,7 @@ function climbTowerContinue(){
 	} else {
 		alert('マップが保存されていません');
 	}
+	$('.map-modal-body').html('');
 	for(let row = 0; row < mapRows; row++){
 		for(let column = 0; column < mapColumns; column++){
 			const mapDiv = $('<div>').addClass('stage');
@@ -248,9 +246,11 @@ function climbTowerContinue(){
 			) {
 				mapDiv.addClass('choices');
 				mapDiv.click((e) => {
-					console.log(map[row][column].name);
+					console.log(`row:[${row}] column:[${column}]`);
+					console.log(map[row][column]);
 					currentMap.row = row;
 					currentMap.column = column;
+					setLocalStorage(keyContinueCurrentMap, currentMap);
 					admissionStage(map[row][column]);
 				});
 			}
@@ -271,10 +271,11 @@ function admissionStage(stageInfo){
 	$('.map-modal-body').html('');
 	switch(stageInfo.name){
 		case stages.boss.name:
-			startButtle(stageLevel.boss);
+			currentLevel = stageLevel.boss;
+			startBattle();
 			break;
 		case stages.gift.name:
-			startgiftEvent();
+			startGiftEvent();
 			break;
 		case stages.shop.name:
 			startShop();
@@ -286,19 +287,23 @@ function admissionStage(stageInfo){
 			startRandomEvent();
 			break;
 		case stages.special.name:
-			startButtle(stageLevel.special);
+			currentLevel = stageLevel.special;
+			startBattle();
 			break;
-		case stages.nomal.name:
-			startButtle(stageLevel.nomal);
+		case stages.normal.name:
+			currentLevel = stageLevel.normal;
+			startBattle();
 			break;
 		default:
-			startButtle(stageLevel.test);
+			currentLevel = stageLevel.test;
+			console.log(`currentLevel: ${currentLevel}`);
+			startBattle();
 			break;
 	}
 }
 
 /*******************************************************/
-/* drawSupplyCard：サプライからカードを取得する
+/* addCardToOriginalDeck：カードをオリジナルデッキに入れる
 /*******************************************************/
 function addCardToOriginalDeck(card, count = 1){
 	
@@ -331,4 +336,18 @@ function deleteTalkingBtn(){
 	$('.talk-area').html('')
 	return
 }
-
+/*******************************************************/
+/* updateMoney：HPをDOM更新する
+/*******************************************************/
+function updateHP(){
+	$('.remainHp').html(playerStatus.remainHP);
+	$('.maxHp').html(playerStatus.maxHP);
+	return
+}
+/*******************************************************/
+/* updateMoney：所持コインをDOM更新する
+/*******************************************************/
+function updateMoney(){
+	$('.remainMoney').html(playerStatus.money);
+	return
+}

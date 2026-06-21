@@ -9,7 +9,7 @@ const stages = {
 	rest: { name: '休憩', weight: 12, image: 'images/map/rest.png' },
 	event: { name: 'イベント', weight: 22, image: 'images/map/event.png' },
 	special: { name: '強敵戦闘', weight: 8, image: 'images/map/special.png' },
-	nomal: { name: '通常戦闘', weight: 53, image: 'images/map/nomal.png' },
+	normal: { name: '通常戦闘', weight: 53, image: 'images/map/normal.png' },
 	test: { name: 'TEST戦闘', weight: 0, image: 'images/map/test.png' },
 };
 
@@ -63,24 +63,14 @@ const selectCharacter = {
 const cardClass = {gran: 'グラン', djeeta: 'ジータ', normal: '無色'};
 const rarity = {starter: '初期', common: 'レア', uncommon: 'スーパーレア', rare: 'SSレア'};
 const type = {attack: 'アタック', skill: 'スキル', power: 'パワー', rare: 'レア'};
-const granCardList = {
-	Wide: {name: 'ワイドブレード', class: cardClass.gran, cost: 1, rarity: rarity.starter, type: type.attack, effect: '6のダメージを与える。', func: 'effectStrike', image:'images/card/gran_Wide.jpg' },
-	Powerswing: {name: 'パワースウィング', class: cardClass.gran, cost: 2, rarity: rarity.starter, type: type.attack, effect: `8のダメージを与える。${debufStatus.defenseDown.name}2を与える。`, func: 'effectPowerswing', image:'images/card/gran_Powerswing.jpg'},
-	Defense: {name: '防御', class: cardClass.gran, cost: 1, rarity: rarity.starter, type: type.skill, effect: '5ブロックを得る。', func: 'effectDefense', image:'images/card/gran_Defense.jpg'},
-};
-const djeetaCardList = {
-	Wide: {name: 'ワイドブレード', class: cardClass.djeeta, cost: 1, rarity: rarity.starter, type: type.attack, effect: '6のダメージを与える。', func: 'effectStrike', image:'images/card/djeeta_Wide.jpg'},
-	Fast: {name: 'ファストスライサー', class: cardClass.djeeta, cost: 0, rarity: rarity.starter, type: type.attack, effect: `3ダメージを与える。${debufStatus.weak.name}1を与える。`, func: 'effectFast', image:'images/card/djeeta_Fast.jpg'},
-	Defense: {name: '防御', class: cardClass.djeeta, cost: 1, rarity: rarity.starter, type: type.skill, effect: '5ブロックを得る。', func: 'effectDefense', image:'images/card/djeeta_Defense.jpg'},
-	Pulverizer: {name: 'パルバライザー', class: cardClass.djeeta, cost: 1, rarity: rarity.starter, type: type.skill, effect: '8ブロックを得る。カードを1枚捨てる。', func: 'effectPulverizer', image:'images/card/djeeta_Pulverizer.jpg'}
-};
+
 
 /*****************************************************************************/
 /* グローバル定数
 /*****************************************************************************/
 const fixedStageBoss = 0;
 const fixedStageGift = 7;
-const fixedStageNomal = 15;
+const fixedStageNormal = 15;
 const initialHandNum = 5;
 const initialEnergy = 3;
 const initialMap = {row: 16, column: 5};
@@ -88,18 +78,24 @@ const mapColumns = 11;
 const mapRows = 16;
 const omenFadeInWaitTime = 1000;
 const omenFadeOutWaitTime = 1000;
+const moneyReward = {
+	normal:{min: 10, max: 20},
+	special:{min: 25, max: 35},
+	boss:{min: 95, max: 105},
+};
 /*****************************************************************************/
 /* ローカルストレージのキー
 /*****************************************************************************/
 const keySelectChara = 'Babu.Select.Chara';
 const keyContinueFlag = 'Babu.Continue.Flag';// 途中プレイがあるかのフラグ
-const keyContinueBattleFlag = 'Babu.Continue.Battle.Flag';// 途中戦闘があるかのフラグ
 const keyContinueArtifact = 'Babu.Continue.Artifact';
 const keyContinuePlayerStatus = 'Babu.Continue.Player.Status';
 const keyContinueMap = 'Babu.Continue.Map';
 const keyContinueCurrentMap = 'Babu.Continue.Current.Map';
-const keyContinueDeck = 'Babu.Continue.Deck';
 const keyContinueOriginalDeck = 'Babu.Continue.Original.Deck';
+// 戦闘用ストレージキー
+const keyContinueBattleFlag = 'Babu.Continue.Battle.Flag';// 途中戦闘があるかのフラグ
+const keyContinueDeck = 'Babu.Continue.Deck';
 const keyContinueHand = 'Babu.Continue.Hand';
 const keyContinueTrash = 'Babu.Continue.Trash';
 const keyContinueDiscard = 'Babu.Continue.Discard';
@@ -107,10 +103,20 @@ const keyContinueTemporary = 'Babu.Continue.Temporary';
 const keyContinueStack = 'Babu.Continue.Stack';
 const keyContinueTurn = 'Babu.Continue.Turn';
 const keyContinueEnemy = 'Babu.Continue.Enemy';
+const keyContinueLevel = 'Babu.Continue.Level';
+const keyContinueReward = 'Babu.Continue.Reward';
+const keyContinuePhase = 'Babu.Continue.Phase';
+const keyContinueDecide = 'Babu.Continue.Decide';
 
 
-
-
+/*****************************************************************************/
+/* フェイズ定数
+/*****************************************************************************/
+const phase = {
+	action: 'アクションフェイズ',
+	enemy: 'エネミーフェイズ',
+	trash: 'トラッシュフェイズ', 
+};
 
 /*****************************************************************************/
 /* グローバル変数
@@ -141,6 +147,9 @@ let myBlock = 0;
 let currentTurn = 0;
 let currentEnemies = [];
 let currentTarget = {};
+let currentLevel = -1;
+let rewards = [];
+let currentPhase = phase.action;
 //各種フラグ
 let enemyAttackWaitFlag = false;
 let allDefeatedFlag = false;
@@ -154,3 +163,6 @@ let enemyAttackPromise = Promise.resolve();
 let enemyAbnormalityPromise = Promise.resolve();
 let enemyGetBlockPromise = Promise.resolve();
 let enemyDefeatedPromise = Promise.resolve();
+
+// 決定ボタン押下用関数
+let decideFunc = '';

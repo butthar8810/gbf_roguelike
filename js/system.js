@@ -2,7 +2,7 @@
 /* システム関数
 /***********************************************************************************/
 /*******************************************************/
-/* deepCopySupply：サプライカード配列をディープコピーする
+/* deepCopySupply：カード配列をディープコピーする
 /*******************************************************/
 function deepCopyCard(arraycard){
 	const cloneArray = [];
@@ -16,6 +16,7 @@ function deepCopyCard(arraycard){
 		cloneOjt.effect = cardOjt.effect;
 		cloneOjt.func = cardOjt.func;
 		cloneOjt.image = cardOjt.image;
+		cloneOjt.discard = cardOjt.discard;
 		cloneArray.push(cloneOjt);
 	});
 	return cloneArray;
@@ -74,7 +75,8 @@ function pushOriginalDeck(card){
 			type: card.type,
 			effect: card.effect,
 			image: card.image,
-			func: card.func
+			func: card.func,
+			discard: card.discard
 		});
 	} else {
 		myOriginalDeck.push(card);
@@ -93,7 +95,8 @@ function unshiftOriginalDeck(card){
 			type: card.type,
 			effect: card.effect,
 			image: card.image,
-			func: card.func
+			func: card.func,
+			discard: card.discard
 		});
 	} else {
 		myOriginalDeck.unshift(card);
@@ -124,7 +127,8 @@ function pushDeck(card){
 			type: card.type,
 			effect: card.effect,
 			image: card.image,
-			func: card.func
+			func: card.func,
+			discard: card.discard
 		});
 	} else {
 		myDeck.push(card);
@@ -143,7 +147,8 @@ function unshiftDeck(card){
 			type: card.type,
 			effect: card.effect,
 			image: card.image,
-			func: card.func
+			func: card.func,
+			discard: card.discard
 		});
 	} else {
 		myDeck.unshift(card);
@@ -156,9 +161,9 @@ function shiftDeck(){
 	return myDeck.shift();
 }
 /*******************************************************/
-/* deletAllDeck：デッキキューをすべて削除する
+/* deleteAllDeck：デッキキューをすべて削除する
 /*******************************************************/
-function deletAllDeck(){
+function deleteAllDeck(){
 	return myDeck.splice(0, myDeck.length);
 }
 /*******************************************************/
@@ -180,7 +185,8 @@ function pushHand(card){
 		type: card.type,
 		effect: card.effect,
 		image: card.image,
-		func: card.func
+		func: card.func,
+		discard: card.discard
 	});
 }
 /*******************************************************/
@@ -196,9 +202,9 @@ function findIndexHand(id, key){
 	return myHand.findIndex((card) => card[id] == key);
 }
 /*******************************************************/
-/* deletAllHand：手札キューをすべて削除する
+/* deleteAllHand：手札キューをすべて削除する
 /*******************************************************/
-function deletAllHand(){
+function deleteAllHand(){
 	return myHand.splice(0, myHand.length);
 }
 /*******************************************************/
@@ -214,7 +220,8 @@ function pushTrash(card){
 			type: card.type,
 			effect: card.effect,
 			image: card.image,
-			func: card.func
+			func: card.func,
+			discard: card.discard
 		});
 	} else {
 		myTrash.push(card);
@@ -233,9 +240,9 @@ function findIndexTrash(id, key){
 	return myTrash.findIndex((card) => card[id] == key);
 }
 /*******************************************************/
-/* deletAllTrash：捨て札キューをすべて削除する
+/* deleteAllTrash：捨て札キューをすべて削除する
 /*******************************************************/
-function deletAllTrash(){
+function deleteAllTrash(){
 	return myTrash.splice(0, myTrash.length);
 }
 /*******************************************************/
@@ -247,19 +254,21 @@ function pushDiscard(card){
 			name: card.name,
 			class: card.class,
 			cost: card.cost,
+			rarity: card.rarity,
 			type: card.type,
 			effect: card.effect,
 			image: card.image,
-			func: card.func
+			func: card.func,
+			discard: card.discard
 		});
 	} else {
 		discard.push(card);
 	}
 }
 /*******************************************************/
-/* deletAllDiscard：廃棄キューをすべて削除する
+/* deleteAllDiscard：廃棄キューをすべて削除する
 /*******************************************************/
-function deletAllDiscard(){
+function deleteAllDiscard(){
 	return discard.splice(0, discard.length);
 }
 /*******************************************************/
@@ -288,9 +297,9 @@ function findIndexTemporaryArea(id, key){
 }
 
 /*******************************************************/
-/* deletAllTemporaryArea：一時用キューをすべて削除する
+/* deleteAllTemporaryArea：一時用キューをすべて削除する
 /*******************************************************/
-function deletAllTemporaryArea(){
+function deleteAllTemporaryArea(){
 	return tmpArea.splice(0, tmpArea.length);
 }
 /*******************************************************/
@@ -306,9 +315,9 @@ function shiftStackCard(){
 	return stackCard.shift();
 }
 /*******************************************************/
-/* deletAllStackCard：カード効果実行キューをすべて削除する
+/* deleteAllStackCard：カード効果実行キューをすべて削除する
 /*******************************************************/
-function deletAllStackCard(){
+function deleteAllStackCard(){
 	return stackCard.splice(0, stackCard.length);
 }
 /*******************************************************/
@@ -316,10 +325,9 @@ function deletAllStackCard(){
 /*******************************************************/
 function shuffleArray(array) {
 	const shuffled = [...array]; // 元の配列を破壊しないようにコピー
-	const mt = new MersenneTwister();
 	for (let i = shuffled.length - 1; i > 0; i--) {
 		// 0 から i までのランダムなインデックスを生成
-		const j = mt.nextInt(0, (i + 1));
+		let j = Math.floor(Math.random() * (i + 1));
 		// 要素を交換
 		[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
 	}
