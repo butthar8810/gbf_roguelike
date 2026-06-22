@@ -175,8 +175,10 @@ function selectCardReward(rewardCards){
 			selectCardDiv.addClass('gran-card');
 		} else if (card.class == cardClass.djeeta) {
 			selectCardDiv.addClass('djeeta-card');
-		} else if (card.class == cardClass.normal) {
-			selectCardDiv.addClass('normal-card');
+		} else if (card.class == cardClass.common) {
+			selectCardDiv.addClass('common-card');
+		} else if (card.class == cardClass.abnormal) {
+			selectCardDiv.addClass('abnormal-card');
 		}
 		$(`.select-cards-area`).append(selectCardDiv);
 	});
@@ -218,7 +220,7 @@ function effectDefense(){
 	return true;
 }
 /*************************************************************************************/
-/* グラン
+/* グランのカード効果関数
 /*************************************************************************************/
 function effectPowerSwing(){
 	// 8のダメージを与える。弱体2を与える。
@@ -361,7 +363,7 @@ function effectNaan(){
 	return true;
 }
 /*************************************************************************************/
-/* ジータ
+/* ジータのカード効果関数
 /*************************************************************************************/
 function effectFast(){
 	// 3ダメージを与える。脱力1を与える。
@@ -374,42 +376,10 @@ function effectPulverizer(){
 	// 8ブロックを得る。カードを1枚捨てる。
 	console.log('effectPulverizer');
 	actionBlock(8);
-	decideFunc = 'decidePulverizer';
-	setLocalStorage(keyContinueDecide, decideFunc);
-	startPhase(phase.trash);
+	actionTrashCard();
 	return true;
 }
-function decidePulverizer(){
-	console.log('decidePulverizer');
-	console.log(tmpArea);
-	if(tmpArea.length === 0){
-		return false;
-	}
-	const trashCard = shiftTemporaryArea();
-	if (trashCard !== undefined) {
-		setLocalStorage(keyContinueTemporary, tmpArea);
-		const index = findIndexHand('id', trashCard.id);
-		if (index === -1) {
-			return false;
-		}
-		const card = spliceHand(index);
-		if (card === undefined) {
-			return false;
-		}
-		pushTrash(card);
-		setLocalStorage(keyContinueHand, myHand);
-		setLocalStorage(keyContinueDiscard, myTrash);
-		$('.decide-area').removeClass('active');
-		$('.hand-area').removeClass('front');
 
-		animateHandToTrash(card);
-		$.when(cardTrashPromise).done(() => {
-			updateHandDom();
-			updateTrashDom();
-		});
-		startPhase(phase.action);
-	}
-}
 
 
 
@@ -530,4 +500,45 @@ function actionStatusDebuf(debuf, amountCount){
 	}
 	// アニメーション
 	animateEnemyAbnormality(currentTarget, receivedDebuf);
+}
+
+/*******************************************************/
+/* 1枚カードを捨てる関数
+/*******************************************************/
+function actionTrashCard(){
+	decideFunc = 'trashCard';
+	setLocalStorage(keyContinueDecide, decideFunc);
+	startPhase(phase.trash);
+}
+function trashCard(){
+	console.log('decidePulverizer');
+	console.log(tmpArea);
+	if(tmpArea.length === 0){
+		return false;
+	}
+	const trashCard = shiftTemporaryArea();
+	if (trashCard !== undefined) {
+		setLocalStorage(keyContinueTemporary, tmpArea);
+		const index = findIndexHand('id', trashCard.id);
+		if (index === -1) {
+			return false;
+		}
+		const card = spliceHand(index);
+		if (card === undefined) {
+			return false;
+		}
+		pushTrash(card);
+		setLocalStorage(keyContinueHand, myHand);
+		setLocalStorage(keyContinueDiscard, myTrash);
+		$('.decide-area').removeClass('active');
+		$('.hand-area').removeClass('front');
+		$(`.hand-card`).removeClass('select');
+
+		animateHandToTrash(card);
+		$.when(cardTrashPromise).done(() => {
+			updateHandDom();
+			updateTrashDom();
+		});
+		startPhase(phase.action);
+	}
 }

@@ -859,8 +859,10 @@ function updateHandDom(){
 			handCardDiv.addClass('gran-card');
 		} else if (hand.class == cardClass.djeeta) {
 			handCardDiv.addClass('djeeta-card');
-		} else if (hand.class == cardClass.normal) {
-			handCardDiv.addClass('normal-card');
+		} else if (hand.class == cardClass.common) {
+			handCardDiv.addClass('common-card');
+		} else if (hand.class == cardClass.abnormal) {
+			handCardDiv.addClass('abnormal-card');
 		}
 		$(`.hand-area`).append(handCardDiv);
 	});
@@ -1354,8 +1356,10 @@ function openExplanationModalDom(card){
 		explanationModal.addClass('gran-card');
 	} else if (card.class == cardClass.djeeta) {
 		explanationModal.addClass('djeeta-card');
-	} else if (card.class == cardClass.normal) {
-		explanationModal.addClass('normal-card');
+	} else if (card.class == cardClass.common) {
+		explanationModal.addClass('common-card');
+	} else if (card.class == cardClass.abnormal) {
+		drawCardDiv.addClass('abnormal-card');
 	}
 	explanationModal.addClass('explanation-modal-card');
 	$('.explanation-modal-body').append(explanationModal);

@@ -60,7 +60,6 @@ const selectCharacter = {
 	gran:	{name: 'グラン', maxHP: 80, money: 99}, 
 	djeeta:	{name: 'ジータ', maxHP: 75, money: 99}
 };
-const cardClass = {gran: 'グラン', djeeta: 'ジータ', normal: '無色'};
 const rarity = {starter: '初期', common: 'レア', uncommon: 'スーパーレア', rare: 'SSレア'};
 const type = {attack: 'アタック', skill: 'スキル', power: 'パワー', rare: 'レア'};
 
@@ -157,6 +156,7 @@ let allDefeatedFlag = false;
 // promiseオブジェクト
 let cardDrawPromise = Promise.resolve();
 let cardTrashPromise = Promise.resolve();
+let cardShowPromise = Promise.resolve();
 let playerAbnormalityPromise = Promise.resolve();
 let playerGetBlockPromise = Promise.resolve();
 let enemyAttackPromise = Promise.resolve();

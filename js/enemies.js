@@ -163,21 +163,28 @@ function actionTEST(){
 	return false;
 }
 function testAttack(enemyInfo, playerInfo, animationFlag){
+	// 毒2+アタック6
 	enemyAttack(enemyInfo, playerInfo, animationFlag, 6);
 	enemyStatusDebuf(enemyInfo, playerInfo, animationFlag, debufStatus.poison, 2);
 }
 function testStrategy(enemyInfo, playerInfo, animationFlag){
+	// 攻撃力アップ2+ブロック5
 	enemyStatusDebuf(enemyInfo, playerInfo, animationFlag, debufStatus.defenseDown, 2);
 }
 function testSpell(enemyInfo, playerInfo, animationFlag){
+	// 攻撃力アップ2+ブロック5
 	enemyStatusBuf(enemyInfo, animationFlag, bufStatus.attackUp, 2);
 	enemyBlock(enemyInfo, animationFlag, 5);
 }
 function testMucus(enemyInfo, playerInfo, animationFlag){
 	// 8ダメージ+粘液1枚を捨て札に加える
 	enemyAttack(enemyInfo, playerInfo, animationFlag, 8);
+	const debufCards = [abnormalCardList.Mucus, abnormalCardList.Mucus, abnormalCardList.Mucus];
+	enemyCardDebuf(animationFlag, debufCards);
+
 }
 function testFirst(enemyInfo, playerInfo, animationFlag){
+	// 開始時効果
 	console.log(testFirst);
 	enemyStatusBuf(enemyInfo, animationFlag, bufStatus.metallicize, 2);
 }
@@ -231,6 +238,8 @@ function silverAttack(enemyInfo, playerInfo, animationFlag){
 function silverMucus(enemyInfo, playerInfo, animationFlag){
 	// 8ダメージ+粘液1枚を捨て札に加える
 	enemyAttack(enemyInfo, playerInfo, animationFlag, 8);
+	const debufCards = [abnormalCardList.Mucus];
+	enemyCardDebuf(animationFlag, debufCards);
 }
 function silverStrategy(enemyInfo, playerInfo, animationFlag){
 	// 脱力1を付与
@@ -410,5 +419,18 @@ function enemyStatusDebuf(enemyInfo, playerInfo, animationFlag, debuf, amountCou
 		setTimeout(() => {
 			animatePlayerAbnormality(receivedDebuf);
 		},enemyAttackGoWaitTime);
+	}
+}
+/*******************************************************/
+/* 状態異常カードを追加する関数
+/*******************************************************/
+function enemyCardDebuf(animationFlag, cards){
+	if(!animationFlag){
+		// カードを追加する
+		cards.forEach((card) => {
+			pushTrash(card);
+		});
+	} else {
+		animatePlayerAddTrash(cards);
 	}
 }
