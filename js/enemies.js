@@ -148,8 +148,8 @@ const enemyActionType = {
 function actionTEST(){
 	const actions = [
 		{weight: 30, omen:{name: 'Test1', func: 'testAttack', type: enemyActionType.attack, damage: 6, image: 'images/enemy/omen/Attack.png'}},
-		{weight: 30, omen:{name: 'Test2', func: 'testStrategy', type: enemyActionType.debuff, damage: 0, image: 'images/enemy/omen/Weakness1.png'}},
-		{weight: 30, omen:{name: 'Test3', func: 'testSpell', type: enemyActionType.buff, damage: 0, image: 'images/enemy/omen/Power2.png'}},
+//		{weight: 30, omen:{name: 'Test2', func: 'testStrategy', type: enemyActionType.debuff, damage: 0, image: 'images/enemy/omen/Weakness1.png'}},
+//		{weight: 30, omen:{name: 'Test3', func: 'testSpell', type: enemyActionType.buff, damage: 0, image: 'images/enemy/omen/Power2.png'}},
 		{weight: 30, omen:{name: 'Test4', func: 'testMucus', type: enemyActionType.debuffAndAttack, damage: 8, image: 'images/enemy/omen/poison.png'}},
 	];
 	const totalWeight = actions.reduce((sum, item) => sum + item.weight, 0);
@@ -186,7 +186,7 @@ function testMucus(enemyInfo, playerInfo, animationFlag){
 function testFirst(enemyInfo, playerInfo, animationFlag){
 	// 開始時効果
 	console.log(testFirst);
-	enemyStatusBuf(enemyInfo, animationFlag, bufStatus.metallicize, 2);
+	enemyStatusBuf(enemyInfo, animationFlag, bufStatus.defenseUp, 2);
 }
 /*******************************************************/
 /* スライム
@@ -348,6 +348,56 @@ function impWeb(enemyInfo, playerInfo, animationFlag){
 /*******************************************************/
 function enemyAttack(enemyInfo, playerInfo, animationFlag, attackCount){
 	let totalAttack = attackCount;
+	// 倍率計算
+	let magnification = 1;
+	// 脱力（攻撃力25%減少）
+	const weakness = enemyInfo.currentStatus.status
+		.find((status) => status.name === debufStatus.weak.name);
+	if (weakness){magnification -= 0.25;}
+	// 防御力ダウン（被ダメ50%上昇）
+	const defenseUp = playerStatus.statuses
+		.find((status) => status.name === bufStatus.defenseUp.name);
+	if (defenseUp){magnification -= 0.5;}
+	// 防御力アップ（被ダメ50%減少）
+	const defenseDown = playerStatus.statuses
+		.find((status) => status.name === debufStatus.defenseDown.name);
+	if (defenseDown){magnification += 0.5;}
+	console.log(`攻撃倍率：${magnification}`);
+	totalAttack = totalAttack * magnification;
+		
+	// エネミーの状態異常の確認
+	enemyInfo.currentStatus.status.forEach((status) => {
+		switch(status.name){
+			case bufStatus.attackUp.name:// 攻撃力アップ（攻撃ダメージが+X。）
+				totalAttack += status.amount;
+				break;
+			case debufStatus.attackDown.name:// 攻撃力ダウン（攻撃ダメージがｰX。）
+				if (totalAttack > status.amount){
+					totalAttack -= status.amount;
+				} else {
+					totalAttack = 0;
+				}
+				break;
+			default:
+				break;
+		}
+	});
+	// プレイヤーの状態異常を確認
+	playerStatus.statuses.forEach((status) => {
+		switch(status.name){
+			case bufStatus.invincible.name:// 無敵(このターン中に減らせるHPは、残りX。)
+				if (totalAttack > status.amount){
+					totalAttack = status.amount;
+					status.amount = 0;
+				} else {
+					status.amount -= totalAttack;
+				}
+				break;
+			default:
+				break;
+		}
+	});
+
 	if(playerInfo.block > 0){
 		if(playerInfo.block >= attackCount){
 			playerInfo.block -= attackCount;
@@ -401,6 +451,19 @@ function enemyStatusBuf(enemyInfo, animationFlag, buf, amountCount){
 /*******************************************************/
 function enemyStatusDebuf(enemyInfo, playerInfo, animationFlag, debuf, amountCount){
 	let sameDebufFlag = false;
+	// 弱体無効がついていれば、無効になる
+	const mount = playerStatus.statuses
+		.find((status) => status.name === bufStatus.mount.name);
+	if (mount){
+		mount.amount--;
+		if (mount.amount <= 0) {
+			playerStatus.statuses = playerStatus.statuses.filter((status) => {
+				return status.amount > 0;
+			});
+		}
+		return;
+	}
+
 	// すでに同じデバフがかかってないか確認
 	// 同じデバフは累積する
 	for (const status of playerInfo.statuses) {

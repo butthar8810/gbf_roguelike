@@ -21,18 +21,18 @@ const stages = {
 const bufStatus = {
 	attackUp: {name: '攻撃力アップ', amount: '',effect: '攻撃ダメージが+X。',image: 'images/status/status_1001.png'},
 	defenseUp: {name: '防御力アップ', amount: '', effect: 'アタックで受けるダメージが50%減少。Xターン有効。',image: 'images/status/status_1019.png'},
-	penetration: {name: '貫通', amount: '', effect: '攻撃ダメージがブロックを無視する。Xターン有効。', image: 'images/status/status_1240.png'},
 	mount: {name: '弱体無効', amount: '', effect: 'デバフをX回無効化。', image: 'images/status/status_1003.png'},
-	metallicize: {name: '金属化', amount: '', effect: 'ターン終了時、Xブロックを得る。', image: 'images/status/status_6549.png'},
-	phantasmal: {name: '幻影', amount: '', effect: '次のターン開始時、ダブルダメージを得る。Xターン有効。', image: 'images/status/status_1313.png'},
+	barrier: {name: 'バリア', amount: '', effect: 'ターン終了時、Xブロックを得る。', image: 'images/status/status_6549.png'},
+	phantasmal: {name: '幻影', amount: '', effect: '次のターン開始時、ダブルアタックを得る。Xターン有効。', image: 'images/status/status_1313.png'},
 	doubleDamage: {name: 'ダブルアタック', amount: '', effect: 'アタックのダメージが2倍になる。1ターン有効。', image: 'images/status/status_1004.png'},
 	dexterity: {name: '敏捷性', amount: '', effect: 'カードから得られるブロックが+X。', image: 'images/status/status_1566.png'},
 	regene: {name: '再生', amount: '', effect: 'ターン終了時、HPをX回復する。', image: 'images/status/status_2.png'},
 	afterImage: {name: '残像', amount: '', effect: 'カードを1枚プレイするたび、Xブロックを得る。', image: 'images/status/status_1566.png'},
 	invincible: {name: '無敵', amount: '', effect: 'このターン中に減らせるHPは、残りX。', image: 'images/status/status_62.png'},
-	energized: {name: '活性', amount: '', effect: '次のターン、Xエナジーを得る。', image: 'images/status/status_1540.png'},
+	energized: {name: '活性', amount: '', effect: '次のターン開始時、Xエナジーを得る。', image: 'images/status/status_1540.png'},
 	drawCard: {name: 'ヘイスト', amount: '', effect: '次のターン開始時、X枚のカードを引く。', image: 'images/status/status_1058.png'},
 	nextTurnBlock: {name: '次ターンブロック', amount: '', effect: '次ターン開始時、ブロックXを得る。', image: 'images/status/status_1075.png'},
+	penetration: {name: '貫通', amount: '', effect: '攻撃ダメージがブロックを無視する。Xターン有効。', image: 'images/status/status_1240.png'},
 };
 // デバフ
 const debufStatus = {

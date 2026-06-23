@@ -209,7 +209,7 @@ function effectStrike(){
 	// 6のダメージを与える。
 	console.log('effectStrike');
 	actionAttack(6);
-	actionStatusBuf(bufStatus.attackUp, 2);
+	actionStatusBuf(bufStatus.mount, 2);
 	actionStatusDebuf(debufStatus.attackDown, 2);
 	return true;
 }
@@ -391,7 +391,59 @@ function effectPulverizer(){
 /*******************************************************/
 function actionAttack(attackCount){
 	let totalAttack = attackCount;
-	// 
+	// 倍率計算
+	let magnification = 1;
+	// 脱力（攻撃力25%減少）
+	const weakness = playerStatus.statuses
+		.find((status) => status.name === debufStatus.weak.name);
+	if (weakness){magnification -= 0.25;}
+	// ダブルアタック（アタックのダメージが2倍になる）
+	const doubleDamage = playerStatus.statuses
+		.find((status) => status.name === bufStatus.doubleDamage.name);
+	if (doubleDamage){magnification += 1.0;}
+	// 防御力ダウン（被ダメ50%上昇）
+	const defenseUp = currentTarget.currentStatus.status
+		.find((status) => status.name === bufStatus.defenseUp.name);
+	if (defenseUp){magnification -= 0.5;}
+	// 防御力アップ（被ダメ50%減少）
+	const defenseDown = currentTarget.currentStatus.status
+		.find((status) => status.name === debufStatus.defenseDown.name);
+	if (defenseDown){magnification += 0.5;}
+	console.log(`攻撃倍率：${magnification}`);
+	totalAttack = totalAttack * magnification;
+
+	// プレイヤーの状態異常の確認
+	playerStatus.statuses.forEach((status) => {
+		switch(status.name){
+			case bufStatus.attackUp.name:// 攻撃力アップ（攻撃ダメージが+X。）
+				totalAttack += status.amount;
+				break;
+			case debufStatus.attackDown.name:// 攻撃力ダウン（攻撃ダメージがｰX。）
+				if (totalAttack > status.amount){
+					totalAttack -= status.amount;
+				} else {
+					totalAttack = 0;
+				}
+				break;
+			default:
+				break;
+		}
+	});
+	// エネミーの状態異常を確認
+	currentTarget.currentStatus.status.forEach((status) => {
+		switch(status.name){
+			case bufStatus.invincible.name:// 無敵(このターン中に減らせるHPは、残りX。)
+				if (totalAttack > status.amount){
+					totalAttack = status.amount;
+					status.amount = 0;
+				} else {
+					status.amount -= totalAttack;
+				}
+				break;
+			default:
+				break;
+		}
+	});
 	const enemyBlock = currentTarget.currentStatus.block;
 	if(enemyBlock > 0){
 		if(enemyBlock >= attackCount){
@@ -412,6 +464,59 @@ function actionAttack(attackCount){
 function actionAllAttack(attackCount){
 	let totalAttack = attackCount;
 	currentEnemies.forEach((enemy) => {
+		// 倍率計算
+		let magnification = 1;
+		// 脱力（攻撃力25%減少）
+		const weakness = playerStatus.statuses
+			.find((status) => status.name === debufStatus.weak.name);
+		if (weakness){magnification -= 0.25;}
+		// ダブルアタック（アタックのダメージが2倍になる）
+		const doubleDamage = playerStatus.statuses
+			.find((status) => status.name === bufStatus.doubleDamage.name);
+		if (doubleDamage){magnification += 1.0;}
+		// 防御力ダウン（被ダメ50%上昇）
+		const defenseUp = enemy.currentStatus.status
+			.find((status) => status.name === bufStatus.defenseUp.name);
+		if (defenseUp){magnification -= 0.5;}
+		// 防御力アップ（被ダメ50%減少）
+		const defenseDown = enemy.currentStatus.status
+			.find((status) => status.name === debufStatus.defenseDown.name);
+		if (defenseDown){magnification += 0.5;}
+		console.log(`攻撃倍率：${magnification}`);
+		totalAttack = totalAttack * magnification;
+
+		// プレイヤーの状態異常の確認
+		playerStatus.statuses.forEach((status) => {
+			switch(status.name){
+				case bufStatus.attackUp.name:// 攻撃力アップ（攻撃ダメージが+X。）
+					totalAttack += status.amount;
+					break;
+				case debufStatus.attackDown.name:// 攻撃力ダウン（攻撃ダメージがｰX。）
+					if (totalAttack > status.amount){
+						totalAttack -= status.amount;
+					} else {
+						totalAttack = 0;
+					}
+					break;
+				default:
+					break;
+			}
+		});
+		// エネミーの状態異常を確認
+		enemy.currentStatus.status.forEach((status) => {
+			switch(status.name){
+				case bufStatus.invincible.name:// 無敵(このターン中に減らせるHPは、残りX。)
+					if (totalAttack > status.amount){
+						totalAttack = status.amount;
+						status.amount = 0;
+					} else {
+						status.amount -= totalAttack;
+					}
+					break;
+				default:
+					break;
+			}
+		});
 		const enemyBlock = enemy.currentStatus.block;
 		if(enemyBlock > 0){
 			if(enemyBlock >= attackCount){
@@ -435,6 +540,61 @@ function actionRandomAttack(attackCount){
 	let random = Math.floor(Math.random() * currentEnemies.length);
 	console.log(`Random Hit: ${random}`);
 	const enemy = currentEnemies[random];
+
+	// 倍率計算
+	let magnification = 1;
+	// 脱力（攻撃力25%減少）
+	const weakness = playerStatus.statuses
+		.find((status) => status.name === debufStatus.weak.name);
+	if (weakness){magnification -= 0.25;}
+	// ダブルアタック（アタックのダメージが2倍になる）
+	const doubleDamage = playerStatus.statuses
+		.find((status) => status.name === bufStatus.doubleDamage.name);
+	if (doubleDamage){magnification += 1.0;}
+	// 防御力ダウン（被ダメ50%上昇）
+	const defenseUp = enemy.currentStatus.status
+		.find((status) => status.name === bufStatus.defenseUp.name);
+	if (defenseUp){magnification -= 0.5;}
+	// 防御力アップ（被ダメ50%減少）
+	const defenseDown = enemy.currentStatus.status
+		.find((status) => status.name === debufStatus.defenseDown.name);
+	if (defenseDown){magnification += 0.5;}
+	console.log(`攻撃倍率：${magnification}`);
+	totalAttack = totalAttack * magnification;
+
+	// プレイヤーの状態異常の確認
+	playerStatus.statuses.forEach((status) => {
+		switch(status.name){
+			case bufStatus.attackUp.name:// 攻撃力アップ（攻撃ダメージが+X。）
+				totalAttack += status.amount;
+				break;
+			case debufStatus.attackDown.name:// 攻撃力ダウン（攻撃ダメージがｰX。）
+				if (totalAttack > status.amount){
+					totalAttack -= status.amount;
+				} else {
+					totalAttack = 0;
+				}
+				break;
+			default:
+				break;
+		}
+	});
+	// エネミーの状態異常を確認
+	enemy.currentStatus.status.forEach((status) => {
+		switch(status.name){
+			case bufStatus.invincible.name:// 無敵(このターン中に減らせるHPは、残りX。)
+				if (totalAttack > status.amount){
+					totalAttack = status.amount;
+					status.amount = 0;
+				} else {
+					status.amount -= totalAttack;
+				}
+				break;
+			default:
+				break;
+		}
+	});
+	
 	const enemyBlock = enemy.currentStatus.block;
 	if(enemyBlock > 0){
 		if(enemyBlock >= attackCount){
@@ -453,7 +613,14 @@ function actionRandomAttack(attackCount){
 /* ブロック関数
 /*******************************************************/
 function actionBlock(blockCount){
-	playerStatus.block += blockCount;
+	let totalBlock = blockCount;
+	const dexterity = playerStatus.statuses
+		.find((status) => status.name === bufStatus.dexterity.name);
+	if (dexterity){
+		totalBlock += dexterity.amount;
+	}
+
+	playerStatus.block += totalBlock;
 	// アニメーション
 	animatePlayerBlocked();
 }

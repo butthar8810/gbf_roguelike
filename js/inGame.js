@@ -109,7 +109,7 @@ function continueCount(){
 	if (lastTrash) {
 		myTrash = lastTrash;
 	}
-	if (lastDiscard) {
+	if (lastDiscard ) {
 		discard = lastDiscard;
 	}
 	if (lastTemporary) {
@@ -121,7 +121,7 @@ function continueCount(){
 	if (lastTurn) {
 		currentTurn = lastTurn;
 	}
-	if (lastLevel) {
+	if (lastLevel !== undefined || lastLevel !== null) {
 		currentLevel = lastLevel;
 	}
 	if (lastPhase) {
@@ -279,6 +279,34 @@ async function startTurn(){
 /*******************************************************/
 function endTurn(){
 	console.log(`endTurn`);
+	// カードを5枚引く
+	drawCardFromDeck(initialHandNum);
+	// 「ヘイスト」で追加2枚
+	const drawCard = playerStatus.statuses
+		.find((status) => status.name === bufStatus.drawCard.name);
+	if (drawCard){
+		drawCardFromDeck(2);
+		drawCard.amount = 0;
+	}
+
+	// エネルギーを回復する
+	playerStatus.remainEnergy = playerStatus.maxEnergy;
+	// 「活性」で追加回復
+	const energized = playerStatus.statuses
+		.find((status) => status.name === bufStatus.energized.name);
+	if (energized){
+		playerStatus.remainEnergy += energized.amount;
+		energized.amount = 0;
+	}
+
+	// 「次ターンブロック」でブロックを得る
+	const nextTurnBlock = playerStatus.statuses
+		.find((status) => status.name === bufStatus.nextTurnBlock.name);
+	if (nextTurnBlock){
+		playerStatus.block += nextTurnBlock.amount;
+		nextTurnBlock.amount = 0;
+	}
+
 	// ターン制の状態変化のターンを進める
 	// プレイヤーの状態変化処理
 	playerStatus.statuses.forEach((status, index) => {
@@ -289,6 +317,7 @@ function endTurn(){
 			case debufStatus.defenseDown.name:
 			case debufStatus.frail.name:
 			case debufStatus.weak.name:
+			case debufStatus.poison.name:
 			case debufStatus.noBlock.name:
 			case debufStatus.Fading.name:
 				status.amount--;
@@ -300,7 +329,7 @@ function endTurn(){
 	// 効果が切れた状態変化を削除する
 	playerStatus.statuses = playerStatus.statuses.filter((status) => {
 		return status.amount > 0;
-	})
+	});
 	// エネミーの状態変化処理
 	currentEnemies.forEach((enemy) => {
 		enemy.currentStatus.status.forEach((status) => {
@@ -310,6 +339,7 @@ function endTurn(){
 				case debufStatus.defenseDown.name:
 				case debufStatus.frail.name:
 				case debufStatus.weak.name:
+				case debufStatus.poison.name:
 				case debufStatus.noBlock.name:
 				case debufStatus.Fading.name:
 					status.amount--;
@@ -321,18 +351,14 @@ function endTurn(){
 		// 効果が切れた状態変化を削除する
 		enemy.currentStatus.status = enemy.currentStatus.status.filter((status) => {
 			return status.amount > 0;
-		})
+		});
 	});
 	// ブロックを解除する
 	playerStatus.block = 0;
 	// 次の予測を決定する
 	decideNextAction();
-	// カードを5枚引く
-	drawCardFromDeck(initialHandNum);
 	// ターンを進める
 	currentTurn++;
-	// エネルギーを回復する
-	playerStatus.remainEnergy = playerStatus.maxEnergy;
 }
 
 /*******************************************************/
@@ -387,7 +413,23 @@ function startCleanup(){
 		hiddenHandDom();
 		updateTrashDom();
 	});
-
+	// ターン終了時効果の発動
+	// バリアの効果発動
+	const barrier = playerStatus.statuses
+		.find((status) => status.name === bufStatus.barrier.name);
+	if (barrier){
+		actionBlock(barrier.amount);
+		updatePlayerStatusDom(playerStatus);
+		barrier.amount = 0;
+	}
+	// 再生の効果発動
+	const regene = playerStatus.statuses
+		.find((status) => status.name === bufStatus.regene.name);
+	if (regene){
+		playerStatus.remainHP += regene.amount;
+		updatePlayerStatusDom(playerStatus);
+		regene.amount = 0;
+	}
 	startEnemiesTurn();
 }
 
@@ -503,6 +545,8 @@ async function endAction(){
 /* clickHandProcess：手札クリック時の処理
 /*******************************************************/
 function clickHandProcess(handCardDiv, hand){
+	console.log(tmpArea);
+	
 	const index = findIndexTemporaryArea('id', hand.id);
 	switch(currentPhase) {
 		case phase.action:
@@ -718,11 +762,11 @@ function targetingEnemy(){
 /*******************************************************/
 /* targetingEnemy：予兆行動のテキストを出力する
 /*******************************************************/
-function omenText(omenAction){
+function omenText(omenAction, totalAttack){
 	const omenText = 'この敵が予定しているのは<br>';
 	switch(omenAction.type){
 		case enemyActionType.attack:
-			return omenText + omenAction.type + 'による' + omenAction.damage +'ダメージ。';
+			return omenText + omenAction.type + 'による' + totalAttack +'ダメージ。';
 			break;
 		case enemyActionType.block:
 			return omenText + omenAction.type + 'を与えること。';
@@ -734,17 +778,17 @@ function omenText(omenAction){
 			return omenText + omenAction.type + 'を与えること。';
 			break;
 		case enemyActionType.blockAndAttack:
-			return omenText + omenAction.type + 'を' + omenAction.damage +'ダメージ。';
+			return omenText + omenAction.type + 'を' + totalAttack +'ダメージ。';
 			break;
 		case enemyActionType.blockAndBuff:
 			return omenText + omenAction.type + 'の使用。';
 			break;
 
 		case enemyActionType.buffAndAttack:
-			return omenText + 'バフを使用し、アタックを' + omenAction.damage +'ダメージ。';
+			return omenText + 'バフを使用し、アタックを' + totalAttack +'ダメージ。';
 			break;
 		case enemyActionType.debuffAndAttack:
-			return omenText + 'デバフを与え、アタックを' + omenAction.damage +'ダメージ。';
+			return omenText + 'デバフを与え、アタックを' + totalAttack +'ダメージ。';
 			break;
 		default:
 			return omenText + '不明です';
@@ -844,6 +888,7 @@ function updateHandDom(){
 			.html(hand.cost);
 		const cardImage = $('<img>')
 			.attr('src', hand.image);
+		console.log(hand);
 		const handCardDiv = $('<div>')
 			.attr('id', `hand-card${hand.id}`)
 			.addClass('hand-card')
@@ -853,6 +898,7 @@ function updateHandDom(){
 			.append(textParagraph)
 			// 手札クリック時の処理登録
 			.click(hand ,() => {
+				console.log(hand);
 				clickHandProcess(handCardDiv, hand);
 			});
 		if (hand.class == cardClass.gran) {
@@ -1081,8 +1127,7 @@ function updateEnemyAreaDom(argEnemies, omenFlag = false){
 			.append(omenModalImage);
 		const omenModalDiv = $('<div>')
 			.addClass('enemy-modal')
-			.append(omenName)
-			.append(omenText(enemy.currentStatus.nextAction));
+			.append(omenName);
 		modalsDiv.append(omenModalDiv);
 		enemy.currentStatus.status.forEach((status) => {
 			// ステータス[status]の要素
@@ -1129,10 +1174,47 @@ function updateEnemyAreaDom(argEnemies, omenFlag = false){
 				.addClass('omen-inner')
 				.append(nextActionImage);
 			if(enemy.currentStatus.nextAction.damage > 0){
+				// 予測ダメージ計算
+				let totalAttack = enemy.currentStatus.nextAction.damage;
+				// 倍率計算
+				let magnification = 1;
+				// 脱力（攻撃力25%減少）
+				const weakness = enemy.currentStatus.status
+					.find((status) => status.name === debufStatus.weak.name);
+				if (weakness){magnification -= 0.25;}
+				// 防御力ダウン（被ダメ50%上昇）
+				const defenseUp = playerStatus.statuses
+					.find((status) => status.name === bufStatus.defenseUp.name);
+				if (defenseUp){magnification -= 0.5;}
+				// 防御力アップ（被ダメ50%減少）
+				const defenseDown = playerStatus.statuses
+					.find((status) => status.name === debufStatus.defenseDown.name);
+				if (defenseDown){magnification += 0.5;}
+				console.log(`攻撃倍率：${magnification}`);
+				totalAttack = totalAttack * magnification;
+					
+				// エネミーの状態異常の確認
+				enemy.currentStatus.status.forEach((status) => {
+					switch(status.name){
+						case bufStatus.attackUp.name:// 攻撃力アップ（攻撃ダメージが+X。）
+							totalAttack += status.amount;
+							break;
+						case debufStatus.attackDown.name:// 攻撃力ダウン（攻撃ダメージがｰX。）
+							if (totalAttack > status.amount){
+								totalAttack -= status.amount;
+							} else {
+								totalAttack = 0;
+							}
+							break;
+						default:
+							break;
+					}
+				});
 				const damageDiv = $('<div>')
 					.addClass('damage')
-					.html(enemy.currentStatus.nextAction.damage);
+					.html(totalAttack);
 				omenInnerDiv.append(damageDiv);
+				omenModalDiv.append(omenText(enemy.currentStatus.nextAction, totalAttack));
 			}
 			const omenDiv = $('<div>')
 				.addClass('omen')
