@@ -105,7 +105,7 @@ const keyContinueEnemy = 'Babu.Continue.Enemy';
 const keyContinueLevel = 'Babu.Continue.Level';
 const keyContinueReward = 'Babu.Continue.Reward';
 const keyContinuePhase = 'Babu.Continue.Phase';
-const keyContinueDecide = 'Babu.Continue.Decide';
+const keyContinueTrashFlag = 'Babu.Continue.Trash.Flag';
 
 
 /*****************************************************************************/
@@ -152,6 +152,7 @@ let currentPhase = phase.action;
 //各種フラグ
 let enemyAttackWaitFlag = false;
 let allDefeatedFlag = false;
+let trashFlag = 0;
 
 // promiseオブジェクト
 let cardDrawPromise = Promise.resolve();
@@ -163,6 +164,3 @@ let enemyAttackPromise = Promise.resolve();
 let enemyAbnormalityPromise = Promise.resolve();
 let enemyGetBlockPromise = Promise.resolve();
 let enemyDefeatedPromise = Promise.resolve();
-
-// 決定ボタン押下用関数
-let decideFunc = '';

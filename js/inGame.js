@@ -105,7 +105,7 @@ function continueCount(){
 	const lastPlayerStatus = getLocalStorage(keyContinuePlayerStatus);
 	const lastLevel = getLocalStorage(keyContinueLevel);
 	const lastPhase = getLocalStorage(keyContinuePhase);
-	const lastDecide = getLocalStorage(keyContinueDecide);
+	const lastTrashFlag = getLocalStorage(keyContinueTrashFlag);
 	if (lastTrash) {
 		myTrash = lastTrash;
 	}
@@ -127,8 +127,8 @@ function continueCount(){
 	if (lastPhase) {
 		currentPhase = lastPhase;
 	}
-	if (lastDecide) {
-		decideFunc = lastDecide;
+	if (lastTrashFlag) {
+		trashFlag = lastTrashFlag;
 	}
 	if (lastPlayerStatus) {
 		playerStatus.remainHP = lastPlayerStatus.remainHP;
@@ -196,11 +196,10 @@ function setupBtn(){
 		endBattle();
 	});
 	$('.decide-btn').click((e) => {
-		if (decideFunc !== '') {
-			const storedFunc = globalThis[decideFunc];
-			if( typeof storedFunc === 'function'){
-				ret = storedFunc();
-			}
+		switch(currentPhase){
+			case phase.trash:
+				trashCard();
+			default:
 		}
 	});
 }

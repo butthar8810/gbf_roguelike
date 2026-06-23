@@ -32,33 +32,33 @@ const djeetaCardList = {
 	Defense: {name: '防御', class: cardClass.djeeta, cost: 1, rarity: rarity.starter, type: type.skill, effect: '5ブロックを得る。', func: 'effectDefense', image:'images/card/djeeta_Defense.jpg', discard: false},
 	Pulverizer: {name: 'パルバライザー', class: cardClass.djeeta, cost: 1, rarity: rarity.starter, type: type.skill, effect: '8ブロックを得る。カードを1枚捨てる。', func: 'effectPulverizer', image:'images/card/djeeta_Pulverizer.jpg', discard: false},
 	// コモン
-	Mineuchi: {name: '峰打', class: cardClass.djeeta, cost: 1, rarity: rarity.common, type: type.attack, effect: `8ダメージを与える。カードを1枚引く。`, func: 'effectFast', image:'images/card/djeeta_Mineuchi.jpg', discard: false},
-	Removal: {name: '芽摘', class: cardClass.djeeta, cost: 0, rarity: rarity.common, type: type.attack, effect: `6ダメージを与える。`, func: 'effectFast', image:'images/card/djeeta_Removal.jpg', discard: false},
-	World: {name: 'アラウンドザワールド', class: cardClass.djeeta, cost: 1, rarity: rarity.common, type: type.attack, effect: `9ダメージを与える。カードを1枚引き、1枚捨てる。`, func: 'effectFast', image:'images/card/djeeta_World.jpg', discard: false},
-	Rain: {name: 'アローレイン', class: cardClass.djeeta, cost: 1, rarity: rarity.common, type: type.attack, effect: `全ての敵に4ダメージを2回与える。`, func: 'effectFast', image:'images/card/djeeta_Rain.jpg', discard: false},
-	True: {name: 'ポイズンスラスト', class: cardClass.djeeta, cost: 1, rarity: rarity.common, type: type.attack, effect: `6ダメージを与える。毒3を与える。`, func: 'effectFast', image:'images/card/djeeta_True.jpg', discard: false},
-	Dead: {name: 'デッドウェッジ', class: cardClass.djeeta, cost: 1, rarity: rarity.common, type: type.attack, effect: `7ダメージを与える。敵が毒を受けている場合、さらに7ダメージを与える。`, func: 'effectFast', image:'images/card/djeeta_Dead.jpg', discard: false},
-	Kamaitachi: {name: '鎌鼬', class: cardClass.djeeta, cost: 2, rarity: rarity.common, type: type.attack, effect: `12ダメージを与える。このターンにカードを捨てていれば、2エナジーを得る。`, func: 'effectFast', image:'images/card/djeeta_Kamaitachi.jpg', discard: false},
-	Simple: {name: '簡易防御', class: cardClass.djeeta, cost: 0, rarity: rarity.common, type: type.skill, effect: `4ブロックを得る。`, func: 'effectFast', image:'images/card/djeeta_Simple.jpg', discard: false},
-	Storm: {name: '嵐竜の加護', class: cardClass.djeeta, cost: 1, rarity: rarity.common, type: type.skill, effect: `カードを3枚引く。カードを1枚捨てる。`, func: 'effectFast', image:'images/card/djeeta_Storm.jpg', discard: false},
-	Preparation: {name: '戦闘準備', class: cardClass.djeeta, cost: 0, rarity: rarity.common, type: type.skill, effect: `カードを1枚引き、1枚捨てる。`, func: 'effectFast', image:'images/card/djeeta_Preparation.jpg', discard: false},
+	Mineuchi: {name: '峰打', class: cardClass.djeeta, cost: 1, rarity: rarity.common, type: type.attack, effect: `8ダメージを与える。カードを1枚引く。`, func: 'effectMineuchi', image:'images/card/djeeta_Mineuchi.jpg', discard: false},
+	Removal: {name: '芽摘', class: cardClass.djeeta, cost: 0, rarity: rarity.common, type: type.attack, effect: `6ダメージを与える。`, func: 'effectRemoval', image:'images/card/djeeta_Removal.jpg', discard: false},
+	World: {name: 'アラウンドザワールド', class: cardClass.djeeta, cost: 1, rarity: rarity.common, type: type.attack, effect: `9ダメージを与える。カードを1枚引き、1枚捨てる。`, func: 'effectWorld', image:'images/card/djeeta_World.jpg', discard: false},
+	Rain: {name: 'アローレイン', class: cardClass.djeeta, cost: 1, rarity: rarity.common, type: type.attack, effect: `全ての敵に4ダメージを2回与える。`, func: 'effectRain', image:'images/card/djeeta_Rain.jpg', discard: false},
+	True: {name: 'ポイズンスラスト', class: cardClass.djeeta, cost: 1, rarity: rarity.common, type: type.attack, effect: `6ダメージを与える。毒3を与える。`, func: 'effectTrue', image:'images/card/djeeta_True.jpg', discard: false},
+	Dead: {name: 'デッドウェッジ', class: cardClass.djeeta, cost: 1, rarity: rarity.common, type: type.attack, effect: `7ダメージを与える。敵が毒を受けている場合、さらに7ダメージを与える。`, func: 'effectDead', image:'images/card/djeeta_Dead.jpg', discard: false},
+	Kamaitachi: {name: '鎌鼬', class: cardClass.djeeta, cost: 2, rarity: rarity.common, type: type.attack, effect: `12ダメージを与える。このターンにカードを捨てていれば、2エナジーを得る。`, func: 'effectKamaitachi', image:'images/card/djeeta_Kamaitachi.jpg', discard: false},
+	Simple: {name: '簡易防御', class: cardClass.djeeta, cost: 0, rarity: rarity.common, type: type.skill, effect: `4ブロックを得る。`, func: 'effectSimple', image:'images/card/djeeta_Simple.jpg', discard: false},
+	Storm: {name: '嵐竜の加護', class: cardClass.djeeta, cost: 1, rarity: rarity.common, type: type.skill, effect: `カードを3枚引く。カードを1枚捨てる。`, func: 'effectStorm', image:'images/card/djeeta_Storm.jpg', discard: false},
+	Preparation: {name: '戦闘準備', class: cardClass.djeeta, cost: 0, rarity: rarity.common, type: type.skill, effect: `カードを1枚引き、1枚捨てる。`, func: 'effectPreparation', image:'images/card/djeeta_Preparation.jpg', discard: false},
 	// アンコモン
-	Smash: {name: 'スマッシュライザー', class: cardClass.djeeta, cost: 2, rarity: rarity.uncommon, type: type.attack, effect: `10のブロックを得る。10ダメージを与える。`, func: 'effectFast', image:'images/card/djeeta_Smash.jpg', discard: false},
-	GiveUp: {name: 'ネバーギブアップ', class: cardClass.djeeta, cost: 3, rarity: rarity.uncommon, type: type.attack, effect: `このターンに捨てたカード1枚につき、エナジーの消費-1。7ダメージを3回与える。`, func: 'effectFast', image:'images/card/djeeta_GiveUp.jpg', discard: false},
-	Iai: {name: '居合スラッシュ', class: cardClass.djeeta, cost: 0, rarity: rarity.uncommon, type: type.attack, effect: `11ダメージを与える。天賦。廃棄。`, func: 'effectFast', image:'images/card/djeeta_Iai.jpg', discard: true},
-	Blaze: {name: 'セラフブレイズ', class: cardClass.djeeta, cost: 1, rarity: rarity.uncommon, type: type.attack, effect: `敵全体に10ダメージを与える。手札をランダムに1枚捨てる。`, func: 'effectFast', image:'images/card/djeeta_Blaze.jpg', discard: false},
-	Violent: {name: '劇毒', class: cardClass.djeeta, cost: 2, rarity: rarity.uncommon, type: type.skill, effect: `敵全体に毒4と脱力2を与える。廃棄。`, func: 'effectFast', image:'images/card/djeeta_Violent.jpg', discard: true},
-	Penalty: {name: 'ペナルティ', class: cardClass.djeeta, cost: 2, rarity: rarity.uncommon, type: type.skill, effect: `弱体99を与える。廃棄。`, func: 'effectFast', image:'images/card/djeeta_Penalty.jpg', discard: true},
-	Supply: {name: '補給', class: cardClass.djeeta, cost: 99, rarity: rarity.uncommon, type: type.skill, effect: `使用不可。このカードを捨てた時、1エナジーを得る。`, func: 'effectFast', image:'images/card/djeeta_Supply.jpg', discard: false},
-	Tactics: {name: '戦術', class: cardClass.djeeta, cost: 99, rarity: rarity.uncommon, type: type.skill, effect: `使用不可。このカードを捨てたとき、カードを2枚引く。`, func: 'effectFast', image:'images/card/djeeta_Tactics.jpg', discard: false},
+	Smash: {name: 'スマッシュライザー', class: cardClass.djeeta, cost: 2, rarity: rarity.uncommon, type: type.attack, effect: `10のブロックを得る。10ダメージを与える。`, func: 'effectSmash', image:'images/card/djeeta_Smash.jpg', discard: false},
+	GiveUp: {name: 'ネバーギブアップ', class: cardClass.djeeta, cost: 3, rarity: rarity.uncommon, type: type.attack, effect: `このターンに捨てたカード1枚につき、エナジーの消費-1。7ダメージを3回与える。`, func: 'effectGiveUp', image:'images/card/djeeta_GiveUp.jpg', discard: false},
+	Iai: {name: '居合スラッシュ', class: cardClass.djeeta, cost: 0, rarity: rarity.uncommon, type: type.attack, effect: `11ダメージを与える。天賦。廃棄。`, func: 'effectIai', image:'images/card/djeeta_Iai.jpg', discard: true},
+	Blaze: {name: 'セラフブレイズ', class: cardClass.djeeta, cost: 1, rarity: rarity.uncommon, type: type.attack, effect: `敵全体に10ダメージを与える。手札をランダムに1枚捨てる。`, func: 'effectBlaze', image:'images/card/djeeta_Blaze.jpg', discard: false},
+	Violent: {name: '劇毒', class: cardClass.djeeta, cost: 2, rarity: rarity.uncommon, type: type.skill, effect: `敵全体に毒4と脱力2を与える。廃棄。`, func: 'effectViolent', image:'images/card/djeeta_Violent.jpg', discard: true},
+	Penalty: {name: 'ペナルティ', class: cardClass.djeeta, cost: 2, rarity: rarity.uncommon, type: type.skill, effect: `弱体99を与える。廃棄。`, func: 'effectPenalty', image:'images/card/djeeta_Penalty.jpg', discard: true},
+	Supply: {name: '補給', class: cardClass.djeeta, cost: 99, rarity: rarity.uncommon, type: type.skill, effect: `使用不可。このカードを捨てた時、1エナジーを得る。`, func: 'effectSupply', image:'images/card/djeeta_Supply.jpg', discard: false},
+	Tactics: {name: '戦術', class: cardClass.djeeta, cost: 99, rarity: rarity.uncommon, type: type.skill, effect: `使用不可。このカードを捨てたとき、カードを2枚引く。`, func: 'effectTactics', image:'images/card/djeeta_Tactics.jpg', discard: false},
 	// レア
-	Roses: {name: 'ブルー・ローゼス', class: cardClass.djeeta, cost: 1, rarity: rarity.rare, type: type.attack, effect: `14ダメージを与える。「アタック」以外の全てのカードを捨てる。`, func: 'effectFast', image:'images/card/djeeta_Roses.jpg', discard: false},
-	DAGARA: {name: 'ダガラハット', class: cardClass.djeeta, cost: 1, rarity: rarity.rare, type: type.attack, effect: `8ダメージを2回与える。この戦闘中はガラスのナイフのダメージが-2低下する。`, func: 'effectFast', image:'images/card/djeeta_DAGARA.jpg', discard: false},
-	Zetsu: {name: '絶', class: cardClass.djeeta, cost: 1, rarity: rarity.rare, type: type.attack, effect: `敵全体に13ダメージを与える。廃棄。`, func: 'effectFast', image:'images/card/djeeta_Zetsu.jpg', discard: true},
-	Zosimos: {name: 'ゾーシモス', class: cardClass.djeeta, cost: 1, rarity: rarity.rare, type: type.skill, effect: `次のターン、「アタック」のダメージが2倍になる。`, func: 'effectFast', image:'images/card/djeeta_Zosimos.jpg', discard: false},
-	Petrification: {name: 'フルグライト', class: cardClass.djeeta, cost: 'X', rarity: rarity.rare, type: type.skill, effect: `敵は筋力Xを失う。脱力Xを与える。廃棄。`, func: 'effectFast', image:'images/card/djeeta_Petrification.jpg', discard: true},
-	Bailout: {name: 'ベイルアウト', class: cardClass.djeeta, cost: 3, rarity: rarity.rare, type: type.skill, effect: `このターン、カードを引くことができない。このターン、あなたの手札のコストは0になる。`, func: 'effectFast', image:'images/card/djeeta_Bailout.jpg', discard: false},
-	Record: {name: 'シーイング・レコード', class: cardClass.djeeta, cost: 0, rarity: rarity.rare, type: type.skill, effect: `1エナジーを得る。カードを2枚引く。廃棄`, func: 'effectFast', image:'images/card/djeeta_Record.jpg', discard: true},
+	Roses: {name: 'ブルー・ローゼス', class: cardClass.djeeta, cost: 1, rarity: rarity.rare, type: type.attack, effect: `14ダメージを与える。「アタック」以外の全てのカードを捨てる。`, func: 'effectRoses', image:'images/card/djeeta_Roses.jpg', discard: false},
+	DAGARA: {name: 'ダガラハット', class: cardClass.djeeta, cost: 1, rarity: rarity.rare, type: type.attack, effect: `8ダメージを2回与える。この戦闘中はガラスのナイフのダメージが-2低下する。`, func: 'effectDAGARA', image:'images/card/djeeta_DAGARA.jpg', discard: false},
+	Zetsu: {name: '絶', class: cardClass.djeeta, cost: 1, rarity: rarity.rare, type: type.attack, effect: `敵全体に13ダメージを与える。廃棄。`, func: 'effectZetsu', image:'images/card/djeeta_Zetsu.jpg', discard: true},
+	Zosimos: {name: 'ゾーシモス', class: cardClass.djeeta, cost: 1, rarity: rarity.rare, type: type.skill, effect: `次のターン、「アタック」のダメージが2倍になる。`, func: 'effectZosimos', image:'images/card/djeeta_Zosimos.jpg', discard: false},
+	Petrification: {name: 'フルグライト', class: cardClass.djeeta, cost: 'X', rarity: rarity.rare, type: type.skill, effect: `敵は筋力Xを失う。脱力Xを与える。廃棄。`, func: 'effectPetrification', image:'images/card/djeeta_Petrification.jpg', discard: true},
+	Bailout: {name: 'ベイルアウト', class: cardClass.djeeta, cost: 3, rarity: rarity.rare, type: type.skill, effect: `このターン、カードを引くことができない。このターン、あなたの手札のコストは0になる。`, func: 'effectBailout', image:'images/card/djeeta_Bailout.jpg', discard: false},
+	Record: {name: 'シーイング・レコード', class: cardClass.djeeta, cost: 0, rarity: rarity.rare, type: type.skill, effect: `1エナジーを得る。カードを2枚引く。廃棄`, func: 'effectRecord', image:'images/card/djeeta_Record.jpg', discard: true},
 };
 
 const commonCardList = {
@@ -379,7 +379,187 @@ function effectPulverizer(){
 	actionTrashCard();
 	return true;
 }
+function effectMineuchi(){
+	// 8ダメージを与える。カードを1枚引く。
+	console.log('effectMineuchi');
+	actionAttack(8);
+	const cards = drawCardFromDeck(1);
+	cards.forEach((card) => {
+		animateDrawDeck(card);
+	});
+	return true;
+}
+function effectRemoval(){
+	// 6ダメージを与える。
+	console.log('effectRemoval');
+	actionAttack(6);
+	return true;
+}
+function effectWorld(){
+	// 9ダメージを与える。カードを1枚引き、1枚捨てる。
+	console.log('effectWorld');
+	actionAttack(9);
+	const cards = drawCardFromDeck(1);
+	cards.forEach((card) => {
+		animateDrawDeck(card);
+	});
+	actionTrashCard();
+	return true;
+}
+function effectRain(){
+	// 全ての敵に4ダメージを2回与える。
+	console.log('effectRain');
+	actionAttack(4);
+	actionAttack(4);
+	return true;
+}
+function effectTrue(){
+	// 6ダメージを与える。毒3を与える。
+	console.log('effectTrue');
+	actionAttack(6);
+	actionStatusDebuf(debufStatus.poison, 3);
+	return true;
+}
+function effectDead(){
+	// 7ダメージを与える。敵が毒を受けている場合、さらに7ダメージを与える。
+	console.log('effectDead');
+	actionAttack(7);
+	// 	敵が毒を受けている場合
+	if (
+		currentTarget.currentStatus.status
+		.find((status) => status.name === debufStatus.poison.name)
+	) {
+		playerStatus.remainEnergy += 1;
+		const card = drawCardFromDeck(1)[0];
+		animateDrawDeck(card);
+	}
+	return true;
+}
+function effectKamaitachi(){
+	// `12ダメージを与える。このターンにカードを捨てていれば、2エナジーを得る。
+	console.log('effectKamaitachi');
+	actionAttack(12);
+	if (trashFlag) {
+		playerStatus.remainEnergy += 2;
+	}
+	return true;
+}
+function effectSimple(){
+	// 4ブロックを得る。
+	console.log('effectSimple');
+	actionBlock(4);
+	return true;
+}
+function effectStorm(){
+	// カードを3枚引く。カードを1枚捨てる。
+	console.log('effectStorm');
+	const cards = drawCardFromDeck(3);
+	cards.forEach((card) => {
+		animateDrawDeck(card);
+	});
+	actionTrashCard();
+	return true;
+}
+function effectPreparation(){
+	// カードを1枚引き、1枚捨てる。
+	console.log('effectPreparation');
+	const cards = drawCardFromDeck(1);
+	cards.forEach((card) => {
+		animateDrawDeck(card);
+	});
+	actionTrashCard();
+	return true;
+}
+function effectSmash(){
+	// 10のブロックを得る。10ダメージを与える。
+	console.log('effectSmash');
+	actionBlock(10);
+	actionAttack(10);
+	return true;
+}
+function effectGiveUp(){
+	// このターンに捨てたカード1枚につき、エナジーの消費-1。7ダメージを3回与える。
+	console.log('effectGiveUp');
+	return true;
+}
+function effectIai(){
+	// 11ダメージを与える。天賦。廃棄。
+	console.log('effectIai');
+	actionAttack(11);
+	return true;
+}
+function effectBlaze(){
+	// 敵全体に10ダメージを与える。手札をランダムに1枚捨てる。
+	console.log('effectBlaze');
+	actionAllAttack(10);
+	actionTrashRandomCard();
+	return true;
+}
+function effectViolent(){
+	// 敵全体に毒4と脱力2を与える。廃棄。`
+	console.log('effectViolent');
+	actionStatusAllDebuf(debufStatus.poison, 4);
+	actionStatusAllDebuf(debufStatus.weak, 2);
+	return true;
+}
+function effectPenalty(){
+	// 弱体99を与える。廃棄。
+	console.log('effectPenalty');
+	actionStatusAllDebuf(debufStatus.defenseDown, 99);
+	return true;
+}
+function effectSupply(){
+	// 使用不可。このカードを捨てた時、1エナジーを得る。
+	console.log('effectSupply');
+	return true;
+}
+function effectTactics(){
+	// 使用不可。このカードを捨てたとき、カードを2枚引く。
+	console.log('effectTactics');
+	return true;
+}
+function effectRoses(){
+	// 14ダメージを与える。「アタック」以外の全てのカードを捨てる。
+	console.log('effectSupply');
 
+	const noAttack = myHand.filter((hand) => hand.type !== type.attack);
+	const myHand = myHand.filter((hand) => hand.type === type.attack);
+	noAttack.forEach((card) => {
+		pushTrash(card);
+		
+	});
+	return true;
+}
+function effectDAGARA(){
+	// 8ダメージを2回与える。この戦闘中はガラスのナイフのダメージが-2低下する。
+	console.log('effectSupply');
+	return true;
+}
+function effectZetsu(){
+	// 敵全体に13ダメージを与える。廃棄。
+	console.log('effectZetsu');
+	return true;
+}
+function effectZosimos(){
+	// 次のターン、「アタック」のダメージが2倍になる。
+	console.log('effectSupply');
+	return true;
+}
+function effectPetrification(){
+	// 敵は筋力Xを失う。脱力Xを与える。廃棄。
+	console.log('effectSupply');
+	return true;
+}
+function effectBailout(){
+	// このターン、カードを引くことができない。このターン、あなたの手札のコストは0になる。
+	console.log('effectSupply');
+	return true;
+}
+function effectRecord(){
+	// 1エナジーを得る。カードを2枚引く。廃棄
+	console.log('effectSupply');
+	return true;
+}
 
 
 
@@ -668,13 +848,35 @@ function actionStatusDebuf(debuf, amountCount){
 	// アニメーション
 	animateEnemyAbnormality(currentTarget, receivedDebuf);
 }
-
+/*******************************************************/
+/* 状態異常を与える関数(全体デバフ)
+/*******************************************************/
+function actionStatusAllDebuf(debuf, amountCount){
+	currentEnemies.forEach((enemy) => {
+		// すでに同じデバフがかかってないか確認
+		// 同じデバフは累積する
+		let sameDebufFlag = false;
+		// すでに同じデバフがかかってないか確認
+		// 同じバフは累積する
+		for (const status of enemy.currentStatus.status) {
+			if (status.name == debuf.name) {
+				status.amount += amountCount;
+				sameDebufFlag = true;
+			}
+		}
+		const receivedDebuf = {...debuf};
+		receivedDebuf.amount = amountCount;
+		if (!sameDebufFlag) {
+			enemy.currentStatus.status.push(receivedDebuf);
+		}
+		// アニメーション
+		animateEnemyAbnormality(enemy, receivedDebuf);
+	});
+}
 /*******************************************************/
 /* 1枚カードを捨てる関数
 /*******************************************************/
 function actionTrashCard(){
-	decideFunc = 'trashCard';
-	setLocalStorage(keyContinueDecide, decideFunc);
 	startPhase(phase.trash);
 }
 function trashCard(){
@@ -695,6 +897,8 @@ function trashCard(){
 			return false;
 		}
 		pushTrash(card);
+		trashFlag = true;
+		setLocalStorage(keyContinueTrashFlag, trashFlag);
 		setLocalStorage(keyContinueHand, myHand);
 		setLocalStorage(keyContinueDiscard, myTrash);
 		$('.decide-area').removeClass('active');
@@ -708,4 +912,22 @@ function trashCard(){
 		});
 		startPhase(phase.action);
 	}
+}
+/*******************************************************/
+/* 手札をランダムに捨てる関数
+/*******************************************************/
+function actionTrashRandomCard(){
+	let randomIndex = Math.floor(Math.random() * myHand.length);
+	const card = spliceHand(index);
+	if (card === undefined) {
+		return false;
+	}
+	pushTrash(card);
+	trashFlag = true;
+	animateHandToTrash(card);
+	$.when(cardTrashPromise).done(() => {
+		updateHandDom();
+		updateTrashDom();
+	});
+
 }

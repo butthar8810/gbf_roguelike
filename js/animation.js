@@ -10,9 +10,9 @@ const coordinateShowForTrashArea = {top: '290px', left: '860px', width: '80px', 
 const playerAttackWaitTime = 1500;
 const playerDamageWaitTime = 1000;
 const defeatedWaitTime = 1000;
-const drawWatiTime = 300;
-const trashWatiTime = 500;
-const showWatiTime = 1500;
+const drawWaitTime = 300;
+const trashWaitTime = 500;
+const showWaitTime = 1500;
 const enemyAttackGoWaitTime = 500;
 const enemyAttackReturnWaitTime = 500;
 /*************************************************************************************/
@@ -55,8 +55,8 @@ async function animateDrawDeck(card){
 		top: coordinateHnadForHandArea.top,
 		width: coordinateHnadForHandArea.width,
 		fontSize: coordinateHnadForHandArea.size
-	}, drawWatiTime);
-	await sleep(drawWatiTime - 100);
+	}, drawWaitTime);
+	await sleep(drawWaitTime - 100);
 }
 /*******************************************************/
 /* animateHandToTrash：捨て札に捨てるアニメーション
@@ -75,7 +75,7 @@ function animateHandToTrash(card){
 		top: coordinateTrashForHandArea.top,
 		width: coordinateTrashForHandArea.width,
 		fontSize: coordinateTrashForHandArea.size
-	}, trashWatiTime);
+	}, trashWaitTime);
 }
 
 /*******************************************************/
@@ -122,12 +122,12 @@ function animatePlayerAddTrash(cards){
 			top: coordinateShowForTrashArea.top,
 			width: coordinateShowForTrashArea.width,
 			fontSize: coordinateShowForTrashArea.size
-		}, trashWatiTime);
+		}, trashWaitTime);
 		$.when(cardShowPromise).done(() => {
 			$('.show-area').addClass('hidden');
 			$('.show-area-inner').html('');
 		});
-	}, showWatiTime);
+	}, showWaitTime);
 	
 
 	
