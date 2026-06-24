@@ -24,7 +24,7 @@ const enemyAttackReturnWaitTime = 500;
 async function animateDrawDeck(card){
 	// カード内容を形成
 	const costDiv = $('<div>')
-		.html(card.cost);
+		.html(card.amount.cost);
 	const cardImage = $('<img>')
 		.attr('src', card.image);
 	const drawCardDiv = $('<div>')
@@ -88,7 +88,7 @@ function animatePlayerAddTrash(cards){
 		const textParagraph = $('<p>')
 			.html(card.effect);
 		const costDiv = $('<div>')
-			.html(card.cost);
+			.html(card.amount.cost);
 		const cardImage = $('<img>')
 			.attr('src', card.image);
 		const showCardDiv = $('<div>')

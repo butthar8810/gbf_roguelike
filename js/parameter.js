@@ -19,34 +19,34 @@ const stages = {
 /*****************************************************************************/
 // バフ
 const bufStatus = {
-	attackUp: {name: '攻撃力アップ', amount: '',effect: '攻撃ダメージが+X。',image: 'images/status/status_1001.png'},
-	defenseUp: {name: '防御力アップ', amount: '', effect: 'アタックで受けるダメージが50%減少。Xターン有効。',image: 'images/status/status_1019.png'},
-	mount: {name: '弱体無効', amount: '', effect: 'デバフをX回無効化。', image: 'images/status/status_1003.png'},
-	barrier: {name: 'バリア', amount: '', effect: 'ターン終了時、Xブロックを得る。', image: 'images/status/status_6549.png'},
-	phantasmal: {name: '幻影', amount: '', effect: '次のターン開始時、ダブルアタックを得る。Xターン有効。', image: 'images/status/status_1313.png'},
+	attackUp: {name: '攻撃力アップ', amount: '',effect: '攻撃ダメージが+{X}。',image: 'images/status/status_1001.png'},
+	defenseUp: {name: '防御力アップ', amount: '', effect: 'アタックで受けるダメージが50%減少。{X}ターン有効。',image: 'images/status/status_1019.png'},
+	mount: {name: '弱体無効', amount: '', effect: 'デバフを{X}回無効化。', image: 'images/status/status_1003.png'},
+	barrier: {name: 'バリア', amount: '', effect: 'ターン終了時、{X}ブロックを得る。', image: 'images/status/status_6549.png'},
+	phantasmal: {name: '幻影', amount: '', effect: '次のターン開始時、ダブルアタックを得る。{X}ターン有効。', image: 'images/status/status_1313.png'},
 	doubleDamage: {name: 'ダブルアタック', amount: '', effect: 'アタックのダメージが2倍になる。1ターン有効。', image: 'images/status/status_1004.png'},
-	dexterity: {name: '敏捷性', amount: '', effect: 'カードから得られるブロックが+X。', image: 'images/status/status_1566.png'},
-	regene: {name: '再生', amount: '', effect: 'ターン終了時、HPをX回復する。', image: 'images/status/status_2.png'},
-	afterImage: {name: '残像', amount: '', effect: 'カードを1枚プレイするたび、Xブロックを得る。', image: 'images/status/status_1566.png'},
-	invincible: {name: '無敵', amount: '', effect: 'このターン中に減らせるHPは、残りX。', image: 'images/status/status_62.png'},
-	energized: {name: '活性', amount: '', effect: '次のターン開始時、Xエナジーを得る。', image: 'images/status/status_1540.png'},
-	drawCard: {name: 'ヘイスト', amount: '', effect: '次のターン開始時、X枚のカードを引く。', image: 'images/status/status_1058.png'},
-	nextTurnBlock: {name: '次ターンブロック', amount: '', effect: '次ターン開始時、ブロックXを得る。', image: 'images/status/status_1075.png'},
-	penetration: {name: '貫通', amount: '', effect: '攻撃ダメージがブロックを無視する。Xターン有効。', image: 'images/status/status_1240.png'},
+	dexterity: {name: '敏捷性', amount: '', effect: 'カードから得られるブロックが+{X}。', image: 'images/status/status_1566.png'},
+	regene: {name: '再生', amount: '', effect: 'ターン終了時、HPを{X}回復する。', image: 'images/status/status_2.png'},
+	afterImage: {name: '残像', amount: '', effect: 'カードを1枚プレイするたび、{X}ブロックを得る。', image: 'images/status/status_1566.png'},
+	invincible: {name: '無敵', amount: '', effect: 'このターン中に減らせるHPは、残り{X}。', image: 'images/status/status_62.png'},
+	energized: {name: '活性', amount: '', effect: '次のターン開始時、{X}エナジーを得る。', image: 'images/status/status_1540.png'},
+	drawCard: {name: 'ヘイスト', amount: '', effect: '次のターン開始時、{X}枚のカードを引く。', image: 'images/status/status_1058.png'},
+	nextTurnBlock: {name: '次ターンブロック', amount: '', effect: '次ターン開始時、ブロック{X}を得る。', image: 'images/status/status_1075.png'},
+	penetration: {name: '貫通', amount: '', effect: '攻撃ダメージがブロックを無視する。{X}ターン有効。', image: 'images/status/status_1240.png'},
 };
 // デバフ
 const debufStatus = {
-	attackDown: {name: '攻撃力ダウン', amount: '', effect: '攻撃ダメージが-X。', image: 'images/status/status_1010.png'},
-	defenseDown: {name: '防御力ダウン', amount: '', effect: 'アタックで受けるダメージが50%増加。Xターン有効。', image: 'images/status/status_1020.png'},
-	frail: {name: '脆弱化', amount: '', effect: 'カードから得られるブロックが25%減少。Xターン有効。', image: 'images/status/status_1011.png'},
-	weak: {name: '脱力', amount: '', effect: 'アタックで与えるダメージが25%減少。Xターン有効。', image: 'images/status/status_1374.png'},
-	poison: {name: '毒', amount: '', effect: 'ターン開始時、HPをX失い、毒が1減少。', image: 'images/status/status_8.png'},
+	attackDown: {name: '攻撃力ダウン', amount: '', effect: '攻撃ダメージが-{X}。', image: 'images/status/status_1010.png'},
+	defenseDown: {name: '防御力ダウン', amount: '', effect: 'アタックで受けるダメージが50%増加。{X}ターン有効。', image: 'images/status/status_1020.png'},
+	frail: {name: '脆弱化', amount: '', effect: 'カードから得られるブロックが25%減少。{X}ターン有効。', image: 'images/status/status_1011.png'},
+	weak: {name: '脱力', amount: '', effect: 'アタックで与えるダメージが25%減少。{X}ターン有効。', image: 'images/status/status_1374.png'},
+	poison: {name: '毒', amount: '', effect: 'ターン開始時、HPを{X}失い、毒が1減少。', image: 'images/status/status_8.png'},
 	sleep: {name: '眠り', amount: '', effect: 'この敵はまだ目覚めていない…', image: 'images/status/status_1263.png'},
-	paralysis: {name: '麻痺', amount: '', effect: '1ターンの間「アタック」をプレイできない。', image: 'images/status/status_102.png'},
-	heat: {name: '灼熱', amount: '', effect: 'カードをプレイするたび、あなたはXダメージを受ける。', image: 'images/status/status_83.png'},
-	petrification: {name: '石化', amount: '', effect: 'カードから得られるブロックが-X。', image: 'images/status/status_1241.png'},
-	noBlock: {name: 'ブロック不可能', amount: '', effect: 'カードからブロックを得られない。Xターン有効。', image: 'images/status/status_6765.png'},
-	Fading: {name: '死の宣告', amount: '', effect: 'Xターン経過後、死亡する。', image: 'images/status/status_100.png'},
+	paralysis: {name: '麻痺', amount: '', effect: '{X}ターンの間「アタック」をプレイできない。', image: 'images/status/status_102.png'},
+	heat: {name: '灼熱', amount: '', effect: 'カードをプレイするたび、あなたは{X}ダメージを受ける。', image: 'images/status/status_83.png'},
+	petrification: {name: '石化', amount: '', effect: 'カードから得られるブロックが-{X}。', image: 'images/status/status_1241.png'},
+	noBlock: {name: 'ブロック不可能', amount: '', effect: 'カードからブロックを得られない。{X}ターン有効。', image: 'images/status/status_6765.png'},
+	Fading: {name: '死の宣告', amount: '', effect: '{X}ターン経過後、死亡する。', image: 'images/status/status_100.png'},
 };
 // ステータス：志望
 const dead = {name: '死亡', amount: 1, effect: '死亡状態',image: ''};
@@ -105,7 +105,7 @@ const keyContinueEnemy = 'Babu.Continue.Enemy';
 const keyContinueLevel = 'Babu.Continue.Level';
 const keyContinueReward = 'Babu.Continue.Reward';
 const keyContinuePhase = 'Babu.Continue.Phase';
-const keyContinueTrashFlag = 'Babu.Continue.Trash.Flag';
+const keyContinueTrashCount = 'Babu.Continue.Trash.Count';
 
 
 /*****************************************************************************/
@@ -152,7 +152,7 @@ let currentPhase = phase.action;
 //各種フラグ
 let enemyAttackWaitFlag = false;
 let allDefeatedFlag = false;
-let trashFlag = 0;
+let trashCount = 0;
 
 // promiseオブジェクト
 let cardDrawPromise = Promise.resolve();

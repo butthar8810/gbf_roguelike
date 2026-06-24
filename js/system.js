@@ -10,13 +10,12 @@ function deepCopyCard(arraycard){
 		const cloneOjt = {};
 		cloneOjt.name = cardOjt.name;
 		cloneOjt.class = cardOjt.class;
-		cloneOjt.cost = cardOjt.cost;
 		cloneOjt.rarity = cardOjt.rarity;
 		cloneOjt.type = cardOjt.type;
-		cloneOjt.effect = cardOjt.effect;
 		cloneOjt.func = cardOjt.func;
 		cloneOjt.image = cardOjt.image;
-		cloneOjt.discard = cardOjt.discard;
+		cloneOjt.effect = cardOjt.effect;
+		cloneOjt.amount = { ...cardOjt.amount };
 		cloneArray.push(cloneOjt);
 	});
 	return cloneArray;
@@ -70,13 +69,12 @@ function pushOriginalDeck(card){
 		myOriginalDeck.push({
 			name: card.name,
 			class: card.class,
-			cost: card.cost,
 			rarity: card.rarity,
 			type: card.type,
-			effect: card.effect,
 			image: card.image,
 			func: card.func,
-			discard: card.discard
+			effect: card.effect,
+			amount: card.amount
 		});
 	} else {
 		myOriginalDeck.push(card);
@@ -90,13 +88,12 @@ function unshiftOriginalDeck(card){
 		myOriginalDeck.unshift({
 			name: card.name,
 			class: card.class,
-			cost: card.cost,
 			rarity: card.rarity,
 			type: card.type,
-			effect: card.effect,
 			image: card.image,
 			func: card.func,
-			discard: card.discard
+			effect: card.effect,
+			amount: card.amount
 		});
 	} else {
 		myOriginalDeck.unshift(card);
@@ -122,13 +119,12 @@ function pushDeck(card){
 		myDeck.push({
 			name: card.name,
 			class: card.class,
-			cost: card.cost,
 			rarity: card.rarity,
 			type: card.type,
-			effect: card.effect,
 			image: card.image,
 			func: card.func,
-			discard: card.discard
+			effect: card.effect,
+			amount: card.amount
 		});
 	} else {
 		myDeck.push(card);
@@ -142,13 +138,12 @@ function unshiftDeck(card){
 		myDeck.unshift({
 			name: card.name,
 			class: card.class,
-			cost: card.cost,
 			rarity: card.rarity,
 			type: card.type,
-			effect: card.effect,
 			image: card.image,
 			func: card.func,
-			discard: card.discard
+			effect: card.effect,
+			amount: card.amount
 		});
 	} else {
 		myDeck.unshift(card);
@@ -180,13 +175,12 @@ function pushHand(card){
 		id: myHand.length+1,
 		name: card.name,
 		class: card.class,
-		cost: card.cost,
 		rarity: card.rarity,
 		type: card.type,
-		effect: card.effect,
 		image: card.image,
 		func: card.func,
-		discard: card.discard
+		effect: card.effect,
+		amount: card.amount
 	});
 }
 /*******************************************************/
@@ -215,13 +209,12 @@ function pushTrash(card){
 		myTrash.push({
 			name: card.name,
 			class: card.class,
-			cost: card.cost,
 			rarity: card.rarity,
 			type: card.type,
-			effect: card.effect,
 			image: card.image,
 			func: card.func,
-			discard: card.discard
+			effect: card.effect,
+			amount: card.amount
 		});
 	} else {
 		myTrash.push(card);
@@ -253,13 +246,12 @@ function pushDiscard(card){
 		discard.push({
 			name: card.name,
 			class: card.class,
-			cost: card.cost,
 			rarity: card.rarity,
 			type: card.type,
-			effect: card.effect,
 			image: card.image,
 			func: card.func,
-			discard: card.discard
+			effect: card.effect,
+			amount: card.amount
 		});
 	} else {
 		discard.push(card);

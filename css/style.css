@@ -989,9 +989,16 @@ header{
 	align-items: center;
 }
 .hand-card p{
-	font-size: 12px;
+	font-size: 14px;
 	width: 100%;
 	padding: 0 5px;
+	text-shadow: 1px 1px 3px black
+}
+.hand-card p .down{
+	color: #ff6563;
+}
+.hand-card p .up{
+	color: #ffce63;
 }
 .is-hover-disabled {
 	/* is-hover-disabled クラスが付与されたときはホバー処理を打ち消す */

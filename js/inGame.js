@@ -26,6 +26,7 @@ function startBattle(){
 	$('.info-area').removeClass('hidden');
 	setLocalStorage(keyContinueBattleFlag, true);
 	
+	setLocalStorage(keyContinueTrashCount, trashCount);
 	setLocalStorage(keyContinueTrash, myTrash);
 	setLocalStorage(keyContinueTurn, currentTurn);
 	setLocalStorage(keyContinueEnemy, currentEnemies);
@@ -105,7 +106,7 @@ function continueCount(){
 	const lastPlayerStatus = getLocalStorage(keyContinuePlayerStatus);
 	const lastLevel = getLocalStorage(keyContinueLevel);
 	const lastPhase = getLocalStorage(keyContinuePhase);
-	const lastTrashFlag = getLocalStorage(keyContinueTrashFlag);
+	const lastTrashCount = getLocalStorage(keyContinueTrashCount);
 	if (lastTrash) {
 		myTrash = lastTrash;
 	}
@@ -127,8 +128,8 @@ function continueCount(){
 	if (lastPhase) {
 		currentPhase = lastPhase;
 	}
-	if (lastTrashFlag) {
-		trashFlag = lastTrashFlag;
+	if (lastTrashCount) {
+		trashCount = lastTrashCount;
 	}
 	if (lastPlayerStatus) {
 		playerStatus.remainHP = lastPlayerStatus.remainHP;
@@ -356,6 +357,8 @@ function endTurn(){
 	playerStatus.block = 0;
 	// 次の予測を決定する
 	decideNextAction();
+	// 捨て札の枚数をリセットする
+	trashCount = 0;
 	// ターンを進める
 	currentTurn++;
 }
@@ -538,6 +541,12 @@ async function endAction(){
 			allEnemiesDefeated();
 		});
 	}
+	$.when(
+		cardDrawPromise,
+		cardTrashPromise
+	).done(() => {
+		updateHandDom();
+	});
 	return ret;
 }
 /*******************************************************/
@@ -549,9 +558,9 @@ function clickHandProcess(handCardDiv, hand){
 	const index = findIndexTemporaryArea('id', hand.id);
 	switch(currentPhase) {
 		case phase.action:
-			if (playerStatus.remainEnergy >= hand.cost) {
+			if (playerStatus.remainEnergy >= hand.amount.cost) {
 				const index = findIndexHand('id', hand.id);
-				playerStatus.remainEnergy -= hand.cost;
+				playerStatus.remainEnergy -= hand.amount.cost;
 				updateEnergyDom();
 				playHandCard(index);
 				setLocalStorage(keyContinuePlayerStatus, playerStatus);
@@ -672,6 +681,7 @@ async function startEnemiesTurn(){
 	}
 	endTurn();
 	currentPhase = phase.action;
+	setLocalStorage(keyContinueTrashCount, trashCount);
 	setLocalStorage(keyContinuePhase, currentPhase);
 	setLocalStorage(keyContinueDeck, myDeck);
 	setLocalStorage(keyContinueHand, myHand);
@@ -765,7 +775,7 @@ function omenText(omenAction, totalAttack){
 	const omenText = 'この敵が予定しているのは<br>';
 	switch(omenAction.type){
 		case enemyActionType.attack:
-			return omenText + omenAction.type + 'による' + totalAttack +'ダメージ。';
+			return omenText + omenAction.type + 'による<span>' + totalAttack +'</span>ダメージ。';
 			break;
 		case enemyActionType.block:
 			return omenText + omenAction.type + 'を与えること。';
@@ -777,17 +787,17 @@ function omenText(omenAction, totalAttack){
 			return omenText + omenAction.type + 'を与えること。';
 			break;
 		case enemyActionType.blockAndAttack:
-			return omenText + omenAction.type + 'を' + totalAttack +'ダメージ。';
+			return omenText + omenAction.type + 'を<span>' + totalAttack +'</span>ダメージ。';
 			break;
 		case enemyActionType.blockAndBuff:
 			return omenText + omenAction.type + 'の使用。';
 			break;
 
 		case enemyActionType.buffAndAttack:
-			return omenText + 'バフを使用し、アタックを' + totalAttack +'ダメージ。';
+			return omenText + 'バフを使用し、アタックを<span>' + totalAttack +'</span>ダメージ。';
 			break;
 		case enemyActionType.debuffAndAttack:
-			return omenText + 'デバフを与え、アタックを' + totalAttack +'ダメージ。';
+			return omenText + 'デバフを与え、アタックを<span>' + totalAttack +'</span>ダメージ。';
 			break;
 		default:
 			return omenText + '不明です';
@@ -881,13 +891,36 @@ function updateEnergyDom(){
 function updateHandDom(){
 	$(`.hand-area`).html('');
 	myHand.forEach((hand, i) => {
+		let attackDamage = 0;
+		let blockCount = 0;
+		let effect = hand.effect;
+		if('attack' in hand.amount){
+			console.log(currentTarget.length);
+			attackDamage = calcDamage(hand.amount.attack, currentTarget);
+			if (hand.amount.attack > attackDamage) {
+				effect = effect.replace('{A}', `<span class='down'>${attackDamage}</span>`);
+			} else if (hand.amount.attack < attackDamage){
+				effect = effect.replace('{A}', `<span class='up'>${attackDamage}</span>`);
+			} else {
+				effect = effect.replace('{A}', `${attackDamage}`);
+			}
+		}
+		if('block' in hand.amount){
+			blockCount = calcBlock(hand.amount.block);
+			if (hand.amount.block > blockCount) {
+				effect = effect.replace('{B}', `<span class='down'>${blockCount}</span>`);
+			} else if (hand.amount.block < blockCount){
+				effect = effect.replace('{B}', `<span class='up'>${blockCount}</span>`);
+			} else {
+				effect = effect.replace('{B}', `${blockCount}`);
+			}
+		}
 		const textParagraph = $('<p>')
-			.html(hand.effect);
+			.html(effect);
 		const costDiv = $('<div>')
-			.html(hand.cost);
+			.html(hand.amount.cost);
 		const cardImage = $('<img>')
 			.attr('src', hand.image);
-		console.log(hand);
 		const handCardDiv = $('<div>')
 			.attr('id', `hand-card${hand.id}`)
 			.addClass('hand-card')
@@ -992,7 +1025,7 @@ function updatePlayerAreaDom(argPlayerStatus){
 		const modalDiv = $('<div>')
 			.addClass('player-modal')
 			.append(modalName)
-			.append(status.effect.replace('X', `<span>${status.amount}</span>`));
+			.append(status.effect.replace('{X}', `<span>${status.amount}</span>`));
 		modalsDiv.append(modalDiv);
 	});
 	const playerAreaInnerDiv = $('<div>')
@@ -1067,7 +1100,7 @@ function updatePlayerStatusDom(argPlayerStatus){
 		const modalDiv = $('<div>')
 			.addClass('player-modal')
 			.append(modalName)
-			.append(status.effect.replace('X', `<span>${status.amount}</span>`));
+			.append(status.effect.replace('{X}', `<span>${status.amount}</span>`));
 		$('.player-modals').append(modalDiv);
 	});
 }
@@ -1149,7 +1182,7 @@ function updateEnemyAreaDom(argEnemies, omenFlag = false){
 			const modalDiv = $('<div>')
 				.addClass('enemy-modal')
 				.append(modalName)
-				.append(status.effect.replace('X', `<span>${status.amount}</span>`));
+				.append(status.effect.replace('{X}', `<span>${status.amount}</span>`));
 			modalsDiv.append(modalDiv);
 		});
 		// 「enemy-area」要素
@@ -1306,7 +1339,7 @@ function updateEnemyStatusDom(argEnemies){
 			const modalDiv = $('<div>')
 				.addClass('enemy-modal')
 				.append(modalName)
-				.append(status.effect.replace('X', `<span>${status.amount}</span>`));
+				.append(status.effect.replace('{X}', `<span>${status.amount}</span>`));
 			modalsDiv.append(modalDiv);
 		});
 	});

@@ -186,7 +186,7 @@ function testMucus(enemyInfo, playerInfo, animationFlag){
 function testFirst(enemyInfo, playerInfo, animationFlag){
 	// 開始時効果
 	console.log(testFirst);
-	enemyStatusBuf(enemyInfo, animationFlag, bufStatus.defenseUp, 2);
+	enemyStatusBuf(enemyInfo, animationFlag, bufStatus.attackUp, 2);
 }
 /*******************************************************/
 /* スライム
