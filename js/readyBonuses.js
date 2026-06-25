@@ -34,3 +34,44 @@ const fourthReadyBonus = {
 
 function bonusDammy(){
 }
+
+/*******************************************************/
+/* getReady：準備を整える（4つから選ぶ）
+/*******************************************************/
+function getReady(){
+	const firstReadyBonus = shuffleArray(firstReadyBonuses).slice(0, 1)[0];
+	const firstBtn = appendTalkingBtn(firstReadyBonus.text);
+	firstBtn.click((e) => {
+		deleteTalkingBtn();
+		firstReadyBonus.func();
+		getReadyOK();
+	});
+	const secondReadyBonus = shuffleArray(secondReadyBonuses).slice(0, 1)[0];
+	const secondBtn = appendTalkingBtn(secondReadyBonus.text);
+	secondBtn.click((e) => {
+		deleteTalkingBtn();
+		secondReadyBonus.func();
+		getReadyOK();
+	});
+	const thirdReadyBonus = shuffleArray(thirdReadyBonuses).slice(0, 1)[0];
+	const thirdReadyCurse = shuffleArray(thirdReandCurses).slice(0, 1)[0];
+	const thirdBtn = appendTalkingBtn(thirdReadyCurse.text + thirdReadyBonus.text);
+	thirdBtn.click((e) => {
+		deleteTalkingBtn();
+		thirdReadyCurse.func();
+		thirdReadyBonus.func();
+		getReadyOK();
+	});
+	const fourthBtn = appendTalkingBtn(fourthReadyBonus.text);
+	fourthBtn.click((e) => {
+		deleteTalkingBtn();
+		fourthReadyBonus.func();
+		getReadyOK();
+	});
+}
+function getReadyOK(){
+	const btn = appendTalkingBtn('塔へ上る');
+	btn.click((e) => {
+		climbTowerStart();
+	});
+}

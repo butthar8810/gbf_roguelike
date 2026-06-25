@@ -140,7 +140,7 @@ function animatePlayerAddTrash(cards){
 /*******************************************************/
 function animatePlayerAttack(){
 	const selectChara = getLocalStorage(keySelectChara);
-	const playerImage = $('.player-area-inner').children('img');
+	const playerImage = $('.player-area-inner').children('.player-picture');
 	
 	if (selectChara) {
 		$('.name-space').html(selectChara);
@@ -168,7 +168,7 @@ function animatePlayerAttack(){
 /*******************************************************/
 function animatePlayerDamage(){
 	const selectChara = getLocalStorage(keySelectChara);
-	const playerImage = $('.player-area-inner').children('img');
+	const playerImage = $('.player-area-inner').children('.player-picture');
 	
 	if (selectChara) {
 		$('.name-space').html(selectChara);
@@ -308,4 +308,15 @@ function animateDefeated(animateEnemy){
 	}, defeatedWaitTime);
 }
 
-
+/*************************************************************************************/
+/* イベントアニメーション処理関連
+/*************************************************************************************/
+/*******************************************************/
+/* animateRestHeal：休憩による回復アニメーション
+/*******************************************************/
+function animateRestHeal(){
+	$('.heal-effect')
+		.animate({ opacity: '0' }, 10, "easeInQuart")
+		.animate({ opacity: '1' }, 600, "easeInQuart")
+		.animate({ opacity: '0' }, 600, "easeInQuart");
+}

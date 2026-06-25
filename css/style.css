@@ -64,6 +64,29 @@ body{
 .empty{
 	opacity: 0.3;
 }
+
+.image-btn{
+	position: relative;
+	width: 200px;
+}
+.image-btn:active{
+	transform: scale(0.95) translateY(3px);
+}
+.image-btn img{
+	width: 100%;
+}
+.image-btn span{
+	width: 100%;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	font-size: 20px;
+	color: white;
+	font-weight: 900;
+	text-shadow: 1px 1px 3px black;
+	text-align: center;
+}
 /*****************************************************************************/
 /* main要素
 /*****************************************************************************/
@@ -392,8 +415,17 @@ header{
 .rest-area .player-character{
 	height: 250px !important;
 	position: absolute;
-	bottom: 40px;
+	bottom: -20px;
 	left: 100px;
+}
+.heal-effect{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-image: radial-gradient(transparent, transparent 30%, #90f75d);
+	opacity: 0;
 }
 
 .battle-area{
@@ -1115,9 +1147,60 @@ header{
 
 
 /*****************************************************************************/
-/* background: 黒背景の要素
+/* black-back-area: 黒背景の要素
 /*****************************************************************************/
-.decide-area{
+.black-back-area{
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+	background: rgba(0,0,0,0.7);
+	visibility: hidden;
+	opacity: 0;
+	z-index: 3000;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+.black-back-area.active{
+	visibility: visible;
+	opacity: 1;
+}
+
+
+/*****************************************************************************/
+/* trash-decide-area: 手札を捨てるカード選択
+/*****************************************************************************/
+.trash-decide-area{
+	width: 100%;
+	height: 100%;
+	visibility: hidden;
+	opacity: 0;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+.trash-decide-area.active{
+	visibility: visible;
+	opacity: 1;
+}
+.trash-decide-title{
+	font-size: 28px;
+	color: white;
+	font-weight: 900;
+	text-stroke: 1px gray;
+	-webkit-text-stroke: 1px gray;
+
+}
+
+/*****************************************************************************/
+/* enhance-area: 黒背景の要素
+/*****************************************************************************/
+.enhance-area{
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -1133,11 +1216,11 @@ header{
 	justify-content: center;
 	align-items: center;
 }
-.decide-area.active{
+.enhance-area.active{
 	visibility: visible;
 	opacity: 1;
 }
-.decide-title{
+.enhance-title{
 	font-size: 28px;
 	color: white;
 	font-weight: 900;
@@ -1145,27 +1228,109 @@ header{
 	-webkit-text-stroke: 1px gray;
 
 }
-.decide-btn{
+
+/* enhance-content */
+.enhance-content{
+	width: 925px;
+	height: 80vh;
+	overflow-y: auto;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: start;
+}
+.enhance-card{
+	font-size: 16px;
+	color: white;
+	width: 165px;
+	margin: 10px 7px;
+	aspect-ratio: 3 / 4;
+	border: 2px solid white;
+	border-radius: 10px;
+	text-align: center;
+	box-shadow: 1px 1px 5px black;
 	position: relative;
-	width: 200px;
 }
-.decide-btn:active{
-	transform: scale(0.95) translateY(3px);
+.enhance-card:hover{
+	transform: scale(1.1);
 }
-.decide-btn img{
+.enhance-card img{
 	width: 100%;
 }
-.decide-btn span{
-	width: 100%;
+.enhance-card div{
+	width: 30px;
+	height: 30px;
 	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
+	bottom: 0;
+	left: 0;
+	background-color: white;
+	border-radius: 50%;
+	color: black;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.enhance-card p{
+	font-size: 16px;
+	width: 100%;
+	padding: 0 5px;
+}
+/* enhance-decide-content */
+.enhance-decide-content{
+	width: 925px;
+	height: 400px;
+	overflow-y: auto;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.enhance-decide-card{
 	font-size: 20px;
 	color: white;
-	font-weight: 900;
-	text-shadow: 1px 1px 3px black;
+	width: 240px;
+	margin: 10px 10px;
+	aspect-ratio: 3 / 4;
+	border: 2px solid white;
+	border-radius: 10px;
 	text-align: center;
+	box-shadow: 1px 1px 5px black;
+	position: relative;
+}
+.enhance-decide-card img{
+	width: 100%;
+}
+.enhance-decide-card div{
+	width: 30px;
+	height: 30px;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	background-color: white;
+	border-radius: 50%;
+	color: black;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.enhance-decide-card p{
+	font-size: 18px;
+	width: 100%;
+	padding: 0 5px;
+}
+/* enhance-btn-area */
+.enhance-btn-area{
+	visibility: hidden;
+	opacity: 0;
+	display: flex;
+	justify-content: space-evenly;
+	align-items: center;
+}
+.enhance-btn-area.active{
+	visibility: visible;
+	opacity: 1;
+}
+.enhance-btn-area .image-btn{
+	margin: 0 10px;
 }
 /*****************************************************************************/
 /* map-modal: マップ表示モーダルの要素

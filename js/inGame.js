@@ -52,7 +52,7 @@ function endBattle(){
 	$('.result-modal').removeClass('active');
 	$('.battle-area').addClass('hidden');
 	$('.info-area').addClass('hidden');
-	$('hand-area').html('');
+	$('.hand-area').html('');
 
 	playerStatus.block = 0;
 	playerStatus.statuses = [];
@@ -196,7 +196,7 @@ function setupBtn(){
 	$('.skip-btn').click((e) => {
 		endBattle();
 	});
-	$('.decide-btn').click((e) => {
+	$('.trash-decide-btn').click((e) => {
 		switch(currentPhase){
 			case phase.trash:
 				trashCard();
@@ -382,13 +382,14 @@ function startPhase(ph){
 			disabledEndBtn(true);
 			disabledMyHand(false);
 			updateHandDom();
-			updateDecideTitle('捨てるカードを選んでください')
+			updateDecideTitleDom('捨てるカードを選んでください');
 			$.when(
 				playerAbnormalityPromise,
 				playerGetBlockPromise,
 				enemyAbnormalityPromise,
 			).done(() => {
-				$('.decide-area').addClass('active');
+				$('.black-back-area').addClass('active');
+				$('.trash-decide-area').addClass('active');
 				$('.hand-area').addClass('front');
 			});
 			break;
@@ -428,7 +429,7 @@ function startCleanup(){
 	const regene = playerStatus.statuses
 		.find((status) => status.name === bufStatus.regene.name);
 	if (regene){
-		playerStatus.remainHP += regene.amount;
+		recoveryHP(regene.amount);
 		updatePlayerStatusDom(playerStatus);
 		regene.amount = 0;
 	}
@@ -985,7 +986,8 @@ function updatePlayerAreaDom(argPlayerStatus){
 		.addClass('player-hp')
 		.append(hpContainerDiv);
 	// プレイヤー立ち絵の要素
-	const playerImage = $('<img>');
+	const playerImage = $('<img>')
+		.addClass('player-picture');
 	if (selectChara == selectCharacter.gran.name){
 		playerImage.attr('src', 'images/gifs/gran_idle.gif');
 	} else if (selectChara == selectCharacter.djeeta.name){
@@ -1437,9 +1439,8 @@ function cardRewardDOM(rewardCards){
 		});
 	$('.result-content').append(rewardDiv);
 }
-
-function updateDecideTitle(text){
-	$('.decide-title').html(text);
+function updateDecideTitleDom(text){
+	$('.trash-decide-title').html(text);
 }
 /***************************************************************************************/
 /* モーダル要素の更新処理

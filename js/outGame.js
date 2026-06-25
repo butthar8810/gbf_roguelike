@@ -9,10 +9,13 @@ function startGame(){
 	if (getLocalStorage(keyContinueBattleFlag)) {
 		console.log('戦闘再開');
 		continueBattle();
+	} else if (getLocalStorage(keyContinueRestFlag)) {
+		console.log('休憩再開');
+		startRestEvent();
 	} else if (getLocalStorage(keyContinueFlag)) {
 		console.log('再開');
 		continueGame();
-	} else {
+	}else {
 		$('.rest-area').removeClass('hidden');
 		$('.talk-area').removeClass('hidden');
 		const btn = appendTalkingBtn('準備を整える');
@@ -102,46 +105,7 @@ function setupDeck(){
 	}
 }
 
-/*******************************************************/
-/* getReady：準備を整える（4つから選ぶ）
-/*******************************************************/
-function getReady(){
-	const firstReadyBonus = shuffleArray(firstReadyBonuses).slice(0, 1)[0];
-	const firstBtn = appendTalkingBtn(firstReadyBonus.text);
-	firstBtn.click((e) => {
-		deleteTalkingBtn();
-		firstReadyBonus.func();
-		getReadyOK();
-	});
-	const secondReadyBonus = shuffleArray(secondReadyBonuses).slice(0, 1)[0];
-	const secondBtn = appendTalkingBtn(secondReadyBonus.text);
-	secondBtn.click((e) => {
-		deleteTalkingBtn();
-		secondReadyBonus.func();
-		getReadyOK();
-	});
-	const thirdReadyBonus = shuffleArray(thirdReadyBonuses).slice(0, 1)[0];
-	const thirdReadyCurse = shuffleArray(thirdReandCurses).slice(0, 1)[0];
-	const thirdBtn = appendTalkingBtn(thirdReadyCurse.text + thirdReadyBonus.text);
-	thirdBtn.click((e) => {
-		deleteTalkingBtn();
-		thirdReadyCurse.func();
-		thirdReadyBonus.func();
-		getReadyOK();
-	});
-	const fourthBtn = appendTalkingBtn(fourthReadyBonus.text);
-	fourthBtn.click((e) => {
-		deleteTalkingBtn();
-		fourthReadyBonus.func();
-		getReadyOK();
-	});
-}
-function getReadyOK(){
-	const btn = appendTalkingBtn('塔へ上る');
-	btn.click((e) => {
-		climbTowerStart();
-	});
-}
+
 /*******************************************************/
 /* climbTowerStart：塔を上る（クライムスタート）
 /*******************************************************/
@@ -156,37 +120,37 @@ function climbTowerStart(){
 		const mapRows = [];
 		for(let column = 0; column < mapColumns; column++){
 			const mapDiv = $('<div>').addClass('stage');
-			let selectStage = {};
 			if (
 				(row === 15 && (column < 4 || column > 6)) ||
 				(row === 14 && (column < 3 || column > 7)) ||
 				(row === 13 && (column < 2 || column > 8)) ||
 				(row === 12 && (column < 1 || column > 9))
 			) {
+				// 空白を入れる
 				$('.map-modal-body').append(mapDiv);
 				mapRows.push({name:'',weight: 0,image:''});
 				continue;
 			}
 			if (row === fixedStageBoss){
+				// 最終ステージはボス部屋
 				mapDiv.html(`<img src='${stages.boss.image}'>`);
 				mapRows.push(stages.boss);
-				selectStage = stages.boss;
 			} else if (row === fixedStageGift){
+				// 中間は宝箱ステージ
 				mapDiv.html(`<img src='${stages.gift.image}'>`);
 				mapRows.push(stages.gift);
-				selectStage = stages.gift;
 			} else if (row === fixedStageNormal){
-				mapDiv.html(`<img src='${stages.normal.image}'>`);
+/*				mapDiv.html(`<img src='${stages.normal.image}'>`);
 				mapRows.push(stages.normal);
-//				selectStage = stages.normal;
-				selectStage = stages.test;
+*/
+				mapDiv.html(`<img src='${stages.rest.image}'>`);
+				mapRows.push(stages.rest);
 			} else {
 				let randomMap = mt.nextInt(0, totalWeight);
 				for (const stage of Object.values(stages)) {
 					if (randomMap < stage.weight) {
 						mapDiv.html(`<img src='${stage.image}'>`);
 						mapRows.push(stage);
-						selectStage = stage;
 						break;
 					}
 					randomMap -= stage.weight;
@@ -200,11 +164,11 @@ function climbTowerStart(){
 				mapDiv.addClass('choices');
 				mapDiv.click((e) => {
 					console.log(`row:[${row}] column:[${column}]`);
-					console.log(selectStage);
+					console.log(map[row][column]);
 					currentMap.row = row;
 					currentMap.column = column;
 					setLocalStorage(keyContinueCurrentMap, currentMap);
-					admissionStage(selectStage);
+					admissionStage(map[row][column]);
 				});
 			}
 			$('.map-modal-body').append(mapDiv);
@@ -254,6 +218,7 @@ function climbTowerContinue(){
 					admissionStage(map[row][column]);
 				});
 			}
+			console.log(map[row][column]);
 			mapDiv.html(`<img src='${map[row][column].image}'>`);
 			$('.map-modal-body').append(mapDiv);
 		}
@@ -269,6 +234,7 @@ function admissionStage(stageInfo){
 	$('.rest-area').addClass('hidden');
 	$('.map-modal').removeClass('active');
 	$('.map-modal-body').html('');
+	console.log(stageInfo);
 	switch(stageInfo.name){
 		case stages.boss.name:
 			currentLevel = stageLevel.boss;

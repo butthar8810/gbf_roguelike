@@ -87,6 +87,7 @@ const moneyReward = {
 /*****************************************************************************/
 const keySelectChara = 'Babu.Select.Chara';
 const keyContinueFlag = 'Babu.Continue.Flag';// 途中プレイがあるかのフラグ
+const keyContinueRestFlag = 'Babu.Continue.Rest.Flag';
 const keyContinueArtifact = 'Babu.Continue.Artifact';
 const keyContinuePlayerStatus = 'Babu.Continue.Player.Status';
 const keyContinueMap = 'Babu.Continue.Map';

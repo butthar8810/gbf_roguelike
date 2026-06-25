@@ -1493,7 +1493,7 @@ function actionTrashCard(){
 	startPhase(phase.trash);
 }
 function trashCard(){
-	console.log('decidePulverizer');
+	console.log('trashCard');
 	console.log(tmpArea);
 	if(tmpArea.length === 0){
 		return false;
@@ -1514,7 +1514,8 @@ function trashCard(){
 		setLocalStorage(keyContinueTrashCount, trashCount);
 		setLocalStorage(keyContinueHand, myHand);
 		setLocalStorage(keyContinueDiscard, myTrash);
-		$('.decide-area').removeClass('active');
+		$('.black-back-area').removeClass('active');
+		$('.trash-decide-area').removeClass('active');
 		$('.hand-area').removeClass('front');
 		$(`.hand-card`).removeClass('select');
 

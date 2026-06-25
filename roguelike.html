@@ -29,15 +29,16 @@
     <!-- Swiper CDN読み込み -->
     <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css" />
     <script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
-	<script src="js/animation.js"></script>
-	<script src="js/artifact.js"></script>
 	<script src="js/parameter.js"></script>
 	<script src="js/system.js"></script>
-	<script src="js/readyBonuses.js"></script>
 	<script src="js/outGame.js"></script>
 	<script src="js/inGame.js"></script>
+	<script src="js/animation.js"></script>
+	<script src="js/artifact.js"></script>
+	<script src="js/readyBonuses.js"></script>
 	<script src="js/cardEffect.js"></script>
 	<script src="js/enemies.js"></script>
+	<script src="js/event.js"></script>
 
 	<link rel="icon" href="images/icon.jpg">
 	<title>バブ・イールの塔壊すべし</title>
@@ -64,6 +65,7 @@
 	<div class="stage-area">
 		<div class="rest-area hidden">
 			<img src="images/stage_rest.jpg" alt="リスポーン">
+			<div class="heal-effect"></div>
 			<img class="player-character" src='' alt="プレイヤーキャラ">
 		</div>
 		<div class="battle-area hidden">
@@ -90,12 +92,12 @@
 		<div class="hand-area"></div>
 		<div class="right-area">
 			<div class="end-btn">
-				<img src="images/btn5.png" alt="">
+				<img src="images/btn5.png" alt="ターン終了ボタン">
 				<span>ターン終了</span>
 			</div>
 			<div class="trash">
 				<div class="trash-area">
-					<img src="images/information/trash.png" alt="廃棄">
+					<img src="images/information/trash.png" alt="捨て札">
 					<div class="trash-count">0</div>
 				</div>
 			</div>
@@ -106,11 +108,28 @@
 		<div class="map-modal-body">
 		</div>
 	</div>
-	<div class="decide-area">
-		<div class="decide-title"></div>
-		<div class="decide-btn">
-			<img src="images/btn2.png" alt="">
-			<span>決定</span>
+	<div class="black-back-area">
+		<div class="trash-decide-area">
+			<div class="trash-decide-title"></div>
+			<div class="image-btn trash-decide-btn">
+				<img src="images/btn2.png" alt="">
+				<span>決定</span>
+			</div>
+		</div>
+		<div class="enhance-area">
+			<div class="enhance-title"></div>
+			<div class="enhance-content"></div>
+			<div class="enhance-decide-content hidden"></div>
+			<div class="enhance-btn-area">
+				<div class="image-btn enhance-cancel-btn">
+					<img src="images/btn3.png" alt="">
+					<span>戻る</span>
+				</div>
+				<div class="image-btn enhance-btn">
+					<img src="images/btn2.png" alt="">
+					<span>決定</span>
+				</div>
+			</div>
 		</div>
 	</div>
 	<div class="result-modal">

@@ -2,6 +2,16 @@
 /* システム関数
 /***********************************************************************************/
 /*******************************************************/
+/* recoveryHP：HPを回復する
+/*******************************************************/
+function recoveryHP(recovery){
+	if (playerStatus.remainHP + recovery > playerStatus.maxHP){
+		playerStatus.remainHP = playerStatus.maxHP;
+	} else {
+		playerStatus.remainHP += recovery;
+	}
+}
+/*******************************************************/
 /* deepCopySupply：カード配列をディープコピーする
 /*******************************************************/
 function deepCopyCard(arraycard){
