@@ -3,7 +3,7 @@
 /*************************************************************************************/
 const cardClass = {gran: 'グラン', djeeta: 'ジータ', common: '共通', abnormal: '状態異常'};
 const rarity = {starter: '初期', common: 'レア', uncommon: 'スーパーレア', rare: 'SSレア'};
-const type = {attack: 'アタック', skill: 'スキル', power: 'パワー'};
+const type = {attack: 'アタック', skill: 'スキル', power: 'パワー', abnormal: '状態異常'};
 
 /********************************************/
 /* グランカードリスト(強化前)
@@ -207,7 +207,7 @@ const granCardList = {
 			cost: 2,
 			attack: 12,
 			debuff: 2,
-			debuffType: 'week',
+			debuffType: 'weak',
 			discard: false,
 		}
 	},
@@ -272,7 +272,7 @@ const granCardList = {
 		class: cardClass.gran,
 		rarity: rarity.common,
 		type: type.skill,
-		func: 'effectDefenseAndRandomTrash',
+		func: 'effectDefenseAndRandomDiscard',
 		image:'images/card/gran_Coat.jpg',
 		effect: '{B}ブロックを得る。手札をランダムで1枚廃棄する。',
 		amount: {
@@ -361,7 +361,7 @@ const granCardList = {
 			cost: 1, 
 			attack: 13,
 			debuff1: 1,
-			debuffType1: 'week',
+			debuffType1: 'weak',
 			debuff2: 1,
 			debuffType2: 'defenseDown',
 			discard: false,
@@ -633,7 +633,7 @@ const granCardList = {
 		amount: {
 			cost: 0, 
 			debuff: 1,
-			debuffType: 'week',
+			debuffType: 'weak',
 			discard: true,
 		}
 	},
@@ -765,7 +765,7 @@ const granCardList = {
 		amount: {
 			cost: 2, 
 			debuff1: 3,
-			debuffType1: 'week',
+			debuffType1: 'weak',
 			debuff2: 3,
 			debuffType2: 'defenseDown',
 			discard: false,
@@ -1150,7 +1150,7 @@ const granEnhancedCardList = {
 			cost: 2,
 			attack: 14,
 			debuff: 3,
-			debuffType: 'week',
+			debuffType: 'weak',
 			discard: false,
 		}
 	},
@@ -1208,7 +1208,7 @@ const granEnhancedCardList = {
 		class: cardClass.gran,
 		rarity: rarity.common,
 		type: type.skill,
-		func: 'effectDefenseAndRandomTrash',
+		func: 'effectDefenseAndRandomDiscard',
 		image:'images/card/gran_Coat.jpg',
 		effect: '<span class="upgrade">{B}</span>ブロックを得る。手札をランダムで1枚廃棄する。',
 		amount: {
@@ -1224,10 +1224,11 @@ const granEnhancedCardList = {
 		type: type.skill,
 		func: 'effectDefenseAndDraw',
 		image:'images/card/gran_Smokescreen.jpg',
-		effect: '<span class="upgrade">{B}</span>ブロックを得る。カードを1枚引く。',
+		effect: '<span class="upgrade">{B}</span>ブロックを得る。カードを{Dr}枚引く。',
 		amount: {
 			cost: 1,
 			block: 11,
+			draw: 1, 
 			discard: false,
 		}
 	},
@@ -1285,7 +1286,7 @@ const granEnhancedCardList = {
 			cost: 2, 
 			attack: 13,
 			debuff1: 2,
-			debuffType1: 'week',
+			debuffType1: 'weak',
 			debuff2: 2,
 			debuffType2: 'defenseDown',
 			discard: false,
@@ -1524,7 +1525,7 @@ const granEnhancedCardList = {
 		amount: {
 			cost: 0, 
 			debuff: 2,
-			debuffType: 'week',
+			debuffType: 'weak',
 			discard: true,
 		}
 	},
@@ -1643,7 +1644,7 @@ const granEnhancedCardList = {
 		amount: {
 			cost: 2, 
 			debuff1: 5,
-			debuffType1: 'week',
+			debuffType1: 'weak',
 			debuff2: 5,
 			debuffType2: 'defenseDown',
 			discard: false,
@@ -2240,7 +2241,7 @@ const abnormalCardList = {
 		name: '粘液',
 		class: cardClass.abnormal,
 		rarity: rarity.common,
-		type: type.skill,
+		type: type.abnormal,
 		func: '',
 		image:'images/card/abnormal_Mucus.jpg',
 		effect: `廃棄。`,
@@ -2253,7 +2254,7 @@ const abnormalCardList = {
 		name: '負傷',
 		class: cardClass.abnormal,
 		rarity: rarity.common,
-		type: type.skill,
+		type: type.abnormal,
 		func: '',
 		image:'images/card/abnormal_Injury.jpg',
 		effect: `使用不可。`,
@@ -2267,7 +2268,7 @@ const abnormalCardList = {
 		class: cardClass.abnormal,
 		cost: 99,
 		rarity: rarity.common,
-		type: type.skill,
+		type: type.abnormal,
 		func: '',
 		image:'images/card/abnormal_Curse.jpg',
 		effect: `使用不可。このカードを引いたとき、エナジーを1失う。エセリアル。`,
@@ -2280,7 +2281,7 @@ const abnormalCardList = {
 		name: '火傷',
 		class: cardClass.abnormal,
 		rarity: rarity.common,
-		type: type.skill,
+		type: type.abnormal,
 		func: '',
 		image:'images/card/abnormal_Burn.jpg',
 		effect: `使用不可。ターン終了時に2ダメージを受ける。`,
@@ -2293,7 +2294,7 @@ const abnormalCardList = {
 		name: 'めまい',
 		class: cardClass.abnormal,
 		rarity: rarity.common,
-		type: type.skill,
+		type: type.abnormal,
 		func: '',
 		image:'images/card/abnormal_Dizziness.jpg',
 		effect: `使用不可。エセリアル。`,
@@ -2325,6 +2326,40 @@ const cardReward = {
 		rare:{weight:100, rarity: rarity.rare},
 	},
 };
+/*******************************************************/
+/* setupDeck：初期デッキとなる10枚のカードを配る
+/*******************************************************/
+function setupDeck(){
+	const continueFlag = getLocalStorage(keyContinueFlag);
+	const selectChara = getLocalStorage(keySelectChara);
+	const lastDeck = getLocalStorage(keyContinueDeck);
+	const lastOriginalDeck = getLocalStorage(keyContinueOriginalDeck);
+
+	if(lastDeck !== null && continueFlag){
+		// 続きからの場合
+		myDeck = lastDeck;
+		myOriginalDeck = lastOriginalDeck;
+	} else {
+		// プレイヤーに初期デッキとなる10枚のカードを配る
+		if (selectChara == selectCharacter.gran.name){
+			addCardToOriginalDeck(granCardList.Wide, 5);
+			addCardToOriginalDeck(granCardList.Defense, 4);
+			addCardToOriginalDeck(granCardList.PowerSwing, 1);
+
+			addCardToOriginalDeck(granCardList.Stimulant, 2);
+			addCardToOriginalDeck(granCardList.Coat, 2);
+			addCardToOriginalDeck(granCardList.Smokescreen, 2);
+			addCardToOriginalDeck(granCardList.Adrenal, 2);
+			addCardToOriginalDeck(granCardList.OverPower, 2);
+
+		} else if (selectChara == selectCharacter.djeeta.name){
+			addCardToOriginalDeck(djeetaCardList.Wide, 5);
+			addCardToOriginalDeck(djeetaCardList.Defense, 5);
+			addCardToOriginalDeck(djeetaCardList.Fast, 1);
+			addCardToOriginalDeck(djeetaCardList.Pulverizer, 1);
+		}
+	}
+}
 /*****************************************************/
 /* カード報酬決定関数
 /*****************************************************/
@@ -2659,9 +2694,9 @@ function effectDefenseAndDraw(amount){
 	endAction();
 	return true;
 }
-function effectDefenseAndRandomTrash(amount){
+function effectDefenseAndRandomDiscard(amount){
 	// {B}ブロックを得る。手札をランダムで1枚廃棄する。
-	console.log('effectDefenseAndRandomTrash');
+	console.log('effectDefenseAndRandomDiscard');
 	if('block' in amount){
 		actionBlock(amount.block);
 	}
@@ -2901,7 +2936,13 @@ function effectGetEnergyAndDrawAndSelfHarm(amount){
 	endAction();
 	return true;
 }
-
+function effectDeckTopPlay(amount){
+	// 山札の一番上にあるカードをプレイする。そのカードを廃棄する。
+	console.log('effectDeckTopPlay');
+	actionDeckTopPlay();
+	endAction();
+	return true;
+}
 function effectDefenseAndUpGrade(amount){
 	// {B}ブロックを得る。戦闘終了まで手札のカード1枚をアップグレードする。
 	console.log('effectDefenseAndUpGrade');
@@ -2911,12 +2952,9 @@ function effectDefenseAndUpGrade(amount){
 	actionUpGradeCard();
 	return true;
 }
-function effectDeckTopPlay(amount){
-	console.log('effectDeckTopPlay');
-	actionDeckTopPlay();
-	return true;
-}
+
 function effectDrawAndUnshiftDeck(amount){
+	// カードを{Dr}枚引く。手札のカードを山札の1番上に置く。廃棄。
 	console.log('effectDeckTopPlay');
 	if('draw' in amount){
 		const cards = drawCardFromDeck(amount.draw);
@@ -2928,6 +2966,7 @@ function effectDrawAndUnshiftDeck(amount){
 	return true;
 }
 function effectReproductionToHand(amount){
+	// 手札にある「アタック」か「パワー」を複製し、1枚手札に加える。
 	console.log('effectDeckTopPlay');
 	actionReproductionToHand();
 	
@@ -3345,6 +3384,7 @@ function actionStatusBuf(buf, amountCount){
 /* 状態異常を与える関数
 /*******************************************************/
 function actionStatusDebuf(debuf, amountCount){
+	console.log(debuf);
 	// すでに同じデバフがかかってないか確認
 	// 同じデバフは累積する
 	let sameDebufFlag = false;
@@ -3437,7 +3477,7 @@ function trashCard(){
 /*******************************************************/
 function actionTrashRandomCard(){
 	let randomIndex = Math.floor(Math.random() * myHand.length);
-	const card = spliceHand(index);
+	const card = spliceHand(randomIndex);
 	if (card === undefined) {
 		return false;
 	}
@@ -3517,11 +3557,6 @@ function upGradeCard(){
 		$('.hand-decide-area').removeClass('active');
 		$('.hand-area').removeClass('front');
 		$(`.hand-card`).removeClass('select');
-
-		animateHandToTrash(card);
-		$.when(cardTrashPromise).done(() => {
-			updateHandDom();
-		});
 		startPhase(phase.action);
 	}
 	endAction();
@@ -3569,9 +3604,10 @@ function actionDeckTopPlay(){
 		// 捨て札をデッキに再構築する
 		reconfigureDeck();
 	}
-	// デッキから手札へカードを引く
+	// デッキからカードを引く
 	const card = shiftDeck();
 	if (card !== undefined){
+		card.amount.tmpDiscard = true;
 		pushStackCard(card);
 	}else{
 		console.log("shiftDeck undefined");

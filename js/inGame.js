@@ -78,6 +78,7 @@ function continueBattle(){
 
 	updateDeckDom();
 	updateTrashDom();
+	updateDiscardDom();
 	updateHandDom();
 	updateEnergyDom();
 	updateEnemyAreaDom(currentEnemies, true);
@@ -189,6 +190,15 @@ function setupBtn(){
 		$('.black-back-area').addClass('active');
 		$('.list-area').addClass('active');
 		createTrashListDom();
+	});
+	$('.discard-area').click((e) => {
+		if (discard.length <= 0) {
+			console.log('廃棄札がありません。');
+			return;
+		}
+		$('.black-back-area').addClass('active');
+		$('.list-area').addClass('active');
+		createDiscardListDom();
 	});
 	$('.close-list-btn').click((e) => {
 		$('.black-back-area').removeClass('active');
@@ -365,6 +375,7 @@ function startPhase(ph){
 async function startTurn(){
 	console.log(`turn: ${currentTurn}`);
 	updateTrashDom();
+	updateDiscardDom()
 	updateEnergyDom();
 	$.when(
 		enemyGetBlockPromise,
@@ -396,6 +407,7 @@ function endTurn(){
 	console.log(`endTurn`);
 	// カードを5枚引く
 	drawCardFromDeck(initialHandNum);
+	
 	// 「ヘイスト」で追加2枚
 	const drawCard = playerStatus.statuses
 		.find((status) => status.name === bufStatus.drawCard.name);
@@ -421,7 +433,18 @@ function endTurn(){
 		playerStatus.block += nextTurnBlock.amount;
 		nextTurnBlock.amount = 0;
 	}
+	// 「攻UP無効」で攻撃力アップが減る
+	const invalidAttackUp = playerStatus.statuses
+		.find((status) => status.name === debufStatus.invalidAttackUp.name);
+	if (invalidAttackUp){
+		const attackUp = playerStatus.statuses
+			.find((status) => status.name === bufStatus.attackUp.name);
+		if(attackUp){
+			attackUp.amount -= invalidAttackUp.amount;
+		}
+	}
 
+	
 	// ターン制の状態変化のターンを進める
 	// プレイヤーの状態変化処理
 	playerStatus.statuses.forEach((status, index) => {
@@ -434,8 +457,12 @@ function endTurn(){
 			case debufStatus.weak.name:
 			case debufStatus.poison.name:
 			case debufStatus.noBlock.name:
+			case debufStatus.noDraw.name:
 			case debufStatus.Fading.name:
 				status.amount--;
+				break;
+			case debufStatus.invalidAttackUp.name:
+				status.amount = 0;
 				break;
 			default:
 				break;
@@ -617,10 +644,15 @@ function endAction(){
 		const playCards = deleteAllPlayArea();
 		setLocalStorage(keyContinuePlayArea, playArea);
 		playCards.forEach((playCard) => {
-			console.log(playCard);
-			if(playCard.amount.discard){
+			if('tmpDiscard' in playCard.amount && playCard.amount.tmpDiscard){
+				delete playCard.amount.tmpDiscard;
 				pushDiscard(playCard);
 				setLocalStorage(keyContinueDiscard, discard);
+				updateDiscardDom();
+			} else if(playCard.amount.discard){
+				pushDiscard(playCard);
+				setLocalStorage(keyContinueDiscard, discard);
+				updateDiscardDom();
 			} else {
 				pushTrash(playCard);
 				setLocalStorage(keyContinueTrash, myTrash);
@@ -632,6 +664,8 @@ function endAction(){
 	// 攻撃を内部的に行う
 	const card = shiftStackCard();
 	pushPlayArea(card);
+	// カードプレイのアニメーション
+	animatePlayCard(card);
 	if (card !== undefined) {
 		const storedFunc = globalThis[card.func];
 		if( typeof storedFunc === 'function'){
@@ -682,7 +716,6 @@ function clickHandProcess(handCardDiv, hand){
 	const index = findIndexTemporaryArea('id', hand.id);
 	switch(currentPhase) {
 		case phase.action:
-			console.log(hand);
 			if ('conditions' in hand.amount && hand.amount.conditions !== '') {
 				const conditionsFunc = globalThis[hand.amount.conditions];
 				if( typeof conditionsFunc === 'function'){
@@ -912,6 +945,7 @@ async function startEnemiesTurn(){
 					animateEnemyAttack(enemy);
 					await sleep(enemyAttackGoWaitTime);
 					animatePlayerDamage();
+					console.log(animatePlayerStatus);
 					updatePlayerStatusDom(animatePlayerStatus);
 				}
 				await sleep(1500);
@@ -977,7 +1011,7 @@ function targetingEnemy(){
 /*******************************************************/
 /* targetingEnemy：予兆行動のテキストを出力する
 /*******************************************************/
-function omenText(omenAction, totalAttack){
+function omenText(omenAction, totalAttack = 0){
 	const omenText = 'この敵が予定しているのは<br>';
 	switch(omenAction.type){
 		case enemyActionType.attack:

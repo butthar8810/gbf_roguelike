@@ -185,6 +185,17 @@ function updateTrashDom(){
 	$(`.trash-count`).html(`${myTrash.length}`);
 }
 /*******************************************************/
+/* updateDiscardDom：捨て札用DOMを生成
+/*******************************************************/
+function updateDiscardDom(){
+	if(discard.length <= 0){
+		$('.discard').addClass('empty');
+	}else{
+		$('.discard').removeClass('empty');
+	}
+	$(`.discard-count`).html(`${discard.length}`);
+}
+/*******************************************************/
 /* updateEnergyDom：残りエネルギー用DOMを生成
 /*******************************************************/
 function updateEnergyDom(){
@@ -204,7 +215,6 @@ function updateHandDom(){
 			.addClass('hand-card')
 			// 手札クリック時の処理登録
 			.click(hand ,() => {
-				console.log(hand);
 				clickHandProcess(handCardDiv, hand);
 			});
 		$(`.hand-area`).append(handCardDiv);
@@ -481,46 +491,14 @@ function updateEnemyAreaDom(argEnemies, omenFlag = false){
 				.addClass('omen-inner')
 				.append(nextActionImage);
 			if(enemy.currentStatus.nextAction.damage > 0){
-				// 予測ダメージ計算
-				let totalAttack = enemy.currentStatus.nextAction.damage;
-				// 倍率計算
-				let magnification = 1;
-				// 脱力（攻撃力25%減少）
-				const weakness = enemy.currentStatus.status
-					.find((status) => status.name === debufStatus.weak.name);
-				if (weakness){magnification -= 0.25;}
-				// 防御力ダウン（被ダメ50%上昇）
-				const defenseUp = playerStatus.statuses
-					.find((status) => status.name === bufStatus.defenseUp.name);
-				if (defenseUp){magnification -= 0.5;}
-				// 防御力アップ（被ダメ50%減少）
-				const defenseDown = playerStatus.statuses
-					.find((status) => status.name === debufStatus.defenseDown.name);
-				if (defenseDown){magnification += 0.5;}
-				totalAttack = totalAttack * magnification;
-					
-				// エネミーの状態異常の確認
-				enemy.currentStatus.status.forEach((status) => {
-					switch(status.name){
-						case bufStatus.attackUp.name:// 攻撃力アップ（攻撃ダメージが+X。）
-							totalAttack += status.amount;
-							break;
-						case debufStatus.attackDown.name:// 攻撃力ダウン（攻撃ダメージがｰX。）
-							if (totalAttack > status.amount){
-								totalAttack -= status.amount;
-							} else {
-								totalAttack = 0;
-							}
-							break;
-						default:
-							break;
-					}
-				});
+				let totalAttack = calcEnemyDamage(enemy.currentStatus.nextAction.damage, enemy);
 				const damageDiv = $('<div>')
 					.addClass('damage')
 					.html(totalAttack);
 				omenInnerDiv.append(damageDiv);
 				omenModalDiv.append(omenText(enemy.currentStatus.nextAction, totalAttack));
+			} else {
+				omenModalDiv.append(omenText(enemy.currentStatus.nextAction));
 			}
 			const omenDiv = $('<div>')
 				.addClass('omen')
@@ -793,6 +771,19 @@ function createTrashListDom(){
 		trashCardDiv
 			.addClass('enhance-card');
 		$('.card-list').append(trashCardDiv);
+	});
+}
+
+/*******************************************************/
+/* createTrashListDom：廃棄札一覧のDOM生成
+/*******************************************************/
+function createDiscardListDom(){
+	$('.card-list').html('');
+	discard.forEach((card) => {
+		const discardCardDiv = createCardDom(card);
+		discardCardDiv
+			.addClass('enhance-card');
+		$('.card-list').append(discardCardDiv);
 	});
 }
 /*******************************************************/

@@ -77,41 +77,6 @@ function setupCharaStatus(){
 	updateHP();
 	updateMoney();
 }
-/*******************************************************/
-/* setupDeck：初期デッキとなる10枚のカードを配る
-/*******************************************************/
-function setupDeck(){
-	const continueFlag = getLocalStorage(keyContinueFlag);
-	const selectChara = getLocalStorage(keySelectChara);
-	const lastDeck = getLocalStorage(keyContinueDeck);
-	const lastOriginalDeck = getLocalStorage(keyContinueOriginalDeck);
-
-	if(lastDeck !== null && continueFlag){
-		// 続きからの場合
-		myDeck = lastDeck;
-		myOriginalDeck = lastOriginalDeck;
-	} else {
-		// プレイヤーに初期デッキとなる10枚のカードを配る
-		if (selectChara == selectCharacter.gran.name){
-			addCardToOriginalDeck(granCardList.Wide, 5);
-			addCardToOriginalDeck(granCardList.Defense, 4);
-			addCardToOriginalDeck(granCardList.PowerSwing, 1);
-
-			addCardToOriginalDeck(granCardList.Swing, 2);
-			addCardToOriginalDeck(granCardList.Straight, 2);
-			addCardToOriginalDeck(granCardList.Pain, 2);
-			addCardToOriginalDeck(granCardList.ThreeBurst, 2);
-			addCardToOriginalDeck(granCardList.Heavy, 2);
-
-		} else if (selectChara == selectCharacter.djeeta.name){
-			addCardToOriginalDeck(djeetaCardList.Wide, 5);
-			addCardToOriginalDeck(djeetaCardList.Defense, 5);
-			addCardToOriginalDeck(djeetaCardList.Fast, 1);
-			addCardToOriginalDeck(djeetaCardList.Pulverizer, 1);
-		}
-	}
-}
-
 
 /*******************************************************/
 /* climbTowerStart：塔を上る（クライムスタート）

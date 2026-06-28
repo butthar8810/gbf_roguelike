@@ -1135,6 +1135,40 @@ header{
 	margin: 0 2px;
 }
 /*****************************************************************************/
+/* discard-area: 捨て札の要素
+/*****************************************************************************/
+.discard{
+	display: flex;
+	justify-content: flex-end;
+}
+
+.discard-area{
+	width: 50px;
+	margin-top: 10px;
+	position: relative;
+}
+.discard-area img{
+	width: 100%;
+	z-index: -1;
+}
+.discard-count{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: absolute;
+	top: 47%;
+	left: 47%;
+	transform: translate(-50%, -50%);
+	width: 35px;
+	height: 35px;
+	color: black;
+	font-size: 20px;
+	font-weight: 900;
+	text-stroke: 1px white;
+	-webkit-text-stroke: 1px white;
+	margin: 0 2px;
+}
+/*****************************************************************************/
 /* talk-area: 会話の要素
 /*****************************************************************************/
 .talk-area{

@@ -16,6 +16,7 @@ function recoveryHP(recovery){
 /*******************************************************/
 function deepCopyCard(cardOjt){
 	const cloneOjt = {};
+	cloneOjt.key = cardOjt.key;
 	cloneOjt.name = cardOjt.name;
 	cloneOjt.class = cardOjt.class;
 	cloneOjt.rarity = cardOjt.rarity;
@@ -29,10 +30,11 @@ function deepCopyCard(cardOjt){
 /*******************************************************/
 /* deepCopySupply：カード配列をディープコピーする
 /*******************************************************/
-function deepCopyCardList(arraycard){
+function deepCopyCardList(arrayCard){
 	const cloneArray = [];
-	arraycard.forEach((cardOjt) => {
+	arrayCard.forEach((cardOjt) => {
 		const cloneOjt = {};
+		cloneOjt.key = cardOjt.key;
 		cloneOjt.name = cardOjt.name;
 		cloneOjt.class = cardOjt.class;
 		cloneOjt.rarity = cardOjt.rarity;
@@ -56,7 +58,15 @@ function deepCopyPlayerStatus(player){
 	cloneOjt.remainEnergy = player.remainEnergy;
 	cloneOjt.maxEnergy = player.maxEnergy;
 	cloneOjt.block = player.block;
-	cloneOjt.statuses = player.statuses.concat();
+	cloneOjt.statuses = [];
+	player.statuses.forEach((status) => {
+		const cloneStatus = {};
+		cloneStatus.name = status.name;
+		cloneStatus.amount = status.amount;
+		cloneStatus.effect = status.effect;
+		cloneStatus.image = status.image;
+		cloneOjt.statuses.push(cloneStatus);
+	});
 
 	return cloneOjt;
 }

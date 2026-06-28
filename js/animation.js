@@ -116,15 +116,6 @@ function animatePlayerAddTrash(cards){
 		showCardDiv
 			.addClass('hand-card')
 			.addClass('is-hover-disabled');
-		if (card.class == cardClass.gran) {
-			showCardDiv.addClass('gran-card');
-		} else if (card.class == cardClass.djeeta) {
-			showCardDiv.addClass('djeeta-card');
-		} else if (card.class == cardClass.common) {
-			showCardDiv.addClass('common-card');
-		} else if (card.class == cardClass.abnormal) {
-			showCardDiv.addClass('abnormal-card');
-		}
 		$('.show-area-inner').append(showCardDiv);
 	});
 	setTimeout(() => {
@@ -147,7 +138,70 @@ function animatePlayerAddTrash(cards){
 		});
 	}, showWaitTime);
 }
+/*******************************************************/
+/* animatePlayCard：捨て札にカードを追加するアニメーション
+/*******************************************************/
+function animatePlayCard(card){
+	console.log('animatePlayCard');
+	$.when(cardShowPromise).done(() => {
+		$('.show-area').removeClass('hidden');
+		$('.show-area-inner').html('');
+		console.log(card);
+		
+		const showCardDiv = createCardDom(card);
+		showCardDiv
+			.addClass('hand-card')
+			.addClass('is-hover-disabled');
+		$('.show-area-inner').append(showCardDiv);
+		showCardDiv
+			.prop('disabled', true)
+			.css('position', 'absolute');
 
+		if('tmpDiscard' in card.amount && card.amount.tmpDiscard){
+			cardShowPromise = showCardDiv
+			.animate({
+				left: coordinateShowForShowArea.left, 
+				top: coordinateShowForShowArea.top,
+			}, showWaitTime)
+			.animate({
+				opacity: 0
+			}, trashWaitTime);
+			$.when(cardShowPromise).done(() => {
+				$('.show-area').addClass('hidden');
+				$('.show-area-inner').html('');
+			});
+		} else if(card.amount.discard){
+			cardShowPromise = showCardDiv
+			.animate({
+				left: coordinateShowForShowArea.left, 
+				top: coordinateShowForShowArea.top,
+			}, showWaitTime)
+			.animate({
+				opacity: 0
+			}, trashWaitTime);
+			$.when(cardShowPromise).done(() => {
+				$('.show-area').addClass('hidden');
+				$('.show-area-inner').html('');
+			});
+		} else {
+			cardShowPromise = showCardDiv
+			.animate({
+			left: coordinateShowForShowArea.left, 
+				top: coordinateShowForShowArea.top,
+				}, showWaitTime)
+			.animate({
+				left: coordinateShowForTrashArea.left, 
+				top: coordinateShowForTrashArea.top,
+				width: coordinateShowForTrashArea.width,
+				fontSize: coordinateShowForTrashArea.size
+			}, trashWaitTime);
+			$.when(cardShowPromise).done(() => {
+				$('.show-area').addClass('hidden');
+				$('.show-area-inner').html('');
+			});
+		}
+	});
+}
 /*************************************************************************************/
 /* バトルアニメーション処理関連
 /*************************************************************************************/

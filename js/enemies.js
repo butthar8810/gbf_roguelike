@@ -179,14 +179,14 @@ function testSpell(enemyInfo, playerInfo, animationFlag){
 function testMucus(enemyInfo, playerInfo, animationFlag){
 	// 8ダメージ+粘液1枚を捨て札に加える
 	enemyAttack(enemyInfo, playerInfo, animationFlag, 8);
-	const debufCards = [abnormalCardList.Mucus, abnormalCardList.Mucus, abnormalCardList.Mucus];
+	const debufCards = [abnormalCardList.Mucus];
 	enemyCardDebuf(animationFlag, debufCards);
 
 }
 function testFirst(enemyInfo, playerInfo, animationFlag){
 	// 開始時効果
 	console.log(testFirst);
-	enemyStatusBuf(enemyInfo, animationFlag, bufStatus.attackUp, 2);
+	enemyStatusBuf(enemyInfo, animationFlag, bufStatus.defenseUp, 2);
 }
 /*******************************************************/
 /* スライム
@@ -344,9 +344,9 @@ function impWeb(enemyInfo, playerInfo, animationFlag){
 /* カードアクション用システム関数
 /*************************************************************************************/
 /*******************************************************/
-/* 与ダメージ関数
+/* 与ダメージ計算関数
 /*******************************************************/
-function enemyAttack(enemyInfo, playerInfo, animationFlag, attackCount){
+function calcEnemyDamage(attackCount, enemyInfo){
 	let totalAttack = attackCount;
 	// 倍率計算
 	let magnification = 1;
@@ -363,7 +363,7 @@ function enemyAttack(enemyInfo, playerInfo, animationFlag, attackCount){
 		.find((status) => status.name === debufStatus.defenseDown.name);
 	if (defenseDown){magnification += 0.5;}
 	console.log(`攻撃倍率：${magnification}`);
-	totalAttack = totalAttack * magnification;
+	totalAttack = Math.floor(totalAttack * magnification);
 		
 	// エネミーの状態異常の確認
 	enemyInfo.currentStatus.status.forEach((status) => {
@@ -397,6 +397,13 @@ function enemyAttack(enemyInfo, playerInfo, animationFlag, attackCount){
 				break;
 		}
 	});
+	return totalAttack;
+}
+/*******************************************************/
+/* 与ダメージ関数
+/*******************************************************/
+function enemyAttack(enemyInfo, playerInfo, animationFlag, attackCount){
+	let totalAttack = calcEnemyDamage(attackCount, enemyInfo);
 
 	if(playerInfo.block > 0){
 		if(playerInfo.block >= attackCount){
