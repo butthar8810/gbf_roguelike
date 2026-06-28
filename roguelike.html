@@ -21,16 +21,22 @@
 	<meta name="twitter:image" content="images/icon.jpg">
 
 	<link rel="stylesheet" href="css/style.css">
+	<!-- jQuery CDN読み込み -->
 	<script src="https://code.jquery.com/jquery-3.7.1.min.js"
 		integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-color/2.1.2/jquery.color.min.js"></script>
+	<!-- MersenneTwister CDN読み込み -->
 	<script src="https://magicant.github.io/sjavascript/mt.js"></script>
-    <!-- Swiper CDN読み込み -->
-    <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css" />
-    <script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
+	<!-- font-awesome CDN読み込み -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"/>
+	<!-- Swiper CDN読み込み -->
+	<link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css" />
+	<script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
+
 	<script src="js/parameter.js"></script>
 	<script src="js/system.js"></script>
+	<script src="js/operateDom.js"></script>
 	<script src="js/outGame.js"></script>
 	<script src="js/inGame.js"></script>
 	<script src="js/animation.js"></script>
@@ -109,9 +115,24 @@
 		</div>
 	</div>
 	<div class="black-back-area">
-		<div class="trash-decide-area">
-			<div class="trash-decide-title"></div>
-			<div class="image-btn trash-decide-btn">
+		<div class="list-area">
+			<div class="btn-area">
+				<button class="close-list-btn">X</button>
+			</div>
+			<div class="list-title"></div>
+			<div class="card-list"></div>
+		</div>
+		<div class="hand-decide-area">
+			<div class="hand-decide-title"></div>
+			<div class="image-btn hand-decide-btn">
+				<img src="images/btn2.png" alt="">
+				<span>決定</span>
+			</div>
+		</div>
+		<div class="return-decide-area">
+			<div class="return-decide-title"></div>
+			<div class="card-list-area"></div>
+			<div class="image-btn return-decide-btn">
 				<img src="images/btn2.png" alt="">
 				<span>決定</span>
 			</div>

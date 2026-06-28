@@ -37,40 +37,21 @@ function enhanceCardList(){
 	$('.enhance-area').addClass('active');
 	$('.enhance-content').html('');
 	updateEnhanceTitleDom('強化する武器を選んでください');
+	// 強化前のカード一覧表示
 	myOriginalDeck.forEach((card) => {
-		let effect = card.effect;
-		if('attack' in card.amount){
-			effect = effect.replace('{A}', `${card.amount.attack}`);
+		if (!('key' in card)){
+			console.log('強化済み');
+			console.log(card);
+			return;
 		}
-		if('block' in card.amount){
-			effect = effect.replace('{B}', `${card.amount.block}`);
-		}
-		const textParagraph = $('<p>')
-			.html(effect);
-		const costDiv = $('<div>')
-			.html(card.amount.cost);
-		const cardImage = $('<img>')
-			.attr('src', card.image);
-		const enhanceCardDiv = $('<div>')
+		const enhanceCardDiv = createCardDom(card);
+		enhanceCardDiv
 			.addClass('enhance-card')
-			.html(`${card.name}`)
-			.append(cardImage)
-			.append(costDiv)
-			.append(textParagraph)
 			// 手札クリック時の処理登録
 			.click(card ,() => {
 				console.log(card);
 				decideEnhanceCard(card);
 			});
-		if (card.class == cardClass.gran) {
-			enhanceCardDiv.addClass('gran-card');
-		} else if (card.class == cardClass.djeeta) {
-			enhanceCardDiv.addClass('djeeta-card');
-		} else if (card.class == cardClass.common) {
-			enhanceCardDiv.addClass('common-card');
-		} else if (card.class == cardClass.abnormal) {
-			enhanceCardDiv.addClass('abnormal-card');
-		}
 		$('.enhance-content').append(enhanceCardDiv);
 	});
 
@@ -82,80 +63,33 @@ function decideEnhanceCard(card){
 	$('.enhance-decide-content').html('');
 	$('.enhance-btn-area').addClass('active');
 	// 強化元のカード表示
-	let effect = card.effect;
-	if('attack' in card.amount){
-		effect = effect.replace('{A}', `${card.amount.attack}`);
-	}
-	if('block' in card.amount){
-		effect = effect.replace('{B}', `${card.amount.block}`);
-	}
-	const textParagraph = $('<p>')
-		.html(effect);
-	const costDiv = $('<div>')
-		.html(card.amount.cost);
-	const cardImage = $('<img>')
-		.attr('src', card.image);
-	const enhanceCardDiv = $('<div>')
+	const enhanceCardDiv = createCardDom(card);
+	enhanceCardDiv
 		.addClass('enhance-decide-card')
 		.addClass('before')
-		.html(`${card.name}`)
-		.append(cardImage)
-		.append(costDiv)
-		.append(textParagraph)
 		// 手札クリック時の処理登録
 		.click(card ,() => {
 			console.log(card);
 			decideEnhanceCard(card);
 		});
-	if (card.class == cardClass.gran) {
-		enhanceCardDiv.addClass('gran-card');
-	} else if (card.class == cardClass.djeeta) {
-		enhanceCardDiv.addClass('djeeta-card');
-	} else if (card.class == cardClass.common) {
-		enhanceCardDiv.addClass('common-card');
-	} else if (card.class == cardClass.abnormal) {
-		enhanceCardDiv.addClass('abnormal-card');
-	}
 	$('.enhance-decide-content').append(enhanceCardDiv);
 	// 矢印
-
-
-
+	const arrowIcon = $('<i>')
+		.addClass('fa-solid')
+		.addClass('fa-angles-right');
+	$('.enhance-decide-content').append(arrowIcon);
 	// 強化後のカードを表示
-	let enhancedEffect = card.effect;
-	if('attack' in card.amount){
-		enhancedEffect = enhancedEffect.replace('{A}', `${card.amount.attack}`);
-	}
-	if('block' in card.amount){
-		enhancedEffect = enhancedEffect.replace('{B}', `${card.amount.block}`);
-	}
-	const enhancedtextParagraph = $('<p>')
-		.html(enhancedEffect);
-	const enhancedcostDiv = $('<div>')
-		.html(card.amount.cost);
-	const enhancedcardImage = $('<img>')
-		.attr('src', card.image);
-	const enhancedCardDiv = $('<div>')
+	const enhancedCard = granEnhancedCardList[card.key];
+	console.log(enhancedCard);
+	const enhancedCardDiv = createCardDom(enhancedCard)
+	enhancedCardDiv
 		.addClass('enhance-decide-card')
 		.addClass('after')
-		.html(`${card.name}`)
-		.append(enhancedcardImage)
-		.append(enhancedcostDiv)
-		.append(enhancedtextParagraph)
 		// 手札クリック時の処理登録
-		.click(card ,() => {
-			console.log(card);
-			decideEnhanceCard(card);
+		.click(enhancedCard ,() => {
+			console.log(enhancedCard);
+			decideEnhanceCard(enhancedCard);
 		});
-	if (card.class == cardClass.gran) {
-		enhancedCardDiv.addClass('gran-card');
-	} else if (card.class == cardClass.djeeta) {
-		enhancedCardDiv.addClass('djeeta-card');
-	} else if (card.class == cardClass.common) {
-		enhancedCardDiv.addClass('common-card');
-	} else if (card.class == cardClass.abnormal) {
-		enhancedCardDiv.addClass('abnormal-card');
-	}
 	$('.enhance-decide-content').append(enhancedCardDiv);
 
 	$('.enhance-cancel-btn').off();
@@ -168,19 +102,16 @@ function decideEnhanceCard(card){
 	});
 	$('.enhance-btn').click(() => {
 		$('.enhance-btn-area').removeClass('active');
-		exchangeEnhancedCard(card, card);
+		exchangeEnhancedCard(card, enhancedCard);
 	});
 }
 
 function exchangeEnhancedCard(card, enhancedCard){
 	const index = myOriginalDeck.findIndex(deckCard => deckCard.name === card.name);
-	const enhancedOriginCard = deepCopyCard([enhancedCard])[0];
+	const enhancedOriginCard = deepCopyCard(enhancedCard);
 	console.log(myOriginalDeck);
 	myOriginalDeck.splice(index, 1, enhancedOriginCard);
 	console.log(myOriginalDeck);
 	$('.before').addClass('hidden');
 
-}
-function updateEnhanceTitleDom(text){
-	$('.enhance-title').html(text);
 }

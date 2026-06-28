@@ -29,6 +29,8 @@
     <script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
 	<script src="js/parameter.js"></script>
 	<script src="js/system.js"></script>
+	<script src="js/operateDom.js"></script>
+	<script src="js/cardEffect.js"></script>
 	<script src="js/toppage.js"></script>
 	
 
@@ -41,11 +43,7 @@
 		<div class="game-logo">
 			<img src="images/logo.png" alt="">
 		</div>
-		<div class="start-btn-area">
-			<a class="toppage-play-btn"><img src="images/btn1.png"><span>プレイ</span></a>
-			<a class="toppage-continue-btn"><img src="images/btn1.png"><span>つづきから</span></a>
-			<a class="toppage-credit-btn"><img src="images/btn1.png"><span>クレジット</span></a>
-		</div>
+		<div class="start-btn-area"></div>
 	</div>
 	<div class="select-modal">
 		<div class="select-modal-body">
@@ -56,14 +54,14 @@
 					<img class="select-chara chara-djeeta" src="images/gifs/djeeta_idle.gif" alt="ジータ">
 				</div>
 				<div class="select-btn-area">
-					<a class="setting-btn close-play-btn">
+					<div class="setting-btn close-play-btn">
 						<img src="images/btn3.png">
 						<span>戻る</span>
-					</a>
-					<a class="setting-btn start-btn" href="roguelike.html">
+					</div>
+					<div class="setting-btn start-btn">
 						<img src="images/btn2.png">
 						<span>決定</span>
-					</a>
+					</div>
 				</div>
 			</div>
 
@@ -92,6 +90,12 @@
 				当サイトで使用されている情報の所有権および著作権はそれぞれの権利者に帰属します。<br>
 			</p>
 		</div>
+	</div>
+	<div class="black-back-area">
+		<div class="btn-area">
+			<button class="close-list-btn">X</button>
+		</div>
+		<div class="card-list-area"></div>
 	</div>
 </body>
 </html>

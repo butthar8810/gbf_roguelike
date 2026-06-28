@@ -96,6 +96,13 @@ function setupDeck(){
 			addCardToOriginalDeck(granCardList.Wide, 5);
 			addCardToOriginalDeck(granCardList.Defense, 4);
 			addCardToOriginalDeck(granCardList.PowerSwing, 1);
+
+			addCardToOriginalDeck(granCardList.Swing, 2);
+			addCardToOriginalDeck(granCardList.Straight, 2);
+			addCardToOriginalDeck(granCardList.Pain, 2);
+			addCardToOriginalDeck(granCardList.ThreeBurst, 2);
+			addCardToOriginalDeck(granCardList.Heavy, 2);
+
 		} else if (selectChara == selectCharacter.djeeta.name){
 			addCardToOriginalDeck(djeetaCardList.Wide, 5);
 			addCardToOriginalDeck(djeetaCardList.Defense, 5);
@@ -143,8 +150,8 @@ function climbTowerStart(){
 /*				mapDiv.html(`<img src='${stages.normal.image}'>`);
 				mapRows.push(stages.normal);
 */
-				mapDiv.html(`<img src='${stages.rest.image}'>`);
-				mapRows.push(stages.rest);
+				mapDiv.html(`<img src='${stages.test.image}'>`);
+				mapRows.push(stages.test);
 			} else {
 				let randomMap = mt.nextInt(0, totalWeight);
 				for (const stage of Object.values(stages)) {
@@ -218,7 +225,6 @@ function climbTowerContinue(){
 					admissionStage(map[row][column]);
 				});
 			}
-			console.log(map[row][column]);
 			mapDiv.html(`<img src='${map[row][column].image}'>`);
 			$('.map-modal-body').append(mapDiv);
 		}

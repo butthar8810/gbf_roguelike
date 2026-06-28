@@ -12,9 +12,24 @@ function recoveryHP(recovery){
 	}
 }
 /*******************************************************/
+/* deepCopySupply：カード単体をディープコピーする
+/*******************************************************/
+function deepCopyCard(cardOjt){
+	const cloneOjt = {};
+	cloneOjt.name = cardOjt.name;
+	cloneOjt.class = cardOjt.class;
+	cloneOjt.rarity = cardOjt.rarity;
+	cloneOjt.type = cardOjt.type;
+	cloneOjt.func = cardOjt.func;
+	cloneOjt.image = cardOjt.image;
+	cloneOjt.effect = cardOjt.effect;
+	cloneOjt.amount = { ...cardOjt.amount };
+	return cloneOjt;
+}
+/*******************************************************/
 /* deepCopySupply：カード配列をディープコピーする
 /*******************************************************/
-function deepCopyCard(arraycard){
+function deepCopyCardList(arraycard){
 	const cloneArray = [];
 	arraycard.forEach((cardOjt) => {
 		const cloneOjt = {};
@@ -77,12 +92,13 @@ function deepCopyEnemies(arrayEnemies){
 function pushOriginalDeck(card){
 	if ('id' in card) {
 		myOriginalDeck.push({
+			key: card.key,
 			name: card.name,
 			class: card.class,
 			rarity: card.rarity,
 			type: card.type,
-			image: card.image,
 			func: card.func,
+			image: card.image,
 			effect: card.effect,
 			amount: card.amount
 		});
@@ -96,12 +112,13 @@ function pushOriginalDeck(card){
 function unshiftOriginalDeck(card){
 	if ('id' in card) {
 		myOriginalDeck.unshift({
+			key: card.key,
 			name: card.name,
 			class: card.class,
 			rarity: card.rarity,
 			type: card.type,
-			image: card.image,
 			func: card.func,
+			image: card.image,
 			effect: card.effect,
 			amount: card.amount
 		});
@@ -127,12 +144,13 @@ function deletAllOriginalDeck(){
 function pushDeck(card){
 	if ('id' in card) {
 		myDeck.push({
+			key: card.key,
 			name: card.name,
 			class: card.class,
 			rarity: card.rarity,
 			type: card.type,
-			image: card.image,
 			func: card.func,
+			image: card.image,
 			effect: card.effect,
 			amount: card.amount
 		});
@@ -146,12 +164,13 @@ function pushDeck(card){
 function unshiftDeck(card){
 	if ('id' in card) {
 		myDeck.unshift({
+			key: card.key,
 			name: card.name,
 			class: card.class,
 			rarity: card.rarity,
 			type: card.type,
-			image: card.image,
 			func: card.func,
+			image: card.image,
 			effect: card.effect,
 			amount: card.amount
 		});
@@ -183,12 +202,13 @@ function pushHand(card){
 	// デッキから手札へカードを引く
 	myHand.push({
 		id: myHand.length+1,
+		key: card.key,
 		name: card.name,
 		class: card.class,
 		rarity: card.rarity,
 		type: card.type,
-		image: card.image,
 		func: card.func,
+		image: card.image,
 		effect: card.effect,
 		amount: card.amount
 	});
@@ -215,20 +235,22 @@ function deleteAllHand(){
 /* pushTrash：捨て札キューの末尾にカードを追加する
 /*******************************************************/
 function pushTrash(card){
-	if ('id' in card) {
-		myTrash.push({
-			name: card.name,
-			class: card.class,
-			rarity: card.rarity,
-			type: card.type,
-			image: card.image,
-			func: card.func,
-			effect: card.effect,
-			amount: card.amount
-		});
-	} else {
-		myTrash.push(card);
-	}
+	myTrash = myTrash.map((user, index) => ({
+		...user,
+		id: index + 1
+	}));
+	myTrash.push({
+		id: myTrash.length+1,
+		key: card.key,
+		name: card.name,
+		class: card.class,
+		rarity: card.rarity,
+		type: card.type,
+		func: card.func,
+		image: card.image,
+		effect: card.effect,
+		amount: card.amount
+	});
 }
 /*******************************************************/
 /* spliceTrash：捨て札キューのIndex番目のデータを取り出す
@@ -237,7 +259,7 @@ function spliceTrash(index){
 	return myTrash.splice(index, 1)[0];
 }
 /*******************************************************/
-/* findIndexHand：手札キューから検索する
+/* findIndexTrash：捨て札キューから検索する
 /*******************************************************/
 function findIndexTrash(id, key){
 	return myTrash.findIndex((card) => card[id] == key);
@@ -249,23 +271,63 @@ function deleteAllTrash(){
 	return myTrash.splice(0, myTrash.length);
 }
 /*******************************************************/
-/* pushDiscard：廃棄キューの末尾にカードを追加する
+/* pushPlayArea：プレイエリアキューの末尾にカードを追加する
 /*******************************************************/
-function pushDiscard(card){
+function pushPlayArea(card){
 	if ('id' in card) {
-		discard.push({
+		playArea.push({
+			key: card.key,
 			name: card.name,
 			class: card.class,
 			rarity: card.rarity,
 			type: card.type,
-			image: card.image,
 			func: card.func,
+			image: card.image,
 			effect: card.effect,
 			amount: card.amount
 		});
 	} else {
-		discard.push(card);
+		playArea.push(card);
 	}
+}
+/*******************************************************/
+/* deleteAllPlayArea：プレイエリアキューをすべて削除する
+/*******************************************************/
+function deleteAllPlayArea(){
+	return playArea.splice(0, playArea.length);
+}
+/*******************************************************/
+/* pushDiscard：廃棄キューの末尾にカードを追加する
+/*******************************************************/
+function pushDiscard(card){
+	discard = discard.map((user, index) => ({
+		...user,
+		id: index + 1
+	}));
+	discard.push({
+		id: discard.length+1,
+		key: card.key,
+		name: card.name,
+		class: card.class,
+		rarity: card.rarity,
+		type: card.type,
+		func: card.func,
+		image: card.image,
+		effect: card.effect,
+		amount: card.amount
+	});
+}
+/*******************************************************/
+/* findIndexHand：手札キューから検索する
+/*******************************************************/
+function findIndexDiscard(id, key){
+	return discard.findIndex((card) => card[id] == key);
+}
+/*******************************************************/
+/* spliceTrash：捨て札キューのIndex番目のデータを取り出す
+/*******************************************************/
+function spliceDiscard(index){
+	return discard.splice(index, 1)[0];
 }
 /*******************************************************/
 /* deleteAllDiscard：廃棄キューをすべて削除する

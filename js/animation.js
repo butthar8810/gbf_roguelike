@@ -23,16 +23,10 @@ const enemyAttackReturnWaitTime = 500;
 /*******************************************************/
 async function animateDrawDeck(card){
 	// カード内容を形成
-	const costDiv = $('<div>')
-		.html(card.amount.cost);
-	const cardImage = $('<img>')
-		.attr('src', card.image);
-	const drawCardDiv = $('<div>')
+	const drawCardDiv = createCardDom(card);
+	drawCardDiv
 		.addClass('hand-card')
 		.addClass('is-hover-disabled')
-		.html(`${card.name}`)
-		.append(cardImage)
-		.append(costDiv)
 		.prop('disabled', true)
 		.css('position', 'absolute')
 		.css('font-size', coordinateDeckForHandArea.size)
@@ -79,25 +73,49 @@ function animateHandToTrash(card){
 }
 
 /*******************************************************/
+/* animateTrashToDeck：捨て札からデッキに移動するアニメーション
+/*******************************************************/
+function animateTrashToDeck(card){
+	const restoreCardDiv = createCardDom(card);
+	restoreCardDiv
+		.addClass('hand-card')
+		.addClass('is-hover-disabled')
+		.prop('disabled', true)
+		.css('position', 'absolute')
+		.css('font-size', coordinateTrashForHandArea.size)
+		.css('width', coordinateTrashForHandArea.width)
+		.css('top', coordinateTrashForHandArea.top)
+		.css('left', coordinateTrashForHandArea.left);
+	if (card.class == cardClass.gran) {
+		restoreCardDiv.addClass('gran-card');
+	} else if (card.class == cardClass.djeeta) {
+		restoreCardDiv.addClass('djeeta-card');
+	} else if (card.class == cardClass.common) {
+		restoreCardDiv.addClass('common-card');
+	} else if (card.class == cardClass.abnormal) {
+		restoreCardDiv.addClass('abnormal-card');
+	}
+	$('.hand-area').append(restoreCardDiv);
+
+	cardRestorePromise = restoreCardDiv.animate({
+		left: coordinateDeckForHandArea.left, 
+		top: coordinateDeckForHandArea.top,
+		width: coordinateDeckForHandArea.width,
+		fontSize: coordinateDeckForHandArea.size
+	}, trashWaitTime);
+	
+}
+/*******************************************************/
 /* animatePlayerAddTrash：捨て札にカードを追加するアニメーション
 /*******************************************************/
 function animatePlayerAddTrash(cards){
 	$('.show-area').removeClass('hidden');
 	$('.show-area-inner').html('');
 	cards.forEach((card, i) => {
-		const textParagraph = $('<p>')
-			.html(card.effect);
-		const costDiv = $('<div>')
-			.html(card.amount.cost);
-		const cardImage = $('<img>')
-			.attr('src', card.image);
-		const showCardDiv = $('<div>')
+		const showCardDiv = createCardDom(card);
+		showCardDiv
 			.addClass('hand-card')
-			.addClass('is-hover-disabled')
-			.html(`${card.name}`)
-			.append(cardImage)
-			.append(costDiv)
-			.append(textParagraph);
+			.addClass('is-hover-disabled');
 		if (card.class == cardClass.gran) {
 			showCardDiv.addClass('gran-card');
 		} else if (card.class == cardClass.djeeta) {
@@ -128,10 +146,8 @@ function animatePlayerAddTrash(cards){
 			$('.show-area-inner').html('');
 		});
 	}, showWaitTime);
-	
-
-	
 }
+
 /*************************************************************************************/
 /* バトルアニメーション処理関連
 /*************************************************************************************/

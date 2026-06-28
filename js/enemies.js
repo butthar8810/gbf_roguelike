@@ -5,8 +5,8 @@
 const enemyList = {
 	test:{
 		name: 'ういなす', 
-		minHP: 6, 
-		maxHP: 20, 
+		minHP: 50, 
+		maxHP: 100, 
 		image: 'images/enemy/uinasu.png',
 		actionAlgorithm: 'actionTEST', 
 		actionFirst: 'testFirst',
