@@ -108,7 +108,7 @@ function continueCount(){
 	const lastPlayerStatus = getLocalStorage(keyContinuePlayerStatus);
 	const lastLevel = getLocalStorage(keyContinueLevel);
 	const lastPhase = getLocalStorage(keyContinuePhase);
-	const lastplayerCount = getLocalStorage(keyContinuePlayerCount);
+	const lastPlayerCount = getLocalStorage(keyContinuePlayerCount);
 	if (lastTrash) {myTrash = lastTrash;}
 	if (lastPlayArea) {playArea = lastPlayArea;}
 	if (lastDiscard ) {discard = lastDiscard;}
@@ -116,7 +116,10 @@ function continueCount(){
 	if (lastStack) {stackCard = lastStack;}
 	if (lastTurn) {currentTurn = lastTurn;}
 	if (lastPhase) {currentPhase = lastPhase;}
-	if (lastplayerCount) {playerCount = lastplayerCount;}
+	if (lastPlayerCount) {
+		playerCount.HPDownCount = lastPlayerCount.HPDownCount;
+		playerCount.trashCount = lastPlayerCount.trashCount;
+	}
 	if (lastLevel !== undefined || lastLevel !== null) {
 		currentLevel = lastLevel;
 	}
@@ -376,7 +379,7 @@ function startPhase(ph){
 async function startTurn(){
 	console.log(`turn: ${currentTurn}`);
 	updateTrashDom();
-	updateDiscardDom()
+	updateDiscardDom();
 	updateEnergyDom();
 	$.when(
 		enemyGetBlockPromise,
@@ -457,11 +460,11 @@ function endTurn(){
 			case debufStatus.frail.name:
 			case debufStatus.weak.name:
 			case debufStatus.poison.name:
-			case debufStatus.noBlock.name:
-			case debufStatus.noDraw.name:
 			case debufStatus.Fading.name:
 				status.amount--;
 				break;
+			case debufStatus.noBlock.name:
+			case debufStatus.noDraw.name:
 			case debufStatus.invalidAttackUp.name:
 				status.amount = 0;
 				break;
@@ -591,6 +594,13 @@ function startCleanup(){
 /*******************************************************/
 function drawCardFromDeck(count = 1){
 	const drawCards = [];
+	if(
+		playerStatus.statuses
+		.find((status) => status.name === debufStatus.noDraw.name)
+	){
+		console.log('デバフによって引けません');
+		return true;
+	}
 	for(let i = 0; i < count; i++){
 		if (myDeck.length <= 0) {
 			// 捨て札をデッキに再構築する
@@ -706,7 +716,8 @@ function endAction(){
 	}
 	$.when(
 		cardDrawPromise,
-		cardTrashPromise
+		cardTrashPromise,
+		cardDiscardPromise
 	).done(() => {
 		updateHandDom();
 	});

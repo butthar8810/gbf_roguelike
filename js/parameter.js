@@ -161,7 +161,7 @@ let currentPhase = phase.action;
 //各種フラグ
 let enemyAttackWaitFlag = false;
 let allDefeatedFlag = false;
-let playerCount = {
+const playerCount = {
 	HPDownCount: 0,
 	trashCount: 0,
 };

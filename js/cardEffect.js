@@ -2346,11 +2346,11 @@ function setupDeck(){
 			addCardToOriginalDeck(granCardList.Defense, 4);
 			addCardToOriginalDeck(granCardList.PowerSwing, 1);
 
-			addCardToOriginalDeck(granCardList.Shrieking, 2);
-			addCardToOriginalDeck(granCardList.Rush, 2);
-			addCardToOriginalDeck(granCardList.ArtilleryShell, 2);
-			addCardToOriginalDeck(granCardList.Revision, 2);
-			addCardToOriginalDeck(granCardList.Bloody, 2);
+			addCardToOriginalDeck(granCardList.Tempest, 2);
+			addCardToOriginalDeck(granCardList.Mantle, 2);
+			addCardToOriginalDeck(granCardList.Belief, 2);
+			addCardToOriginalDeck(granCardList.Helm, 2);
+			addCardToOriginalDeck(granCardList.Script, 2);
 
 		} else if (selectChara == selectCharacter.djeeta.name){
 			addCardToOriginalDeck(djeetaCardList.Wide, 5);
@@ -2810,9 +2810,11 @@ function effectAttackAndNoAttackDiscard(amount){
 	// 「アタック」以外の手札を廃棄する。{A}のダメージを与える。
 	console.log('effectAttackAndNoAttackDiscard');
 	const noAttack = myHand.filter((hand) => hand.type !== type.attack);
-	const myHand = myHand.filter((hand) => hand.type === type.attack);
+	myHand = myHand.filter((hand) => hand.type === type.attack);
 	noAttack.forEach((card) => {
 		pushDiscard(card);
+		animateHandToDiscard(card);
+		updateDiscardDom();
 	});
 
 	if('attack' in amount){
@@ -2824,9 +2826,11 @@ function effectDefenseAndNoAttackDiscard(amount){
 	// 「アタック」以外の手札を廃棄する。この方法で廃棄したカードの枚数×{B}ブロックを得る。
 	console.log('effectAttackAndNoAttackDiscard');
 	const noAttack = myHand.filter((hand) => hand.type !== type.attack);
-	const myHand = myHand.filter((hand) => hand.type === type.attack);
+	myHand = myHand.filter((hand) => hand.type === type.attack);
 	noAttack.forEach((card) => {
 		pushDiscard(card);
+		animateHandToDiscard(card);
+		updateDiscardDom();
 	});
 	if('block' in amount){
 		const totalBlock = amount.block * noAttack.length;

@@ -212,6 +212,7 @@ function updateEnergyDom(){
 /* updateEnergyDom：手札用DOMを生成
 /*******************************************************/
 function updateHandDom(){
+	console.log('updateHandDom');
 	$(`.hand-area`).html('');
 	myHand.forEach((hand, i) => {
 		let attackDamage = 0;
