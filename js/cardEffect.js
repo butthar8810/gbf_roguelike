@@ -2610,6 +2610,9 @@ function effectAttackAndSelfHarm(amount){
 	console.log('effectAttackAndSelfHarm');
 	if('harm' in amount){
 		playerStatus.remainHP -= amount.harm;
+		playerCount.HPDownCount++;
+		console.log(`playerCount.HPDownCount: ${playerCount.HPDownCount}`);
+		setLocalStorage(keyContinuePlayerCount, playerCount);
 	}
 	if('attack' in amount){
 		actionAttack(amount.attack);
@@ -2735,6 +2738,9 @@ function effectGetEnergyAndSelfHarm(amount){
 	console.log('effectGetEnergy');
 	if('harm' in amount){
 		playerStatus.remainHP -= amount.harm;
+		playerCount.HPDownCount++;
+		console.log(`playerCount.HPDownCount: ${playerCount.HPDownCount}`);
+		setLocalStorage(keyContinuePlayerCount, playerCount);
 	}
 	if('energy' in amount){
 		playerStatus.remainEnergy += amount.energy;
@@ -2925,6 +2931,9 @@ function effectGetEnergyAndDrawAndSelfHarm(amount){
 	console.log('effectGetEnergyAndDrawAndSelfHarm');
 	if('harm' in amount){
 		playerStatus.remainHP -= amount.harm;
+		playerCount.HPDownCount++;
+		console.log(`playerCount.HPDownCount: ${playerCount.HPDownCount}`);
+		setLocalStorage(keyContinuePlayerCount, playerCount);
 	}
 	if('energy' in amount){
 		playerStatus.remainEnergy += amount.energy;
@@ -3051,7 +3060,7 @@ function effectKamaitachi(){
 	// `12ダメージを与える。このターンにカードを捨てていれば、2エナジーを得る。
 	console.log('effectKamaitachi');
 	actionAttack(djeetaCardList.Kamaitachi.amount.attack);
-	if (trashCount > 0) {
+	if (playerCount.trashCount > 0) {
 		playerStatus.remainEnergy += 2;
 	}
 	return true;
@@ -3457,8 +3466,8 @@ function trashCard(){
 			return false;
 		}
 		pushTrash(card);
-		trashCount++;
-		setLocalStorage(keyContinueTrashCount, trashCount);
+		playerCount.trashCount++;
+		setLocalStorage(keyContinuePlayerCount, playerCount);
 		setLocalStorage(keyContinueHand, myHand);
 		setLocalStorage(keyContinueTrash, myTrash);
 		$('.black-back-area').removeClass('active');
@@ -3486,8 +3495,8 @@ function actionTrashRandomCard(){
 		return false;
 	}
 	pushTrash(card);
-	trashCount++;
-	setLocalStorage(keyContinueTrashCount, trashCount);
+	playerCount.trashCount++;
+	setLocalStorage(keyContinuePlayerCount, playerCount);
 	animateHandToTrash(card);
 	$.when(cardTrashPromise).done(() => {
 		updateHandDom();

@@ -60,9 +60,17 @@ function enhanceCardList(){
 function exchangeEnhancedCard(card, enhancedCard){
 	const index = myOriginalDeck.findIndex(deckCard => deckCard.name === card.name);
 	const enhancedOriginCard = deepCopyCard(enhancedCard);
-	console.log(myOriginalDeck);
 	myOriginalDeck.splice(index, 1, enhancedOriginCard);
-	console.log(myOriginalDeck);
+	setLocalStorage(keyContinueOriginalDeck, myOriginalDeck);
+	removeLocalStorage(keyContinueRestFlag);
 	$('.before').addClass('hidden');
+	$('.arrow-icon').addClass('hidden');
+	setTimeout(() => {
+		$('.black-back-area').removeClass('active');
+		$('.enhance-area').removeClass('active');
+		$('.enhance-content').html('');
+		climbTowerContinue();
+	}, 1500);
+	 
 
 }

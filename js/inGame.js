@@ -25,7 +25,7 @@ function startBattle(){
 	$('.info-area').removeClass('hidden');
 	setLocalStorage(keyContinueBattleFlag, true);
 	
-	setLocalStorage(keyContinueTrashCount, trashCount);
+	setLocalStorage(keyContinuePlayerCount, playerCount);
 	setLocalStorage(keyContinueTrash, myTrash);
 	setLocalStorage(keyContinueTurn, currentTurn);
 	setLocalStorage(keyContinueEnemy, currentEnemies);
@@ -49,7 +49,7 @@ function endBattle(){
 	removeLocalStorage(keyContinueLevel);
 	removeLocalStorage(keyContinueReward);
 	removeLocalStorage(keyContinuePhase);
-	removeLocalStorage(keyContinueTrashCount);
+	removeLocalStorage(keyContinuePlayerCount);
 	initialize();
 	$('.result-modal').removeClass('active');
 	$('.battle-area').addClass('hidden');
@@ -108,7 +108,7 @@ function continueCount(){
 	const lastPlayerStatus = getLocalStorage(keyContinuePlayerStatus);
 	const lastLevel = getLocalStorage(keyContinueLevel);
 	const lastPhase = getLocalStorage(keyContinuePhase);
-	const lastTrashCount = getLocalStorage(keyContinueTrashCount);
+	const lastplayerCount = getLocalStorage(keyContinuePlayerCount);
 	if (lastTrash) {myTrash = lastTrash;}
 	if (lastPlayArea) {playArea = lastPlayArea;}
 	if (lastDiscard ) {discard = lastDiscard;}
@@ -116,7 +116,7 @@ function continueCount(){
 	if (lastStack) {stackCard = lastStack;}
 	if (lastTurn) {currentTurn = lastTurn;}
 	if (lastPhase) {currentPhase = lastPhase;}
-	if (lastTrashCount) {trashCount = lastTrashCount;}
+	if (lastplayerCount) {playerCount = lastplayerCount;}
 	if (lastLevel !== undefined || lastLevel !== null) {
 		currentLevel = lastLevel;
 	}
@@ -501,7 +501,7 @@ function endTurn(){
 	// 次の予測を決定する
 	decideNextAction();
 	// 捨て札の枚数をリセットする
-	trashCount = 0;
+	playerCount.trashCount = 0;
 	// ターンを進める
 	currentTurn++;
 }
@@ -553,6 +553,7 @@ function startCleanup(){
 		if('ethereal' in card.amount && card.amount.ethereal){
 			// エセリアルは廃棄
 			pushDiscard(card);
+			animateHandToDiscard(card);
 		} else {
 			pushTrash(card);
 			animateHandToTrash(card);
@@ -561,6 +562,7 @@ function startCleanup(){
 	// トラッシュアニメーションが完了したら
 	$.when(cardTrashPromise).done(() => {
 		hiddenHandDom();
+		updateDiscardDom();
 		updateTrashDom();
 	});
 	// ターン終了時効果の発動
@@ -683,6 +685,7 @@ function endAction(){
 	updateEnemyStatusDom(currentEnemies);
 	// 攻撃アニメーションの完了を待ち、DOM更新する
 	$.when(
+		playerAttackPromise,
 		playerGetBlockPromise,
 		playerAbnormalityPromise
 	).done(() => {
@@ -939,7 +942,7 @@ async function startEnemiesTurn(){
 	}
 	endTurn();
 	currentPhase = phase.action;
-	setLocalStorage(keyContinueTrashCount, trashCount);
+	setLocalStorage(keyContinuePlayerCount, playerCount);
 	setLocalStorage(keyContinuePhase, currentPhase);
 	setLocalStorage(keyContinueDeck, myDeck);
 	setLocalStorage(keyContinueHand, myHand);

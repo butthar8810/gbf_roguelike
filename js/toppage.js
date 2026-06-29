@@ -43,7 +43,7 @@ function loadTopPage(){
 			removeLocalStorage(keyContinueLevel);
 			removeLocalStorage(keyContinueReward);
 			removeLocalStorage(keyContinuePhase);
-			removeLocalStorage(keyContinueTrashCount);
+			removeLocalStorage(keyContinuePlayerCount);
 			window.location.href = 'roguelike.html';
 		} else {
 			alert('キャラが選択されておりません');

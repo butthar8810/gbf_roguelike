@@ -14,7 +14,7 @@ function startGame(){
 		startRestEvent();
 	} else if (getLocalStorage(keyContinueFlag)) {
 		console.log('再開');
-		continueGame();
+		climbTowerContinue();
 	}else {
 		$('.rest-area').removeClass('hidden');
 		$('.talk-area').removeClass('hidden');
@@ -24,13 +24,6 @@ function startGame(){
 			getReady();
 		});
 	}
-}
-/*******************************************************/
-/* continueGame：ゲーム再開
-/*******************************************************/
-function continueGame(){
-	map = getLocalStorage(keyContinueMap);
-	climbTowerContinue();
 }
 /*******************************************************/
 /* setupCharaStatus：キャラステータスをセットアップ
@@ -156,6 +149,7 @@ function climbTowerStart(){
 /* climbTowerContinue：塔登頂を再開する（クライムコンティニュー）
 /*******************************************************/
 function climbTowerContinue(){
+	map = getLocalStorage(keyContinueMap);
 	const lastCurrentMap = getLocalStorage(keyContinueCurrentMap);
 	if (lastCurrentMap) {
 		currentMap = lastCurrentMap;

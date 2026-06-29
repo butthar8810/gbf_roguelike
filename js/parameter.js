@@ -108,7 +108,7 @@ const keyContinueEnemy = 'Babu.Continue.Enemy';
 const keyContinueLevel = 'Babu.Continue.Level';
 const keyContinueReward = 'Babu.Continue.Reward';
 const keyContinuePhase = 'Babu.Continue.Phase';
-const keyContinueTrashCount = 'Babu.Continue.Trash.Count';
+const keyContinuePlayerCount = 'Babu.Continue.Player.Count';
 
 
 /*****************************************************************************/
@@ -161,13 +161,17 @@ let currentPhase = phase.action;
 //各種フラグ
 let enemyAttackWaitFlag = false;
 let allDefeatedFlag = false;
-let trashCount = 0;
+let playerCount = {
+	HPDownCount: 0,
+	trashCount: 0,
+};
 
 // promiseオブジェクト
 let cardDrawPromise = Promise.resolve();
 let cardTrashPromise = Promise.resolve();
 let cardRestorePromise = Promise.resolve();
 let cardShowPromise = Promise.resolve();
+let playerAttackPromise = Promise.resolve();
 let playerAbnormalityPromise = Promise.resolve();
 let playerGetBlockPromise = Promise.resolve();
 let enemyAttackPromise = Promise.resolve();

@@ -135,6 +135,13 @@ function createCardDom(card){
 	const typeParagraph = $('<p>')
 		.addClass('type')
 		.html(card.type);
+	if(card.name === granCardList.Bloody.name){
+		if (4 > playerCount.HPDownCount) {
+			card.amount.cost = 4 - playerCount.HPDownCount;
+		} else {
+			card.amount.cost = 0;
+		}
+	}
 	const costDiv = $('<div>')
 		.html(card.amount.cost);
 	const cardImage = $('<img>')
@@ -853,15 +860,11 @@ function decideEnhanceCardDom(card){
 	const enhanceCardDiv = createCardDom(card);
 	enhanceCardDiv
 		.addClass('enhance-decide-card')
-		.addClass('before')
-		// 手札クリック時の処理登録
-		.click(card ,() => {
-			console.log(card);
-			decideEnhanceCardDom(card);
-		});
+		.addClass('before');
 	$('.enhance-decide-content').append(enhanceCardDiv);
 	// 矢印
 	const arrowIcon = $('<i>')
+		.addClass('arrow-icon')
 		.addClass('fa-solid')
 		.addClass('fa-angles-right');
 	$('.enhance-decide-content').append(arrowIcon);
@@ -876,12 +879,7 @@ function decideEnhanceCardDom(card){
 	const enhancedCardDiv = createCardDom(enhancedCard)
 	enhancedCardDiv
 		.addClass('enhance-decide-card')
-		.addClass('after')
-		// 手札クリック時の処理登録
-		.click(enhancedCard ,() => {
-			console.log(enhancedCard);
-			decideEnhanceCardDom(enhancedCard);
-		});
+		.addClass('after');
 	$('.enhance-decide-content').append(enhancedCardDiv);
 
 	$('.enhance-cancel-btn').off();

@@ -362,7 +362,6 @@ function calcEnemyDamage(attackCount, enemyInfo){
 	const defenseDown = playerStatus.statuses
 		.find((status) => status.name === debufStatus.defenseDown.name);
 	if (defenseDown){magnification += 0.5;}
-	console.log(`攻撃倍率：${magnification}`);
 	totalAttack = Math.floor(totalAttack * magnification);
 		
 	// エネミーの状態異常の確認
@@ -414,10 +413,16 @@ function enemyAttack(enemyInfo, playerInfo, animationFlag, attackCount){
 			totalAttack = attackCount - playerInfo.block;
 		}
 	}
-	playerInfo.remainHP -= totalAttack;
-
+	if(totalAttack > 0){
+		playerInfo.remainHP -= totalAttack;
+	}
 	if(animationFlag){
 		enemyAttackWaitFlag = true;
+		if(totalAttack > 0){
+			playerCount.HPDownCount++;
+			console.log(`playerCount.HPDownCount: ${playerCount.HPDownCount}`);
+			setLocalStorage(keyContinuePlayerCount, playerCount);
+		}
 	}
 }
 /*******************************************************/
