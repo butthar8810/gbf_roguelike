@@ -304,6 +304,7 @@ function startPhase(ph){
 			).done(() => {
 				$('.black-back-area').addClass('active');
 				$('.hand-decide-area').addClass('active');
+				$('.hand-enhance-area').removeClass('hidden');
 				$('.hand-area').addClass('front');
 			});
 			break;
@@ -751,7 +752,6 @@ function clickHandProcess(handCardDiv, hand){
 			break;
 		case phase.trash:
 		case phase.unshiftDeck:
-		case phase.upGrade:
 			if (index === -1) {
 				if (tmpArea.length < 1){
 					pushTemporaryArea(hand);
@@ -761,6 +761,26 @@ function clickHandProcess(handCardDiv, hand){
 					$('.hand-card').removeClass("select");
 					pushTemporaryArea(hand);
 					handCardDiv.addClass("select");
+				}
+			} else {
+				spliceTemporaryArea(index);
+				handCardDiv.removeClass("select");
+			}
+			break;
+		case phase.upGrade:
+			if (index === -1) {
+				if('key' in hand){
+					if (tmpArea.length < 1){
+						pushTemporaryArea(hand);
+						handCardDiv.addClass("select");
+						selectEnhanceCardDom(hand);
+					} else {
+						spliceTemporaryArea(index);
+						$('.hand-card').removeClass("select");
+						pushTemporaryArea(hand);
+						handCardDiv.addClass("select");
+						selectEnhanceCardDom(hand);
+					}
 				}
 			} else {
 				spliceTemporaryArea(index);
@@ -988,7 +1008,6 @@ function checkEnemyDefeated(Enemies){
 				enemy.currentStatus.status.push(dead);
 				targetingEnemy();
 				animateDefeated(enemy);
-				actionWaitFlagForEnemy = true;
 			} else {
 				allDefeatedFlag = false;
 			}

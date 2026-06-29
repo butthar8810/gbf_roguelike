@@ -50,60 +50,11 @@ function enhanceCardList(){
 			// 手札クリック時の処理登録
 			.click(card ,() => {
 				console.log(card);
-				decideEnhanceCard(card);
+				decideEnhanceCardDom(card);
 			});
 		$('.enhance-content').append(enhanceCardDiv);
 	});
 
-}
-function decideEnhanceCard(card){
-	updateEnhanceTitleDom('この武器を強化しますか。');
-	$('.enhance-content').addClass('hidden');
-	$('.enhance-decide-content').removeClass('hidden');
-	$('.enhance-decide-content').html('');
-	$('.enhance-btn-area').addClass('active');
-	// 強化元のカード表示
-	const enhanceCardDiv = createCardDom(card);
-	enhanceCardDiv
-		.addClass('enhance-decide-card')
-		.addClass('before')
-		// 手札クリック時の処理登録
-		.click(card ,() => {
-			console.log(card);
-			decideEnhanceCard(card);
-		});
-	$('.enhance-decide-content').append(enhanceCardDiv);
-	// 矢印
-	const arrowIcon = $('<i>')
-		.addClass('fa-solid')
-		.addClass('fa-angles-right');
-	$('.enhance-decide-content').append(arrowIcon);
-	// 強化後のカードを表示
-	const enhancedCard = granEnhancedCardList[card.key];
-	console.log(enhancedCard);
-	const enhancedCardDiv = createCardDom(enhancedCard)
-	enhancedCardDiv
-		.addClass('enhance-decide-card')
-		.addClass('after')
-		// 手札クリック時の処理登録
-		.click(enhancedCard ,() => {
-			console.log(enhancedCard);
-			decideEnhanceCard(enhancedCard);
-		});
-	$('.enhance-decide-content').append(enhancedCardDiv);
-
-	$('.enhance-cancel-btn').off();
-	$('.enhance-btn').off();
-	$('.enhance-cancel-btn').click(() => {
-		$('.enhance-content').removeClass('hidden');
-		$('.enhance-decide-content').addClass('hidden');
-		$('.enhance-btn-area').removeClass('active');
-		enhanceCardList();
-	});
-	$('.enhance-btn').click(() => {
-		$('.enhance-btn-area').removeClass('active');
-		exchangeEnhancedCard(card, enhancedCard);
-	});
 }
 
 function exchangeEnhancedCard(card, enhancedCard){

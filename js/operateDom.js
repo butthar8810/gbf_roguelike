@@ -840,3 +840,91 @@ function disabledEndBtn(flag){
 	}
 	return $('.end-btn').prop('disabled', flag);
 }
+/*******************************************************/
+/* disabledMyHand：強化するカードの選択UIのDOM表示
+/*******************************************************/
+function decideEnhanceCardDom(card){
+	updateEnhanceTitleDom('この武器を強化しますか。');
+	$('.enhance-content').addClass('hidden');
+	$('.enhance-decide-content').removeClass('hidden');
+	$('.enhance-decide-content').html('');
+	$('.enhance-btn-area').addClass('active');
+	// 強化元のカード表示
+	const enhanceCardDiv = createCardDom(card);
+	enhanceCardDiv
+		.addClass('enhance-decide-card')
+		.addClass('before')
+		// 手札クリック時の処理登録
+		.click(card ,() => {
+			console.log(card);
+			decideEnhanceCardDom(card);
+		});
+	$('.enhance-decide-content').append(enhanceCardDiv);
+	// 矢印
+	const arrowIcon = $('<i>')
+		.addClass('fa-solid')
+		.addClass('fa-angles-right');
+	$('.enhance-decide-content').append(arrowIcon);
+	// 強化後のカードを表示
+	let enhancedCard;
+	if(card.class === cardClass.gran){
+		enhancedCard = granEnhancedCardList[card.key];
+	} else if(card.class === cardClass.djeeta){
+		enhancedCard = djeetaEnhancedCardList[card.key];
+	}
+	console.log(enhancedCard);
+	const enhancedCardDiv = createCardDom(enhancedCard)
+	enhancedCardDiv
+		.addClass('enhance-decide-card')
+		.addClass('after')
+		// 手札クリック時の処理登録
+		.click(enhancedCard ,() => {
+			console.log(enhancedCard);
+			decideEnhanceCardDom(enhancedCard);
+		});
+	$('.enhance-decide-content').append(enhancedCardDiv);
+
+	$('.enhance-cancel-btn').off();
+	$('.enhance-btn').off();
+	$('.enhance-cancel-btn').click(() => {
+		$('.enhance-content').removeClass('hidden');
+		$('.enhance-decide-content').addClass('hidden');
+		$('.enhance-btn-area').removeClass('active');
+		enhanceCardList();
+	});
+	$('.enhance-btn').click(() => {
+		$('.enhance-btn-area').removeClass('active');
+		exchangeEnhancedCard(card, enhancedCard);
+	});
+}
+/*******************************************************/
+/* disabledMyHand：強化するカードの選択UIのDOM表示(カード効果)
+/*******************************************************/
+function selectEnhanceCardDom(card){
+	$('.hand-enhance-area').html('');
+	// 強化元のカード表示
+	const enhanceCardDiv = createCardDom(card);
+	enhanceCardDiv
+		.addClass('enhance-decide-card')
+		.addClass('before');
+	$('.hand-enhance-area').append(enhanceCardDiv);
+	// 矢印
+	const arrowIcon = $('<i>')
+		.addClass('fa-solid')
+		.addClass('fa-angles-right');
+	$('.hand-enhance-area').append(arrowIcon);
+	// 強化後のカードを表示
+	const enhancedCard = granEnhancedCardList[card.key];
+	const enhancedCardDiv = createCardDom(enhancedCard);
+	enhancedCardDiv
+		.addClass('enhance-decide-card')
+		.addClass('after')
+		// 手札クリック時の処理登録
+		.click(enhancedCard ,() => {
+			console.log(enhancedCard);
+			decideEnhanceCardDom(enhancedCard);
+		});
+	$('.hand-enhance-area').append(enhancedCardDiv);
+
+
+}

@@ -2346,11 +2346,11 @@ function setupDeck(){
 			addCardToOriginalDeck(granCardList.Defense, 4);
 			addCardToOriginalDeck(granCardList.PowerSwing, 1);
 
-			addCardToOriginalDeck(granCardList.Stimulant, 2);
-			addCardToOriginalDeck(granCardList.Coat, 2);
-			addCardToOriginalDeck(granCardList.Smokescreen, 2);
-			addCardToOriginalDeck(granCardList.Adrenal, 2);
-			addCardToOriginalDeck(granCardList.OverPower, 2);
+			addCardToOriginalDeck(granCardList.Shrieking, 2);
+			addCardToOriginalDeck(granCardList.Rush, 2);
+			addCardToOriginalDeck(granCardList.ArtilleryShell, 2);
+			addCardToOriginalDeck(granCardList.Revision, 2);
+			addCardToOriginalDeck(granCardList.Bloody, 2);
 
 		} else if (selectChara == selectCharacter.djeeta.name){
 			addCardToOriginalDeck(djeetaCardList.Wide, 5);
@@ -2529,7 +2529,7 @@ function effectAttackAndDoubleDebuff(amount){
 	if('debuff1' in amount && 'debuffType1' in amount ){
 		actionStatusDebuf(debufStatus[amount.debuffType1], amount.debuff1);
 	}
-	if('debuff2' in amount && 'debuffType3' in amount ){
+	if('debuff2' in amount && 'debuffType2' in amount ){
 		actionStatusDebuf(debufStatus[amount.debuffType2], amount.debuff2);
 	}
 	endAction();
@@ -2726,6 +2726,7 @@ function effectGetEnergy(amount){
 	console.log('effectGetEnergy');
 	if('energy' in amount){
 		playerStatus.remainEnergy += amount.energy;
+		updateEnergyDom();
 	}
 	return true;
 }
@@ -2737,6 +2738,7 @@ function effectGetEnergyAndSelfHarm(amount){
 	}
 	if('energy' in amount){
 		playerStatus.remainEnergy += amount.energy;
+		updateEnergyDom();
 	}
 	return true;
 }
@@ -2786,6 +2788,7 @@ function effectAttackAndConditionsDefenseDown(amount){
 	) {
 		if('energy' in amount){
 			playerStatus.remainEnergy += amount.energy;
+			updateEnergyDom();
 		}
 		if('draw' in amount){
 			const cards = drawCardFromDeck(amount.draw);
@@ -2925,6 +2928,7 @@ function effectGetEnergyAndDrawAndSelfHarm(amount){
 	}
 	if('energy' in amount){
 		playerStatus.remainEnergy += amount.energy;
+		updateEnergyDom();
 	}
 	if('draw' in amount){
 		const cards = drawCardFromDeck(amount.draw);
@@ -3519,10 +3523,9 @@ function unshiftDeckCard(){
 		$('.black-back-area').removeClass('active');
 		$('.return-decide-area').removeClass('active');
 
-		animateTrashToDeck(card);
-		$.when(cardRestorePromise).done(() => {
+		animateHandToDeck(card);
+		$.when(cardRemovePromise).done(() => {
 			updateHandDom();
-			updateTrashDom();
 			updateDeckDom();
 		});
 		startPhase(phase.action);
@@ -3557,6 +3560,8 @@ function upGradeCard(){
 		$('.hand-decide-area').removeClass('active');
 		$('.hand-area').removeClass('front');
 		$(`.hand-card`).removeClass('select');
+		$(`.hand-enhance-area`).addClass('hidden');
+		updateHandDom();
 		startPhase(phase.action);
 	}
 	endAction();

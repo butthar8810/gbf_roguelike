@@ -1298,8 +1298,9 @@ header{
 	height: 100%;
 	display:none;
 	flex-direction: column;
-	justify-content: center;
+	justify-content: flex-start;
 	align-items: center;
+	margin-top: 30px;
 }
 .hand-decide-area.active{
 	display:flex
@@ -1310,7 +1311,14 @@ header{
 	font-weight: 900;
 	text-stroke: 1px gray;
 	-webkit-text-stroke: 1px gray;
-
+}
+.hand-enhance-area{
+	width: 925px;
+	height: 400px;
+	overflow-y: auto;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 /*****************************************************************************/
 /* return-decide-area: カード選択エリア
@@ -1426,10 +1434,13 @@ header{
 	justify-content: center;
 	align-items: center;
 }
-.enhance-decide-card p{
+.enhance-decide-card .effect{
 	font-size: 18px;
 	width: 100%;
 	padding: 0 5px;
+}
+.enhance-decide-card .type{
+	font-size: 18px;
 }
 /* enhance-btn-area */
 .enhance-btn-area{

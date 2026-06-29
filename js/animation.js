@@ -103,7 +103,39 @@ function animateTrashToDeck(card){
 		width: coordinateDeckForHandArea.width,
 		fontSize: coordinateDeckForHandArea.size
 	}, trashWaitTime);
-	
+}
+
+/*******************************************************/
+/* animateHandToDeck：手札からデッキに移動するアニメーション
+/*******************************************************/
+function animateHandToDeck(card){
+	const restoreCardDiv = createCardDom(card);
+	restoreCardDiv
+		.addClass('hand-card')
+		.addClass('is-hover-disabled')
+		.prop('disabled', true)
+		.css('position', 'absolute')
+		.css('font-size', coordinateHnadForHandArea.size)
+		.css('width', coordinateHnadForHandArea.width)
+		.css('top', coordinateHnadForHandArea.top)
+		.css('left', coordinateHnadForHandArea.left);
+	if (card.class == cardClass.gran) {
+		restoreCardDiv.addClass('gran-card');
+	} else if (card.class == cardClass.djeeta) {
+		restoreCardDiv.addClass('djeeta-card');
+	} else if (card.class == cardClass.common) {
+		restoreCardDiv.addClass('common-card');
+	} else if (card.class == cardClass.abnormal) {
+		restoreCardDiv.addClass('abnormal-card');
+	}
+	$('.hand-area').append(restoreCardDiv);
+
+	cardRemovePromise = restoreCardDiv.animate({
+		left: coordinateDeckForHandArea.left, 
+		top: coordinateDeckForHandArea.top,
+		width: coordinateDeckForHandArea.width,
+		fontSize: coordinateDeckForHandArea.size
+	}, trashWaitTime);
 }
 /*******************************************************/
 /* animatePlayerAddTrash：捨て札にカードを追加するアニメーション
@@ -211,16 +243,53 @@ function animatePlayCard(card){
 function animatePlayerAttack(){
 	const selectChara = getLocalStorage(keySelectChara);
 	const playerImage = $('.player-area-inner').children('.player-picture');
-	
+	console.log('Attack Start');
+
 	if (selectChara) {
 		$('.name-space').html(selectChara);
 		if (selectChara == selectCharacter.gran.name){
-			playerImage.attr('src', 'images/gifs/gran_attack.gif');
+			let timestamp = new Date().getTime();
+			playerImage.attr('src', 'images/gifs/gran_attack.gif' + '?' + timestamp);
 			setTimeout(() => {
 				playerImage.attr('src', 'images/gifs/gran_idle.gif');
+				console.log('Attack end');
+				playerAttackPromise = Promise.resolve();
 			}, playerAttackWaitTime);
 		} else if (selectChara == selectCharacter.djeeta.name){
-			playerImage.attr('src', 'images/gifs/djeeta_attack.gif');
+			let timestamp = new Date().getTime();
+			playerImage.attr('src', 'images/gifs/djeeta_attack.gif' + '?' + timestamp);
+			setTimeout(() => {
+				playerImage.attr('src', 'images/gifs/djeeta_idle.gif');
+				playerAttackPromise = Promise.resolve();
+			}, playerAttackWaitTime);
+		} else {
+			alert('別キャラが選択されています。');
+			window.location.href = 'index.html';
+		}
+	} else{
+		alert('キャラが選択されていません。');
+		window.location.href = 'index.html';
+	}
+}
+/*******************************************************/
+/* animatePlayerPower：プレイヤーがパワーアップする
+/*******************************************************/
+function animatePlayerPower(){
+	const selectChara = getLocalStorage(keySelectChara);
+	const playerImage = $('.player-area-inner').children('.player-picture');
+	console.log('Attack Start');
+	if (selectChara) {
+		$('.name-space').html(selectChara);
+		if (selectChara == selectCharacter.gran.name){
+			let timestamp = new Date().getTime();
+			playerImage.attr('src', 'images/gifs/gran_ready.gif');
+			setTimeout(() => {
+				playerImage.attr('src', 'images/gifs/gran_idle.gif');
+				console.log('Attack end');
+			}, playerAttackWaitTime);
+		} else if (selectChara == selectCharacter.djeeta.name){
+			let timestamp = new Date().getTime();
+			playerImage.attr('src', 'images/gifs/djeeta_ready.gif');
 			setTimeout(() => {
 				playerImage.attr('src', 'images/gifs/djeeta_idle.gif');
 			}, playerAttackWaitTime);
