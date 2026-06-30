@@ -789,9 +789,10 @@ const granCardList = {
 			block: 5,
 			energy: 2,
 			discard: false,
+			discardFunc: 'effectGetEnergy'
 		}
 	},
-	//非道の刃
+/*	//非道の刃
 	Yorishiro: {
 		key: 'Yorishiro',
 		name: '依代の刃',
@@ -804,6 +805,136 @@ const granCardList = {
 		amount: {
 			cost: 1, 
 			discard: true,
+		}
+	},
+*/
+	//パワー
+	// 炎の吐息
+	Samsara: {
+		key: 'Samsara',
+		name: 'サンサーラ',
+		class: cardClass.gran,
+		rarity: rarity.uncommon,
+		type: type.power,
+		func: 'effectBuff',
+		image:'images/card/gran_Samsara.jpg',
+		effect: '状態異常か呪いを引くたび、敵全体に{F}ダメージを与える。',
+		amount: {
+			cost: 1,
+			buff: 6,
+			buffType: 'barrage',
+		}
+	},
+	//無痛
+	Jasseron: {
+		key: 'Jasseron',
+		name: 'ジャセロン',
+		class: cardClass.gran,
+		rarity: rarity.uncommon,
+		type: type.power,
+		func: 'effectBuff',
+		image:'images/card/gran_Jasseron.jpg',
+		effect: 'カードを廃棄するたび、{F}ブロックを得る。',
+		amount: {
+			cost: 1,
+			buff: 3,
+			buffType: 'painless',
+		}
+	},
+	//燃焼
+	Stamp: {
+		key: 'Stamp',
+		name: 'ショロトルスタンプ',
+		class: cardClass.gran,
+		rarity: rarity.uncommon,
+		type: type.power,
+		func: 'effectBuff',
+		image:'images/card/gran_Stamp.jpg',
+		effect: 'ターン終了時にHPを1失い、すべての敵に{F}ダメージを与える。',
+		amount: {
+			cost: 1,
+			buff: 5,
+			buffType: 'madness',
+		}
+	},
+	//破裂
+	Vamp: {
+		key: 'Vamp',
+		name: 'ヴァンプネイル',
+		class: cardClass.gran,
+		rarity: rarity.uncommon,
+		type: type.power,
+		func: 'effectBuff',
+		image:'images/card/gran_Vamp.jpg',
+		effect: 'カードのプレイによってHPが失われるたび、筋力{F}を得る。',
+		amount: {
+			cost: 1,
+			buff: 1,
+			buffType: 'compensation',
+		}
+	},
+	//発火
+	Fist: {
+		key: 'Fist',
+		name: 'ダンディフィスト',
+		class: cardClass.gran,
+		rarity: rarity.uncommon,
+		type: type.power,
+		func: 'effectBuff',
+		image:'images/card/gran_Fist.jpg',
+		effect: '攻撃力アップ{F}を得る。',
+		amount: {
+			cost: 1,
+			buff: 2,
+			buffType: 'attackUp',
+		}
+	},
+	//進化
+	Wander: {
+		key: 'Wander',
+		name: '彷徨の刃',
+		class: cardClass.gran,
+		rarity: rarity.uncommon,
+		type: type.power,
+		func: 'effectBuff',
+		image:'images/card/gran_Wander.jpg',
+		effect: '状態異常を引くたび、カードを{F}枚引く。',
+		amount: {
+			cost: 1,
+			buff: 1,
+			buffType: 'adversity',
+		}
+	},
+	//金属化
+	Holy: {
+		key: 'Holy',
+		name: 'ホーリーシールド',
+		class: cardClass.gran,
+		rarity: rarity.uncommon,
+		type: type.power,
+		func: 'effectBuff',
+		image:'images/card/gran_Holy.jpg',
+		effect: 'ターン終了時に{F}ブロックを得る。',
+		amount: {
+			cost: 1,
+			buff: 3,
+			buffType: 'barrier',
+		}
+	},
+	//闇の抱擁
+	Lynette: {
+		key: 'Lynette',
+		name: 'リネット',
+		class: cardClass.gran,
+		rarity: rarity.uncommon,
+		type: type.power,
+		func: 'effectBuff',
+		image:'images/card/gran_Lynette.jpg',
+		effect: 'カードを廃棄するたび、カードを{F}枚引く。',
+		amount: {
+			cost: 2,
+			buff: 1,
+			buffType: 'eye',
 		}
 	},
 	/*************** レア ***************/
@@ -972,6 +1103,105 @@ const granCardList = {
 		amount: {
 			cost: 1, 
 			discard: true,
+		}
+	},
+	//パワー
+	//ジャガーノート
+	Lamentation: {
+		key: 'Lamentation',
+		name: '嘆きの盾',
+		class: cardClass.gran,
+		rarity: rarity.rare,
+		type: type.power,
+		func: 'effectBuff',
+		image:'images/card/gran_Lamentation.jpg',
+		effect: 'ブロックを得るたび、ランダムな敵に{F}ダメージを与える。',
+		amount: {
+			cost: 2,
+			buff: 5,
+			buffType: 'lamentation',
+		}
+	},
+	//バリケード
+	Colossus: {
+		key: 'Colossus',
+		name: 'コロッサスウォール',
+		class: cardClass.gran,
+		rarity: rarity.rare,
+		type: type.power,
+		func: 'effectBuff',
+		image:'images/card/gran_Colossus.jpg',
+		effect: 'ターン開始時にブロック値を失わない。',
+		amount: {
+			cost: 3,
+			buff: '',
+			buffType: 'wall',
+		}
+	},
+	//堕落
+	Manuscript: {
+		key: 'Manuscript',
+		name: '禁聖の写本',
+		class: cardClass.gran,
+		rarity: rarity.rare,
+		type: type.power,
+		func: 'effectBuff',
+		image:'images/card/gran_Manuscript.jpg',
+		effect: '「スキル」がエナジーを消費しない。プレイした「スキル」は廃棄する。',
+		amount: {
+			cost: 3,
+			buff: '',
+			buffType: 'sacred',
+		}
+	},
+	//悪魔化
+	Wear: {
+		key: 'Wear',
+		name: '十天光輝の佩剣',
+		class: cardClass.gran,
+		rarity: rarity.rare,
+		type: type.power,
+		func: 'effectBuff',
+		image:'images/card/gran_Wear.png',
+		effect: 'ターン開始時に、攻撃力アップ{F}を得る。',
+		amount: {
+			cost: 3,
+			buff: 2,
+			buffType: 'end',
+		}
+	},
+	//残虐
+	Hrunting: {
+		key: 'Hrunting',
+		name: 'フルンティング',
+		class: cardClass.gran,
+		rarity: rarity.rare,
+		type: type.power,
+		func: 'effectBuff',
+		image:'images/card/gran_Hrunting.jpg',
+		effect: 'ターン開始時に、HPを1失いカードを{F}枚引く。',
+		amount: {
+			cost: 0,
+			buff: 1,
+			buffType: 'hrunting',
+		}
+	},
+	//狂戦士
+	Lancet: {
+		key: 'Lancet',
+		name: 'ランセット',
+		class: cardClass.gran,
+		rarity: rarity.rare,
+		type: type.power,
+		func: 'effectBuffAndDebuff',
+		image:'images/card/gran_Lancet.jpg',
+		effect: '防御力ダウン{D}を得る。ターン開始時、{F}エナジーを得る。',
+		amount: {
+			cost: 0,
+			buff: 1,
+			buffType: 'energized',
+			debuff: 2,
+			debuffType: 'defenseDown',
 		}
 	},
 };
@@ -1674,7 +1904,7 @@ const granEnhancedCardList = {
 			discard: false,
 		}
 	},
-	//非道の刃
+/*	//非道の刃
 	Yorishiro: {
 		name: '<span class="upgrade">依代の刃+</span>',
 		class: cardClass.gran,
@@ -1686,6 +1916,128 @@ const granEnhancedCardList = {
 		amount: {
 			cost: 0, 
 			discard: true,
+		}
+	},
+*/
+	//パワー
+	// 炎の吐息
+	Samsara: {
+		name: '<span class="upgrade">サンサーラ+</span>',
+		class: cardClass.gran,
+		rarity: rarity.uncommon,
+		type: type.power,
+		func: 'effectBuff',
+		image:'images/card/gran_Samsara.jpg',
+		effect: '状態異常か呪いを引くたび、敵全体に<span class="upgrade">{F}</span>ダメージを与える。',
+		amount: {
+			cost: 1,
+			buff: 10,
+			buffType: 'barrage',
+		}
+	},
+	//無痛
+	Jasseron: {
+		name: '<span class="upgrade">ジャセロン+</span>',
+		class: cardClass.gran,
+		rarity: rarity.uncommon,
+		type: type.power,
+		func: 'effectBuff',
+		image:'images/card/gran_Jasseron.jpg',
+		effect: 'カードを廃棄するたび、<span class="upgrade">{F}</span>ブロックを得る。',
+		amount: {
+			cost: 1,
+			buff: 4,
+			buffType: 'painless',
+		}
+	},
+	//燃焼
+	Stamp: {
+		name: '<span class="upgrade">ショロトルスタンプ+</span>',
+		class: cardClass.gran,
+		rarity: rarity.uncommon,
+		type: type.power,
+		func: 'effectBuff',
+		image:'images/card/gran_Stamp.jpg',
+		effect: 'ターン終了時にHPを1失い、すべての敵に<span class="upgrade">{F}</span>ダメージを与える。',
+		amount: {
+			cost: 1,
+			buff: 7,
+			buffType: 'madness',
+		}
+	},
+	//破裂
+	Vamp: {
+		name: '<span class="upgrade">ヴァンプネイル+</span>',
+		class: cardClass.gran,
+		rarity: rarity.uncommon,
+		type: type.power,
+		func: 'effectBuff',
+		image:'images/card/gran_Vamp.jpg',
+		effect: 'カードのプレイによってHPが失われるたび、攻撃力アップ<span class="upgrade">{F}</span>を得る。',
+		amount: {
+			cost: 1,
+			buff: 2,
+			buffType: 'compensation',
+		}
+	},
+	//発火
+	Fist: {
+		name: '<span class="upgrade">ダンディフィスト+</span>',
+		class: cardClass.gran,
+		rarity: rarity.uncommon,
+		type: type.power,
+		func: 'effectBuff',
+		image:'images/card/gran_Fist.jpg',
+		effect: '攻撃力アップ<span class="upgrade">{F}</span>を得る。',
+		amount: {
+			cost: 1,
+			buff: 3,
+			buffType: 'attackUp',
+		}
+	},
+	//進化
+	Wander: {
+		name: '<span class="upgrade">彷徨の刃+</span>',
+		class: cardClass.gran,
+		rarity: rarity.uncommon,
+		type: type.power,
+		func: 'effectBuff',
+		image:'images/card/gran_Wander.jpg',
+		effect: '状態異常を引くたび、カードを<span class="upgrade">{F}</span>枚引く。',
+		amount: {
+			cost: 1,
+			buff: 2,
+			buffType: 'adversity',
+		}
+	},
+	//金属化
+	Holy: {
+		name: '<span class="upgrade">ホーリーシールド+</span>',
+		class: cardClass.gran,
+		rarity: rarity.uncommon,
+		type: type.power,
+		func: 'effectBuff',
+		image:'images/card/gran_Holy.jpg',
+		effect: 'ターン終了時に<span class="upgrade">{F}</span>ブロックを得る。',
+		amount: {
+			cost: 1,
+			buff: 4,
+			buffType: 'barrier',
+		}
+	},
+	//闇の抱擁
+	Lynette: {
+		name: '<span class="upgrade">リネット+</span>',
+		class: cardClass.gran,
+		rarity: rarity.uncommon,
+		type: type.power,
+		func: 'effectBuff',
+		image:'images/card/gran_Lynette.jpg',
+		effect: 'カードを廃棄するたび、カードを{F}枚引く。',
+		amount: {
+			cost: 1,
+			buff: 1,
+			buffType: 'eye',
 		}
 	},
 	/*************** レア ***************/
@@ -1832,6 +2184,99 @@ const granEnhancedCardList = {
 		amount: {
 			cost: 0, 
 			discard: true,
+		}
+	},
+	//パワー
+	//ジャガーノート
+	Lamentation: {
+		name: '<span class="upgrade">嘆きの盾+</span>',
+		class: cardClass.gran,
+		rarity: rarity.rare,
+		type: type.power,
+		func: 'effectBuff',
+		image:'images/card/gran_Lamentation.jpg',
+		effect: 'ブロックを得るたび、ランダムな敵に<span class="upgrade">{F}</span>ダメージを与える。',
+		amount: {
+			cost: 2,
+			buff: 5,
+			buffType: 'lamentation',
+		}
+	},
+	//バリケード
+	Colossus: {
+		name: '<span class="upgrade">コロッサスウォール+</span>',
+		class: cardClass.gran,
+		rarity: rarity.rare,
+		type: type.power,
+		func: 'effectBuff',
+		image:'images/card/gran_Colossus.jpg',
+		effect: 'ターン開始時にブロック値を失わない。',
+		amount: {
+			cost: 2,
+			buff: '',
+			buffType: 'wall',
+		}
+	},
+	//堕落
+	Manuscript: {
+		name: '<span class="upgrade">禁聖の写本+</span>',
+		class: cardClass.gran,
+		rarity: rarity.rare,
+		type: type.power,
+		func: 'effectBuff',
+		image:'images/card/gran_Manuscript.jpg',
+		effect: '「スキル」がエナジーを消費しない。プレイした「スキル」は廃棄する。',
+		amount: {
+			cost: 2,
+			buff: '',
+			buffType: 'sacred',
+		}
+	},
+	//悪魔化
+	Wear: {
+		name: '<span class="upgrade">十天光輝の佩剣+</span>',
+		class: cardClass.gran,
+		rarity: rarity.rare,
+		type: type.power,
+		func: 'effectBuff',
+		image:'images/card/gran_Wear.png',
+		effect: 'ターン開始時に、攻撃力アップ<span class="upgrade">{F}</span>を得る。',
+		amount: {
+			cost: 3,
+			buff: 3,
+			buffType: 'end',
+		}
+	},
+	//残虐
+	Hrunting: {
+		name: '</span>フルンティング+</span>',
+		class: cardClass.gran,
+		rarity: rarity.rare,
+		type: type.power,
+		func: 'effectBuff',
+		image:'images/card/gran_Hrunting.jpg',
+		effect: '<span class="upgrade">天賦。</span>ターン開始時に、HPを1失いカードを{F}枚引く。',
+		amount: {
+			cost: 0,
+			buff: 1,
+			buffType: 'hrunting',
+		}
+	},
+	//狂戦士
+	Lancet: {
+		name: '</span>ランセット+</span>',
+		class: cardClass.gran,
+		rarity: rarity.rare,
+		type: type.power,
+		func: 'effectBuffAndDebuff',
+		image:'images/card/gran_Lancet.jpg',
+		effect: '防御力ダウン<span class="upgrade">{D}</span>を得る。ターン開始時、{F}エナジーを得る。',
+		amount: {
+			cost: 0,
+			buff: 1,
+			buffType: 'energized',
+			debuff: 1,
+			debuffType: 'defenseDown',
 		}
 	},
 };
@@ -2566,7 +3011,7 @@ function effectAttackAndAbnormal(amount){
 	if('abnormal' in amount && 'count' in amount){
 		const abnormal = [];
 		for(let i = 0; i < amount.count; i++){
-			pushTrash(abnormalCardList[amount.abnormal]);
+			trashCardProcess(abnormalCardList[amount.abnormal]);
 			abnormal.push(abnormalCardList[amount.abnormal]);
 		}
 		animatePlayerAddTrash(abnormal);
@@ -2583,7 +3028,7 @@ function effectAllAttackAndAbnormal(amount){
 	if('abnormal' in amount && 'count' in amount){
 		const abnormal = [];
 		for(let i = 0; i < amount.count; i++){
-			pushTrash(abnormalCardList[amount.abnormal]);
+			trashCardProcess(abnormalCardList[amount.abnormal]);
 			abnormal.push(abnormalCardList[amount.abnormal]);
 		}
 		animatePlayerAddTrash(abnormal);
@@ -2765,7 +3210,7 @@ function effectDefenseAndAbnormal(amount){
 	if('abnormal' in amount && 'count' in amount){
 		const abnormal = [];
 		for(let i = 0; i < amount.count; i++){
-			pushTrash(abnormalCardList[amount.abnormal]);
+			trashCardProcess(abnormalCardList[amount.abnormal]);
 			abnormal.push(abnormalCardList[amount.abnormal]);
 		}
 		animatePlayerAddTrash(abnormal);
@@ -2843,7 +3288,7 @@ function effectAttackAndReproduction(amount){
 	if('attack' in amount){
 		actionAttack(amount.attack);
 	}
-	pushTrash(granCardList.Bullet);
+	trashCardProcess(granCardList.Bullet);
 	animatePlayerAddTrash([granCardList.Bullet]);
 	endAction();
 	return true;
@@ -2879,7 +3324,7 @@ function effectAttackAndNoAttackDiscard(amount){
 	const noAttack = myHand.filter((hand) => hand.type !== type.attack);
 	myHand = myHand.filter((hand) => hand.type === type.attack);
 	noAttack.forEach((card) => {
-		pushDiscard(card);
+		discardCardProcess(card);
 		animateHandToDiscard(card);
 		updateDiscardDom();
 	});
@@ -2896,7 +3341,7 @@ function effectDefenseAndNoAttackDiscard(amount){
 	const noAttack = myHand.filter((hand) => hand.type !== type.attack);
 	myHand = myHand.filter((hand) => hand.type === type.attack);
 	noAttack.forEach((card) => {
-		pushDiscard(card);
+		discardCardProcess(card);
 		animateHandToDiscard(card);
 		updateDiscardDom();
 	});
@@ -2983,12 +3428,11 @@ function effectAttackAndAllDiscard(amount){
 	// 手札を全て廃棄する。この方法で廃棄した枚数x7のダメージを与える。廃棄。
 	console.log('effectAttackAndAllDiscard');
 	if('attack' in amount){
-		const damage = myHand.length * amount.attack;
 		const discardCards = deleteAllHand();
 		discardCards.forEach((card) => {
-			pushDiscard(card);
+			discardCardProcess(card);
+			actionAttack(amount.attack);
 		});
-		actionAttack(damage);
 	}
 	endAction();
 	return true;
@@ -3051,6 +3495,9 @@ function effectReproductionToHand(amount){
 	actionReproductionToHand();
 	
 	return true;
+}
+function effectGetAttackCard(amount){
+
 }
 /*************************************************************************************/
 /* ジータのカード効果関数
@@ -3217,7 +3664,7 @@ function effectRoses(){
 	const noAttack = myHand.filter((hand) => hand.type !== type.attack);
 	const myHand = myHand.filter((hand) => hand.type === type.attack);
 	noAttack.forEach((card) => {
-		pushTrash(card);
+		trashCardProcess(card);
 	});
 	return true;
 }
@@ -3575,7 +4022,7 @@ function trashCard(){
 		if (card === undefined) {
 			return false;
 		}
-		pushTrash(card);
+		trashCardProcess(card);
 		playerCount.trashCount++;
 		setLocalStorage(keyContinuePlayerCount, playerCount);
 		setLocalStorage(keyContinueHand, myHand);
@@ -3604,7 +4051,7 @@ function actionTrashRandomCard(){
 	if (card === undefined) {
 		return false;
 	}
-	pushTrash(card);
+	trashCardProcess(card);
 	playerCount.trashCount++;
 	setLocalStorage(keyContinuePlayerCount, playerCount);
 	animateHandToTrash(card);
@@ -3635,7 +4082,7 @@ function discardCard(){
 		if (card === undefined) {
 			return false;
 		}
-		pushDiscard(card);
+		discardCardProcess(card);
 		playerCount.discardCount++;
 		setLocalStorage(keyContinuePlayerCount, playerCount);
 		setLocalStorage(keyContinueHand, myHand);
@@ -3858,12 +4305,8 @@ function reuseCard(){
 		$('.black-back-area').removeClass('active');
 		$('.return-decide-area').removeClass('active');
 
-		animateTrashToDeck(card);
-		$.when(cardRestorePromise).done(() => {
-			updateHandDom();
-			updateTrashDom();
-			updateDeckDom();
-		});
+		updateHandDom();
+		updateDiscardDom();
 		startPhase(phase.action);
 	}
 	endAction();

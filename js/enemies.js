@@ -520,7 +520,7 @@ function enemyCardDebuf(animationFlag, cards){
 	if(!animationFlag){
 		// カードを追加する
 		cards.forEach((card) => {
-			pushTrash(card);
+			trashCardProcess(card);
 		});
 	} else {
 		animatePlayerAddTrash(cards);

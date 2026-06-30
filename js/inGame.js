@@ -365,7 +365,7 @@ function startPhase(ph){
 				createRestoreListDom();
 			});
 			break;
-		case phase.reuse:
+		case phase.reuseToHand:
 			if (discard.length <= 0) {
 				console.log('廃棄札がありません。');
 				startPhase(phase.action);
@@ -382,7 +382,7 @@ function startPhase(ph){
 				enemyAbnormalityPromise,
 			).done(() => {
 				$('.black-back-area').addClass('active');
-				$('.restore-decide-area').addClass('active');
+				$('.return-decide-area').addClass('active');
 				createReuseListDom();
 			});
 			break;
@@ -597,12 +597,12 @@ function startCleanup(){
 		barrier.amount = 0;
 	}
 	// 再生の効果発動
-	const regene = playerStatus.statuses
-		.find((status) => status.name === bufStatus.regene.name);
-	if (regene){
-		recoveryHP(regene.amount);
+	const regeneration = playerStatus.statuses
+		.find((status) => status.name === bufStatus.regeneration.name);
+	if (regeneration){
+		recoveryHP(regeneration.amount);
 		updatePlayerStatusDom(playerStatus);
-		regene.amount = 0;
+		regeneration.amount = 0;
 	}
 	startEnemiesTurn();
 }
@@ -693,12 +693,15 @@ function endAction(){
 		const playCards = deleteAllPlayArea();
 		setLocalStorage(keyContinuePlayArea, playArea);
 		playCards.forEach((playCard) => {
-			if('tmpDiscard' in playCard.amount && playCard.amount.tmpDiscard){
+			if(playCard.type === type.power){
+				// パワーは使用するとその戦闘中デッキから取り除かれる。この処理は廃棄ではない。
+				console.log(`「${playCard.name}」は取り除かれた。`);
+			}else if('tmpDiscard' in playCard.amount && playCard.amount.tmpDiscard){
 				delete playCard.amount.tmpDiscard;
 				pushDiscard(playCard);
 				setLocalStorage(keyContinueDiscard, discard);
 				updateDiscardDom();
-			} else if(playCard.amount.discard){
+			} else if('discard' in playCard.amount && playCard.amount.discard){
 				pushDiscard(playCard);
 				setLocalStorage(keyContinueDiscard, discard);
 				updateDiscardDom();
@@ -721,6 +724,9 @@ function endAction(){
 		} 
 	}
 	checkEnemyDefeated(currentEnemies);
+	setLocalStorage(keyContinueHand, myHand);
+	setLocalStorage(keyContinueTrash, myTrash);
+	setLocalStorage(keyContinueDiscard, discard);
 	setLocalStorage(keyContinuePlayArea, playArea);
 	setLocalStorage(keyContinueStack, stackCard);
 	setLocalStorage(keyContinuePlayerStatus, playerStatus);
@@ -764,7 +770,6 @@ function endAction(){
 /* clickHandProcess：手札クリック時の処理
 /*******************************************************/
 function clickHandProcess(handCardDiv, hand){
-	
 	const index = findIndexTemporaryArea('id', hand.id);
 	switch(currentPhase) {
 		case phase.action:
@@ -920,7 +925,34 @@ function clickDiscardCardProcess(trashCardDiv, card){
 	}
 	return true;
 }
-
+/*******************************************************/
+/* trashCardProcess：捨て札にする際の処理
+/*******************************************************/
+function trashCardProcess(trashCard){
+	if('trashFunc' in trashCard.amount){
+		if (trashCard.amount.trashFunc !== '') {
+			const storedFunc = globalThis[trashCard.amount.trashFunc];
+			if( typeof storedFunc === 'function'){
+				ret = storedFunc(trashCard.amount);
+			} 
+		}
+	}
+	pushTrash(trashCard);
+}
+/*******************************************************/
+/* discardCardProcess：廃棄する際の処理
+/*******************************************************/
+function discardCardProcess(discardCard){
+	if('discardFunc' in discardCard.amount){
+		if (discardCard.amount.discardFunc !== '') {
+			const storedFunc = globalThis[discardCard.amount.discardFunc];
+			if( typeof storedFunc === 'function'){
+				ret = storedFunc(discardCard.amount);
+			} 
+		}
+	}
+	pushDiscard(discardCard);
+}
 
 
 /*************************************************************************************/
