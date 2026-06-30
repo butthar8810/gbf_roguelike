@@ -208,7 +208,7 @@ function slimeAttack(enemyInfo, playerInfo, animationFlag){
 	enemyAttack(enemyInfo, playerInfo, animationFlag, 6);
 }
 function slimeStrategy(enemyInfo, playerInfo, animationFlag){
-	// 脱力1を付与
+	// 恐怖1を付与
 	enemyStatusDebuf(enemyInfo, playerInfo, animationFlag, debufStatus.weak, 1);
 }
 /*******************************************************/
@@ -242,7 +242,7 @@ function silverMucus(enemyInfo, playerInfo, animationFlag){
 	enemyCardDebuf(animationFlag, debufCards);
 }
 function silverStrategy(enemyInfo, playerInfo, animationFlag){
-	// 脱力1を付与
+	// 恐怖1を付与
 	enemyStatusDebuf(enemyInfo, playerInfo, animationFlag, debufStatus.weak, 1);
 }
 /*******************************************************/
@@ -332,7 +332,7 @@ function impGrowth(enemyInfo, playerInfo, animationFlag){
 	enemyStatusBuf(enemyInfo, animationFlag, bufStatus.attackUp, 3);
 }
 function impWeb(enemyInfo, playerInfo, animationFlag){
-	// 脱力2を付与
+	// 恐怖2を付与
 	enemyStatusDebuf(enemyInfo, playerInfo, animationFlag, debufStatus.weak, 2);
 }
 
@@ -350,7 +350,7 @@ function calcEnemyDamage(attackCount, enemyInfo){
 	let totalAttack = attackCount;
 	// 倍率計算
 	let magnification = 1;
-	// 脱力（攻撃力25%減少）
+	// 恐怖（攻撃力25%減少）
 	const weakness = enemyInfo.currentStatus.status
 		.find((status) => status.name === debufStatus.weak.name);
 	if (weakness){magnification -= 0.25;}
@@ -415,6 +415,23 @@ function enemyAttack(enemyInfo, playerInfo, animationFlag, attackCount){
 	}
 	if(totalAttack > 0){
 		playerInfo.remainHP -= totalAttack;
+	}
+	// 「反射」の効果
+	const reflection = playerInfo.statuses
+		.find((status) => status.name === bufStatus.reflection.name);
+	if(reflection){
+		const playerReflection = reflection.amount;
+		const enemyBlock = enemyInfo.currentStatus.block;
+		if(enemyBlock > 0){
+			if(enemyBlock >= playerReflection){
+				enemyInfo.currentStatus.block -= playerReflection;
+				playerReflection = 0;
+			} else if (enemyBlock < playerReflection){
+				enemyInfo.currentStatus.block = 0;
+				playerReflection -= enemyBlock;
+			}
+		}
+		enemyInfo.currentStatus.remainHP -= playerReflection;
 	}
 	if(animationFlag){
 		enemyAttackWaitFlag = true;

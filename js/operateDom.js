@@ -335,6 +335,7 @@ function updatePlayerAreaDom(argPlayerStatus){
 /* updatePlayerStatusDom：プレイヤーのステータス部を生成
 /*******************************************************/
 function updatePlayerStatusDom(argPlayerStatus){
+	console.log('updatePlayerStatusDom');
 	$('.player-hp').html('');
 	// HPバー[player-hp-container]の要素
 	const remainHP = 100 * ( argPlayerStatus.remainHP / argPlayerStatus.maxHP );
@@ -531,6 +532,7 @@ function updateEnemyAreaDom(argEnemies, omenFlag = false){
 /* updateEnemyStatusDom：エネミーのステータス部を生成
 /*******************************************************/
 function updateEnemyStatusDom(argEnemies){
+	console.log('updateEnemyStatusDom');
 	argEnemies.forEach((enemy) => {
 		// 残りHP[enemy-hp-container]要素
 		const hpContainerDiv = 
@@ -838,13 +840,16 @@ function disabledMyHand(flag){
 	return $('.hand-area').prop('disabled', flag);
 }
 /*******************************************************/
-/* disabledMyHand：手札のdisabled化
+/* disabledMyHand：「ターン終了」ボタンのdisabled化
 /*******************************************************/
 function disabledEndBtn(flag){
 	if (flag) {
-		$('.end-btn').css('opacity', 0);
+		$('.end-btn').off();
 	} else {
-		$('.end-btn').css('opacity', 1);
+		$('.end-btn').off();
+		$('.end-btn').click((e) => {
+			startPhase(phase.enemy);
+		});
 	}
 	return $('.end-btn').prop('disabled', flag);
 }

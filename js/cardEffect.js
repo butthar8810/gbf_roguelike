@@ -202,7 +202,7 @@ const granCardList = {
 		type: type.attack,
 		func: 'effectAttackAndDebuff',
 		image:'images/card/gran_BrainShake.jpg',
-		effect: '{A}のダメージを与える。脱力{D}を与える。',
+		effect: '{A}のダメージを与える。恐怖{D}を与える。',
 		amount: {
 			cost: 2,
 			attack: 12,
@@ -356,7 +356,7 @@ const granCardList = {
 		type: type.attack,
 		func: 'effectAttackAndDoubleDebuff',
 		image:'images/card/gran_Melee.jpg',
-		effect: '{A}のダメージを与える。脱力{D1}と防御力ダウン{D2}を与える。',
+		effect: '{A}のダメージを与える。恐怖{D1}と防御力ダウン{D2}を与える。',
 		amount: {
 			cost: 1, 
 			attack: 13,
@@ -629,7 +629,7 @@ const granCardList = {
 		type: type.skill,
 		func: 'effectALLDebuff',
 		image:'images/card/gran_KillKnife.jpg',
-		effect: '敵全体に脱力{D}を与える。廃棄。',
+		effect: '敵全体に恐怖{D}を与える。廃棄。',
 		amount: {
 			cost: 0, 
 			debuff: 1,
@@ -661,12 +661,13 @@ const granCardList = {
 		class: cardClass.gran,
 		rarity: rarity.uncommon,
 		type: type.skill,
-		func: 'effectDefenseEveryAttack',
+		func: 'effectBuff',
 		image:'images/card/gran_Tiamat.jpg',
 		effect: 'このターン、「アタック」をプレイするたび{B}ブロックを得る。',
 		amount: {
 			cost: 0, 
-			block: 3,
+			buff: 3,
+			buffType: 'wind',
 			discard: false,
 		}
 	},
@@ -727,13 +728,14 @@ const granCardList = {
 		class: cardClass.gran,
 		rarity: rarity.uncommon,
 		type: type.skill,
-		func: '',
+		func: 'effectDefenseAndBuff',
 		image:'images/card/gran_Rose.jpg',
-		effect: '{B}ブロックを得る。このターン攻撃を受けるたび、攻撃した敵に{A}ダメージを与える。',
+		effect: '{B}ブロックを得る。このターン攻撃を受けるたび、攻撃した敵に{F}ダメージを与える。',
 		amount: {
 			cost: 2, 
-			attack: 4,
 			block: 12,
+			buff: 4,
+			buffType: 'reflection',
 			discard: false,
 		}
 	},
@@ -744,11 +746,12 @@ const granCardList = {
 		class: cardClass.gran,
 		rarity: rarity.uncommon,
 		type: type.skill,
-		func: '',
+		func: 'effectDrawAndDiscard',
 		image:'images/card/gran_Truce.jpg',
-		effect: 'カードを1枚廃棄する。カードを2枚引く。',
+		effect: 'カードを1枚廃棄する。カードを{Dr}枚引く。',
 		amount: {
 			cost: 1, 
+			draw: 2,
 			discard: false,
 		}
 	},
@@ -761,14 +764,14 @@ const granCardList = {
 		type: type.skill,
 		func: 'effectALLDoubleDebuff',
 		image:'images/card/gran_Cane.jpg',
-		effect: '敵全体に脱力{D1}と防御力ダウン{D2}を与える。廃棄。',
+		effect: '敵全体に恐怖{D1}と防御力ダウン{D2}を与える。廃棄。',
 		amount: {
 			cost: 2, 
 			debuff1: 3,
 			debuffType1: 'weak',
 			debuff2: 3,
 			debuffType2: 'defenseDown',
-			discard: false,
+			discard: true,
 		}
 	},
 	//見張り
@@ -896,11 +899,13 @@ const granCardList = {
 		class: cardClass.gran,
 		rarity: rarity.rare,
 		type: type.skill,
-		func: 'effect',
+		func: 'effectBuff',
 		image:'images/card/gran_Lyman.jpg',
 		effect: 'このターン、次の「アタック」を2回プレイする。',
 		amount: {
 			cost: 1, 
+			buff: 1,
+			buffType: 'combo',
 			discard: false,
 		}
 	},
@@ -911,11 +916,12 @@ const granCardList = {
 		class: cardClass.gran,
 		rarity: rarity.rare,
 		type: type.skill,
-		func: 'effect',
+		func: 'effectDoubleBuff',
 		image:'images/card/gran_Lion.jpg',
 		effect: '「攻撃力アップ」を2倍にする。廃棄。',
 		amount: {
 			cost: 1, 
+			buffType: 'attackUp',
 			discard: true,
 		}
 	},
@@ -1145,7 +1151,7 @@ const granEnhancedCardList = {
 		type: type.attack,
 		func: 'effectAttackAndDebuff',
 		image:'images/card/gran_BrainShake.jpg',
-		effect: '<span class="upgrade">{A}</span>のダメージを与える。脱力<span class="upgrade">{D}</span>を与える。',
+		effect: '<span class="upgrade">{A}</span>のダメージを与える。恐怖<span class="upgrade">{D}</span>を与える。',
 		amount: {
 			cost: 2,
 			attack: 14,
@@ -1281,7 +1287,7 @@ const granEnhancedCardList = {
 		block: 0,
 		func: 'effectAttackAndDoubleDebuff',
 		image:'images/card/gran_Melee.jpg',
-		effect: '{A}のダメージを与える。脱力<span class="upgrade">{D1}</span>と防御力ダウン<span class="upgrade">{D2}</span>を与える。',
+		effect: '{A}のダメージを与える。恐怖<span class="upgrade">{D1}</span>と防御力ダウン<span class="upgrade">{D2}</span>を与える。',
 		amount: {
 			cost: 2, 
 			attack: 13,
@@ -1521,7 +1527,7 @@ const granEnhancedCardList = {
 		type: type.skill,
 		func: 'effectALLDebuff',
 		image:'images/card/gran_KillKnife.jpg',
-		effect: '敵全体に脱力<span class="upgrade">{D}</span>を与える。廃棄。',
+		effect: '敵全体に恐怖<span class="upgrade">{D}</span>を与える。廃棄。',
 		amount: {
 			cost: 0, 
 			debuff: 2,
@@ -1549,12 +1555,13 @@ const granEnhancedCardList = {
 		class: cardClass.gran,
 		rarity: rarity.uncommon,
 		type: type.skill,
-		func: 'effectDefenseEveryAttack',
+		func: 'effectBuff',
 		image:'images/card/gran_Tiamat.jpg',
 		effect: 'このターン、「アタック」をプレイするたび<span class="upgrade">{B}</span>ブロックを得る。',
 		amount: {
 			cost: 0, 
-			Block: 5,
+			buff: 5,
+			buffType: 'wind',
 			discard: false,
 		}
 	},
@@ -1608,13 +1615,14 @@ const granEnhancedCardList = {
 		class: cardClass.gran,
 		rarity: rarity.uncommon,
 		type: type.skill,
-		func: '',
+		func: 'effectDefenseAndBuff',
 		image:'images/card/gran_Rose.jpg',
 		effect: '<span class="upgrade">{B}</span>ブロックを得る。このターン攻撃を受けるたび、攻撃した敵に<span class="upgrade">{A}</span>ダメージを与える。',
 		amount: {
 			cost: 2, 
-			attack: 6,
 			block: 16,
+			buff: 6,
+			buffType: 'reflection',
 			discard: false,
 		}
 	},
@@ -1624,7 +1632,7 @@ const granEnhancedCardList = {
 		class: cardClass.gran,
 		rarity: rarity.uncommon,
 		type: type.skill,
-		func: '',
+		func: 'effectDrawAndDiscard',
 		image:'images/card/gran_Truce.jpg',
 		effect: 'カードを1枚廃棄する。カードを<span class="upgrade">2</span>枚引く。',
 		amount: {
@@ -1640,14 +1648,14 @@ const granEnhancedCardList = {
 		type: type.skill,
 		func: 'effectALLDoubleDebuff',
 		image:'images/card/gran_Cane.jpg',
-		effect: '敵全体に脱力<span class="upgrade">{D1}</span>と防御力ダウン<span class="upgrade">{D2}</span>を与える。廃棄。',
+		effect: '敵全体に恐怖<span class="upgrade">{D1}</span>と防御力ダウン<span class="upgrade">{D2}</span>を与える。廃棄。',
 		amount: {
 			cost: 2, 
 			debuff1: 5,
 			debuffType1: 'weak',
 			debuff2: 5,
 			debuffType2: 'defenseDown',
-			discard: false,
+			discard: true,
 		}
 	},
 	//見張り
@@ -1759,11 +1767,13 @@ const granEnhancedCardList = {
 		class: cardClass.gran,
 		rarity: rarity.rare,
 		type: type.skill,
-		func: 'effect',
+		func: 'effectBuff',
 		image:'images/card/gran_Lyman.jpg',
 		effect: 'このターン、次の<span class="upgrade">2つの</span>「アタック」を2回プレイする。',
 		amount: {
 			cost: 1, 
+			buff: 2,
+			buffType: 'combo',
 			discard: false,
 		}
 	},
@@ -2090,7 +2100,7 @@ const djeetaCardList = {
 		type: type.skill,
 		func: 'effectViolent',
 		image:'images/card/djeeta_Violent.jpg',
-		effect: `敵全体に毒4と脱力2を与える。廃棄。`,
+		effect: `敵全体に毒4と恐怖2を与える。廃棄。`,
 		amount: {
 			cost: 2,
 			discard: true,
@@ -2198,7 +2208,7 @@ const djeetaCardList = {
 		type: type.skill,
 		func: 'effectPetrification',
 		image:'images/card/djeeta_Petrification.jpg',
-		effect: `敵は筋力Xを失う。脱力Xを与える。廃棄。`,
+		effect: `敵は筋力Xを失う。恐怖Xを与える。廃棄。`,
 		amount: {
 			cost: 1,
 			discard: true,
@@ -2346,11 +2356,11 @@ function setupDeck(){
 			addCardToOriginalDeck(granCardList.Defense, 4);
 			addCardToOriginalDeck(granCardList.PowerSwing, 1);
 
-			addCardToOriginalDeck(granCardList.Tempest, 2);
-			addCardToOriginalDeck(granCardList.Mantle, 2);
-			addCardToOriginalDeck(granCardList.Belief, 2);
-			addCardToOriginalDeck(granCardList.Helm, 2);
-			addCardToOriginalDeck(granCardList.Script, 2);
+			addCardToOriginalDeck(granCardList.Getsuga, 2);
+			addCardToOriginalDeck(granCardList.Carbuncle, 2);
+			addCardToOriginalDeck(granCardList.Yorishiro, 2);
+			addCardToOriginalDeck(granCardList.Naan, 2);
+			addCardToOriginalDeck(granCardList.Reuse, 2);
 
 		} else if (selectChara == selectCharacter.djeeta.name){
 			addCardToOriginalDeck(djeetaCardList.Wide, 5);
@@ -2521,7 +2531,7 @@ function effectAttackAndDebuff(amount){
 	return true;
 }
 function effectAttackAndDoubleDebuff(amount){
-	// {A}のダメージを与える。脱力{D1}と防御力ダウン{D2}を与える。
+	// {A}のダメージを与える。恐怖{D1}と防御力ダウン{D2}を与える。
 	console.log('effectAttackAndDebuff');
 	if('attack' in amount){
 		actionAttack(amount.attack);
@@ -2641,6 +2651,47 @@ function effectDoubleBlock(amount){
 	endAction();
 	return true;
 }
+function effectDoubleBuff(amount){
+	// 現在のブロックの値を2倍にする。
+	console.log('effectDefenseDouble');
+	actionBlock(playerStatus.block);
+	endAction();
+	return true;
+}
+function effectBuff(amount){
+	// 防御力ダウン{D}を与える。
+	console.log('effectBuff');
+	if('buff' in amount && 'buffType' in amount ){
+		actionStatusBuf(bufStatus[amount.buffType], amount.buff);
+	}
+	endAction();
+	return true;
+}
+function effectDoubleBuff(amount){
+	// 「攻撃力アップ」を2倍にする。廃棄。
+	console.log('effectDefenseDouble');
+	if('buffType' in amount){
+		const buff = playerStatus.statuses
+			.find((status) => status.name === bufStatus[amount.buffType].name)
+		if(buff){
+			buff.amount *= 2;
+		}
+	}
+	endAction();
+	return true;
+}
+function effectDefenseAndBuff(amount){
+	// {B}ブロックを得る。
+	console.log('effectDefenseAndBuff');
+	if('block' in amount){
+		actionBlock(amount.block);
+	}
+	if('buff' in amount && 'buffType' in amount ){
+		actionStatusBuf(bufStatus[amount.buffType], amount.buff);
+	}
+	endAction();
+	return true;
+}
 function effectDebuff(amount){
 	// 防御力ダウン{D}を与える。
 	console.log('effectDebuff');
@@ -2649,8 +2700,9 @@ function effectDebuff(amount){
 	}
 	endAction();
 	return true;
-}function effectALLDebuff(amount){
-	// 敵全体に脱力{D}を与える。
+}
+function effectALLDebuff(amount){
+	// 敵全体に恐怖{D}を与える。
 	console.log('effectALLDebuff');
 	if('debuff' in amount && 'debuffType' in amount ){
 		actionStatusAllDebuf(debufStatus[amount.debuffType], amount.debuff);
@@ -2659,7 +2711,7 @@ function effectDebuff(amount){
 	return true;
 }
 function effectALLDoubleDebuff(amount){
-	// 敵全体に脱力{D}を与える。
+	// 敵全体に恐怖{D}を与える。
 	console.log('effectALLDoubleDebuff');
 	if('debuff1' in amount && 'debuffType1' in amount ){
 		actionStatusAllDebuf(debufStatus[amount.debuffType1], amount.debuff1);
@@ -2731,10 +2783,11 @@ function effectGetEnergy(amount){
 		playerStatus.remainEnergy += amount.energy;
 		updateEnergyDom();
 	}
+	endAction();
 	return true;
 }
 function effectGetEnergyAndSelfHarm(amount){
-	// 2エナジーを得る。廃棄。
+	// {E}エナジーを得る。HP{HP}を失う。
 	console.log('effectGetEnergy');
 	if('harm' in amount){
 		playerStatus.remainHP -= amount.harm;
@@ -2746,6 +2799,7 @@ function effectGetEnergyAndSelfHarm(amount){
 		playerStatus.remainEnergy += amount.energy;
 		updateEnergyDom();
 	}
+	endAction();
 	return true;
 }
 function effectReuseToHand(amount){
@@ -2764,6 +2818,19 @@ function effectDrawAndDebuff(amount){
 	if('debuff' in amount && 'debuffType' in amount ){
 		actionStatusBuf(debufStatus[amount.debuffType], amount.debuff);
 	}
+	endAction();
+	return true;
+}
+async function effectDrawAndDiscard(amount){
+	// カードを2枚引く。カードを1枚廃棄する。
+	console.log('effectDrawAndDebuff');
+	if('draw' in amount){
+		const cards = drawCardFromDeck(amount.draw);
+		cards.forEach((card) => {
+			animateDrawDeck(card);
+		});
+	}
+	actionDiscardCard();
 	endAction();
 	return true;
 }
@@ -2820,6 +2887,7 @@ function effectAttackAndNoAttackDiscard(amount){
 	if('attack' in amount){
 		actionAttack(amount.attack);
 	}
+	endAction();
 	return true;
 }
 function effectDefenseAndNoAttackDiscard(amount){
@@ -2836,6 +2904,7 @@ function effectDefenseAndNoAttackDiscard(amount){
 		const totalBlock = amount.block * noAttack.length;
 		actionBlock(totalBlock);
 	}
+	endAction();
 	return true;
 }
 function effectAllAttackXTimes(amount){
@@ -2868,7 +2937,7 @@ function effectBuffForAttack(amount){
 	console.log('effectBuffForAttack');
 	let AttackFlag = false;
 	currentEnemies.forEach((enemy) => {
-		switch(enemy.currentStatus.nextAction.omen.type){
+		switch(enemy.currentStatus.nextAction.type){
 			case enemyActionType.attack:
 			case enemyActionType.blockAndAttack:
 			case enemyActionType.buffAndAttack:
@@ -2887,12 +2956,7 @@ function effectBuffForAttack(amount){
 	endAction();
 	return true;
 }
-function effectDefenseEveryAttack(amount){
-	// このターン、「アタック」をプレイするたび{B}ブロックを得る。
-	
-	endAction();
-	return true;
-}
+
 function effectAttackAndSeizure(amount){
 	// {A}のダメージを与える。この攻撃で敵を倒すと、最大HPが3増える(戦闘終了後も有効)。廃棄。
 	console.log('effectAttackAndSeizure');
@@ -2910,9 +2974,8 @@ function effectAttackAndBloodsucking(amount){
 	// 敵全体に{A}のダメージを与える。防御されなかったダメージ分を回復する。廃棄。
 	console.log('effectAttackAndBloodsucking');
 	if('attack' in amount){
-		actionAllAttack(amount.attack);
+		actionAllAttackAndAbsorb(amount.attack);
 	}
-	
 	endAction();
 	return true;
 }
@@ -2993,7 +3056,7 @@ function effectReproductionToHand(amount){
 /* ジータのカード効果関数
 /*************************************************************************************/
 function effectFast(){
-	// 3ダメージを与える。脱力1を与える。
+	// 3ダメージを与える。恐怖1を与える。
 	console.log('effectFast');
 	actionAttack(djeetaCardList.Fast.amount.attack);
 	actionStatusDebuf(debufStatus.weak, 1);
@@ -3124,7 +3187,7 @@ function effectBlaze(){
 	return true;
 }
 function effectViolent(){
-	// 敵全体に毒4と脱力2を与える。廃棄。`
+	// 敵全体に毒4と恐怖2を与える。廃棄。`
 	console.log('effectViolent');
 	actionStatusAllDebuf(debufStatus.poison, 4);
 	actionStatusAllDebuf(debufStatus.weak, 2);
@@ -3177,7 +3240,7 @@ function effectZosimos(){
 	return true;
 }
 function effectPetrification(){
-	// 敵は筋力Xを失う。脱力Xを与える。廃棄。
+	// 敵は筋力Xを失う。恐怖Xを与える。廃棄。
 	console.log('effectSupply');
 	return true;
 }
@@ -3217,7 +3280,7 @@ function conditionsStraight(){
 function calcDamage(attackCount, targetEnemy){
 	let totalAttack = attackCount;
 	let magnification = 1;
-	// 脱力（攻撃力25%減少）
+	// 恐怖（攻撃力25%減少）
 	const weakness = playerStatus.statuses
 		.find((status) => status.name === debufStatus.weak.name);
 	if (weakness){magnification -= 0.25;}
@@ -3296,6 +3359,27 @@ function actionAttack(attackCount){
 	animatePlayerAttack();
 }
 /*******************************************************/
+/* 与ダメージ&吸収関数
+/*******************************************************/
+function actionAttackAndAbsorb(attackCount){
+	let totalAttack = calcDamage(attackCount, currentTarget);
+	// ブロック計算
+	const enemyBlock = currentTarget.currentStatus.block;
+	if(enemyBlock > 0){
+		if(enemyBlock >= totalAttack){
+			currentTarget.currentStatus.block -= totalAttack;
+			totalAttack = 0;
+		} else if (enemyBlock < totalAttack){
+			currentTarget.currentStatus.block = 0;
+			totalAttack = totalAttack - enemyBlock;
+		}
+	}
+	currentTarget.currentStatus.remainHP -= totalAttack;
+	recoveryHP(totalAttack);
+	// アニメーション
+	animatePlayerAttack();
+}
+/*******************************************************/
 /* 与ダメージ関数（全体ダメージ）
 /*******************************************************/
 function actionAllAttack(attackCount){
@@ -3318,6 +3402,29 @@ function actionAllAttack(attackCount){
 	animatePlayerAttack();
 }
 /*******************************************************/
+/* 与ダメージ&吸収関数（全体ダメージ）
+/*******************************************************/
+function actionAllAttackAndAbsorb(attackCount){
+	currentEnemies.forEach((enemy) => {
+		let totalAttack = calcDamage(attackCount, enemy);
+		// ブロック計算
+		const enemyBlock = enemy.currentStatus.block;
+		if(enemyBlock > 0){
+			if(enemyBlock >= totalAttack){
+				enemy.currentStatus.block -= totalAttack;
+				totalAttack = 0;
+			} else if (enemyBlock < totalAttack){
+				enemy.currentStatus.block = 0;
+				totalAttack = totalAttack - enemyBlock;
+			}
+		}
+		enemy.currentStatus.remainHP -= totalAttack;
+		recoveryHP(totalAttack);
+	});
+	// アニメーション
+	animatePlayerAttack();
+}
+/*******************************************************/
 /* 与ダメージ関数（ランダムダメージ）
 /*******************************************************/
 function actionRandomAttack(attackCount){
@@ -3333,7 +3440,7 @@ function actionRandomAttack(attackCount){
 			totalAttack = 0;
 		} else if (enemyBlock < totalAttack){
 			enemy.currentStatus.block = 0;
-			totalAttack = totalAttack - enemyBlock;
+			totalAttack -= enemyBlock;
 		}
 	}
 	enemy.currentStatus.remainHP -= totalAttack;
@@ -3454,7 +3561,6 @@ function actionTrashCard(){
 }
 function trashCard(){
 	console.log('trashCard');
-	console.log(tmpArea);
 	if(tmpArea.length === 0){
 		return false;
 	}
@@ -3506,6 +3612,47 @@ function actionTrashRandomCard(){
 		updateHandDom();
 		updateTrashDom();
 	});
+}
+/*******************************************************/
+/* 1枚カードを廃棄する関数
+/*******************************************************/
+function actionDiscardCard(){
+	startPhase(phase.discard);
+}
+function discardCard(){
+	console.log('trashCard');
+	if(tmpArea.length === 0){
+		return false;
+	}
+	const trashCard = shiftTemporaryArea();
+	if (trashCard !== undefined) {
+		setLocalStorage(keyContinueTemporary, tmpArea);
+		const index = findIndexHand('id', trashCard.id);
+		if (index === -1) {
+			return false;
+		}
+		const card = spliceHand(index);
+		if (card === undefined) {
+			return false;
+		}
+		pushDiscard(card);
+		playerCount.discardCount++;
+		setLocalStorage(keyContinuePlayerCount, playerCount);
+		setLocalStorage(keyContinueHand, myHand);
+		setLocalStorage(keyContinueTrash, discard);
+		$('.black-back-area').removeClass('active');
+		$('.hand-decide-area').removeClass('active');
+		$('.hand-area').removeClass('front');
+		$(`.hand-card`).removeClass('select');
+
+		animateHandToDiscard(card);
+		$.when(cardTrashPromise).done(() => {
+			updateHandDom();
+			updateDiscardDom();
+		});
+		startPhase(phase.action);
+	}
+	endAction();
 }
 /*******************************************************/
 /* 手札1枚をデッキの一番上に置く関数
@@ -3585,17 +3732,24 @@ function upGradeCard(){
 /* 手札1枚を複製する関数
 /*******************************************************/
 function actionReproductionToHand(){
+	const attackCard = myHand.filter((card) => {
+		return card.type === type.attack;
+	});
+	if(attackCard.length === 0){
+		return true;
+	}
 	startPhase(phase.reproductionToHand);
+	return true;
 }
 function reproductionToHandCard(){
 	console.log('reproductionToHandCard');
 	if(tmpArea.length === 0){
 		return false;
 	}
-	const upGradeCard = shiftTemporaryArea();
-	if (upGradeCard !== undefined) {
+	const reproductionCard = shiftTemporaryArea();
+	if (reproductionCard !== undefined) {
 		setLocalStorage(keyContinueTemporary, tmpArea);
-		const index = findIndexHand('id', upGradeCard.id);
+		const index = findIndexHand('id', reproductionCard.id);
 		if (index === -1) {
 			return false;
 		}
@@ -3605,6 +3759,7 @@ function reproductionToHandCard(){
 		}
 		pushHand(card);
 		setLocalStorage(keyContinueHand, myHand);
+		updateHandDom();
 		$('.black-back-area').removeClass('active');
 		$('.hand-decide-area').removeClass('active');
 		$('.hand-area').removeClass('front');
@@ -3627,6 +3782,7 @@ function actionDeckTopPlay(){
 	if (card !== undefined){
 		card.amount.tmpDiscard = true;
 		pushStackCard(card);
+		pushPlayArea(card);
 	}else{
 		console.log("shiftDeck undefined");
 	}

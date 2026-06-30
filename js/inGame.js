@@ -182,9 +182,7 @@ function setupHandCard(){
 /* setupBtn：各種ボタンの初期設定
 /*******************************************************/
 function setupBtn(){
-	$('.end-btn').click((e) => {
-		startPhase(phase.enemy);
-	});
+	disabledEndBtn(false);
 	$('.trash-area').click((e) => {
 		if (myTrash.length <= 0) {
 			console.log('捨て札がありません。');
@@ -214,6 +212,9 @@ function setupBtn(){
 		switch(currentPhase){
 			case phase.trash:
 				trashCard();
+				break;
+			case phase.discard:
+				discardCard();
 				break;
 			case phase.unshiftDeck:
 				unshiftDeckCard();
@@ -267,6 +268,22 @@ function startPhase(ph){
 			disabledMyHand(false);
 			updateHandDom();
 			updateHandDecideTitleDom('捨てるカードを選んでください');
+			$.when(
+				cardDrawPromise,
+				playerAbnormalityPromise,
+				playerGetBlockPromise,
+				enemyAbnormalityPromise,
+			).done(() => {
+				$('.black-back-area').addClass('active');
+				$('.hand-decide-area').addClass('active');
+				$('.hand-area').addClass('front');
+			});
+			break;
+		case phase.discard:
+			disabledEndBtn(true);
+			disabledMyHand(false);
+			updateHandDom();
+			updateHandDecideTitleDom('廃棄するカードを選んでください');
 			$.when(
 				cardDrawPromise,
 				playerAbnormalityPromise,
@@ -409,8 +426,6 @@ async function startTurn(){
 /*******************************************************/
 function endTurn(){
 	console.log(`endTurn`);
-	// カードを5枚引く
-	drawCardFromDeck(initialHandNum);
 	
 	// 「ヘイスト」で追加2枚
 	const drawCard = playerStatus.statuses
@@ -463,6 +478,8 @@ function endTurn(){
 			case debufStatus.Fading.name:
 				status.amount--;
 				break;
+			case bufStatus.reflection.name:
+			case bufStatus.wind.name:
 			case debufStatus.noBlock.name:
 			case debufStatus.noDraw.name:
 			case debufStatus.invalidAttackUp.name:
@@ -499,6 +516,8 @@ function endTurn(){
 			return status.amount > 0;
 		});
 	});
+	// カードを5枚引く
+	drawCardFromDeck(initialHandNum);
 	// ブロックを解除する
 	playerStatus.block = 0;
 	// 次の予測を決定する
@@ -642,9 +661,26 @@ function playHandCard(index){
 	// 手札表示の更新
 	updateHandDom();
 	pushStackCard(card);
-
+	pushPlayArea(card);
+	//「風の加護」効果
+	const wind = playerStatus.statuses
+		.find((status) => status.name === bufStatus.wind.name);
+	if (wind && card.type === type.attack){
+		actionBlock(wind.amount);
+	}
+	//「連撃アップ」の効果
+	const combo = playerStatus.statuses
+		.find((status) => status.name === bufStatus.combo.name);
+	if (combo && combo.amount > 0 && card.type === type.attack){
+		pushStackCard(card);
+		combo.amount--;
+		playerStatus.statuses = playerStatus.statuses.filter((status) => {
+			return status.amount > 0;
+		});
+	}
 	setLocalStorage(keyContinueHand, myHand);
 	setLocalStorage(keyContinueStack, stackCard);
+	setLocalStorage(keyContinuePlayerStatus, playerStatus);
 
 	endAction();
 }
@@ -676,7 +712,6 @@ function endAction(){
 	}
 	// 攻撃を内部的に行う
 	const card = shiftStackCard();
-	pushPlayArea(card);
 	// カードプレイのアニメーション
 	animatePlayCard(card);
 	if (card !== undefined) {
@@ -704,6 +739,15 @@ function endAction(){
 	$.when(enemyAbnormalityPromise).done(() => {
 		updateEnemyAreaDom(currentEnemies, true);
 	});
+	$.when(
+		cardDrawPromise,
+		cardTrashPromise,
+		cardDiscardPromise
+	).done(() => {
+		updateHandDom();
+		updateTrashDom();
+		updateDiscardDom();
+	});
 	
 	if (allDefeatedFlag){
 		console.log('全滅');
@@ -714,13 +758,6 @@ function endAction(){
 			allEnemiesDefeated();
 		});
 	}
-	$.when(
-		cardDrawPromise,
-		cardTrashPromise,
-		cardDiscardPromise
-	).done(() => {
-		updateHandDom();
-	});
 	return ret;
 }
 /*******************************************************/
@@ -765,6 +802,7 @@ function clickHandProcess(handCardDiv, hand){
 		case phase.enemy:
 			break;
 		case phase.trash:
+		case phase.discard:
 		case phase.unshiftDeck:
 			if (index === -1) {
 				if (tmpArea.length < 1){

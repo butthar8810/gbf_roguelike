@@ -1,6 +1,10 @@
 /*****************************************************************************/
 /* アーティファクト情報
 /*****************************************************************************/
+const starterTest = {
+	test: {name: '剣闘士の証', effect: '戦闘開始時、攻撃力アップ3。', image: 'images/artifact/gladiator.png', firstFunc: 'artifactTest'},
+};
+
 const starterArtifact = {
 	recovery: {name: '剣闘士の証', effect: '戦闘終了時、HP6回復。', image: 'images/artifact/gladiator.png', firstFunc: 'artifactRecovery'},
 	startDraw: {name: '魔剣士の証', effect: '戦闘開始時、カード2枚を追加で引く。', image: 'images/artifact/swordsman.png', firstFunc: 'artifactStartDraw'},
@@ -36,7 +40,7 @@ const rareArtifact = {
 	hitPoint14: {name: '至極の指輪', effect: '最大HPが増加:14', image: 'images/artifact/extremely.png', firstFunc: ''},
 	thelma: {name: 'テルマ', effect: '使用しなかったエナジーが蓄積されていく。', image: 'images/artifact/thelma.png', firstFunc: ''},
 	omega: {name: 'オメガの器', effect: '脆弱化にならない。', image: 'images/artifact/omega.png', firstFunc: ''},
-	gavsky: {name: 'ガフスキー', effect: '脱力にならない。', image: 'images/artifact/gavsky.png', firstFunc: ''},
+	gavsky: {name: 'ガフスキー', effect: '恐怖にならない。', image: 'images/artifact/gavsky.png', firstFunc: ''},
 	star: {name: '星の欠片', effect: '7ターン目の終了時、すべての敵に52ダメージを与える。', image: 'images/artifact/star.png', firstFunc: ''},
 };
 const bossArtifact = {
@@ -65,7 +69,7 @@ function setupArtifact(){
 	} else {
 		// プレイヤーに初期デッキとなる10枚のカードを配る
 		if (selectChara == selectCharacter.gran.name){
-			myArtifact.push(starterArtifact.recovery);
+			myArtifact.push(starterTest.test);
 		} else if (selectChara == selectCharacter.djeeta.name){
 			myArtifact.push(starterArtifact.startDraw);
 		}
@@ -77,6 +81,13 @@ function setupArtifact(){
 /*****************************************************************************/
 /* アーティファクト効果
 /*****************************************************************************/
+function artifactTest(){
+	console.log('artifactAgility');
+	
+	actionStatusBuf(bufStatus.attackUp, 3);
+	
+	return true;
+}
 /*******************************************************/
 /* 戦闘終了時、HP6回復。
 /*******************************************************/
@@ -89,6 +100,7 @@ function artifactRecovery(){
 	}
 	return true;
 }
+
 /*******************************************************/
 /* 戦闘開始時、カード2枚を追加で引く。
 /*******************************************************/

@@ -72,7 +72,7 @@ function animateHandToTrash(card){
 	}, trashWaitTime);
 }
 /*******************************************************/
-/* animateHandToTrash：廃棄札に捨てるアニメーション
+/* animateHandToDiscard：廃棄札に捨てるアニメーション
 /*******************************************************/
 function animateHandToDiscard(card){
 	const handCardDiv = $(`#hand-card${card.id}`);

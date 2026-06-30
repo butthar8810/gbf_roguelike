@@ -34,13 +34,15 @@ const bufStatus = {
 	nextTurnBlock: {name: '次ターンブロック', amount: '', effect: '次ターン開始時、ブロック{X}を得る。', image: 'images/status/status_1075.png'},
 	penetration: {name: '貫通', amount: '', effect: '攻撃ダメージがブロックを無視する。{X}ターン有効。', image: 'images/status/status_1240.png'},
 	reflection: {name: '反射', amount: '', effect: '攻撃を受けるたび、攻撃した敵に{X}ダメージを与える。1ターン有効。', image: 'images/status/status_1062_3.png'},
+	wind: {name: '風の加護', amount: '', effect: '「アタック」をプレイするたび{X}ブロックを得る。1ターン有効。', image: 'images/status/status_1062_3.png'},
+	combo: {name: '連撃アップ', amount: '', effect: '次の{X}枚の「アタック」を2回プレイする。1ターン有効。', image: 'images/status/status_1004.png'},
 };
 // デバフ
 const debufStatus = {
 	attackDown: {name: '攻撃力ダウン', amount: '', effect: '攻撃ダメージが-{X}。', image: 'images/status/status_1010.png'},
 	defenseDown: {name: '防御力ダウン', amount: '', effect: 'アタックで受けるダメージが50%増加。{X}ターン有効。', image: 'images/status/status_1020.png'},
 	frail: {name: '脆弱化', amount: '', effect: 'カードから得られるブロックが25%減少。{X}ターン有効。', image: 'images/status/status_1011.png'},
-	weak: {name: '脱力', amount: '', effect: 'アタックで与えるダメージが25%減少。{X}ターン有効。', image: 'images/status/status_1374.png'},
+	weak: {name: '恐怖', amount: '', effect: 'アタックで与えるダメージが25%減少。{X}ターン有効。', image: 'images/status/status_1374.png'},
 	poison: {name: '毒', amount: '', effect: 'ターン開始時、HPを{X}失い、毒が1減少。', image: 'images/status/status_8.png'},
 	sleep: {name: '眠り', amount: '', effect: 'この敵はまだ目覚めていない…', image: 'images/status/status_1263.png'},
 	paralysis: {name: '麻痺', amount: '', effect: '{X}ターンの間「アタック」をプレイできない。', image: 'images/status/status_102.png'},
@@ -164,11 +166,12 @@ let allDefeatedFlag = false;
 const playerCount = {
 	HPDownCount: 0,
 	trashCount: 0,
+	discardCount: 0,
 };
-
 // promiseオブジェクト
 let cardDrawPromise = Promise.resolve();
 let cardTrashPromise = Promise.resolve();
+let cardDiscardPromise = Promise.resolve();
 let cardRestorePromise = Promise.resolve();
 let cardShowPromise = Promise.resolve();
 let playerAttackPromise = Promise.resolve();
