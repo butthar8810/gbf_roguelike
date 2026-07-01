@@ -31,12 +31,13 @@ const bufStatus = {
 	adversity: {name: '逆境', amount: '', effect: '状態異常を引くたび、カードを{X}枚引く。', image: 'images/status/status_1181.png'},
 	painless: {name: '無痛', amount: '', effect: 'カードを廃棄するたび、{X}ブロックを得る。', image: 'images/status/status_6083.png'},
 	eye: {name: '慧眼', amount: '', effect: 'カードを廃棄するたび、カードを{X}枚引く。', image: 'images/status/status_7122.png'},
-	energized: {name: '活性', amount: '', effect: '次のターン開始時、{X}エナジーを得る。', image: 'images/status/status_1638.png'},
+	activity: {name: '活性', amount: '', effect: '次のターン開始時、{X}エナジーを得る。1ターン有効', image: 'images/status/status_2.png'},
+	energized: {name: '活性化', amount: '', effect: '次のターン開始時、{X}エナジーを得る。', image: 'images/status/status_1638.png'},
 	drawCard: {name: 'ヘイスト', amount: '', effect: '次のターン開始時、{X}枚のカードを引く。', image: 'images/status/status_1058.png'},
 	wall: {name: '炎の盾', amount: '', effect: 'ターン開始時にブロック値を失わない。', image: 'images/status/status_7343.png'},
 	end: {name: '果ての力', amount: '', effect: 'ターン開始時に、攻撃力アップ{X}を得る。', image: 'images/status/status_7980_1.png'},
 	hrunting: {name: 'フルンティング', amount: '', effect: 'ターン開始時に、HPを1失いカードを{X}枚引く。', image: 'images/status/status_3170.png'},
-	nextTurnBlock: {name: '次ターンブロック', amount: '', effect: '次ターン開始時、ブロック{X}を得る。', image: 'images/status/status_1075.png'},
+	nextTurnBlock: {name: '次ターンブロック', amount: '', effect: '次ターン開始時、ブロック{X}を得る。1ターン有効', image: 'images/status/status_1075.png'},
 	phantasmal: {name: '幻影', amount: '', effect: '次のターン開始時、ダブルアタックを得る。{X}ターン有効。', image: 'images/status/status_1313.png'},
 	doubleDamage: {name: 'ダブルアタック', amount: '', effect: 'アタックのダメージが2倍になる。1ターン有効。', image: 'images/status/status_1004.png'},
 	barrier: {name: 'バリア', amount: '', effect: 'ターン終了時、{X}ブロックを得る。', image: 'images/status/status_1314.png'},
@@ -56,15 +57,16 @@ const debufStatus = {
 	defenseDown: {name: '防御力ダウン', amount: '', effect: 'アタックで受けるダメージが50%増加。{X}ターン有効。', image: 'images/status/status_1020.png'},
 	frail: {name: '脆弱化', amount: '', effect: 'カードから得られるブロックが25%減少。{X}ターン有効。', image: 'images/status/status_1011.png'},
 	weak: {name: '恐怖', amount: '', effect: 'アタックで与えるダメージが25%減少。{X}ターン有効。', image: 'images/status/status_1374.png'},
+	noDraw: {name: 'ドロー不可', amount: '', effect: 'カードからブロックを得られない。{X}ターン有効。', image: 'images/status/status_3270.png'},
+	invalidAttackUp: {name: '攻UP削除', amount: '',effect: 'ターン終了時、攻撃力アップを{X}下げる',image: 'images/status/status_9999.png'},
+
 	poison: {name: '毒', amount: '', effect: 'ターン開始時、HPを{X}失い、毒が1減少。', image: 'images/status/status_8.png'},
 	sleep: {name: '眠り', amount: '', effect: 'この敵はまだ目覚めていない…', image: 'images/status/status_1263.png'},
 	paralysis: {name: '麻痺', amount: '', effect: '{X}ターンの間「アタック」をプレイできない。', image: 'images/status/status_102.png'},
 	heat: {name: '灼熱', amount: '', effect: 'カードをプレイするたび、あなたは{X}ダメージを受ける。', image: 'images/status/status_83.png'},
 	petrification: {name: '石化', amount: '', effect: 'カードから得られるブロックが-{X}。', image: 'images/status/status_1241.png'},
 	noBlock: {name: 'ブロック不可', amount: '', effect: 'デッキからカードを引くことができない。{X}ターン有効。', image: 'images/status/status_6765.png'},
-	noDraw: {name: 'ドロー不可', amount: '', effect: 'カードからブロックを得られない。{X}ターン有効。', image: 'images/status/status_3270.png'},
 	Fading: {name: '死の宣告', amount: '', effect: '{X}ターン経過後、死亡する。', image: 'images/status/status_100.png'},
-	invalidAttackUp: {name: '攻UP無効', amount: '',effect: 'ターン終了時、攻撃力アップを{X}下げる',image: 'images/status/status_9999.png'},
 };
 // ステータス：志望
 const dead = {name: '死亡', amount: 1, effect: '死亡状態',image: ''};
@@ -137,6 +139,7 @@ const phase = {
 	upGrade: 'アップグレードフェイズ', // 手札をアップグレード
 	unshiftDeck: 'アンシフトデッキフェイズ', // 手札をデッキに
 	reproductionToHand: '複製フェイズ', // 複製を手札に
+	twoReproductionToHand: '2枚複製フェイズ', // 複製を手札に
 };
 
 /*****************************************************************************/

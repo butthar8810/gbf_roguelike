@@ -86,7 +86,15 @@ function updateArtifactDom(){
 function createCardDom(card){
 	let effect = card.effect;
 	if('attack' in card.amount){
-		attackDamage = calcDamage(card.amount.attack, currentTarget);
+		switch(card.name){
+			case granCardList.Dig.name:
+			case granEnhancedCardList.Dig.name:
+				attackDamage = calcDamage(card.amount.attack, currentTarget, card.amount.magnification);
+				break;
+			default:
+				attackDamage = calcDamage(card.amount.attack, currentTarget);
+				break;
+		}
 		if (card.amount.attack > attackDamage) {
 			effect = effect.replace('{A}', `<span class='down'>${attackDamage}</span>`);
 		} else if (card.amount.attack < attackDamage){

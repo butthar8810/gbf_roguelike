@@ -217,6 +217,9 @@ function setupBtn(){
 			case phase.reproductionToHand:
 				reproductionToHandCard();
 				break;
+			case phase.twoReproductionToHand:
+				twoReproductionToHandCard();
+				break;
 			default:
 				break;
 		}
@@ -325,6 +328,7 @@ function startPhase(ph){
 			});
 			break;
 		case phase.reproductionToHand:
+		case phase.twoReproductionToHand:
 			disabledEndBtn(true);
 			disabledMyHand(false);
 			updateHandDom();
@@ -439,20 +443,7 @@ function endTurn(){
 	if (end){
 		actionStatusBufNoAnimate(bufStatus.attackUp, end.amount);
 	}
-	// 「ヘイスト」で追加2枚
-	const drawCard = playerStatus.statuses
-		.find((status) => status.name === bufStatus.drawCard.name);
-	if (drawCard){
-		drawCardFromDeck(2);
-		drawCard.amount = 0;
-	}
-	//「フルンティング」の効果発動
-	const hrunting = playerStatus.statuses
-		.find((status) => status.name === bufStatus.hrunting.name);
-	if (hrunting){
-		damageHP(1);
-		drawCardFromDeck(hrunting.amount);
-	}
+
 	//「炎の盾」がある場合はブロックを初期化しない
 	const wall = playerStatus.statuses
 		.find((status) => status.name === bufStatus.wall.name);
@@ -469,11 +460,32 @@ function endTurn(){
 	}
 	// エネルギーを回復する
 	playerStatus.remainEnergy = playerStatus.maxEnergy;
-	// 「活性」で追加回復
+	// 「活性化」で追加回復
+	const activity = playerStatus.statuses
+		.find((status) => status.name === bufStatus.activity.name);
+	if (activity){
+		playerStatus.remainEnergy += activity.amount;
+		activity.amount = 0;
+	}
+	// 「活性化」で追加回復
 	const energized = playerStatus.statuses
 		.find((status) => status.name === bufStatus.energized.name);
 	if (energized){
 		playerStatus.remainEnergy += energized.amount;
+	}
+	//「フルンティング」の効果発動
+	const hrunting = playerStatus.statuses
+		.find((status) => status.name === bufStatus.hrunting.name);
+	if (hrunting){
+		damageHP(1);
+		drawCardFromDeck(hrunting.amount);
+	}
+	// 「ヘイスト」で追加2枚
+	const drawCard = playerStatus.statuses
+		.find((status) => status.name === bufStatus.drawCard.name);
+	if (drawCard){
+		drawCardFromDeck(2);
+		drawCard.amount = 0;
 	}
 	// カードを5枚引く
 	drawCardFromDeck(initialHandNum);
@@ -899,6 +911,7 @@ function clickHandProcess(handCardDiv, hand){
 			}
 			break;
 		case phase.reproductionToHand:
+		case phase.twoReproductionToHand:
 			if(hand.type === type.attack || hand.type === type.power){
 				if (index === -1) {
 					if (tmpArea.length < 1){
@@ -985,7 +998,7 @@ function clickDiscardCardProcess(trashCardDiv, card){
 function trashCardProcess(trashCard){
 	if('trashFunc' in trashCard.amount && trashCard.amount.trashFunc !== ''){
 		pushStackCard({
-			func: trashCard.trashCard,
+			func: trashCard.trashFunc,
 			amount: trashCard.amount,
 		});
 	}
