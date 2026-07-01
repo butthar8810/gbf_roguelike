@@ -2257,6 +2257,7 @@ const granEnhancedCardList = {
 		image:'images/card/gran_Hrunting.jpg',
 		effect: '<span class="upgrade">天賦。</span>ターン開始時に、HPを1失いカードを{F}枚引く。',
 		amount: {
+			gift: true,
 			cost: 0,
 			buff: 1,
 			buffType: 'hrunting',
@@ -2800,12 +2801,7 @@ function setupDeck(){
 			addCardToOriginalDeck(granCardList.Wide, 5);
 			addCardToOriginalDeck(granCardList.Defense, 4);
 			addCardToOriginalDeck(granCardList.PowerSwing, 1);
-
-			addCardToOriginalDeck(granCardList.Getsuga, 2);
-			addCardToOriginalDeck(granCardList.Carbuncle, 2);
-			addCardToOriginalDeck(granCardList.Yorishiro, 2);
-			addCardToOriginalDeck(granCardList.Naan, 2);
-			addCardToOriginalDeck(granCardList.Reuse, 2);
+			addCardToOriginalDeck(granEnhancedCardList.Hrunting, 1);
 
 		} else if (selectChara == selectCharacter.djeeta.name){
 			addCardToOriginalDeck(djeetaCardList.Wide, 5);
@@ -3064,10 +3060,7 @@ function effectAttackAndSelfHarm(amount){
 	// HP{HP}を失う。{A}のダメージを与える。
 	console.log('effectAttackAndSelfHarm');
 	if('harm' in amount){
-		playerStatus.remainHP -= amount.harm;
-		playerCount.HPDownCount++;
-		console.log(`playerCount.HPDownCount: ${playerCount.HPDownCount}`);
-		setLocalStorage(keyContinuePlayerCount, playerCount);
+		actionLoseHP(amount.harm);
 	}
 	if('attack' in amount){
 		actionAttack(amount.attack);
@@ -3235,10 +3228,7 @@ function effectGetEnergyAndSelfHarm(amount){
 	// {E}エナジーを得る。HP{HP}を失う。
 	console.log('effectGetEnergy');
 	if('harm' in amount){
-		playerStatus.remainHP -= amount.harm;
-		playerCount.HPDownCount++;
-		console.log(`playerCount.HPDownCount: ${playerCount.HPDownCount}`);
-		setLocalStorage(keyContinuePlayerCount, playerCount);
+		actionLoseHP(amount.harm);
 	}
 	if('energy' in amount){
 		playerStatus.remainEnergy += amount.energy;
@@ -3441,10 +3431,7 @@ function effectGetEnergyAndDrawAndSelfHarm(amount){
 	// HP6を失う。●●を得る。カードを3枚引く。廃棄。
 	console.log('effectGetEnergyAndDrawAndSelfHarm');
 	if('harm' in amount){
-		playerStatus.remainHP -= amount.harm;
-		playerCount.HPDownCount++;
-		console.log(`playerCount.HPDownCount: ${playerCount.HPDownCount}`);
-		setLocalStorage(keyContinuePlayerCount, playerCount);
+		actionLoseHP(amount.harm);
 	}
 	if('energy' in amount){
 		playerStatus.remainEnergy += amount.energy;
@@ -3574,7 +3561,7 @@ function effectKamaitachi(){
 	// `12ダメージを与える。このターンにカードを捨てていれば、2エナジーを得る。
 	console.log('effectKamaitachi');
 	actionAttack(djeetaCardList.Kamaitachi.amount.attack);
-	if (playerCount.trashCount > 0) {
+	if (playerStatus.playerCount.trashCount > 0) {
 		playerStatus.remainEnergy += 2;
 	}
 	return true;
@@ -3895,6 +3882,29 @@ function actionRandomAttack(attackCount){
 	animatePlayerAttack();
 }
 /*******************************************************/
+/* 与ダメージ関数(バフ・デバフ影響なし)（全体ダメージ）
+/*******************************************************/
+function actionAllAttackSimple(attackCount){
+	currentEnemies.forEach((enemy) => {
+		let totalAttack = attackCount;
+		// ブロック計算
+		const enemyBlock = enemy.currentStatus.block;
+		if(enemyBlock > 0){
+			if(enemyBlock >= totalAttack){
+				enemy.currentStatus.block -= totalAttack;
+				totalAttack = 0;
+			} else if (enemyBlock < totalAttack){
+				enemy.currentStatus.block = 0;
+				totalAttack = totalAttack - enemyBlock;
+			}
+		}
+		enemy.currentStatus.remainHP -= totalAttack;
+		recoveryHP(totalAttack);
+	});
+	// アニメーション
+	animatePlayerAttack();
+}
+/*******************************************************/
 // ブロック計算
 /*******************************************************/
 function calcBlock(blockCount){
@@ -3929,6 +3939,12 @@ function actionBlock(blockCount){
 	playerStatus.block += calcBlock(blockCount);
 	// アニメーション
 	animatePlayerBlocked();
+
+	const lamentation = playerStatus.statuses
+		.find((status) => status.name === bufStatus.lamentation.name);
+	if (lamentation){
+		actionRandomAttack(lamentation.amount);
+	}
 }
 /*******************************************************/
 /* バフを与える関数
@@ -3950,6 +3966,38 @@ function actionStatusBuf(buf, amountCount){
 	}
 	// アニメーション
 	animatePlayerAbnormality(receivedBuf);
+}
+/*******************************************************/
+/* バフを与える関数（アニメーション後付け）
+/*******************************************************/
+function actionStatusBufNoAnimate(buf, amountCount){
+	let sameBufFlag = false;
+	// すでに同じバフがかかってないか確認
+	// 同じバフは累積する
+	for (const status of playerStatus.statuses) {
+		if (status.name == buf.name) {
+			status.amount += amountCount;
+			sameBufFlag = true;
+		}
+	}
+	const receivedBuf = {...buf};
+	receivedBuf.amount = amountCount;
+	if (!sameBufFlag) {
+		playerStatus.statuses.push(receivedBuf);
+	}
+}
+
+/*******************************************************/
+/* バフを与える関数（アニメーション後付け）
+/*******************************************************/
+function actionLoseHP(loseHP){
+	damageHP(loseHP);
+	//「血の代償」の効果発動
+	const compensation = playerStatus.statuses
+		.find((status) => status.name === bufStatus.compensation.name);
+	if (compensation){
+		actionStatusBuf(bufStatus.attackUp, compensation.amount);
+	}
 }
 /*******************************************************/
 /* 状態異常を与える関数
@@ -4023,8 +4071,8 @@ function trashCard(){
 			return false;
 		}
 		trashCardProcess(card);
-		playerCount.trashCount++;
-		setLocalStorage(keyContinuePlayerCount, playerCount);
+		playerStatus.playerCount.trashCount++;
+		setLocalStorage(keyContinuePlayerStatus, playerStatus);
 		setLocalStorage(keyContinueHand, myHand);
 		setLocalStorage(keyContinueTrash, myTrash);
 		$('.black-back-area').removeClass('active');
@@ -4052,8 +4100,8 @@ function actionTrashRandomCard(){
 		return false;
 	}
 	trashCardProcess(card);
-	playerCount.trashCount++;
-	setLocalStorage(keyContinuePlayerCount, playerCount);
+	playerStatus.playerCount.trashCount++;
+	setLocalStorage(keyContinuePlayerStatus, playerStatus);
 	animateHandToTrash(card);
 	$.when(cardTrashPromise).done(() => {
 		updateHandDom();
@@ -4083,8 +4131,8 @@ function discardCard(){
 			return false;
 		}
 		discardCardProcess(card);
-		playerCount.discardCount++;
-		setLocalStorage(keyContinuePlayerCount, playerCount);
+		playerStatus.playerCount.discardCount++;
+		setLocalStorage(keyContinuePlayerStatus, playerStatus);
 		setLocalStorage(keyContinueHand, myHand);
 		setLocalStorage(keyContinueTrash, discard);
 		$('.black-back-area').removeClass('active');

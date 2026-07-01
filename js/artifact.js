@@ -69,7 +69,7 @@ function setupArtifact(){
 	} else {
 		// プレイヤーに初期デッキとなる10枚のカードを配る
 		if (selectChara == selectCharacter.gran.name){
-			myArtifact.push(starterTest.test);
+			myArtifact.push(starterArtifact.recovery);
 		} else if (selectChara == selectCharacter.djeeta.name){
 			myArtifact.push(starterArtifact.startDraw);
 		}

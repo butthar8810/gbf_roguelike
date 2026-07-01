@@ -12,6 +12,19 @@ function recoveryHP(recovery){
 	}
 }
 /*******************************************************/
+/* damageHP：HPが減少する
+/*******************************************************/
+function damageHP(damage, playerInfo = playerStatus){
+	playerInfo.playerCount.HPDownCount++;
+	setLocalStorage(keyContinuePlayerStatus, playerStatus);
+	if (playerInfo.remainHP > damage){
+		playerInfo.remainHP -= damage;
+	} else {
+		playerInfo.remainHP -= damage;
+		console.log('敗北処理');
+	}
+}
+/*******************************************************/
 /* deepCopySupply：カード単体をディープコピーする
 /*******************************************************/
 function deepCopyCard(cardOjt){
@@ -67,6 +80,9 @@ function deepCopyPlayerStatus(player){
 		cloneStatus.image = status.image;
 		cloneOjt.statuses.push(cloneStatus);
 	});
+	cloneOjt.playerCount = {};
+	cloneOjt.playerCount.HPDownCount = player.playerCount.HPDownCount;
+	cloneOjt.playerCount.trashCount = player.playerCount.trashCount;
 
 	return cloneOjt;
 }
@@ -193,6 +209,12 @@ function unshiftDeck(card){
 /*******************************************************/
 function shiftDeck(){
 	return myDeck.shift();
+}
+/*******************************************************/
+/* spliceDeck：デッキキューのIndex番目のデータを取り出す
+/*******************************************************/
+function spliceDeck(index){
+	return myDeck.splice(index, 1)[0];
 }
 /*******************************************************/
 /* deleteAllDeck：デッキキューをすべて削除する

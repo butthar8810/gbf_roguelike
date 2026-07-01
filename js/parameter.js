@@ -21,32 +21,34 @@ const stages = {
 const bufStatus = {
 	attackUp: {name: '攻撃力アップ', amount: '',effect: '攻撃ダメージが+{X}。',image: 'images/status/status_1001.png'},
 	defenseUp: {name: '防御力アップ', amount: '', effect: 'アタックで受けるダメージが50%減少。{X}ターン有効。',image: 'images/status/status_1019.png'},
-	mount: {name: '弱体無効', amount: '', effect: 'デバフを{X}回無効化。', image: 'images/status/status_1003.png'},
-	barrier: {name: 'バリア', amount: '', effect: 'ターン終了時、{X}ブロックを得る。', image: 'images/status/status_1314.png'},
-	phantasmal: {name: '幻影', amount: '', effect: '次のターン開始時、ダブルアタックを得る。{X}ターン有効。', image: 'images/status/status_1313.png'},
-	doubleDamage: {name: 'ダブルアタック', amount: '', effect: 'アタックのダメージが2倍になる。1ターン有効。', image: 'images/status/status_1004.png'},
 	dexterity: {name: '敏捷性', amount: '', effect: 'カードから得られるブロックが+{X}。', image: 'images/status/status_1566.png'},
-	regeneration: {name: '再生', amount: '', effect: 'ターン終了時、HPを{X}回復する。', image: 'images/status/status_2.png'},
-	afterImage: {name: '残像', amount: '', effect: 'カードを1枚プレイするたび、{X}ブロックを得る。', image: 'images/status/status_1566.png'},
-	invincible: {name: '無敵', amount: '', effect: 'このターン中に減らせるHPは、残り{X}。', image: 'images/status/status_62.png'},
-	energized: {name: '活性', amount: '', effect: '次のターン開始時、{X}エナジーを得る。', image: 'images/status/status_1638.png'},
-	drawCard: {name: 'ヘイスト', amount: '', effect: '次のターン開始時、{X}枚のカードを引く。', image: 'images/status/status_1058.png'},
-	nextTurnBlock: {name: '次ターンブロック', amount: '', effect: '次ターン開始時、ブロック{X}を得る。', image: 'images/status/status_1075.png'},
-	penetration: {name: '貫通', amount: '', effect: '攻撃ダメージがブロックを無視する。{X}ターン有効。', image: 'images/status/status_1240.png'},
 	reflection: {name: '反射', amount: '', effect: '攻撃を受けるたび、攻撃した敵に{X}ダメージを与える。1ターン有効。', image: 'images/status/status_1062_3.png'},
 	wind: {name: '風の障壁', amount: '', effect: '「アタック」をプレイするたび{X}ブロックを得る。1ターン有効。', image: 'images/status/status_6132_4.png'},
 	combo: {name: '連撃アップ', amount: '', effect: '次の{X}枚の「アタック」を2回プレイする。1ターン有効。', image: 'images/status/status_1004.png'},
-	barrage: {name: '弾幕', amount: '', effect: '状態異常か呪いを引くたび、敵全体に{X}ダメージを与える。', image: 'images/status/status_14311.png'},
-	painless: {name: '無痛', amount: '', effect: 'カードを廃棄するたび、{X}ブロックを得る。', image: 'images/status/status_6083.png'},
-	madness: {name: '狂化', amount: '', effect: 'ターン終了時にHPを1失い、すべての敵に{X}ダメージを与える。', image: 'images/status/status_3097.png'},
-	compensation: {name: '血の代償', amount: '', effect: 'カードのプレイによってHPが失われるたび、攻撃力アップ{X}を得る。', image: 'images/status/status_6568.png'},
-	adversity: {name: '逆境', amount: '', effect: '状態異常を引くたび、カードを{X}枚引く。', image: 'images/status/status_1181.png'},
-	eye: {name: '慧眼', amount: '', effect: 'カードを廃棄するたび、カードを{X}枚引く。', image: 'images/status/status_7122.png'},
 	lamentation: {name: '嘆きの盾', amount: '', effect: 'ブロックを得るたび、ランダムな敵に{X}ダメージを与える。', image: 'images/status/status_6132_5.png'},
+	compensation: {name: '血の代償', amount: '', effect: 'カードのプレイによってHPが失われるたび、攻撃力アップ{X}を得る。', image: 'images/status/status_6568.png'},
+	barrage: {name: '弾幕', amount: '', effect: '状態異常を引くたび、敵全体に{X}ダメージを与える。', image: 'images/status/status_14311.png'},
+	adversity: {name: '逆境', amount: '', effect: '状態異常を引くたび、カードを{X}枚引く。', image: 'images/status/status_1181.png'},
+	painless: {name: '無痛', amount: '', effect: 'カードを廃棄するたび、{X}ブロックを得る。', image: 'images/status/status_6083.png'},
+	eye: {name: '慧眼', amount: '', effect: 'カードを廃棄するたび、カードを{X}枚引く。', image: 'images/status/status_7122.png'},
+	energized: {name: '活性', amount: '', effect: '次のターン開始時、{X}エナジーを得る。', image: 'images/status/status_1638.png'},
+	drawCard: {name: 'ヘイスト', amount: '', effect: '次のターン開始時、{X}枚のカードを引く。', image: 'images/status/status_1058.png'},
 	wall: {name: '炎の盾', amount: '', effect: 'ターン開始時にブロック値を失わない。', image: 'images/status/status_7343.png'},
-	sacred: {name: '禁聖', amount: '', effect: '「スキル」がエナジーを消費しない。プレイした「スキル」は廃棄する。', image: 'images/status/status_7758.png'},
 	end: {name: '果ての力', amount: '', effect: 'ターン開始時に、攻撃力アップ{X}を得る。', image: 'images/status/status_7980_1.png'},
 	hrunting: {name: 'フルンティング', amount: '', effect: 'ターン開始時に、HPを1失いカードを{X}枚引く。', image: 'images/status/status_3170.png'},
+	nextTurnBlock: {name: '次ターンブロック', amount: '', effect: '次ターン開始時、ブロック{X}を得る。', image: 'images/status/status_1075.png'},
+	phantasmal: {name: '幻影', amount: '', effect: '次のターン開始時、ダブルアタックを得る。{X}ターン有効。', image: 'images/status/status_1313.png'},
+	doubleDamage: {name: 'ダブルアタック', amount: '', effect: 'アタックのダメージが2倍になる。1ターン有効。', image: 'images/status/status_1004.png'},
+	barrier: {name: 'バリア', amount: '', effect: 'ターン終了時、{X}ブロックを得る。', image: 'images/status/status_1314.png'},
+	regeneration: {name: '再生', amount: '', effect: 'ターン終了時、HPを{X}回復する。', image: 'images/status/status_2.png'},
+	madness: {name: '狂化', amount: '', effect: 'ターン終了時にHPを1失い、すべての敵に{X}ダメージを与える。', image: 'images/status/status_3097.png'},
+	sacred: {name: '禁聖', amount: '', effect: '「スキル」がエナジーを消費しない。プレイした「スキル」は廃棄する。', image: 'images/status/status_7758.png'},
+
+	mount: {name: '弱体無効', amount: '', effect: 'デバフを{X}回無効化。', image: 'images/status/status_1003.png'},
+	afterImage: {name: '残像', amount: '', effect: 'カードを1枚プレイするたび、{X}ブロックを得る。', image: 'images/status/status_1566.png'},
+	invincible: {name: '無敵', amount: '', effect: 'このターン中に減らせるHPは、残り{X}。', image: 'images/status/status_62.png'},
+	penetration: {name: '貫通', amount: '', effect: '攻撃ダメージがブロックを無視する。{X}ターン有効。', image: 'images/status/status_1240.png'},
+
 };
 // デバフ
 const debufStatus = {
@@ -121,7 +123,6 @@ const keyContinueEnemy = 'Babu.Continue.Enemy';
 const keyContinueLevel = 'Babu.Continue.Level';
 const keyContinueReward = 'Babu.Continue.Reward';
 const keyContinuePhase = 'Babu.Continue.Phase';
-const keyContinuePlayerCount = 'Babu.Continue.Player.Count';
 
 
 /*****************************************************************************/
@@ -156,6 +157,10 @@ const playerStatus = {
 	maxEnergy: 3,
 	block: 0,
 	statuses: [],
+	playerCount: {
+		HPDownCount: 0,
+		trashCount: 0,
+	}
 };
 let myDeck = [];
 let myHand = [];
@@ -174,11 +179,6 @@ let currentPhase = phase.action;
 //各種フラグ
 let enemyAttackWaitFlag = false;
 let allDefeatedFlag = false;
-const playerCount = {
-	HPDownCount: 0,
-	trashCount: 0,
-	discardCount: 0,
-};
 // promiseオブジェクト
 let cardDrawPromise = Promise.resolve();
 let cardTrashPromise = Promise.resolve();

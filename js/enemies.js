@@ -148,8 +148,8 @@ const enemyActionType = {
 function actionTEST(){
 	const actions = [
 		{weight: 30, omen:{name: 'Test1', func: 'testAttack', type: enemyActionType.attack, damage: 6, image: 'images/enemy/omen/Attack.png'}},
-//		{weight: 30, omen:{name: 'Test2', func: 'testStrategy', type: enemyActionType.debuff, damage: 0, image: 'images/enemy/omen/Weakness1.png'}},
-//		{weight: 30, omen:{name: 'Test3', func: 'testSpell', type: enemyActionType.buff, damage: 0, image: 'images/enemy/omen/Power2.png'}},
+		{weight: 30, omen:{name: 'Test2', func: 'testStrategy', type: enemyActionType.debuff, damage: 0, image: 'images/enemy/omen/Weakness1.png'}},
+		{weight: 30, omen:{name: 'Test3', func: 'testSpell', type: enemyActionType.buff, damage: 0, image: 'images/enemy/omen/Power2.png'}},
 		{weight: 30, omen:{name: 'Test4', func: 'testMucus', type: enemyActionType.debuffAndAttack, damage: 8, image: 'images/enemy/omen/poison.png'}},
 	];
 	const totalWeight = actions.reduce((sum, item) => sum + item.weight, 0);
@@ -179,7 +179,7 @@ function testSpell(enemyInfo, playerInfo, animationFlag){
 function testMucus(enemyInfo, playerInfo, animationFlag){
 	// 8ダメージ+粘液1枚を捨て札に加える
 	enemyAttack(enemyInfo, playerInfo, animationFlag, 8);
-	const debufCards = [abnormalCardList.Mucus];
+	const debufCards = [abnormalCardList.Mucus,abnormalCardList.Mucus];
 	enemyCardDebuf(animationFlag, debufCards);
 
 }
@@ -414,7 +414,7 @@ function enemyAttack(enemyInfo, playerInfo, animationFlag, attackCount){
 		}
 	}
 	if(totalAttack > 0){
-		playerInfo.remainHP -= totalAttack;
+		damageHP(totalAttack, playerInfo);
 	}
 	// 「反射」の効果
 	const reflection = playerInfo.statuses
@@ -435,11 +435,6 @@ function enemyAttack(enemyInfo, playerInfo, animationFlag, attackCount){
 	}
 	if(animationFlag){
 		enemyAttackWaitFlag = true;
-		if(totalAttack > 0){
-			playerCount.HPDownCount++;
-			console.log(`playerCount.HPDownCount: ${playerCount.HPDownCount}`);
-			setLocalStorage(keyContinuePlayerCount, playerCount);
-		}
 	}
 }
 /*******************************************************/

@@ -24,8 +24,6 @@ function startBattle(){
 	$('.battle-area').removeClass('hidden');
 	$('.info-area').removeClass('hidden');
 	setLocalStorage(keyContinueBattleFlag, true);
-	
-	setLocalStorage(keyContinuePlayerCount, playerCount);
 	setLocalStorage(keyContinueTrash, myTrash);
 	setLocalStorage(keyContinueTurn, currentTurn);
 	setLocalStorage(keyContinueEnemy, currentEnemies);
@@ -49,7 +47,6 @@ function endBattle(){
 	removeLocalStorage(keyContinueLevel);
 	removeLocalStorage(keyContinueReward);
 	removeLocalStorage(keyContinuePhase);
-	removeLocalStorage(keyContinuePlayerCount);
 	initialize();
 	$('.result-modal').removeClass('active');
 	$('.battle-area').addClass('hidden');
@@ -74,7 +71,6 @@ function continueBattle(){
 	updatePlayerAreaDom(playerStatus);
 	setupEnemy();
 	setupBtn();
-	checkEnemyDefeated(currentEnemies);
 
 	updateDeckDom();
 	updateTrashDom();
@@ -84,9 +80,7 @@ function continueBattle(){
 	updateEnemyAreaDom(currentEnemies, true);
 	$('.battle-area').removeClass('hidden');
 	$('.info-area').removeClass('hidden');
-	if (allDefeatedFlag){
-		allEnemiesDefeated();
-	}
+	
 	// フェイズ開始
 	if (currentPhase !== null){
 		startPhase(currentPhase);
@@ -108,7 +102,6 @@ function continueCount(){
 	const lastPlayerStatus = getLocalStorage(keyContinuePlayerStatus);
 	const lastLevel = getLocalStorage(keyContinueLevel);
 	const lastPhase = getLocalStorage(keyContinuePhase);
-	const lastPlayerCount = getLocalStorage(keyContinuePlayerCount);
 	if (lastTrash) {myTrash = lastTrash;}
 	if (lastPlayArea) {playArea = lastPlayArea;}
 	if (lastDiscard ) {discard = lastDiscard;}
@@ -116,10 +109,6 @@ function continueCount(){
 	if (lastStack) {stackCard = lastStack;}
 	if (lastTurn) {currentTurn = lastTurn;}
 	if (lastPhase) {currentPhase = lastPhase;}
-	if (lastPlayerCount) {
-		playerCount.HPDownCount = lastPlayerCount.HPDownCount;
-		playerCount.trashCount = lastPlayerCount.trashCount;
-	}
 	if (lastLevel !== undefined || lastLevel !== null) {
 		currentLevel = lastLevel;
 	}
@@ -131,6 +120,8 @@ function continueCount(){
 		playerStatus.maxEnergy = lastPlayerStatus.maxEnergy;
 		playerStatus.block = lastPlayerStatus.block;
 		playerStatus.statuses = lastPlayerStatus.statuses;
+		playerStatus.playerCount.HPDownCount = lastPlayerStatus.playerCount.HPDownCount;
+		playerStatus.playerCount.trashCount = lastPlayerStatus.playerCount.trashCount;
 	}
 
 }
@@ -173,7 +164,8 @@ function setupHandCard(){
 		// 続きからの場合
 		myHand = lastHand;
 	} else {
-		drawCardFromDeck(initialHandNum);
+		const giftCardsNum = giftDrawFromDeck();
+		drawCardFromDeck(initialHandNum - giftCardsNum);
 		setLocalStorage(keyContinueHand, myHand);
 	}
 }
@@ -258,6 +250,10 @@ function startPhase(ph){
 			disabledEndBtn(false);
 			disabledMyHand(false);
 			endAction();
+			checkEnemyDefeated(currentEnemies);
+			if (allDefeatedFlag){
+				allEnemiesDefeated();
+			}
 			break;
 		case phase.enemy:
 			disabledEndBtn(true);
@@ -426,33 +422,8 @@ async function startTurn(){
 /*******************************************************/
 function endTurn(){
 	console.log(`endTurn`);
-	
-	// 「ヘイスト」で追加2枚
-	const drawCard = playerStatus.statuses
-		.find((status) => status.name === bufStatus.drawCard.name);
-	if (drawCard){
-		drawCardFromDeck(2);
-		drawCard.amount = 0;
-	}
-
-	// エネルギーを回復する
-	playerStatus.remainEnergy = playerStatus.maxEnergy;
-	// 「活性」で追加回復
-	const energized = playerStatus.statuses
-		.find((status) => status.name === bufStatus.energized.name);
-	if (energized){
-		playerStatus.remainEnergy += energized.amount;
-		energized.amount = 0;
-	}
-
-	// 「次ターンブロック」でブロックを得る
-	const nextTurnBlock = playerStatus.statuses
-		.find((status) => status.name === bufStatus.nextTurnBlock.name);
-	if (nextTurnBlock){
-		playerStatus.block += nextTurnBlock.amount;
-		nextTurnBlock.amount = 0;
-	}
-	// 「攻UP無効」で攻撃力アップが減る
+	//ターン開始時効果を発動する
+	//「攻UP無効」で攻撃力アップが減る
 	const invalidAttackUp = playerStatus.statuses
 		.find((status) => status.name === debufStatus.invalidAttackUp.name);
 	if (invalidAttackUp){
@@ -462,8 +433,50 @@ function endTurn(){
 			attackUp.amount -= invalidAttackUp.amount;
 		}
 	}
-
-	
+	//「果ての力」の効果発動
+	const end = playerStatus.statuses
+		.find((status) => status.name === bufStatus.end.name);
+	if (end){
+		actionStatusBufNoAnimate(bufStatus.attackUp, end.amount);
+	}
+	// 「ヘイスト」で追加2枚
+	const drawCard = playerStatus.statuses
+		.find((status) => status.name === bufStatus.drawCard.name);
+	if (drawCard){
+		drawCardFromDeck(2);
+		drawCard.amount = 0;
+	}
+	//「フルンティング」の効果発動
+	const hrunting = playerStatus.statuses
+		.find((status) => status.name === bufStatus.hrunting.name);
+	if (hrunting){
+		damageHP(1);
+		drawCardFromDeck(hrunting.amount);
+	}
+	//「炎の盾」がある場合はブロックを初期化しない
+	const wall = playerStatus.statuses
+		.find((status) => status.name === bufStatus.wall.name);
+	if (!wall){
+		// ブロックを解除する
+		playerStatus.block = 0;
+	}
+	// 「次ターンブロック」でブロックを得る
+	const nextTurnBlock = playerStatus.statuses
+		.find((status) => status.name === bufStatus.nextTurnBlock.name);
+	if (nextTurnBlock){
+		playerStatus.block += nextTurnBlock.amount;
+		nextTurnBlock.amount = 0;
+	}
+	// エネルギーを回復する
+	playerStatus.remainEnergy = playerStatus.maxEnergy;
+	// 「活性」で追加回復
+	const energized = playerStatus.statuses
+		.find((status) => status.name === bufStatus.energized.name);
+	if (energized){
+		playerStatus.remainEnergy += energized.amount;
+	}
+	// カードを5枚引く
+	drawCardFromDeck(initialHandNum);
 	// ターン制の状態変化のターンを進める
 	// プレイヤーの状態変化処理
 	playerStatus.statuses.forEach((status, index) => {
@@ -491,7 +504,7 @@ function endTurn(){
 	});
 	// 効果が切れた状態変化を削除する
 	playerStatus.statuses = playerStatus.statuses.filter((status) => {
-		return status.amount > 0;
+		return status.amount !== 0;
 	});
 	// エネミーの状態変化処理
 	currentEnemies.forEach((enemy) => {
@@ -513,19 +526,17 @@ function endTurn(){
 		});
 		// 効果が切れた状態変化を削除する
 		enemy.currentStatus.status = enemy.currentStatus.status.filter((status) => {
-			return status.amount > 0;
+			return status.amount !== 0;
 		});
 	});
-	// カードを5枚引く
-	drawCardFromDeck(initialHandNum);
-	// ブロックを解除する
-	playerStatus.block = 0;
+
 	// 次の予測を決定する
 	decideNextAction();
 	// 捨て札の枚数をリセットする
-	playerCount.trashCount = 0;
+	playerStatus.playerCount.trashCount = 0;
 	// ターンを進める
 	currentTurn++;
+
 }
 /*******************************************************/
 /* startAbility：敵やAFの開始時効果処理を行う
@@ -574,7 +585,7 @@ function startCleanup(){
 	deleteAllHand().forEach((card) => {
 		if('ethereal' in card.amount && card.amount.ethereal){
 			// エセリアルは廃棄
-			pushDiscard(card);
+			discardCardProcess(card);
 			animateHandToDiscard(card);
 		} else {
 			pushTrash(card);
@@ -587,22 +598,30 @@ function startCleanup(){
 		updateDiscardDom();
 		updateTrashDom();
 	});
-	// ターン終了時効果の発動
-	// バリアの効果発動
-	const barrier = playerStatus.statuses
-		.find((status) => status.name === bufStatus.barrier.name);
-	if (barrier){
-		actionBlock(barrier.amount);
-		updatePlayerStatusDom(playerStatus);
-		barrier.amount = 0;
-	}
-	// 再生の効果発動
+	// 「再生」の効果発動
 	const regeneration = playerStatus.statuses
 		.find((status) => status.name === bufStatus.regeneration.name);
 	if (regeneration){
 		recoveryHP(regeneration.amount);
 		updatePlayerStatusDom(playerStatus);
 		regeneration.amount = 0;
+	}
+	// ターン終了時効果の発動
+	// 「バリア」の効果発動
+	const barrier = playerStatus.statuses
+		.find((status) => status.name === bufStatus.barrier.name);
+	if (barrier){
+		actionBlock(barrier.amount);
+		updatePlayerStatusDom(playerStatus);
+	}
+	//「狂化」の効果発動
+	const madness = playerStatus.statuses
+		.find((status) => status.name === bufStatus.madness.name);
+	if (madness){
+		damageHP(1);
+		updatePlayerStatusDom(playerStatus);
+		actionAllAttackSimple(madness.amount);
+		updateEnemyStatusDom(currentEnemies);
 	}
 	startEnemiesTurn();
 }
@@ -630,6 +649,23 @@ function drawCardFromDeck(count = 1){
 		if (card !== undefined){
 			pushHand(card);
 			drawCards.push(card);
+			if(card.type === type.abnormal){
+				// 「弾幕」の効果
+				const barrage = playerStatus.statuses
+					.find((status) => status.name === bufStatus.barrage.name);
+				if(barrage){
+					actionAllAttackSimple(barrage.amount);
+				}
+				// 「逆境」の効果
+				const adversity = playerStatus.statuses
+					.find((status) => status.name === bufStatus.adversity.name);
+				if(adversity){
+					const cards = drawCardFromDeck(adversity.amount);
+					cards.forEach((drawcard) => {
+						drawCards.push(drawcard);
+					});
+				}
+			}
 		}else{
 			console.log("shiftDeck undefined");
 			break;
@@ -639,6 +675,20 @@ function drawCardFromDeck(count = 1){
 	setLocalStorage(keyContinueDeck, myDeck);
 	setLocalStorage(keyContinueHand, myHand);
 	return drawCards;
+}
+/*******************************************************/
+/* giftDrawFromDeck：「天賦」のカードを引く
+/*******************************************************/
+function giftDrawFromDeck(){
+	const giftCardIndex = myDeck.reduce((acc, current, index) => {
+		if (current === target) {
+			acc.push(index);
+		}
+		return acc;
+	}, []);
+	giftCardIndex.forEach((index) => {
+		
+	});
 }
 /*******************************************************/
 /* reconfigureDeck：捨て札のカードをデッキに再構成する
@@ -660,7 +710,10 @@ function playHandCard(index){
 	const card = spliceHand(index);
 	// 手札表示の更新
 	updateHandDom();
-	pushStackCard(card);
+	pushStackCard({
+		func: card.func,
+		amount: card.amount,
+	});
 	pushPlayArea(card);
 	//「風の加護」効果
 	const wind = playerStatus.statuses
@@ -672,7 +725,10 @@ function playHandCard(index){
 	const combo = playerStatus.statuses
 		.find((status) => status.name === bufStatus.combo.name);
 	if (combo && combo.amount > 0 && card.type === type.attack){
-		pushStackCard(card);
+		pushStackCard({
+			func: card.func,
+			amount: card.amount,
+		});
 		combo.amount--;
 		playerStatus.statuses = playerStatus.statuses.filter((status) => {
 			return status.amount > 0;
@@ -698,11 +754,11 @@ function endAction(){
 				console.log(`「${playCard.name}」は取り除かれた。`);
 			}else if('tmpDiscard' in playCard.amount && playCard.amount.tmpDiscard){
 				delete playCard.amount.tmpDiscard;
-				pushDiscard(playCard);
+				discardCardProcess(playCard);
 				setLocalStorage(keyContinueDiscard, discard);
 				updateDiscardDom();
 			} else if('discard' in playCard.amount && playCard.amount.discard){
-				pushDiscard(playCard);
+				discardCardProcess(playCard);
 				setLocalStorage(keyContinueDiscard, discard);
 				updateDiscardDom();
 			} else {
@@ -714,13 +770,11 @@ function endAction(){
 		return true;
 	}
 	// 攻撃を内部的に行う
-	const card = shiftStackCard();
-	// カードプレイのアニメーション
-	animatePlayCard(card);
-	if (card !== undefined) {
-		const storedFunc = globalThis[card.func];
+	const cardInfo = shiftStackCard();
+	if (cardInfo !== undefined) {
+		const storedFunc = globalThis[cardInfo.func];
 		if( typeof storedFunc === 'function'){
-			ret = storedFunc(card.amount);
+			ret = storedFunc(cardInfo.amount);
 		} 
 	}
 	checkEnemyDefeated(currentEnemies);
@@ -929,13 +983,11 @@ function clickDiscardCardProcess(trashCardDiv, card){
 /* trashCardProcess：捨て札にする際の処理
 /*******************************************************/
 function trashCardProcess(trashCard){
-	if('trashFunc' in trashCard.amount){
-		if (trashCard.amount.trashFunc !== '') {
-			const storedFunc = globalThis[trashCard.amount.trashFunc];
-			if( typeof storedFunc === 'function'){
-				ret = storedFunc(trashCard.amount);
-			} 
-		}
+	if('trashFunc' in trashCard.amount && trashCard.amount.trashFunc !== ''){
+		pushStackCard({
+			func: trashCard.trashCard,
+			amount: trashCard.amount,
+		});
 	}
 	pushTrash(trashCard);
 }
@@ -943,13 +995,28 @@ function trashCardProcess(trashCard){
 /* discardCardProcess：廃棄する際の処理
 /*******************************************************/
 function discardCardProcess(discardCard){
-	if('discardFunc' in discardCard.amount){
-		if (discardCard.amount.discardFunc !== '') {
-			const storedFunc = globalThis[discardCard.amount.discardFunc];
-			if( typeof storedFunc === 'function'){
-				ret = storedFunc(discardCard.amount);
-			} 
-		}
+	//「無痛」の効果
+	const painless = playerStatus.statuses
+		.find((status) => status.name === bufStatus.painless.name);
+	if(painless){
+		actionBlock(painless.amount);
+		updatePlayerStatusDom(playerStatus);
+	}
+	//「慧眼」の効果
+	const eye = playerStatus.statuses
+		.find((status) => status.name === bufStatus.eye.name);
+	if(eye){
+		const drawCards = drawCardFromDeck(eye.amount);
+		drawCards.forEach((card) => {
+			animateDrawDeck(card);
+		});
+	}
+
+	if('discardFunc' in discardCard.amount && discardCard.amount.discardFunc !== ''){
+		pushStackCard({
+			func: discardCard.discardFunc,
+			amount: discardCard.amount,
+		});
 	}
 	pushDiscard(discardCard);
 }
@@ -1023,7 +1090,6 @@ async function startEnemiesTurn(){
 	}
 	endTurn();
 	currentPhase = phase.action;
-	setLocalStorage(keyContinuePlayerCount, playerCount);
 	setLocalStorage(keyContinuePhase, currentPhase);
 	setLocalStorage(keyContinueDeck, myDeck);
 	setLocalStorage(keyContinueHand, myHand);

@@ -136,8 +136,8 @@ function createCardDom(card){
 		.addClass('type')
 		.html(card.type);
 	if(card.name === granCardList.Bloody.name){
-		if (4 > playerCount.HPDownCount) {
-			card.amount.cost = 4 - playerCount.HPDownCount;
+		if (4 > playerStatus.playerCount.HPDownCount) {
+			card.amount.cost = 4 - playerStatus.playerCount.HPDownCount;
 		} else {
 			card.amount.cost = 0;
 		}
