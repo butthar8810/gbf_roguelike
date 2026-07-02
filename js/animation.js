@@ -5,7 +5,8 @@ const coordinateDeckForHandArea = {top: '40px', left: '-70px', width: '80px', si
 const coordinateHnadForHandArea = {top: '0px', left: '350px', width: '150px', size: '16px'};
 const coordinateTrashForHandArea = {top: '50px', left: '820px', width: '80px', size: '10px'};
 const coordinateShowForShowArea = {top: '0px', left: '400px', width: '150px', size: '16px'};
-const coordinateShowForTrashArea = {top: '290px', left: '860px', width: '80px', size: '10px'};
+const coordinateTrashForShowArea = {top: '290px', left: '860px', width: '80px', size: '10px'};
+const coordinateHandForShowArea = {top: '240px', left: '400px', width: '150px', size: '16px'};
 
 const playerAttackWaitTime = 1500;
 const playerDamageWaitTime = 1000;
@@ -171,16 +172,52 @@ function animatePlayerAddTrash(cards){
 			.css('left', coordinateShowForShowArea.left);
 
 		cardShowPromise = showCards.animate({
-			left: coordinateShowForTrashArea.left, 
-			top: coordinateShowForTrashArea.top,
-			width: coordinateShowForTrashArea.width,
-			fontSize: coordinateShowForTrashArea.size
+			left: coordinateTrashForShowArea.left, 
+			top: coordinateTrashForShowArea.top,
+			width: coordinateTrashForShowArea.width,
+			fontSize: coordinateTrashForShowArea.size
 		}, trashWaitTime);
 		$.when(cardShowPromise).done(() => {
 			$('.show-area').addClass('hidden');
 			$('.show-area-inner').html('');
 		});
 	}, showWaitTime);
+}
+/*******************************************************/
+/* animatePlayerAddTrash：手札にカードを追加するアニメーション
+/*******************************************************/
+function animatePlayerAddHand(cards){
+	cardDrawPromise = new Promise((resolve) => {
+		$('.show-area').removeClass('hidden');
+		$('.show-area-inner').html('');
+		cards.forEach((card, i) => {
+			const showCardDiv = createCardDom(card);
+			showCardDiv
+				.addClass('hand-card')
+				.addClass('is-hover-disabled');
+			$('.show-area-inner').append(showCardDiv);
+		});
+		setTimeout(() => {
+			const showCards = $('.show-area-inner').children('.hand-card');
+			showCards
+				.prop('disabled', true)
+				.css('position', 'absolute')
+				.css('top', coordinateShowForShowArea.top)
+				.css('left', coordinateShowForShowArea.left);
+
+			cardShowPromise = showCards.animate({
+				left: coordinateHandForShowArea.left, 
+				top: coordinateHandForShowArea.top,
+				width: coordinateHandForShowArea.width,
+				fontSize: coordinateHandForShowArea.size
+			}, trashWaitTime);
+			$.when(cardShowPromise).done(() => {
+				$('.show-area').addClass('hidden');
+				$('.show-area-inner').html('');
+				resolve();
+			});
+		}, showWaitTime);
+	});
 }
 
 /*******************************************************/
@@ -211,10 +248,6 @@ function animatePlayCard(card){
 			.animate({
 				opacity: 0
 			}, trashWaitTime);
-			$.when(cardShowPromise).done(() => {
-				$('.show-area').addClass('hidden');
-				$('.show-area-inner').html('');
-			});
 		} else if(card.amount.discard){
 			cardShowPromise = showCardDiv
 			.animate({
@@ -224,10 +257,6 @@ function animatePlayCard(card){
 			.animate({
 				opacity: 0
 			}, trashWaitTime);
-			$.when(cardShowPromise).done(() => {
-				$('.show-area').addClass('hidden');
-				$('.show-area-inner').html('');
-			});
 		} else {
 			cardShowPromise = showCardDiv
 			.animate({
@@ -235,16 +264,16 @@ function animatePlayCard(card){
 				top: coordinateShowForShowArea.top,
 				}, showWaitTime)
 			.animate({
-				left: coordinateShowForTrashArea.left, 
-				top: coordinateShowForTrashArea.top,
-				width: coordinateShowForTrashArea.width,
-				fontSize: coordinateShowForTrashArea.size
+				left: coordinateTrashForShowArea.left, 
+				top: coordinateTrashForShowArea.top,
+				width: coordinateTrashForShowArea.width,
+				fontSize: coordinateTrashForShowArea.size
 			}, trashWaitTime);
-			$.when(cardShowPromise).done(() => {
-				$('.show-area').addClass('hidden');
-				$('.show-area-inner').html('');
-			});
 		}
+		$.when(cardShowPromise).done(() => {
+			$('.show-area').addClass('hidden');
+			$('.show-area-inner').html('');
+		});
 	});
 }
 /*************************************************************************************/

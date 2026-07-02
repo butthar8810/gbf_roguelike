@@ -514,7 +514,7 @@ const granCardList = {
 		type: type.attack,
 		func: 'effectAttack',
 		image:'images/card/gran_Bloody.jpg',
-		effect: '戦闘でHPを失うたび、エナジー消費が-1。{A}のダメージを与える。',
+		effect: '戦闘でHPを失うたび、使用コストが-1。{A}のダメージを与える。',
 		amount: {
 			cost: 4,
 			attack: 18,
@@ -2637,11 +2637,12 @@ const djeetaCardList = {
 		class: cardClass.djeeta,
 		rarity: rarity.common,
 		type: type.skill,
-		func: '',
+		func: 'effectAddCommonCard',
 		image:'images/card/djeeta_Leiomano.jpg',
 		effect: `ナイフを{C}枚手札に加える。`,
 		amount: {
 			cost: 1,
+			commonCard: 'Knife',
 			count: 3,
 			discard: false,
 		}
@@ -2653,12 +2654,14 @@ const djeetaCardList = {
 		class: cardClass.djeeta,
 		rarity: rarity.common,
 		type: type.skill,
-		func: '',
+		func: 'effectDefenseAndAddCommonCard',
 		image:'images/card/djeeta_Rune.jpg',
 		effect: `{B}ブロックを得る。ナイフを1枚手札に加える。`,
 		amount: {
 			cost: 1,
 			block: 6,
+			commonCard: 'Knife',
+			count: 1,
 			discard: false,
 		}
 	},
@@ -2708,9 +2711,9 @@ const djeetaCardList = {
 		amount: {
 			cost: 1,
 			debuff1: 6,
-			debuffType1: 'weak',
+			debuffType1: 'attackDown',
 			debuff2: 6,
-			debuffType2: 'defenseDown',
+			debuffType2: 'invalidAttackDown',
 			discard: true,
 		}
 	},
@@ -2722,11 +2725,11 @@ const djeetaCardList = {
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
 		type: type.attack,
-		func: '',
+		func: 'effectTimesAttackEveryAttack',
 		image:'images/card/djeeta_Shigure.jpg',
 		effect: `このターン使用した「アタック」の枚数ｘ{A}ダメージを与える。`,
 		amount: {
-			cost: 2,
+			cost: 1,
 			attack: 6,
 			discard: false,
 		}
@@ -2738,7 +2741,7 @@ const djeetaCardList = {
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
 		type: type.attack,
-		func: 'effectSmash',
+		func: 'effectAttackAndDefense',
 		image:'images/card/djeeta_Smash.jpg',
 		effect: `{B}ブロックを得る。{A}ダメージを与える。`,
 		amount: {
@@ -2766,17 +2769,17 @@ const djeetaCardList = {
 		}
 	},
 	//ヒールフック
-	aa: {
+	aaa: {
 		key: '',
 		name: '',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
 		type: type.attack,
-		func: '',
+		func: 'effectAttackAndConditionsWeak',
 		image:'images/card/djeeta_.jpg',
 		effect: `{A}ダメージを与える。敵が恐怖を受けている場合は{E}エナジーを得てカードを{Dr}枚引く。`,
 		amount: {
-			cost: 2,
+			cost: 1,
 			attack: 5,
 			energy: 1,
 			draw: 1,
@@ -2790,7 +2793,7 @@ const djeetaCardList = {
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
 		type: type.attack,
-		func: 'effectBlaze',
+		func: 'effectAllAttackAndRandomTrash',
 		image:'images/card/djeeta_Blaze.jpg',
 		effect: `敵全体に{A}ダメージを与える。手札をランダムに1枚捨てる。`,
 		amount: {
@@ -2806,39 +2809,39 @@ const djeetaCardList = {
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
 		type: type.attack,
-		func: '',
+		func: 'effectTimesAttackEverySkillCard',
 		image:'images/card/djeeta_.jpg',
 		effect: `手札にある「スキル」の枚数ｘ{A}ダメージを与える。`,
 		amount: {
-			cost: 2,
+			cost: 1,
 			attack: 4,
 			discard: false,
 		}
 	},
 	//一撃必殺
-	aa: {
+	aaaaa: {
 		key: '',
 		name: '',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
 		type: type.attack,
-		func: '',
+		func: 'effectAttack',
 		image:'images/card/djeeta_.jpg',
 		effect: `{A}ダメージを与える。ダメージを受けるたび、このカードのコストが1増加。`,
 		amount: {
-			cost: 2,
+			cost: 0,
 			attack: 12,
 			discard: false,
 		}
 	},
 	//串刺し
-	aa: {
+	bbb: {
 		key: '',
 		name: '',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
 		type: type.attack,
-		func: '',
+		func: 'effectAttackXTimes',
 		image:'images/card/djeeta_.jpg',
 		effect: `{A}ダメージをX回与える。`,
 		amount: {
@@ -2849,15 +2852,15 @@ const djeetaCardList = {
 		}
 	},
 	//略奪
-	aa: {
+	b: {
 		key: '',
 		name: '',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
 		type: type.attack,
-		func: '',
+		func: 'effectAttackAndBuff',
 		image:'images/card/djeeta_.jpg',
-		effect: `15ダメージを与える。次のターン開始時、カードを{F}枚引く。`,
+		effect: `{A}ダメージを与える。次のターン開始時、カードを{F}枚引く。`,
 		amount: {
 			cost: 2,
 			attack: 15,
@@ -2867,35 +2870,35 @@ const djeetaCardList = {
 		}
 	},
 	//窒息
-	aa: {
+	ccc: {
 		key: '',
 		name: '',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
 		type: type.attack,
-		func: '',
+		func: 'effectAttackAndDebuff',
 		image:'images/card/djeeta_.jpg',
 		effect: `{A}ダメージを与える。このターンでカードを使用するたび、ターゲットの敵がHP{D}を失う。`,
 		amount: {
 			cost: 2,
 			attack: 12,
 			debuff: 3,
-			debuffType: '',
+			debuffType: 'suffocation',
 			discard: false,
 		}
 	},
 	//終わりなき苦痛
-	aa: {
+	fff: {
 		key: '',
 		name: '',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
 		type: type.attack,
-		func: '',
+		func: 'effectAttack',
 		image:'images/card/djeeta_.jpg',
 		effect: `このカードを引くたび、「終わりなき苦痛」を手札に加える。{A}ダメージを与える。廃棄。`,
 		amount: {
-			cost: 2,
+			cost: 0,
 			attack: 4,
 			discard: true,
 		}
@@ -2907,12 +2910,13 @@ const djeetaCardList = {
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
 		type: type.attack,
-		func: 'effectGiveUp',
+		func: 'effectTimesAllAttack',
 		image:'images/card/djeeta_GiveUp.jpg',
-		effect: `このターンに捨てたカード1枚につき、エナジーの消費-1。{A}ダメージを3回与える。`,
+		effect: `このターンに捨てたカード1枚につき、使用コストが-1。{A}ダメージを3回与える。`,
 		amount: {
 			cost: 3,
 			attack: 7,
+			count: 3,
 			discard: false,
 		}
 	},
@@ -2923,7 +2927,7 @@ const djeetaCardList = {
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
 		type: type.attack,
-		func: 'effectIai',
+		func: 'effectAttack',
 		image:'images/card/djeeta_Iai.jpg',
 		effect: `{A}ダメージを与える。天賦。廃棄。`,
 		amount: {
@@ -3134,7 +3138,7 @@ const djeetaCardList = {
 	//悪夢
 	//死体爆破
 	//鋼の嵐
-	//******************************スキル******************************//
+	//******************************パワー******************************//
 	//メッタ切り
 	//商売道具
 	//死霊化
@@ -3144,7 +3148,37 @@ const djeetaCardList = {
 
 const djeetaEnhancedCardList = {};
 const commonCardList = {
-
+	Knife: {
+		key: 'Knife',
+		name: 'ナイフ',
+		class: cardClass.common,
+		rarity: rarity.common,
+		type: type.attack,
+		func: 'effectAttack',
+		image:'images/card/common_Knife.jpg',
+		effect: `{A}ダメージを与える。廃棄。`,
+		amount: {
+			cost: 0,
+			attack: 4,
+			discard: true,
+		}
+	},
+};
+const commonEnhancedCardList = {
+	Knife: {
+		name: '<span class="upgrade">ナイフ+</span>',
+		class: cardClass.common,
+		rarity: rarity.common,
+		type: type.attack,
+		func: 'effectAttack',
+		image:'images/card/common_Knife.jpg',
+		effect: `<span class="upgrade">{A}</span>ダメージを与える。廃棄。`,
+		amount: {
+			cost: 0,
+			attack: 6,
+			discard: true,
+		}
+	},
 };
 
 const abnormalCardList = {
@@ -3262,8 +3296,11 @@ function setupDeck(){
 		} else if (selectChara == selectCharacter.djeeta.name){
 			addCardToOriginalDeck(djeetaCardList.Wide, 5);
 			addCardToOriginalDeck(djeetaCardList.Defense, 5);
-			addCardToOriginalDeck(djeetaCardList.Fast, 1);
+			addCardToOriginalDeck(djeetaCardList.Assassin, 1);
 			addCardToOriginalDeck(djeetaCardList.Pulverizer, 1);
+			addCardToOriginalDeck(djeetaCardList.Leiomano, 2);
+			addCardToOriginalDeck(djeetaCardList.Iai, 1);
+			addCardToOriginalDeck(djeetaCardList.Rune, 2);
 		}
 	}
 }
@@ -3520,7 +3557,6 @@ function effectAttackAndSelfHarm(amount){
 	if('attack' in amount){
 		actionAttack(amount.attack);
 	}
-	
 	endAction();
 	return true;
 }
@@ -3752,6 +3788,37 @@ async function effectDrawAndDiscard(amount){
 		});
 	}
 	actionDiscardCard();
+	endAction();
+	return true;
+}
+function effectAddCommonCard(amount){
+	// CommonCardを{C}枚手札に加える。
+	console.log('effectAddCommonCard');
+	if('commonCard' in amount && 'count' in amount){
+		const commonCard = [];
+		for(let i = 0; i < amount.count; i++){
+			pushHand(commonCardList[amount.commonCard]);
+			commonCard.push(commonCardList[amount.commonCard]);
+		}
+		animatePlayerAddHand(commonCard);
+	}
+	endAction();
+	return true;
+}
+function effectDefenseAndAddCommonCard(amount){
+	// CommonCardを{C}枚手札に加える。
+	console.log('effectDefenseAndAddCommonCard');
+	if('block' in amount){
+		actionBlock(amount.block);
+	}
+	if('commonCard' in amount && 'count' in amount){
+		const commonCard = [];
+		for(let i = 0; i < amount.count; i++){
+			pushHand(commonCardList[amount.commonCard]);
+			commonCard.push(commonCardList[amount.commonCard]);
+		}
+		animatePlayerAddHand(commonCard);
+	}
 	endAction();
 	return true;
 }
@@ -4024,7 +4091,7 @@ function effectAttackAndGetEnergy(amount){
 	if('attack' in amount){
 		actionAttack(amount.attack);
 	}
-	if (playerStatus.playerCount.trashCount > 0) {
+	if (playerStatus.playerCount.trashCountPerTurn > 0) {
 		playerStatus.remainEnergy += 2;
 	}
 	return true;
@@ -4041,50 +4108,87 @@ function effectDrawAndTrash(amount){
 	actionTrashCard();
 	return true;
 }
-
-
-
-
-
-
-function effectSimple(){
-	// 4ブロックを得る。
-	console.log('effectSimple');
-	actionBlock(djeetaCardList.Simple.amount.block);
+function effectTimesAttackEveryAttack(amount){
+	// このターン使用した「アタック」の枚数ｘ{A}ダメージを与える。
+	console.log('effectTimesAttackEveryAttack');
+	if('attack' in amount){
+		console.log(`${playerStatus.playerCount.playAttackPerTurn}回 - 1回`);
+		for(let i = 0; i < playerStatus.playerCount.playAttackPerTurn - 1; i++){
+			actionAttack(amount.attack);
+		}
+	}
+	endAction();
 	return true;
 }
-
-function effectPreparation(){
-	// カードを1枚引き、1枚捨てる。
-	console.log('effectPreparation');
-	const cards = drawCardFromDeck(1);
-	cards.forEach((card) => {
-		animateDrawDeck(card);
+function effectAttackAndConditionsWeak(amount){
+	// {A}のダメージを与える。敵が「防御力ダウン」を受けている場合は{E}エナジーを得てカードを1枚引く。
+	console.log('effectAttackAndConditionsWeak');
+	if('attack' in amount){
+		actionAttack(amount.attack);
+	}
+	// 	敵が恐怖を受けている場合
+	if (
+		currentTarget.currentStatus.status
+		.find((status) => status.name === debufStatus.weak.name)
+	) {
+		if('energy' in amount){
+			playerStatus.remainEnergy += amount.energy;
+			updateEnergyDom();
+		}
+		if('draw' in amount){
+			const cards = drawCardFromDeck(amount.draw);
+			cards.forEach((card) => {
+				animateDrawDeck(card);
+			});
+		}
+	}
+	endAction();
+	return true;
+}
+function effectAllAttackAndRandomTrash(amount){
+	// 敵全体に10ダメージを与える。手札をランダムに1枚捨てる。
+	console.log('effectAllAttackAndRandomTrash');
+	if('attack' in amount){
+		actionAllAttack(amount.attack);
+	}
+	actionTrashRandomCard();
+	return true;
+}
+function effectTimesAttackEverySkillCard(amount){
+	// 手札にある「スキル」の枚数ｘ{A}ダメージを与える。
+	console.log('effectTimesAttackEverySkillCard');
+	const skillCard = myHand.filter((hand) => {
+		return hand.type === type.skill;
 	});
-	actionTrashCard();
+	if('attack' in amount){
+		console.log(`${skillCard.length}回`);
+		for(let i = 0; i < skillCard.length; i++){
+			actionAttack(amount.attack);
+		}
+	}
+	endAction();
 	return true;
 }
-function effectSmash(){
-	// 10のブロックを得る。10ダメージを与える。
-	console.log('effectSmash');
-	actionBlock(djeetaCardList.Smash.amount.block);
-	actionAttack(djeetaCardList.Smash.amount.attack);
+function effectAttackXTimes(amount){
+	// 敵全体に{A}のダメージを与える。
+	console.log('effectAttackXTimes');
+	if('attack' in amount && 'variable' in amount){
+		console.log(`${amount.variable}回`);
+		for(let i = 0; i < amount.variable; i++){
+			actionAttack(amount.attack);
+		}
+	}
+	endAction();
 	return true;
 }
-function effectGiveUp(){
-	// このターンに捨てたカード1枚につき、エナジーの消費-1。7ダメージを3回与える。
-	console.log('effectGiveUp');
-	actionAttack(djeetaCardList.GiveUp.amount.attack);
-	actionAttack(djeetaCardList.GiveUp.amount.attack);
-	actionAttack(djeetaCardList.GiveUp.amount.attack);
-	return true;
-}
-function effectIai(){
-	// 11ダメージを与える。天賦。廃棄。
-	console.log('effectIai');
-	actionAttack(djeetaCardList.Iai.amount.attack);
-	return true;
-}
+
+
+
+
+
+
+
+
 function effectBlaze(){
 	// 敵全体に10ダメージを与える。手札をランダムに1枚捨てる。
 	console.log('effectBlaze');
@@ -4547,7 +4651,6 @@ function trashCard(){
 			return false;
 		}
 		trashCardProcess(card);
-		playerStatus.playerCount.trashCount++;
 		setLocalStorage(keyContinuePlayerStatus, playerStatus);
 		setLocalStorage(keyContinueHand, myHand);
 		setLocalStorage(keyContinueTrash, myTrash);
@@ -4572,7 +4675,6 @@ function actionTrashRandomCard(){
 		return false;
 	}
 	trashCardProcess(card);
-	playerStatus.playerCount.trashCount++;
 	setLocalStorage(keyContinuePlayerStatus, playerStatus);
 	animateHandToTrash(card);
 	$.when(cardTrashPromise).done(() => {
@@ -4698,6 +4800,7 @@ function upGradeCard(){
 	$(`.hand-card`).removeClass('select');
 	$(`.hand-enhance-area`).addClass('hidden');
 	const upGradeCards = deleteAllTemporaryArea();
+	const animateCards = [];
 	setLocalStorage(keyContinueTemporary, tmpArea);
 	upGradeCards.forEach((upGradeCard) => {
 		const index = findIndexHand('id', upGradeCard.id);
@@ -4708,15 +4811,22 @@ function upGradeCard(){
 		if (card === undefined) {
 			return false;
 		}
-		if(card.class === cardClass.gran){
-			pushHand(granEnhancedCardList[card.key]);
-		} else if(card.class === cardClass.djeeta){
-			pushHand(djeetaEnhancedCardList[card.key]);
+		if('key' in card){
+			if(card.class === cardClass.gran){
+				pushHand(granEnhancedCardList[card.key]);
+			} else if(card.class === cardClass.djeeta){
+				pushHand(djeetaEnhancedCardList[card.key]);
+			} else if(card.class === cardClass.common){
+				pushHand(commonEnhancedCardList[card.key]);
+			}
+			animateCards.push(card);
 		}
-		
 		setLocalStorage(keyContinueHand, myHand);
 	});
-	updateHandDom();
+	animatePlayerAddHand(animateCards);
+	$.when(cardDrawPromise).done(() => {
+		updateHandDom();
+	});
 	startPhase(phase.action);
 	endAction();
 }
@@ -4753,7 +4863,10 @@ function reproductionToHandCard(){
 		}
 		pushHand(card);
 		setLocalStorage(keyContinueHand, myHand);
-		updateHandDom();
+		animatePlayerAddHand([card]);
+		$.when(cardDrawPromise).done(() => {
+			updateHandDom();
+		});
 		$('.black-back-area').removeClass('active');
 		$('.hand-decide-area').removeClass('active');
 		$('.hand-area').removeClass('front');
@@ -4794,7 +4907,10 @@ function twoReproductionToHandCard(){
 		}
 		pushHand(card);
 		setLocalStorage(keyContinueHand, myHand);
-		updateHandDom();
+		animatePlayerAddHand([card]);
+		$.when(cardDrawPromise).done(() => {
+			updateHandDom();
+		});
 		$('.black-back-area').removeClass('active');
 		$('.hand-decide-area').removeClass('active');
 		$('.hand-area').removeClass('front');
@@ -4890,10 +5006,13 @@ function reuseCard(){
 		pushHand(card);
 		setLocalStorage(keyContinueHand, myHand);
 		setLocalStorage(keyContinueDiscard, discard);
+		animatePlayerAddHand([card]);
+		$.when(cardDrawPromise).done(() => {
+			updateHandDom();
+		});
 		$('.black-back-area').removeClass('active');
 		$('.return-decide-area').removeClass('active');
 
-		updateHandDom();
 		updateDiscardDom();
 		startPhase(phase.action);
 	}

@@ -121,7 +121,8 @@ function continueCount(){
 		playerStatus.block = lastPlayerStatus.block;
 		playerStatus.statuses = lastPlayerStatus.statuses;
 		playerStatus.playerCount.HPDownCount = lastPlayerStatus.playerCount.HPDownCount;
-		playerStatus.playerCount.trashCount = lastPlayerStatus.playerCount.trashCount;
+		playerStatus.playerCount.trashCountPerTurn = lastPlayerStatus.playerCount.trashCountPerTurn;
+		playerStatus.playerCount.playAttackPerTurn = lastPlayerStatus.playerCount.playAttackPerTurn;
 	}
 
 }
@@ -434,7 +435,25 @@ function endTurn(){
 		const attackUp = playerStatus.statuses
 			.find((status) => status.name === bufStatus.attackUp.name);
 		if(attackUp){
-			attackUp.amount -= invalidAttackUp.amount;
+			if(attackUp.amount > invalidAttackUp.amount){
+				attackUp.amount -= invalidAttackUp.amount;
+			} else {
+				attackUp.amount = 0;
+			}
+		}
+	}
+	//「防Down削除」で攻撃力ダウンが減る
+	const invalidAttackDown = playerStatus.statuses
+		.find((status) => status.name === debufStatus.invalidAttackDown.name);
+	if (invalidAttackDown){
+		const attackDown = playerStatus.statuses
+			.find((status) => status.name === debufStatus.attackDown.name);
+		if(attackDown){
+			if(attackDown.amount > invalidAttackDown.amount){
+				attackDown.amount -= invalidAttackDown.amount;
+			} else {
+				attackDown.amount = 0;
+			}
 		}
 	}
 	//「果ての力」の効果発動
@@ -456,16 +475,14 @@ function endTurn(){
 		.find((status) => status.name === bufStatus.nextTurnBlock.name);
 	if (nextTurnBlock){
 		playerStatus.block += nextTurnBlock.amount;
-		nextTurnBlock.amount = 0;
 	}
 	// エネルギーを回復する
 	playerStatus.remainEnergy = playerStatus.maxEnergy;
-	// 「活性化」で追加回復
+	// 「活性」で追加回復
 	const activity = playerStatus.statuses
 		.find((status) => status.name === bufStatus.activity.name);
 	if (activity){
 		playerStatus.remainEnergy += activity.amount;
-		activity.amount = 0;
 	}
 	// 「活性化」で追加回復
 	const energized = playerStatus.statuses
@@ -485,7 +502,6 @@ function endTurn(){
 		.find((status) => status.name === bufStatus.drawCard.name);
 	if (drawCard){
 		drawCardFromDeck(2);
-		drawCard.amount = 0;
 	}
 	// カードを5枚引く
 	drawCardFromDeck(initialHandNum);
@@ -505,9 +521,13 @@ function endTurn(){
 				break;
 			case bufStatus.reflection.name:
 			case bufStatus.wind.name:
+			case bufStatus.nextTurnBlock.name:
+			case bufStatus.activity.name:
+			case bufStatus.drawCard.name:
 			case debufStatus.noBlock.name:
 			case debufStatus.noDraw.name:
 			case debufStatus.invalidAttackUp.name:
+			case debufStatus.invalidAttackDown.name:
 				status.amount = 0;
 				break;
 			default:
@@ -518,20 +538,42 @@ function endTurn(){
 	playerStatus.statuses = playerStatus.statuses.filter((status) => {
 		return status.amount !== 0;
 	});
+	
 	// エネミーの状態変化処理
+	//「防Down削除」で攻撃力ダウンが減る
 	currentEnemies.forEach((enemy) => {
+		const invalidAttackDown = enemy.currentStatus.status
+			.find((status) => status.name === debufStatus.invalidAttackDown.name);
+		if (invalidAttackDown){
+			const attackDown = enemy.currentStatus.status
+				.find((status) => status.name === debufStatus.attackDown.name);
+			if(attackDown){
+				if(attackDown.amount > invalidAttackDown.amount){
+					attackDown.amount -= invalidAttackDown.amount;
+				} else {
+					attackDown.amount = 0;
+				}
+			}
+		}
 		enemy.currentStatus.status.forEach((status) => {
 			switch(status.name){
 				case bufStatus.defenseUp.name:
+				case bufStatus.penetration.name:
 				case bufStatus.phantasmal.name:
 				case debufStatus.defenseDown.name:
 				case debufStatus.frail.name:
 				case debufStatus.weak.name:
 				case debufStatus.poison.name:
-				case debufStatus.noBlock.name:
 				case debufStatus.Fading.name:
 					status.amount--;
 					break;
+				case bufStatus.reflection.name:
+				case bufStatus.wind.name:
+				case debufStatus.noBlock.name:
+				case debufStatus.noDraw.name:
+				case debufStatus.invalidAttackUp.name:
+				case debufStatus.invalidAttackDown.name:
+					status.amount = 0;
 				default:
 					break;
 			}
@@ -545,7 +587,8 @@ function endTurn(){
 	// 次の予測を決定する
 	decideNextAction();
 	// 捨て札の枚数をリセットする
-	playerStatus.playerCount.trashCount = 0;
+	playerStatus.playerCount.trashCountPerTurn = 0;
+	playerStatus.playerCount.playAttackPerTurn = 0;
 	// ターンを進める
 	currentTurn++;
 
@@ -693,14 +736,16 @@ function drawCardFromDeck(count = 1){
 /*******************************************************/
 function giftDrawFromDeck(){
 	const giftCardIndex = myDeck.reduce((acc, current, index) => {
-		if (current === target) {
+		if ('gift' in current.amount && current.amount.gift) {
 			acc.push(index);
 		}
 		return acc;
 	}, []);
 	giftCardIndex.forEach((index) => {
-		
+		const giftCard = spliceDeck(index);
+		pushHand(giftCard);
 	});
+	return giftCardIndex.length;
 }
 /*******************************************************/
 /* reconfigureDeck：捨て札のカードをデッキに再構成する
@@ -745,6 +790,9 @@ function playHandCard(index){
 		playerStatus.statuses = playerStatus.statuses.filter((status) => {
 			return status.amount > 0;
 		});
+	}
+	if(card.type === type.attack){
+		playerStatus.playerCount.playAttackPerTurn++;
 	}
 	setLocalStorage(keyContinueHand, myHand);
 	setLocalStorage(keyContinueStack, stackCard);
@@ -1185,7 +1233,6 @@ function targetingEnemy(){
 	currentEnemies.forEach((enemy) => {
 		if(!enemy.currentStatus.status.some(status => status.name === dead.name)){
 			currentTarget = enemy;
-			
 		}
 	});
 }

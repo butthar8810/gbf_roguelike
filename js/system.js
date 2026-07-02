@@ -80,9 +80,7 @@ function deepCopyPlayerStatus(player){
 		cloneStatus.image = status.image;
 		cloneOjt.statuses.push(cloneStatus);
 	});
-	cloneOjt.playerCount = {};
-	cloneOjt.playerCount.HPDownCount = player.playerCount.HPDownCount;
-	cloneOjt.playerCount.trashCount = player.playerCount.trashCount;
+	cloneOjt.playerCount = { ...player.playerCount };
 
 	return cloneOjt;
 }
@@ -103,7 +101,15 @@ function deepCopyEnemies(arrayEnemies){
 		cloneCurrentStatus.remainHP = EnemyOjt.currentStatus.remainHP;
 		cloneCurrentStatus.maxHP = EnemyOjt.currentStatus.maxHP;
 		cloneCurrentStatus.block = EnemyOjt.currentStatus.block;
-		cloneCurrentStatus.status = EnemyOjt.currentStatus.status.concat();
+		cloneCurrentStatus.status = [];
+		EnemyOjt.currentStatus.status.forEach((status) => {
+			const cloneStatus = {};
+			cloneStatus.name = status.name;
+			cloneStatus.amount = status.amount;
+			cloneStatus.effect = status.effect;
+			cloneStatus.image = status.image;
+			cloneCurrentStatus.status.push(cloneStatus);
+		});
 		cloneCurrentStatus.nextAction = {...EnemyOjt.currentStatus.nextAction};
 		cloneCurrentStatus.divId = EnemyOjt.currentStatus.divId;
 		cloneOjt.currentStatus = cloneCurrentStatus;
