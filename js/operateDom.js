@@ -154,7 +154,11 @@ function createCardDom(card){
 		.html(card.amount.cost);
 	const cardImage = $('<img>')
 		.attr('src', card.image);
-	const cardDiv = $('<div>')
+	const cardDiv = $('<div>');
+	if(card.name.length > 10){
+		cardDiv.addClass('is-small');
+	}
+	cardDiv
 		.addClass('card-style')
 		.html(`${card.name}`)
 		.append(cardImage)

@@ -59,16 +59,16 @@ const debufStatus = {
 	weak: {name: '恐怖', amount: '', effect: 'アタックで与えるダメージが25%減少。{X}ターン有効。', image: 'images/status/status_1374.png'},
 	noDraw: {name: 'ドロー不可', amount: '', effect: 'カードからブロックを得られない。{X}ターン有効。', image: 'images/status/status_3270.png'},
 	invalidAttackUp: {name: '攻UP削除', amount: '',effect: 'ターン終了時、攻撃力アップを{X}下げる',image: 'images/status/status_9999.png'},
-	invalidAttackDown: {name: '攻Down削除', amount: '',effect: 'ターン終了時、攻撃力ダウンを{X}下げる',image: 'images/status/status_1075.png'},
+	invalidAttackDown: {name: '攻Down削除', amount: '',effect: 'ターン終了時、攻撃力ダウンを{X}下げる',image: 'images/status/status_9999_2.png'},
 
 	poison: {name: '毒', amount: '', effect: 'ターン開始時、HPを{X}失い、毒が1減少。', image: 'images/status/status_8.png'},
 	sleep: {name: '眠り', amount: '', effect: 'この敵はまだ目覚めていない…', image: 'images/status/status_1263.png'},
 	paralysis: {name: '麻痺', amount: '', effect: '{X}ターンの間「アタック」をプレイできない。', image: 'images/status/status_102.png'},
 	heat: {name: '灼熱', amount: '', effect: 'カードをプレイするたび、あなたは{X}ダメージを受ける。', image: 'images/status/status_83.png'},
 	petrification: {name: '石化', amount: '', effect: 'カードから得られるブロックが-{X}。', image: 'images/status/status_1241.png'},
-	noBlock: {name: 'ブロック不可', amount: '', effect: 'デッキからカードを引くことができない。{X}ターン有効。', image: 'images/status/status_6765.png'},
+	noBlock: {name: 'ブロック不可', amount: '', effect: 'カードからブロックを得られない。{X}ターン有効。', image: 'images/status/status_6765.png'},
 	Fading: {name: '死の宣告', amount: '', effect: '{X}ターン経過後、死亡する。', image: 'images/status/status_100.png'},
-	suffocation: {name: '窒息', amount: '', effect: 'カードをプレイするたび、HPを{X}失う。1ターン有効', image: 'images/status/status_100.png'},
+	suffocation: {name: '窒息', amount: '', effect: 'カードをプレイするたび、HPを{X}失う。1ターン有効', image: 'images/status/status_1103.png'},
 };
 // ステータス：志望
 const dead = {name: '死亡', amount: 1, effect: '死亡状態',image: ''};

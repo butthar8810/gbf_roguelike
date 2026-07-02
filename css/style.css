@@ -51,6 +51,7 @@ body{
 }
 .card-style{
 	font-size: 14px;
+	line-height: 22px;
 	color: white;
 	width: 150px;
 	aspect-ratio: 3 / 4;
@@ -79,6 +80,7 @@ body{
 }
 .card-style .effect{
 	font-size: 12px;
+	line-height: 18px;
 	width: 100%;
 	padding: 0 5px;
 	text-shadow: 1px 1px 3px black;
@@ -1390,6 +1392,9 @@ header{
 .enhance-card.select{
 	background-color: rgba(254, 197, 105);
 	box-shadow: 1px 1px 5px red;
+}
+.enhance-card.is-small{
+	font-size: 12px;
 }
 .enhance-card:hover{
 	transform: scale(1.1);

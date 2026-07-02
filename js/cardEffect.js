@@ -610,7 +610,7 @@ const granCardList = {
 	//二刀流
 	HangedMan: {
 		key: 'HangedMan',
-		name: '刑死者召喚',
+		name: 'ザ・ハングドマン',
 		class: cardClass.gran,
 		rarity: rarity.uncommon,
 		type: type.skill,
@@ -680,7 +680,7 @@ const granCardList = {
 		type: type.skill,
 		func: 'effectBuff',
 		image:'images/card/gran_Tiamat.jpg',
-		effect: 'このターン、「アタック」をプレイするたび{B}ブロックを得る。',
+		effect: 'このターン、「アタック」をプレイするたび{F}ブロックを得る。',
 		amount: {
 			cost: 0, 
 			buff: 3,
@@ -691,7 +691,7 @@ const granCardList = {
 	//武装解除
 	Devil: {
 		key: 'Devil',
-		name: '悪魔召喚',
+		name: 'ザ・デビル',
 		class: cardClass.gran,
 		rarity: rarity.uncommon,
 		type: type.skill,
@@ -794,7 +794,7 @@ const granCardList = {
 	//見張り
 	Carbuncle: {
 		key: 'Carbuncle',
-		name: 'カーバンクル召喚',
+		name: 'カーバンクル',
 		class: cardClass.gran,
 		rarity: rarity.uncommon,
 		type: type.skill,
@@ -1760,7 +1760,7 @@ const granEnhancedCardList = {
 		}
 	},
 	HangedMan: {
-		name: '<span class="upgrade">刑死者召喚+</span>',
+		name: '<span class="upgrade">ザ・ハングドマン+</span>',
 		class: cardClass.gran,
 		rarity: rarity.uncommon,
 		type: type.skill,
@@ -1822,7 +1822,7 @@ const granEnhancedCardList = {
 		type: type.skill,
 		func: 'effectBuff',
 		image:'images/card/gran_Tiamat.jpg',
-		effect: 'このターン、「アタック」をプレイするたび<span class="upgrade">{B}</span>ブロックを得る。',
+		effect: 'このターン、「アタック」をプレイするたび<span class="upgrade">{F}</span>ブロックを得る。',
 		amount: {
 			cost: 0, 
 			buff: 5,
@@ -1831,7 +1831,7 @@ const granEnhancedCardList = {
 		}
 	},
 	Devil: {
-		name: '<span class="upgrade">悪魔召喚+</span>',
+		name: '<span class="upgrade">ザ・デビル+</span>',
 		class: cardClass.gran,
 		rarity: rarity.uncommon,
 		type: type.skill,
@@ -1926,7 +1926,7 @@ const granEnhancedCardList = {
 	},
 	//見張り
 	Carbuncle: {
-		name: '<span class="upgrade">カーバンクル召喚+</span>',
+		name: '<span class="upgrade">カーバンクル+</span>',
 		class: cardClass.gran,
 		rarity: rarity.uncommon,
 		type: type.skill,
@@ -2289,7 +2289,7 @@ const granEnhancedCardList = {
 	},
 	//残虐
 	Hrunting: {
-		name: '</span>フルンティング+</span>',
+		name: '<span class="upgrade">フルンティング+</span>',
 		class: cardClass.gran,
 		rarity: rarity.rare,
 		type: type.power,
@@ -2305,7 +2305,7 @@ const granEnhancedCardList = {
 	},
 	//狂戦士
 	Lancet: {
-		name: '</span>ランセット+</span>',
+		name: '<span class="upgrade">ランセット+</span>',
 		class: cardClass.gran,
 		rarity: rarity.rare,
 		type: type.power,
@@ -2599,7 +2599,7 @@ const djeetaCardList = {
 	//バックフリップ
 	Yggdrasil: {
 		key: 'Yggdrasil',
-		name: '<span style="font-size:12px;">ユグドラシル・ミニステル</span>',
+		name: 'ユグドラシル・ミニステル',
 		class: cardClass.djeeta,
 		rarity: rarity.common,
 		type: type.skill,
@@ -2769,14 +2769,14 @@ const djeetaCardList = {
 		}
 	},
 	//ヒールフック
-	aaa: {
-		key: '',
-		name: '',
+	Wheel: {
+		key: 'Wheel',
+		name: 'セラフホウィール',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
 		type: type.attack,
 		func: 'effectAttackAndConditionsWeak',
-		image:'images/card/djeeta_.jpg',
+		image:'images/card/djeeta_Wheel.jpg',
 		effect: `{A}ダメージを与える。敵が恐怖を受けている場合は{E}エナジーを得てカードを{Dr}枚引く。`,
 		amount: {
 			cost: 1,
@@ -2803,14 +2803,14 @@ const djeetaCardList = {
 		}
 	},
 	//フレシェット
-	aa: {
-		key: '',
-		name: '',
+	Instruction: {
+		key: 'Instruction',
+		name: '魔星の指南書',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
 		type: type.attack,
 		func: 'effectTimesAttackEverySkillCard',
-		image:'images/card/djeeta_.jpg',
+		image:'images/card/djeeta_Instruction.jpg',
 		effect: `手札にある「スキル」の枚数ｘ{A}ダメージを与える。`,
 		amount: {
 			cost: 1,
@@ -2819,14 +2819,14 @@ const djeetaCardList = {
 		}
 	},
 	//一撃必殺
-	aaaaa: {
-		key: '',
-		name: '',
+	Perfeed: {
+		key: 'Perfeed',
+		name: 'ペルフィード',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
 		type: type.attack,
 		func: 'effectAttack',
-		image:'images/card/djeeta_.jpg',
+		image:'images/card/djeeta_Perfeed.jpg',
 		effect: `{A}ダメージを与える。ダメージを受けるたび、このカードのコストが1増加。`,
 		amount: {
 			cost: 0,
@@ -2835,14 +2835,14 @@ const djeetaCardList = {
 		}
 	},
 	//串刺し
-	bbb: {
-		key: '',
-		name: '',
+	Agastia: {
+		key: 'Agastia',
+		name: 'アガスティア・ダブル',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
 		type: type.attack,
 		func: 'effectAttackXTimes',
-		image:'images/card/djeeta_.jpg',
+		image:'images/card/djeeta_Agastia.jpg',
 		effect: `{A}ダメージをX回与える。`,
 		amount: {
 			cost: 'X',
@@ -2852,14 +2852,14 @@ const djeetaCardList = {
 		}
 	},
 	//略奪
-	b: {
-		key: '',
-		name: '',
+	Mimic: {
+		key: 'Mimic',
+		name: 'ミニック',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
 		type: type.attack,
 		func: 'effectAttackAndBuff',
-		image:'images/card/djeeta_.jpg',
+		image:'images/card/djeeta_Mimic.jpg',
 		effect: `{A}ダメージを与える。次のターン開始時、カードを{F}枚引く。`,
 		amount: {
 			cost: 2,
@@ -2870,14 +2870,14 @@ const djeetaCardList = {
 		}
 	},
 	//窒息
-	ccc: {
-		key: '',
-		name: '',
+	Leviathan: {
+		key: 'Leviathan',
+		name: 'リヴァイアサン・ミニステル',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
 		type: type.attack,
 		func: 'effectAttackAndDebuff',
-		image:'images/card/djeeta_.jpg',
+		image:'images/card/djeeta_Leviathan.jpg',
 		effect: `{A}ダメージを与える。このターンでカードを使用するたび、ターゲットの敵がHP{D}を失う。`,
 		amount: {
 			cost: 2,
@@ -2888,15 +2888,15 @@ const djeetaCardList = {
 		}
 	},
 	//終わりなき苦痛
-	fff: {
-		key: '',
-		name: '',
+	Spada: {
+		key: 'Spada',
+		name: 'イルジオーネ・スパーダ',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
 		type: type.attack,
 		func: 'effectAttack',
-		image:'images/card/djeeta_.jpg',
-		effect: `このカードを引くたび、「終わりなき苦痛」を手札に加える。{A}ダメージを与える。廃棄。`,
+		image:'images/card/djeeta_Spada.jpg',
+		effect: `このカードを引くたび、「イルジオーネ・スパーダ」を手札に加える。{A}ダメージを与える。廃棄。`,
 		amount: {
 			cost: 0,
 			attack: 4,
@@ -2939,24 +2939,81 @@ const djeetaCardList = {
 	},
 	//******************************スキル******************************//
 	//イカサマ
+	Branch: {
+		key: 'Branch',
+		name: '天導樹の枝',
+		class: cardClass.djeeta,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: '',
+		image:'images/card/djeeta_Branch.jpg',
+		effect: `手札をすべて捨て、同じ枚数だけカードを引く。廃棄。`,
+		amount: {
+			cost: 0,
+			discard: true,
+		}
+	},
 	//セットアップ
+	Justice: {
+		key: 'Justice',
+		name: 'ザ・ジャスティス',
+		class: cardClass.djeeta,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: '',
+		image:'images/card/djeeta_Justice.jpg',
+		effect: `手札のカード1枚を山札の1番上に置く。プレイされるまでそのコストは0`,
+		amount: {
+			cost: 1,
+			discard: true,
+		}
+	},
 	//バウンドフラスコ
+	BlackishPurple: {
+		key: 'BlackishPurple',
+		name: '黒紫羽',
+		class: cardClass.djeeta,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: '',
+		image:'images/card/djeeta_BlackishPurple.jpg',
+		effect: `ランダムな敵に毒3を3回与える。`,
+		amount: {
+			cost: 2,
+			discard: true,
+		}
+	},
 	//劇毒
-	Violent: {
-		key: 'Violent',
-		name: '劇毒',
+	Autophagon: {
+		key: 'Autophagon',
+		name: '自壊因子',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
 		type: type.skill,
 		func: 'effectViolent',
-		image:'images/card/djeeta_Violent.jpg',
+		image:'images/card/djeeta_Autophagon.jpg',
 		effect: `敵全体に毒4と恐怖2を与える。廃棄。`,
 		amount: {
 			cost: 2,
 			discard: true,
 		}
 	},
-	//動揺
+/*	//動揺
+	test1: {
+		key: '',
+		name: '',
+		class: cardClass.djeeta,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: '',
+		image:'images/card/djeeta_.jpg',
+		effect: `ランダムな「スキル」を1枚手札に加える。このターンそのカードのコストは0。廃棄`,
+		amount: {
+			cost: 0,
+			discard: true,
+		}
+	},
+*/
 	//反射
 	Tactics: {
 		key: 'Tactics',
@@ -3009,19 +3066,194 @@ const djeetaCardList = {
 		}
 	},
 	//職人技
+	Sun: {
+		key: 'Sun',
+		name: 'ザ・サン',
+		class: cardClass.djeeta,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: '',
+		image:'images/card/djeeta_Sun.jpg',
+		effect: `手札が6枚になるまでカードを引く。`,
+		amount: {
+			cost: 1,
+			discard: true,
+		}
+	},
 	//脱出計画
+	Shell: {
+		key: 'Shell',
+		name: '執明真甲',
+		class: cardClass.djeeta,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: '',
+		image:'images/card/djeeta_Shell.jpg',
+		effect: `カードを1枚引く。引いたカードが「スキル」の場合、3ブロックを得る。`,
+		amount: {
+			cost: 0,
+			discard: true,
+		}
+	},
 	//触媒
+	Chain: {
+		key: 'Chain',
+		name: '凶毒の穿鎖',
+		class: cardClass.djeeta,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: '',
+		image:'images/card/djeeta_Chain.jpg',
+		effect: `敵の毒を2倍にする。廃棄。`,
+		amount: {
+			cost: 1,
+			discard: true,
+		}
+	},
 	//足払い
+	LawWheel: {
+		key: 'LawWheel',
+		name: '転舞法輪',
+		class: cardClass.djeeta,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: '',
+		image:'images/card/djeeta_LawWheel.jpg',
+		effect: `恐怖2を与える。11のブロックを得る。`,
+		amount: {
+			cost: 2,
+			discard: true,
+		}
+	},
 	//集中
+	Noodles: {
+		key: 'Noodles',
+		name: '替え玉一丁！',
+		class: cardClass.djeeta,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: '',
+		image:'images/card/djeeta_Noodles.jpg',
+		effect: `カードを3枚捨てる。2エナジーを得る。`,
+		amount: {
+			cost: 0,
+			discard: true,
+		}
+	},
 	//ブラー
+	LuWoh: {
+		key: 'LuWoh',
+		name: 'ル・オー・ミニステル',
+		class: cardClass.djeeta,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: '',
+		image:'images/card/djeeta_LuWoh.jpg',
+		effect: `5ブロックを得る。次のターン開始時にブロックを失わない。`,
+		amount: {
+			cost: 1,
+			discard: true,
+		}
+	},
 	
 	//******************************パワー******************************//
 	//まきびし
+	Aura: {
+		key: 'Aura',
+		name: '闇のオーラ',
+		class: cardClass.djeeta,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: 'effectBuff',
+		image:'images/card/djeeta_Aura.jpg',
+		effect: `攻撃を受けるたび、攻撃を行った敵に{F}ダメージを与える。`,
+		amount: {
+			cost: 1,
+			buff: 3,
+			buffType: '',
+		}
+	},
 	//フットワーク
+	Runner: {
+		key: 'Runner',
+		name: 'ランナーズハイ',
+		class: cardClass.djeeta,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: 'effectBuff',
+		image:'images/card/djeeta_Runner.jpg',
+		effect: `敏捷性{F}を得る。`,
+		amount: {
+			cost: 1,
+			buff: 2,
+			buffType: '',
+		}
+	},
 	//有毒ガス
+	Grudge: {
+		key: 'Grudge',
+		name: '怨怨',
+		class: cardClass.djeeta,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: 'effectBuff',
+		image:'images/card/djeeta_Grudge.jpg',
+		effect: `ターン開始時に、敵全体に毒{F}を与える。`,
+		amount: {
+			cost: 1,
+			buff: 2,
+			buffType: '',
+		}
+	},
 	//無限の刃
-	//用意周到
+	FlyingBlade: {
+		key: 'FlyingBlade',
+		name: '無限の飛刃',
+		class: cardClass.djeeta,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: 'effectBuff',
+		image:'images/card/djeeta_FlyingBlade.jpg',
+		effect: `ターン開始時に、ナイフを{F}枚手札に加える。`,
+		amount: {
+			cost: 1,
+			buff: 1,
+			buffType: '',
+		}
+	},
+/*	//用意周到
+	test1: {
+		key: '',
+		name: '',
+		class: cardClass.djeeta,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: 'effectBuff',
+		image:'images/card/djeeta_.jpg',
+		effect: `ターン終了時に、カードを{F}枚保留する。`,
+		amount: {
+			cost: 1,
+			buff: 1,
+			buffType: '',
+		}
+	},
+*/
 	//精度上昇
+	Telescope: {
+		key: 'Telescope',
+		name: '精度上昇',
+		class: cardClass.djeeta,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: 'effectBuff',
+		image:'images/card/djeeta_Telescope.jpg',
+		effect: `ナイフが{F}の追加ダメージを与える。`,
+		amount: {
+			cost: 1,
+			buff: 4,
+			buffType: '',
+		}
+	},
 	//*********************************************レア*********************************************//
 	//アンロード
 	Roses: {
@@ -3150,7 +3382,7 @@ const djeetaEnhancedCardList = {};
 const commonCardList = {
 	Knife: {
 		key: 'Knife',
-		name: 'ナイフ',
+		name: '投げナイフ',
 		class: cardClass.common,
 		rarity: rarity.common,
 		type: type.attack,
@@ -3166,7 +3398,7 @@ const commonCardList = {
 };
 const commonEnhancedCardList = {
 	Knife: {
-		name: '<span class="upgrade">ナイフ+</span>',
+		name: '<span class="upgrade">投げナイフ+</span>',
 		class: cardClass.common,
 		rarity: rarity.common,
 		type: type.attack,
