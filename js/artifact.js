@@ -12,7 +12,7 @@ const starterArtifact = {
 
 const normalArtifact = {
 	hitPoint7: {name: '栄華の指輪', effect: '最大HPが増加:7', image: 'images/artifact/crown.png', firstFunc: ''},
-	agility: {name: '金華羽飾', effect: '戦闘開始時、敏捷性1を得る。', image: 'images/artifact/feather.png', firstFunc: 'artifactAgility'},
+	agility: {name: '金華羽飾', effect: '戦闘開始時、回避率アップ1を得る。', image: 'images/artifact/feather.png', firstFunc: 'artifactAgility'},
 	attackUpGrade: {name: 'ギガス鋼', effect: '獲得時に、ランダムな2枚の「アタック」をアップグレードする。', image: 'images/artifact/Gigas.png', firstFunc: ''},
 	skillUpGrade: {name: '玉鋼', effect: '獲得時に、ランダムな2枚の「スキル」をアップグレードする。', image: 'images/artifact/Tamahagane.png', firstFunc: ''},
 	block: {name: 'サント・キャスク', effect: '戦闘開始時に10ブロックを得る。', image: 'images/artifact/cask.png', firstFunc: 'artifactBlock'},
@@ -30,7 +30,7 @@ const normalArtifact = {
 const uncommonArtifact = {
 	hitPoint10: {name: '覇業の指輪', effect: '最大HPが増加:10', image: 'images/artifact/conquest.png', firstFunc: ''},
 	threeAttackPower: {name: 'オミナス・ホーン', effect: '1ターンに3枚の「アタック」をプレイするたび、攻撃力アップ1を得る。', image: 'images/artifact/horn.png', firstFunc: ''},
-	threeAttackDexterity: {name: 'オミナス・フィアン', effect: '1ターンに3枚の「アタック」をプレイするたび、敏捷性1を得る。', image: 'images/artifact/fian.png', firstFunc: ''},
+	threeAttackDexterity: {name: 'オミナス・フィアン', effect: '1ターンに3枚の「アタック」をプレイするたび、回避率アップ1を得る。', image: 'images/artifact/fian.png', firstFunc: ''},
 	threeSkill: {name: 'オミナス・アミュレット', effect: '1ターンの間に「スキル」を3枚プレイするたび、敵全体に5ダメージを与える。', image: 'images/artifact/amulet.png', firstFunc: ''},
 	threeAttackBlock: {name: 'オミナス・ホイッスル', effect: '「アタック」を3枚プレイするたび、4のブロックを得る。', image: 'images/artifact/whistle.png', firstFunc: ''},
 	emblem: {name: '英勇のエンブレム', effect: '敵を倒すと、1エナジーを得て、カードを1枚引く。', image: 'images/artifact/emblem.png', firstFunc: ''},
@@ -114,7 +114,7 @@ function artifactStartDraw(){
 	return true;
 }
 /*******************************************************/
-/* 戦闘開始時、敏捷性1を得る。
+/* 戦闘開始時、回避率アップ1を得る。
 /*******************************************************/
 function artifactAgility(){
 	console.log('artifactAgility');

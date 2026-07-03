@@ -206,11 +206,20 @@ function setupBtn(){
 			case phase.trash:
 				trashCard();
 				break;
+			case phase.threeTrash:
+				if(tmpArea.length < 3){
+					break;
+				}
+				trashCard();
+				break;
 			case phase.discard:
 				discardCard();
 				break;
 			case phase.unshiftDeck:
-				unshiftDeckCard();
+				unshiftDeckCard(false);
+				break;
+			case phase.unshiftDeckAndZero:
+				unshiftDeckCard(true);
 				break;
 			case phase.upGrade:
 				upGradeCard();
@@ -264,6 +273,7 @@ function startPhase(ph){
 			startCleanup();
 			break;
 		case phase.trash:
+		case phase.threeTrash:
 			disabledEndBtn(true);
 			disabledMyHand(false);
 			updateHandDom();
@@ -296,6 +306,7 @@ function startPhase(ph){
 			});
 			break;
 		case phase.unshiftDeck:
+		case phase.unshiftDeckAndZero:
 			disabledEndBtn(true);
 			disabledMyHand(false);
 			updateHandDom();
@@ -463,10 +474,12 @@ function endTurn(){
 		actionStatusBufNoAnimate(bufStatus.attackUp, end.amount);
 	}
 
-	//「炎の盾」がある場合はブロックを初期化しない
+	//「炎の盾」がある場合はブロックを初期化しないlightWall
 	const wall = playerStatus.statuses
 		.find((status) => status.name === bufStatus.wall.name);
-	if (!wall){
+	const lightWall = playerStatus.statuses
+		.find((status) => status.name === bufStatus.lightWall.name);
+	if (!wall && !lightWall){
 		// ブロックを解除する
 		playerStatus.block = 0;
 	}
@@ -524,6 +537,7 @@ function endTurn(){
 			case bufStatus.nextTurnBlock.name:
 			case bufStatus.activity.name:
 			case bufStatus.drawCard.name:
+			case bufStatus.lightWall.name:
 			case debufStatus.noBlock.name:
 			case debufStatus.noDraw.name:
 			case debufStatus.invalidAttackUp.name:
@@ -571,6 +585,7 @@ function endTurn(){
 				case bufStatus.wind.name:
 				case debufStatus.noBlock.name:
 				case debufStatus.noDraw.name:
+				case debufStatus.suffocation.name:
 				case debufStatus.invalidAttackUp.name:
 				case debufStatus.invalidAttackDown.name:
 					status.amount = 0;
@@ -791,6 +806,16 @@ function playHandCard(index){
 			return status.amount > 0;
 		});
 	}
+	currentEnemies.forEach((enemy) => {
+		//「窒息」効果
+		const suffocation = enemy.currentStatus.status
+			.find((status) => status.name === debufStatus.suffocation.name);
+		if (suffocation){
+			//ブロック無視
+			enemy.currentStatus.remainHP -= suffocation.amount;
+		}
+	});
+	
 	if(card.type === type.attack){
 		playerStatus.playerCount.playAttackPerTurn++;
 	}
@@ -905,7 +930,14 @@ function clickHandProcess(handCardDiv, hand){
 				const index = findIndexHand('id', hand.id);
 				playHandCard(index);
 				setLocalStorage(keyContinuePlayerStatus, playerStatus);
-			} else if (playerStatus.remainEnergy >= hand.amount.cost) {
+			} else if ('tmpCost' in hand.amount && playerStatus.remainEnergy >= hand.amount.tmpCost) {
+				const index = findIndexHand('id', hand.id);
+				playerStatus.remainEnergy -= hand.amount.tmpCost;
+				updateEnergyDom();
+				delete hand.amount.tmpCost;
+				playHandCard(index);
+				setLocalStorage(keyContinuePlayerStatus, playerStatus);
+			}  else if (playerStatus.remainEnergy >= hand.amount.cost) {
 				const index = findIndexHand('id', hand.id);
 				playerStatus.remainEnergy -= hand.amount.cost;
 				updateEnergyDom();
@@ -923,6 +955,7 @@ function clickHandProcess(handCardDiv, hand){
 		case phase.trash:
 		case phase.discard:
 		case phase.unshiftDeck:
+		case phase.unshiftDeckAndZero:
 			if (index === -1) {
 				if (tmpArea.length < 1){
 					pushTemporaryArea(hand);
@@ -930,6 +963,17 @@ function clickHandProcess(handCardDiv, hand){
 				} else {
 					spliceTemporaryArea(index);
 					$('.hand-card').removeClass("select");
+					pushTemporaryArea(hand);
+					handCardDiv.addClass("select");
+				}
+			} else {
+				spliceTemporaryArea(index);
+				handCardDiv.removeClass("select");
+			}
+			break;
+		case phase.threeTrash:
+			if (index === -1) {
+				if (tmpArea.length < 3){
 					pushTemporaryArea(hand);
 					handCardDiv.addClass("select");
 				}
@@ -1050,6 +1094,7 @@ function trashCardProcess(trashCard){
 			amount: trashCard.amount,
 		});
 	}
+	playerStatus.playerCount.trashCountPerTurn++;
 	pushTrash(trashCard);
 }
 /*******************************************************/

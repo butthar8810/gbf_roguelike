@@ -21,8 +21,9 @@ const stages = {
 const bufStatus = {
 	attackUp: {name: '攻撃力アップ', amount: '',effect: '攻撃ダメージが+{X}。',image: 'images/status/status_1001.png'},
 	defenseUp: {name: '防御力アップ', amount: '', effect: 'アタックで受けるダメージが50%減少。{X}ターン有効。',image: 'images/status/status_1019.png'},
-	dexterity: {name: '敏捷性', amount: '', effect: 'カードから得られるブロックが+{X}。', image: 'images/status/status_1566.png'},
+	dexterity: {name: '回避率アップ', amount: '', effect: 'カードから得られるブロックが+{X}。', image: 'images/status/status_1566.png'},
 	reflection: {name: '反射', amount: '', effect: '攻撃を受けるたび、攻撃した敵に{X}ダメージを与える。1ターン有効。', image: 'images/status/status_1062_3.png'},
+	counter: {name: 'カウンター', amount: '', effect: '攻撃を受けるたび、攻撃を行った敵に{X}ダメージを与える。', image: 'images/status/status_1541.png'},
 	wind: {name: '風の障壁', amount: '', effect: '「アタック」をプレイするたび{X}ブロックを得る。1ターン有効。', image: 'images/status/status_6132_4.png'},
 	combo: {name: '連撃アップ', amount: '', effect: '次の{X}枚の「アタック」を2回プレイする。1ターン有効。', image: 'images/status/status_1004.png'},
 	lamentation: {name: '嘆きの盾', amount: '', effect: 'ブロックを得るたび、ランダムな敵に{X}ダメージを与える。', image: 'images/status/status_6132_5.png'},
@@ -34,6 +35,7 @@ const bufStatus = {
 	activity: {name: '活性', amount: '', effect: '次のターン開始時、{X}エナジーを得る。1ターン有効', image: 'images/status/status_2.png'},
 	energized: {name: '活性化', amount: '', effect: '次のターン開始時、{X}エナジーを得る。', image: 'images/status/status_1638.png'},
 	drawCard: {name: 'ヘイスト', amount: '', effect: '次のターン開始時、{X}枚のカードを引く。', image: 'images/status/status_1058.png'},
+	lightWall: {name: '光の盾', amount: '', effect: 'ターン開始時にブロック値を失わない。1ターン有効', image: 'images/status/status_7343.png'},
 	wall: {name: '炎の盾', amount: '', effect: 'ターン開始時にブロック値を失わない。', image: 'images/status/status_7343.png'},
 	end: {name: '果ての力', amount: '', effect: 'ターン開始時に、攻撃力アップ{X}を得る。', image: 'images/status/status_7980_1.png'},
 	hrunting: {name: 'フルンティング', amount: '', effect: 'ターン開始時に、HPを1失いカードを{X}枚引く。', image: 'images/status/status_3170.png'},
@@ -49,7 +51,9 @@ const bufStatus = {
 	afterImage: {name: '残像', amount: '', effect: 'カードを1枚プレイするたび、{X}ブロックを得る。', image: 'images/status/status_1566.png'},
 	invincible: {name: '無敵', amount: '', effect: 'このターン中に減らせるHPは、残り{X}。', image: 'images/status/status_62.png'},
 	penetration: {name: '貫通', amount: '', effect: '攻撃ダメージがブロックを無視する。{X}ターン有効。', image: 'images/status/status_1240.png'},
-
+	grudge: {name: '怨念', amount: '', effect: 'ターン開始時に、敵全体に毒{X}を与える。', image: 'images/status/status_8_2.png'},
+	infinite: {name: '無限の飛刃', amount: '', effect: 'ターン開始時に、ナイフを{X}枚手札に加える。', image: 'images/status/status_7769_1.png'},
+	hitRate: {name: '命中率アップ', amount: '', effect: 'ナイフが{X}の追加ダメージを与える。', image: 'images/status/status_1057.png'},
 };
 // デバフ
 const debufStatus = {
@@ -60,6 +64,7 @@ const debufStatus = {
 	noDraw: {name: 'ドロー不可', amount: '', effect: 'カードからブロックを得られない。{X}ターン有効。', image: 'images/status/status_3270.png'},
 	invalidAttackUp: {name: '攻UP削除', amount: '',effect: 'ターン終了時、攻撃力アップを{X}下げる',image: 'images/status/status_9999.png'},
 	invalidAttackDown: {name: '攻Down削除', amount: '',effect: 'ターン終了時、攻撃力ダウンを{X}下げる',image: 'images/status/status_9999_2.png'},
+	suffocation: {name: '窒息', amount: '', effect: 'カードをプレイするたび、HPを{X}失う。1ターン有効', image: 'images/status/status_1103.png'},
 
 	poison: {name: '毒', amount: '', effect: 'ターン開始時、HPを{X}失い、毒が1減少。', image: 'images/status/status_8.png'},
 	sleep: {name: '眠り', amount: '', effect: 'この敵はまだ目覚めていない…', image: 'images/status/status_1263.png'},
@@ -68,7 +73,6 @@ const debufStatus = {
 	petrification: {name: '石化', amount: '', effect: 'カードから得られるブロックが-{X}。', image: 'images/status/status_1241.png'},
 	noBlock: {name: 'ブロック不可', amount: '', effect: 'カードからブロックを得られない。{X}ターン有効。', image: 'images/status/status_6765.png'},
 	Fading: {name: '死の宣告', amount: '', effect: '{X}ターン経過後、死亡する。', image: 'images/status/status_100.png'},
-	suffocation: {name: '窒息', amount: '', effect: 'カードをプレイするたび、HPを{X}失う。1ターン有効', image: 'images/status/status_1103.png'},
 };
 // ステータス：志望
 const dead = {name: '死亡', amount: 1, effect: '死亡状態',image: ''};
@@ -136,10 +140,12 @@ const phase = {
 	action: 'アクションフェイズ',
 	enemy: 'エネミーフェイズ',
 	trash: 'トラッシュフェイズ', // 手札を捨て札に
+	threeTrash: '3トラッシュフェイズ', // 手札を捨て札に
 	restore: 'レストアフェイズ', // 捨て札をデッキに
 	reuseToHand: 'リユースフェイズ', // 廃棄札を手札に
 	upGrade: 'アップグレードフェイズ', // 手札をアップグレード
 	unshiftDeck: 'アンシフトデッキフェイズ', // 手札をデッキに
+	unshiftDeckAndZero: 'アンシフトデッキアンドゼロフェイズ', // 手札をデッキに
 	reproductionToHand: '複製フェイズ', // 複製を手札に
 	twoReproductionToHand: '2枚複製フェイズ', // 複製を手札に
 };

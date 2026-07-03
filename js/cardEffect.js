@@ -517,6 +517,8 @@ const granCardList = {
 		effect: '戦闘でHPを失うたび、使用コストが-1。{A}のダメージを与える。',
 		amount: {
 			cost: 4,
+			originCost: 4,
+			costChange:'changeCostDownEveryDamage',
 			attack: 18,
 			discard: false,
 		}
@@ -1064,7 +1066,7 @@ const granCardList = {
 		class: cardClass.gran,
 		rarity: rarity.rare,
 		type: type.skill,
-		func: 'effectDoubleBuff',
+		func: 'effectTwiceBuff',
 		image:'images/card/gran_Lion.jpg',
 		effect: '「攻撃力アップ」を2倍にする。廃棄。',
 		amount: {
@@ -1678,6 +1680,8 @@ const granEnhancedCardList = {
 		effect: '戦闘でHPを失うたび、エナジー消費が-1。<span class="upgrade">{A}</span>のダメージを与える。',
 		amount: {
 			cost: 3,
+			originCost: 3,
+			costChange:'changeCostDownEveryDamage',
 			attack: 22,
 			discard: false,
 		}
@@ -2830,6 +2834,8 @@ const djeetaCardList = {
 		effect: `{A}ダメージを与える。ダメージを受けるたび、このカードのコストが1増加。`,
 		amount: {
 			cost: 0,
+			originCost: 0,
+			costChange:'changeCostUpEveryDamage',
 			attack: 12,
 			discard: false,
 		}
@@ -2888,6 +2894,7 @@ const djeetaCardList = {
 		}
 	},
 	//終わりなき苦痛
+	// 「このカードを引くたび、～」、未実装
 	Spada: {
 		key: 'Spada',
 		name: 'イルジオーネ・スパーダ',
@@ -2915,6 +2922,8 @@ const djeetaCardList = {
 		effect: `このターンに捨てたカード1枚につき、使用コストが-1。{A}ダメージを3回与える。`,
 		amount: {
 			cost: 3,
+			originCost: 3,
+			costChange:'changeCostDownEveryTrash',
 			attack: 7,
 			count: 3,
 			discard: false,
@@ -2945,7 +2954,7 @@ const djeetaCardList = {
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
 		type: type.skill,
-		func: '',
+		func: 'effectAllTrashAndDraw',
 		image:'images/card/djeeta_Branch.jpg',
 		effect: `手札をすべて捨て、同じ枚数だけカードを引く。廃棄。`,
 		amount: {
@@ -2960,12 +2969,12 @@ const djeetaCardList = {
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
 		type: type.skill,
-		func: '',
+		func: 'effectPutCardDeckTop',
 		image:'images/card/djeeta_Justice.jpg',
 		effect: `手札のカード1枚を山札の1番上に置く。プレイされるまでそのコストは0`,
 		amount: {
 			cost: 1,
-			discard: true,
+			discard: false,
 		}
 	},
 	//バウンドフラスコ
@@ -2975,12 +2984,15 @@ const djeetaCardList = {
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
 		type: type.skill,
-		func: '',
+		func: 'effectTimesRandomDebuff',
 		image:'images/card/djeeta_BlackishPurple.jpg',
-		effect: `ランダムな敵に毒3を3回与える。`,
+		effect: `ランダムな敵に毒{D}を{C}回与える。`,
 		amount: {
 			cost: 2,
-			discard: true,
+			debuff: 4,
+			debuffType: 'invalidAttackUp',
+			count: 3,
+			discard: false,
 		}
 	},
 	//劇毒
@@ -2990,11 +3002,15 @@ const djeetaCardList = {
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
 		type: type.skill,
-		func: 'effectViolent',
+		func: 'effectALLDoubleDebuff',
 		image:'images/card/djeeta_Autophagon.jpg',
 		effect: `敵全体に毒4と恐怖2を与える。廃棄。`,
 		amount: {
 			cost: 2,
+			debuff1: 4,
+			debuffType1: 'poison',
+			debuff2: 2,
+			debuffType2: 'weak',
 			discard: true,
 		}
 	},
@@ -3021,7 +3037,7 @@ const djeetaCardList = {
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
 		type: type.skill,
-		func: 'effectTactics',
+		func: '',
 		image:'images/card/djeeta_Tactics.jpg',
 		effect: `使用不可。このカードを捨てたとき、カードを{Dr}枚引く。`,
 		amount: {
@@ -3040,7 +3056,7 @@ const djeetaCardList = {
 		type: type.skill,
 		func: 'effectDebuff',
 		image:'images/card/djeeta_Penalty.jpg',
-		effect: `弱体99を与える。廃棄。`,
+		effect: `防御ダウン99を与える。廃棄。`,
 		amount: {
 			cost: 1,
 			debuff: 99,
@@ -3055,7 +3071,7 @@ const djeetaCardList = {
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
 		type: type.skill,
-		func: 'effectSupply',
+		func: '',
 		image:'images/card/djeeta_Supply.jpg',
 		effect: `使用不可。このカードを捨てた時、{E}エナジーを得る。`,
 		amount: {
@@ -3072,11 +3088,12 @@ const djeetaCardList = {
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
 		type: type.skill,
-		func: '',
+		func: 'effectCountDraw',
 		image:'images/card/djeeta_Sun.jpg',
-		effect: `手札が6枚になるまでカードを引く。`,
+		effect: `手札が{C}枚になるまでカードを引く。`,
 		amount: {
 			cost: 1,
+			count: 6,
 			discard: true,
 		}
 	},
@@ -3087,11 +3104,13 @@ const djeetaCardList = {
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
 		type: type.skill,
-		func: '',
+		func: 'effectDrawAndSkillDefense',
 		image:'images/card/djeeta_Shell.jpg',
-		effect: `カードを1枚引く。引いたカードが「スキル」の場合、3ブロックを得る。`,
+		effect: `カードを{Dr}枚引く。引いたカードが「スキル」の場合、{B}ブロックを得る。`,
 		amount: {
 			cost: 0,
+			drow: 1,
+			block: 3,
 			discard: true,
 		}
 	},
@@ -3102,11 +3121,12 @@ const djeetaCardList = {
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
 		type: type.skill,
-		func: '',
+		func: 'effectTwiceDebuff',
 		image:'images/card/djeeta_Chain.jpg',
 		effect: `敵の毒を2倍にする。廃棄。`,
 		amount: {
 			cost: 1,
+			debuffType: 'poison',
 			discard: true,
 		}
 	},
@@ -3117,11 +3137,14 @@ const djeetaCardList = {
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
 		type: type.skill,
-		func: '',
+		func: 'effectDefenseAndBuff',
 		image:'images/card/djeeta_LawWheel.jpg',
-		effect: `恐怖2を与える。11のブロックを得る。`,
+		effect: `恐怖{D}を与える。{B}のブロックを得る。`,
 		amount: {
 			cost: 2,
+			block: 11,
+			debuff: 2,
+			debuffType: 'weak',
 			discard: true,
 		}
 	},
@@ -3132,11 +3155,12 @@ const djeetaCardList = {
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
 		type: type.skill,
-		func: '',
+		func: 'effectThreeTrashAndGetEnergy',
 		image:'images/card/djeeta_Noodles.jpg',
-		effect: `カードを3枚捨てる。2エナジーを得る。`,
+		effect: `カードを3枚捨てる。{E}エナジーを得る。`,
 		amount: {
 			cost: 0,
+			energy: 2,
 			discard: true,
 		}
 	},
@@ -3147,11 +3171,14 @@ const djeetaCardList = {
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
 		type: type.skill,
-		func: '',
+		func: 'effectDefenseAndBuff',
 		image:'images/card/djeeta_LuWoh.jpg',
-		effect: `5ブロックを得る。次のターン開始時にブロックを失わない。`,
+		effect: `{B}ブロックを得る。次のターン開始時にブロックを失わない。`,
 		amount: {
 			cost: 1,
+			block: 5,
+			buff: '',
+			buffType: 'lightWall',
 			discard: true,
 		}
 	},
@@ -3170,7 +3197,7 @@ const djeetaCardList = {
 		amount: {
 			cost: 1,
 			buff: 3,
-			buffType: '',
+			buffType: 'counter',
 		}
 	},
 	//フットワーク
@@ -3182,11 +3209,11 @@ const djeetaCardList = {
 		type: type.skill,
 		func: 'effectBuff',
 		image:'images/card/djeeta_Runner.jpg',
-		effect: `敏捷性{F}を得る。`,
+		effect: `回避率アップ{F}を得る。`,
 		amount: {
 			cost: 1,
 			buff: 2,
-			buffType: '',
+			buffType: 'dexterity',
 		}
 	},
 	//有毒ガス
@@ -3202,7 +3229,7 @@ const djeetaCardList = {
 		amount: {
 			cost: 1,
 			buff: 2,
-			buffType: '',
+			buffType: 'grudge',
 		}
 	},
 	//無限の刃
@@ -3218,7 +3245,7 @@ const djeetaCardList = {
 		amount: {
 			cost: 1,
 			buff: 1,
-			buffType: '',
+			buffType: 'infinite',
 		}
 	},
 /*	//用意周到
@@ -3251,7 +3278,7 @@ const djeetaCardList = {
 		amount: {
 			cost: 1,
 			buff: 4,
-			buffType: '',
+			buffType: 'hitRate',
 		}
 	},
 	//*********************************************レア*********************************************//
@@ -3530,9 +3557,8 @@ function setupDeck(){
 			addCardToOriginalDeck(djeetaCardList.Defense, 5);
 			addCardToOriginalDeck(djeetaCardList.Assassin, 1);
 			addCardToOriginalDeck(djeetaCardList.Pulverizer, 1);
-			addCardToOriginalDeck(djeetaCardList.Leiomano, 2);
-			addCardToOriginalDeck(djeetaCardList.Iai, 1);
-			addCardToOriginalDeck(djeetaCardList.Rune, 2);
+			addCardToOriginalDeck(djeetaCardList.Penalty, 2);
+			addCardToOriginalDeck(djeetaCardList.Noodles, 2);
 		}
 	}
 }
@@ -3805,14 +3831,8 @@ function effectDefense(amount){
 	endAction();
 	return true;
 }
-function effectDoubleBlock(amount){
-	// 現在のブロックの値を2倍にする。
-	console.log('effectDefenseDouble');
-	actionBlock(playerStatus.block);
-	endAction();
-	return true;
-}
-function effectDoubleBuff(amount){
+
+function effectTwiceBuff(amount){
 	// 現在のブロックの値を2倍にする。
 	console.log('effectDefenseDouble');
 	actionBlock(playerStatus.block);
@@ -3828,7 +3848,7 @@ function effectBuff(amount){
 	endAction();
 	return true;
 }
-function effectDoubleBuff(amount){
+function effectTwiceBuff(amount){
 	// 「攻撃力アップ」を2倍にする。廃棄。
 	console.log('effectDefenseDouble');
 	if('buffType' in amount){
@@ -3862,6 +3882,19 @@ function effectDebuff(amount){
 	endAction();
 	return true;
 }
+function effectTwiceDebuff(amount){
+	// 敵の毒を2倍にする。廃棄。
+	console.log('effectDefenseDouble');
+	if('debuffType' in amount){
+		const debuff = currentTarget.currentStatus.status
+			.find((status) => status.name === debufStatus[amount.debuffType].name)
+		if(debuff){
+			debuff.amount *= 2;
+		}
+	}
+	endAction();
+	return true;
+}
 function effectALLDebuff(amount){
 	// 敵全体に恐怖{D}を与える。
 	console.log('effectALLDebuff');
@@ -3872,13 +3905,25 @@ function effectALLDebuff(amount){
 	return true;
 }
 function effectALLDoubleDebuff(amount){
-	// 敵全体に恐怖{D}を与える。
+	// 敵全体に毒4と恐怖2を与える。廃棄。
 	console.log('effectALLDoubleDebuff');
 	if('debuff1' in amount && 'debuffType1' in amount ){
 		actionStatusAllDebuf(debufStatus[amount.debuffType1], amount.debuff1);
 	}
 	if('debuff2' in amount && 'debuffType2' in amount ){
 		actionStatusAllDebuf(debufStatus[amount.debuffType2], amount.debuff2);
+	}
+	endAction();
+	return true;
+}
+function effectDefenseAndBuff(amount){
+	// 恐怖{D}を与える。{B}のブロックを得る。
+	console.log('effectDefenseAndBuff');
+	if('block' in amount){
+		actionBlock(amount.block);
+	}
+	if('debuff' in amount && 'debuffType' in amount ){
+		actionStatusDebuf(bufStatus[amount.debuffType], amount.debuff);
 	}
 	endAction();
 	return true;
@@ -3912,21 +3957,21 @@ function effectDefenseAndDraw(amount){
 	return true;
 }
 function effectDefenseAndTrash(amount){
-	// {B}ブロックを得る。手札を1枚廃棄する。
+	// {B}ブロックを得る。カードを1枚捨てる。
 	console.log('effectDefenseAndTrash');
 	if('block' in amount){
 		actionBlock(amount.block);
 	}
-	actionDiscardCard();
+	actionTrashCard();
 	return true;
 }
 function effectDefenseAndDiscard(amount){
 	// {B}ブロックを得る。手札を1枚廃棄する。
-	console.log('effectDefenseAndRandomDiscard');
+	console.log('effectDefenseAndDiscard');
 	if('block' in amount){
 		actionBlock(amount.block);
 	}
-	actionTrashCard();
+	actionDiscardCard();
 	return true;
 }
 function effectDefenseAndRandomDiscard(amount){
@@ -3964,6 +4009,21 @@ function effectDraw(amount){
 		cards.forEach((card) => {
 			animateDrawDeck(card);
 		});
+	}
+	endAction();
+	return true;
+}
+function effectCountDraw(amount){
+	// 手札が{C}枚になるまでカードを引く。
+	console.log('effectCountDraw');
+	if('count' in amount){
+		const drawNum = amount.count - myHand.length;
+		if(drawNum > 0){
+			const cards = drawCardFromDeck(drawNum);
+			cards.forEach((card) => {
+				animateDrawDeck(card);
+			});
+		}
 	}
 	endAction();
 	return true;
@@ -4271,7 +4331,7 @@ function effectDrawAndUnshiftDeck(amount){
 }
 function effectReproductionToHand(amount){
 	// 手札にある「アタック」か「パワー」を複製し、1枚手札に加える。
-	console.log('effectDeckTopPlay');
+	console.log('effectReproductionToHand');
 	actionReproductionToHand();
 	
 	return true;
@@ -4413,44 +4473,76 @@ function effectAttackXTimes(amount){
 	endAction();
 	return true;
 }
-
-
-
-
-
-
-
-
-function effectBlaze(){
-	// 敵全体に10ダメージを与える。手札をランダムに1枚捨てる。
-	console.log('effectBlaze');
-	actionAllAttack(djeetaCardList.Blaze.amount.attack);
-	actionTrashRandomCard();
+function effectAllTrashAndDraw(amount){
+	// 手札をすべて捨て、同じ枚数だけカードを引く。廃棄。
+	console.log('effectAllTrashAndDraw');
+	const allHnad = deleteAllHand();
+	allHnad.forEach((card) => {
+		trashCardProcess(card);
+		animateHandToTrash(card);
+	});
+	$.when(cardTrashPromise).done(() => {
+		hiddenHandDom();
+		updateTrashDom();
+	});
+	if(allHnad.length > 0){
+		const cards = drawCardFromDeck(allHnad.length);
+		cards.forEach((card) => {
+			animateDrawDeck(card);
+		});
+		$.when(cardDrawPromise).done(() => {
+			updateHandDom();
+		});
+	}
+	endAction();
 	return true;
 }
-function effectViolent(){
-	// 敵全体に毒4と恐怖2を与える。廃棄。`
-	console.log('effectViolent');
-	actionStatusAllDebuf(debufStatus.poison, 4);
-	actionStatusAllDebuf(debufStatus.weak, 2);
+function effectPutCardDeckTop(amount){
+	// 手札のカード1枚を山札の1番上に置く。プレイされるまでそのコストは0
+	actionUnshiftDeckAndCostDown();
+	endAction();
 	return true;
 }
-function effectPenalty(){
-	// 弱体99を与える。廃棄。
-	console.log('effectPenalty');
-	actionStatusAllDebuf(debufStatus.defenseDown, 99);
+function effectTimesRandomDebuff(amount){
+	// ランダムな敵に毒3を3回与える。
+	console.log('effectALLDebuff');
+	if('debuff' in amount && 'debuffType' in amount && 'count' in amount){
+		for(let i = 0; i < amount.count; i++){
+			actionStatusRandomDebuf(debufStatus[amount.debuffType], amount.debuff);
+		}
+	}
+	endAction();
 	return true;
 }
-function effectSupply(){
-	// 使用不可。このカードを捨てた時、1エナジーを得る。
-	console.log('effectSupply');
+function effectDrawAndSkillDefense(amount){
+	// カードを1枚引く。引いたカードが「スキル」の場合、3ブロックを得る。
+	console.log('effectDraw');
+	if('draw' in amount && 'block' in amount){
+		const cards = drawCardFromDeck(amount.draw);
+		cards.forEach((card) => {
+			animateDrawDeck(card);
+			if(card.type === type.skill){
+				actionBlock(amount.block);
+			}
+		});
+	}
+	endAction();
 	return true;
 }
-function effectTactics(){
-	// 使用不可。このカードを捨てたとき、カードを2枚引く。
-	console.log('effectTactics');
+function effectThreeTrashAndGetEnergy(amount){
+	// カードを3枚捨てる。{E}エナジーを得る。
+	console.log('effectDefenseAndTrash');
+	if('energy' in amount){
+		playerStatus.remainEnergy += amount.energy;
+		updateEnergyDom();
+	}
+	actionThreeTrashCard();
 	return true;
 }
+
+
+
+
 function effectRoses(){
 	// 14ダメージを与える。「アタック」以外の全てのカードを捨てる。
 	console.log('effectSupply');
@@ -4512,6 +4604,27 @@ function conditionsStraight(){
 	});
 	console.log(`myHand noAttack: ${noAttack.length}`);
 	return noAttack.length === 0 ? true : false;
+}
+
+/*****************************************************/
+/* コスト変動条件用関数
+/*****************************************************/
+function changeCostDownEveryDamage(amount){
+	if (amount.originCost > playerStatus.playerCount.HPDownCount) {
+		amount.cost = amount.originCost - playerStatus.playerCount.HPDownCount;
+	} else {
+		amount.cost = 0;
+	}
+}
+function changeCostUpEveryDamage(amount){
+	amount.cost = amount.originCost + playerStatus.playerCount.HPDownCount;
+}
+function changeCostDownEveryTrash(amount){
+	if (amount.originCost > playerStatus.playerCount.trashCountPerTurn) {
+		amount.cost = amount.originCost - playerStatus.playerCount.trashCountPerTurn;
+	} else {
+		amount.cost = 0;
+	}
 }
 /*************************************************************************************/
 /* カードアクション用システム関数
@@ -4717,7 +4830,7 @@ function actionAllAttackSimple(attackCount){
 /*******************************************************/
 function calcBlock(blockCount){
 	let totalBlock = blockCount;
-	// 敏捷性の効果
+	// 回避率アップの効果
 	const dexterity = playerStatus.statuses
 		.find((status) => status.name === bufStatus.dexterity.name);
 	if (dexterity){
@@ -4857,10 +4970,40 @@ function actionStatusAllDebuf(debuf, amountCount){
 	});
 }
 /*******************************************************/
+/* 状態異常を与える関数(ランダムデバフ)
+/*******************************************************/
+function actionStatusRandomDebuf(debuf, amountCount){
+	let random = Math.floor(Math.random() * currentEnemies.length);
+	console.log(`Random Hit: ${random}`);
+	const enemy = currentEnemies[random];
+
+	// すでに同じデバフがかかってないか確認
+	// 同じデバフは累積する
+	let sameDebufFlag = false;
+	// すでに同じデバフがかかってないか確認
+	// 同じバフは累積する
+	for (const status of enemy.currentStatus.status) {
+		if (status.name == debuf.name) {
+			status.amount += amountCount;
+			sameDebufFlag = true;
+		}
+	}
+	const receivedDebuf = {...debuf};
+	receivedDebuf.amount = amountCount;
+	if (!sameDebufFlag) {
+		enemy.currentStatus.status.push(receivedDebuf);
+	}
+	// アニメーション
+	animateEnemyAbnormality(enemy, receivedDebuf);
+}
+/*******************************************************/
 /* カードを捨てる関数
 /*******************************************************/
 function actionTrashCard(){
 	startPhase(phase.trash);
+}
+function actionThreeTrashCard(){
+	startPhase(phase.threeTrash);
 }
 function trashCard(){
 	console.log('trashCard');
@@ -4978,23 +5121,29 @@ function actionDiscardRandomCard(){
 function actionUnshiftDeck(){
 	startPhase(phase.unshiftDeck);
 }
-function unshiftDeckCard(){
+function actionUnshiftDeckAndCostDown(){
+	startPhase(phase.unshiftDeckAndZero);
+}
+function unshiftDeckCard(costZeroFlag = false){
 	console.log('unshiftDeckCard');
 	if(tmpArea.length === 0){
 		return false;
 	}
 	$('.black-back-area').removeClass('active');
 	$('.return-decide-area').removeClass('active');
-	const restoreCards = deleteAllTemporaryArea();
-	restoreCards.forEach((restoreCard) => {
+	const removeCards = deleteAllTemporaryArea();
+	removeCards.forEach((removeCard) => {
 		setLocalStorage(keyContinueTemporary, tmpArea);
-		const index = findIndexHand('id', restoreCard.id);
+		const index = findIndexHand('id', removeCard.id);
 		if (index === -1) {
 			return false;
 		}
 		const card = spliceHand(index);
 		if (card === undefined) {
 			return false;
+		}
+		if(costZeroFlag){
+			card.amount.tmpCost = 0;
 		}
 		unshiftDeck(card);
 		setLocalStorage(keyContinueDeck, myDeck);
@@ -5008,6 +5157,7 @@ function unshiftDeckCard(){
 	startPhase(phase.action);
 	endAction();
 }
+
 /*******************************************************/
 /* 手札をアップグレードする関数
 /*******************************************************/

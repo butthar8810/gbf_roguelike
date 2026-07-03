@@ -432,6 +432,23 @@ function enemyAttack(enemyInfo, playerInfo, animationFlag, attackCount){
 		}
 		enemyInfo.currentStatus.remainHP -= playerReflection;
 	}
+	// 「カウンター」の効果
+	const counter = playerInfo.statuses
+		.find((status) => status.name === bufStatus.counter.name);
+	if(counter){
+		const playerCounter = counter.amount;
+		const enemyBlock = enemyInfo.currentStatus.block;
+		if(enemyBlock > 0){
+			if(enemyBlock >= playerCounter){
+				enemyInfo.currentStatus.block -= playerCounter;
+				playerCounter = 0;
+			} else if (enemyBlock < playerCounter){
+				enemyInfo.currentStatus.block = 0;
+				playerCounter -= enemyBlock;
+			}
+		}
+		enemyInfo.currentStatus.remainHP -= playerCounter;
+	}
 	if(animationFlag){
 		enemyAttackWaitFlag = true;
 	}
@@ -514,7 +531,7 @@ function enemyCardDebuf(animationFlag, cards){
 	if(!animationFlag){
 		// カードを追加する
 		cards.forEach((card) => {
-			trashCardProcess(card);
+			pushTrash(card);
 		});
 	} else {
 		animatePlayerAddTrash(cards);

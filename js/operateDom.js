@@ -143,15 +143,21 @@ function createCardDom(card){
 	const typeParagraph = $('<p>')
 		.addClass('type')
 		.html(card.type);
-	if(card.name === granCardList.Bloody.name){
-		if (4 > playerStatus.playerCount.HPDownCount) {
-			card.amount.cost = 4 - playerStatus.playerCount.HPDownCount;
-		} else {
-			card.amount.cost = 0;
+		
+	const costDiv = $('<div>');
+	if('costChange' in card.amount){
+		const changeFunc = globalThis[card.amount.costChange];
+		if( typeof changeFunc === 'function'){
+			ret = changeFunc(card.amount);
 		}
 	}
-	const costDiv = $('<div>')
-		.html(card.amount.cost);
+	if('tmpCost' in card.amount && card.amount.cost !== 'X'){
+		costDiv
+			.addClass('costDown')
+			.html(card.amount.tmpCost);
+	}else{
+		costDiv.html(card.amount.cost);
+	}
 	const cardImage = $('<img>')
 		.attr('src', card.image);
 	const cardDiv = $('<div>');

@@ -73,6 +73,7 @@ body{
 	left: -5px;
 	background-color: white;
 	border-radius: 50%;
+	font-size: 16px;
 	color: black;
 	display: flex;
 	justify-content: center;
@@ -94,6 +95,9 @@ body{
 	bottom: 0;
 	left: 0;
 	border-radius: 0 0 5px 5px;
+}
+.costDown{
+	color: rgb(136, 181, 107) !important;
 }
 .gran-card{
 	background-color: #5b80cc;
@@ -1049,6 +1053,9 @@ header{
 	transform: translateY(-30px);
 	background-color: rgba(254, 197, 105);
 	box-shadow: 1px 1px 5px red;
+}
+.hand-card.is-small{
+	font-size: 11px;
 }
 .hand-card.available{
 	box-shadow: -5px -5px 15px 5px rgb(112, 253, 24), 5px 5px 15px 7px rgb(112, 253, 24) !important;
