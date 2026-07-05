@@ -98,6 +98,7 @@ function continueCount(){
 	const lastDiscard = getLocalStorage(keyContinueDiscard);
 	const lastTemporary = getLocalStorage(keyContinueTemporary);
 	const lastStack = getLocalStorage(keyContinueStack);
+	const lastHold = getLocalStorage(keyContinueHold);
 	const lastTurn = getLocalStorage(keyContinueTurn);
 	const lastPlayerStatus = getLocalStorage(keyContinuePlayerStatus);
 	const lastLevel = getLocalStorage(keyContinueLevel);
@@ -106,7 +107,8 @@ function continueCount(){
 	if (lastPlayArea) {playArea = lastPlayArea;}
 	if (lastDiscard ) {discard = lastDiscard;}
 	if (lastTemporary) {tmpArea = lastTemporary;}
-	if (lastStack) {stackCard = lastStack;}
+	if (lastStack) {stackCards = lastStack;}
+	if (lastHold) {holdCard = lastHold;}
 	if (lastTurn) {currentTurn = lastTurn;}
 	if (lastPhase) {currentPhase = lastPhase;}
 	if (lastLevel !== undefined || lastLevel !== null) {
@@ -135,12 +137,12 @@ function initialize(){
 	deleteAllTrash();
 	deleteAllDiscard();
 	deleteAllTemporaryArea();
-	deleteAllStackCard();
+	deleteAllStackCards();
 	currentTurn = 1;
 	playerStatus.remainEnergy = playerStatus.maxEnergy;
 }
 /*******************************************************/
-/* readyDeck：初期デッキとなる10枚のカードを配る
+/* readyDeck：初期デッキとなるカードを配る
 /*******************************************************/
 function readyDeck(){
 	const continueBattleFlag = getLocalStorage(keyContinueBattleFlag);
@@ -225,10 +227,16 @@ function setupBtn(){
 				upGradeCard();
 				break;
 			case phase.reproductionToHand:
-				reproductionToHandCard();
+				reproductionToHandCard(1);
 				break;
 			case phase.twoReproductionToHand:
-				twoReproductionToHandCard();
+				reproductionToHandCard(2);
+				break;
+			case phase.reproductionToNextTurn:
+				reproductionToNextTurnCard(3);
+				break;
+			case phase.repair:
+				repairCard();
 				break;
 			default:
 				break;
@@ -270,10 +278,15 @@ function startPhase(ph){
 			break;
 		case phase.enemy:
 			disabledEndBtn(true);
-			startCleanup();
+			endTurn();
 			break;
 		case phase.trash:
 		case phase.threeTrash:
+			if (myHand.length <= 0) {
+				console.log('手札がありません。');
+				startPhase(phase.action);
+				break;
+			}
 			disabledEndBtn(true);
 			disabledMyHand(false);
 			updateHandDom();
@@ -290,6 +303,11 @@ function startPhase(ph){
 			});
 			break;
 		case phase.discard:
+			if (myHand.length <= 0) {
+				console.log('手札がありません。');
+				startPhase(phase.action);
+				break;
+			}
 			disabledEndBtn(true);
 			disabledMyHand(false);
 			updateHandDom();
@@ -307,6 +325,11 @@ function startPhase(ph){
 			break;
 		case phase.unshiftDeck:
 		case phase.unshiftDeckAndZero:
+			if (myHand.length <= 0) {
+				console.log('手札がありません。');
+				startPhase(phase.action);
+				break;
+			}
 			disabledEndBtn(true);
 			disabledMyHand(false);
 			updateHandDom();
@@ -323,6 +346,11 @@ function startPhase(ph){
 			});
 			break;
 		case phase.upGrade:
+			if (myHand.length <= 0) {
+				console.log('手札がありません。');
+				startPhase(phase.action);
+				break;
+			}
 			disabledEndBtn(true);
 			disabledMyHand(false);
 			updateHandDom();
@@ -341,6 +369,12 @@ function startPhase(ph){
 			break;
 		case phase.reproductionToHand:
 		case phase.twoReproductionToHand:
+		case phase.reproductionToNextTurn:
+			if (myHand.length <= 0) {
+				console.log('手札がありません。');
+				startPhase(phase.action);
+				break;
+			}
 			disabledEndBtn(true);
 			disabledMyHand(false);
 			updateHandDom();
@@ -355,6 +389,20 @@ function startPhase(ph){
 				$('.hand-decide-area').addClass('active');
 				$('.hand-area').addClass('front');
 			});
+			break;
+		case phase.repair:
+			if (myHand.length <= 0) {
+				console.log('手札がありません。');
+				startPhase(phase.enemy);
+				break;
+			}
+			disabledEndBtn(true);
+			disabledMyHand(false);
+			updateHandDom();
+			updateHandDecideTitleDom('保留するカードを選んでください');
+			$('.black-back-area').addClass('active');
+			$('.hand-decide-area').addClass('active');
+			$('.hand-area').addClass('front');
 			break;
 		case phase.restore:
 			if (myTrash.length <= 0) {
@@ -426,7 +474,7 @@ async function startTurn(){
 	for(const hand of myHand){
 		await animateDrawDeck(hand);
 	}
-	$.when(cardDrawPromise).done(() => {
+	$.when(cardDrawPromise,cardAddHandPromise).done(() => {
 		updateHandDom();
 		disabledMyHand(false);
 		updateDeckDom();
@@ -434,16 +482,16 @@ async function startTurn(){
 	startPhase(phase.action);
 }
 /*******************************************************/
-/* endTurn：ターン終了処理を行う
+/* startTurnStatuses：ターン開始時のステータス処理を行う
 /*******************************************************/
-function endTurn(){
-	console.log(`endTurn`);
+function startTurnStatuses(playerInfo, enemiesInfo, animateFlag){
 	//ターン開始時効果を発動する
+	console.log(`endTurnStatuses`);
 	//「攻UP無効」で攻撃力アップが減る
-	const invalidAttackUp = playerStatus.statuses
+	const invalidAttackUp = playerInfo.statuses
 		.find((status) => status.name === debufStatus.invalidAttackUp.name);
 	if (invalidAttackUp){
-		const attackUp = playerStatus.statuses
+		const attackUp = playerInfo.statuses
 			.find((status) => status.name === bufStatus.attackUp.name);
 		if(attackUp){
 			if(attackUp.amount > invalidAttackUp.amount){
@@ -454,10 +502,10 @@ function endTurn(){
 		}
 	}
 	//「防Down削除」で攻撃力ダウンが減る
-	const invalidAttackDown = playerStatus.statuses
+	const invalidAttackDown = playerInfo.statuses
 		.find((status) => status.name === debufStatus.invalidAttackDown.name);
 	if (invalidAttackDown){
-		const attackDown = playerStatus.statuses
+		const attackDown = playerInfo.statuses
 			.find((status) => status.name === debufStatus.attackDown.name);
 		if(attackDown){
 			if(attackDown.amount > invalidAttackDown.amount){
@@ -467,81 +515,91 @@ function endTurn(){
 			}
 		}
 	}
-	//「果ての力」の効果発動
-	const end = playerStatus.statuses
-		.find((status) => status.name === bufStatus.end.name);
-	if (end){
-		actionStatusBufNoAnimate(bufStatus.attackUp, end.amount);
+	//「無限の飛刃」の効果発動
+	const infinite = playerInfo.statuses
+		.find((status) => status.name === bufStatus.infinite.name);
+	if (infinite){
+		if(animateFlag){
+			// アニメーション用
+			const commonCard = [];
+			for(let i = 0; i < infinite.amount; i++){
+				commonCard.push(commonCardList.Knife);
+			}
+			animatePlayerAddHand(commonCard);
+		}else {
+			// 内部処理用
+			for(let i = 0; i < infinite.amount; i++){
+				pushHand(commonCardList.Knife);
+			}	
+		}
 	}
 
+	//「怨念」の効果発動
+	const grudge = playerInfo.statuses
+		.find((status) => status.name === bufStatus.grudge.name);
+	if (grudge){
+		actionStatusAllDebufForAnimate(enemiesInfo, debufStatus.poison, grudge.amount, animateFlag);
+	}
+	//「果ての力」の効果発動
+	const end = playerInfo.statuses
+		.find((status) => status.name === bufStatus.end.name);
+	if (end){
+		actionStatusBufForAnimate(playerInfo, bufStatus.attackUp, end.amount, animateFlag);
+	}
 	//「炎の盾」がある場合はブロックを初期化しないlightWall
-	const wall = playerStatus.statuses
+	const wall = playerInfo.statuses
 		.find((status) => status.name === bufStatus.wall.name);
-	const lightWall = playerStatus.statuses
+	const lightWall = playerInfo.statuses
 		.find((status) => status.name === bufStatus.lightWall.name);
 	if (!wall && !lightWall){
 		// ブロックを解除する
-		playerStatus.block = 0;
+		playerInfo.block = 0;
 	}
 	// 「次ターンブロック」でブロックを得る
-	const nextTurnBlock = playerStatus.statuses
+	const nextTurnBlock = playerInfo.statuses
 		.find((status) => status.name === bufStatus.nextTurnBlock.name);
 	if (nextTurnBlock){
-		playerStatus.block += nextTurnBlock.amount;
+		playerInfo.block += nextTurnBlock.amount;
 	}
 	// エネルギーを回復する
-	playerStatus.remainEnergy = playerStatus.maxEnergy;
+	playerInfo.remainEnergy = playerInfo.maxEnergy;
 	// 「活性」で追加回復
-	const activity = playerStatus.statuses
+	const activity = playerInfo.statuses
 		.find((status) => status.name === bufStatus.activity.name);
 	if (activity){
-		playerStatus.remainEnergy += activity.amount;
+		playerInfo.remainEnergy += activity.amount;
 	}
 	// 「活性化」で追加回復
-	const energized = playerStatus.statuses
+	const energized = playerInfo.statuses
 		.find((status) => status.name === bufStatus.energized.name);
 	if (energized){
-		playerStatus.remainEnergy += energized.amount;
+		playerInfo.remainEnergy += energized.amount;
 	}
-	//「フルンティング」の効果発動
-	const hrunting = playerStatus.statuses
-		.find((status) => status.name === bufStatus.hrunting.name);
-	if (hrunting){
-		damageHP(1);
-		drawCardFromDeck(hrunting.amount);
-	}
-	// 「ヘイスト」で追加2枚
-	const drawCard = playerStatus.statuses
-		.find((status) => status.name === bufStatus.drawCard.name);
-	if (drawCard){
-		drawCardFromDeck(2);
-	}
-	// カードを5枚引く
-	drawCardFromDeck(initialHandNum);
+	
 	// ターン制の状態変化のターンを進める
 	// プレイヤーの状態変化処理
-	playerStatus.statuses.forEach((status, index) => {
+	playerInfo.statuses.forEach((status, index) => {
 		switch(status.name){
 			case bufStatus.defenseUp.name:
-			case bufStatus.penetration.name:
 			case bufStatus.phantasmal.name:
+			case bufStatus.doubleDamage.name:
 			case debufStatus.defenseDown.name:
 			case debufStatus.frail.name:
 			case debufStatus.weak.name:
-			case debufStatus.poison.name:
-			case debufStatus.Fading.name:
 				status.amount--;
 				break;
 			case bufStatus.reflection.name:
 			case bufStatus.wind.name:
-			case bufStatus.nextTurnBlock.name:
+			case bufStatus.attackCombo.name:
+			case bufStatus.skillCombo.name:
 			case bufStatus.activity.name:
-			case bufStatus.drawCard.name:
 			case bufStatus.lightWall.name:
-			case debufStatus.noBlock.name:
+			case bufStatus.nextTurnBlock.name:
+			case bufStatus.nextTurnDraw.name:
 			case debufStatus.noDraw.name:
 			case debufStatus.invalidAttackUp.name:
 			case debufStatus.invalidAttackDown.name:
+			case debufStatus.suffocation.name:
 				status.amount = 0;
 				break;
 			default:
@@ -549,13 +607,23 @@ function endTurn(){
 		}
 	});
 	// 効果が切れた状態変化を削除する
-	playerStatus.statuses = playerStatus.statuses.filter((status) => {
+	playerInfo.statuses = playerInfo.statuses.filter((status) => {
+		return status.amount !== 0;
+	});
+	const Ereshkigal = playerInfo.statuses
+		.find((status) => status.name === bufStatus.Ereshkigal.name);
+	if (Ereshkigal){
+		actionStatusBufForAnimate(playerInfo, bufStatus.doubleDamage, 1, animateFlag);
+		Ereshkigal.amount--;
+	}
+	// 効果が切れた状態変化を削除する
+	playerInfo.statuses = playerInfo.statuses.filter((status) => {
 		return status.amount !== 0;
 	});
 	
 	// エネミーの状態変化処理
-	//「防Down削除」で攻撃力ダウンが減る
-	currentEnemies.forEach((enemy) => {
+	enemiesInfo.forEach((enemy) => {
+		//「防Down削除」で攻撃力ダウンが減る
 		const invalidAttackDown = enemy.currentStatus.status
 			.find((status) => status.name === debufStatus.invalidAttackDown.name);
 		if (invalidAttackDown){
@@ -572,22 +640,23 @@ function endTurn(){
 		enemy.currentStatus.status.forEach((status) => {
 			switch(status.name){
 				case bufStatus.defenseUp.name:
-				case bufStatus.penetration.name:
 				case bufStatus.phantasmal.name:
 				case debufStatus.defenseDown.name:
 				case debufStatus.frail.name:
 				case debufStatus.weak.name:
-				case debufStatus.poison.name:
-				case debufStatus.Fading.name:
 					status.amount--;
 					break;
 				case bufStatus.reflection.name:
 				case bufStatus.wind.name:
-				case debufStatus.noBlock.name:
+				case bufStatus.attackCombo.name:
+				case bufStatus.activity.name:
+				case bufStatus.lightWall.name:
+				case bufStatus.nextTurnBlock.name:
+				case bufStatus.nextTurnDraw.name:
 				case debufStatus.noDraw.name:
-				case debufStatus.suffocation.name:
 				case debufStatus.invalidAttackUp.name:
 				case debufStatus.invalidAttackDown.name:
+				case debufStatus.suffocation.name:
 					status.amount = 0;
 				default:
 					break;
@@ -599,14 +668,47 @@ function endTurn(){
 		});
 	});
 
+	//保留したカードを手札に加える
+	if(animateFlag){
+		// アニメーション用
+		animatePlayerAddHand(holdCard.splice(0, holdCard.length));
+	}else {
+		// 内部処理用
+		holdCard.forEach((card) => {
+			pushHand(card);
+		});	
+	}
+	// 捨て札の枚数をリセットする
+	playerInfo.playerCount.trashCountPerTurn = 0;
+	playerInfo.playerCount.playAttackPerTurn = 0;
+}
+/*******************************************************/
+/* startTurnProcess：ターン開始時の処理を行う
+/*******************************************************/
+function startTurnProcess(){
+	console.log(`startTurnProcess`);
+	//ドロー処理
+	//「フルンティング」の効果発動
+	const hrunting = playerStatus.statuses
+		.find((status) => status.name === bufStatus.hrunting.name);
+	if (hrunting){
+		damageHP(1);
+		drawCardFromDeck(hrunting.amount);
+	}
+	// 「ヘイスト」で追加2枚
+	const nextTurnDraw = playerStatus.statuses
+		.find((status) => status.name === bufStatus.nextTurnDraw.name);
+	if (nextTurnDraw){
+		drawCardFromDeck(nextTurnDraw.amount);
+	}
+	// カードを5枚引く
+	drawCardFromDeck(initialHandNum);
+
 	// 次の予測を決定する
 	decideNextAction();
-	// 捨て札の枚数をリセットする
-	playerStatus.playerCount.trashCountPerTurn = 0;
-	playerStatus.playerCount.playAttackPerTurn = 0;
+
 	// ターンを進める
 	currentTurn++;
-
 }
 /*******************************************************/
 /* startAbility：敵やAFの開始時効果処理を行う
@@ -646,9 +748,9 @@ function startAbility(){
 }
 
 /*******************************************************/
-/* startCleanup：ターン終了処理を行う
+/* endTurn：ターン終了処理を行う
 /*******************************************************/
-function startCleanup(){
+function endTurn(){
 	// カードに触れれなくする
 	disabledMyHand(true);
 	// 手札を捨て札エリアに格納
@@ -693,6 +795,22 @@ function startCleanup(){
 		actionAllAttackSimple(madness.amount);
 		updateEnemyStatusDom(currentEnemies);
 	}
+
+	// エネミーの状態変化処理
+	currentEnemies.forEach((enemy) => {
+		// 「毒」の効果発動
+		const poison = enemy.currentStatus.status
+			.find((status) => status.name === debufStatus.poison.name);
+		if (poison){
+			enemy.currentStatus.remainHP -= poison.amount;
+			poison.amount--;
+		}
+		// 効果が切れた状態変化を削除する
+		enemy.currentStatus.status = enemy.currentStatus.status.filter((status) => {
+			return status.amount !== 0;
+		});
+	});
+	updateEnemyStatusDom(currentEnemies);
 	startEnemiesTurn();
 }
 
@@ -782,7 +900,7 @@ function playHandCard(index){
 	const card = spliceHand(index);
 	// 手札表示の更新
 	updateHandDom();
-	pushStackCard({
+	pushStackCards({
 		func: card.func,
 		amount: card.amount,
 	});
@@ -794,17 +912,23 @@ function playHandCard(index){
 		actionBlock(wind.amount);
 	}
 	//「連撃アップ」の効果
-	const combo = playerStatus.statuses
-		.find((status) => status.name === bufStatus.combo.name);
-	if (combo && combo.amount > 0 && card.type === type.attack){
-		pushStackCard({
+	const attackCombo = playerStatus.statuses
+		.find((status) => status.name === bufStatus.attackCombo.name);
+	if (attackCombo && attackCombo.amount > 0 && card.type === type.attack){
+		pushStackCards({
 			func: card.func,
 			amount: card.amount,
 		});
-		combo.amount--;
-		playerStatus.statuses = playerStatus.statuses.filter((status) => {
-			return status.amount > 0;
+		attackCombo.amount--;
+	}
+	const skillCombo = playerStatus.statuses
+		.find((status) => status.name === bufStatus.skillCombo.name);
+	if (skillCombo && skillCombo.amount > 0 && card.type === type.skill){
+		pushStackCards({
+			func: card.func,
+			amount: card.amount,
 		});
+		skillCombo.amount--;
 	}
 	currentEnemies.forEach((enemy) => {
 		//「窒息」効果
@@ -815,12 +939,14 @@ function playHandCard(index){
 			enemy.currentStatus.remainHP -= suffocation.amount;
 		}
 	});
-	
+	playerStatus.statuses = playerStatus.statuses.filter((status) => {
+		return status.amount > 0;
+	});
 	if(card.type === type.attack){
 		playerStatus.playerCount.playAttackPerTurn++;
 	}
 	setLocalStorage(keyContinueHand, myHand);
-	setLocalStorage(keyContinueStack, stackCard);
+	setLocalStorage(keyContinueStack, stackCards);
 	setLocalStorage(keyContinuePlayerStatus, playerStatus);
 
 	endAction();
@@ -830,7 +956,7 @@ function playHandCard(index){
 /*******************************************************/
 function endAction(){
 	let ret = false;
-	if ( stackCard.length === 0 ){
+	if ( stackCards.length === 0 ){
 		const playCards = deleteAllPlayArea();
 		setLocalStorage(keyContinuePlayArea, playArea);
 		playCards.forEach((playCard) => {
@@ -855,7 +981,7 @@ function endAction(){
 		return true;
 	}
 	// 攻撃を内部的に行う
-	const cardInfo = shiftStackCard();
+	const cardInfo = shiftStackCards();
 	if (cardInfo !== undefined) {
 		const storedFunc = globalThis[cardInfo.func];
 		if( typeof storedFunc === 'function'){
@@ -867,7 +993,7 @@ function endAction(){
 	setLocalStorage(keyContinueTrash, myTrash);
 	setLocalStorage(keyContinueDiscard, discard);
 	setLocalStorage(keyContinuePlayArea, playArea);
-	setLocalStorage(keyContinueStack, stackCard);
+	setLocalStorage(keyContinueStack, stackCards);
 	setLocalStorage(keyContinuePlayerStatus, playerStatus);
 	setLocalStorage(keyContinueEnemy, currentEnemies);
 	// ステータス部分だけ更新する
@@ -956,13 +1082,14 @@ function clickHandProcess(handCardDiv, hand){
 		case phase.discard:
 		case phase.unshiftDeck:
 		case phase.unshiftDeckAndZero:
+		case phase.reproductionToNextTurn:
 			if (index === -1) {
 				if (tmpArea.length < 1){
 					pushTemporaryArea(hand);
 					handCardDiv.addClass("select");
 				} else {
-					spliceTemporaryArea(index);
-					$('.hand-card').removeClass("select");
+					const cancelCard = shiftTemporaryArea();
+					$(`#hand-card${cancelCard.id}`).removeClass("select");
 					pushTemporaryArea(hand);
 					handCardDiv.addClass("select");
 				}
@@ -974,6 +1101,11 @@ function clickHandProcess(handCardDiv, hand){
 		case phase.threeTrash:
 			if (index === -1) {
 				if (tmpArea.length < 3){
+					pushTemporaryArea(hand);
+					handCardDiv.addClass("select");
+				} else {
+					const cancelCard = shiftTemporaryArea();
+					$(`#hand-card${cancelCard.id}`).removeClass("select");
 					pushTemporaryArea(hand);
 					handCardDiv.addClass("select");
 				}
@@ -990,8 +1122,8 @@ function clickHandProcess(handCardDiv, hand){
 						handCardDiv.addClass("select");
 						selectEnhanceCardDom(hand);
 					} else {
-						spliceTemporaryArea(index);
-						$('.hand-card').removeClass("select");
+						const cancelCard = shiftTemporaryArea();
+						$(`#hand-card${cancelCard.id}`).removeClass("select");
 						pushTemporaryArea(hand);
 						handCardDiv.addClass("select");
 						selectEnhanceCardDom(hand);
@@ -1010,8 +1142,8 @@ function clickHandProcess(handCardDiv, hand){
 						pushTemporaryArea(hand);
 						handCardDiv.addClass("select");
 					} else {
-						spliceTemporaryArea(index);
-						$('.hand-card').removeClass("select");
+						const cancelCard = shiftTemporaryArea();
+						$(`#hand-card${cancelCard.id}`).removeClass("select");
 						pushTemporaryArea(hand);
 						handCardDiv.addClass("select");
 					}
@@ -1021,6 +1153,24 @@ function clickHandProcess(handCardDiv, hand){
 				}
 			} else {
 				alert('「アタック」か「パワー」しか選択できません。')
+			}
+			break;
+		case phase.repair:
+			const repair = playerStatus.statuses
+				.find((status) => status.name === bufStatus.repair.name);
+			if (index === -1) {
+				if (tmpArea.length < repair.amount){
+					pushTemporaryArea(hand);
+					handCardDiv.addClass("select");
+				} else {
+					const cancelCard = shiftTemporaryArea();
+					$(`#hand-card${cancelCard.id}`).removeClass("select");
+					pushTemporaryArea(hand);
+					handCardDiv.addClass("select");
+				}
+			} else {
+				spliceTemporaryArea(index);
+				handCardDiv.removeClass("select");
 			}
 			break;
 		default:
@@ -1089,7 +1239,7 @@ function clickDiscardCardProcess(trashCardDiv, card){
 /*******************************************************/
 function trashCardProcess(trashCard){
 	if('trashFunc' in trashCard.amount && trashCard.amount.trashFunc !== ''){
-		pushStackCard({
+		pushStackCards({
 			func: trashCard.trashFunc,
 			amount: trashCard.amount,
 		});
@@ -1119,7 +1269,7 @@ function discardCardProcess(discardCard){
 	}
 
 	if('discardFunc' in discardCard.amount && discardCard.amount.discardFunc !== ''){
-		pushStackCard({
+		pushStackCards({
 			func: discardCard.discardFunc,
 			amount: discardCard.amount,
 		});
@@ -1194,7 +1344,8 @@ async function startEnemiesTurn(){
 			}
 		}
 	}
-	endTurn();
+	startTurnStatuses(playerStatus, currentEnemies, false);
+	startTurnProcess();
 	currentPhase = phase.action;
 	setLocalStorage(keyContinuePhase, currentPhase);
 	setLocalStorage(keyContinueDeck, myDeck);
@@ -1232,6 +1383,7 @@ async function startEnemiesTurn(){
 		updateEnemyAreaDom(animateCurrentEnemies, true);
 		enemyAttackWaitFlag = false;
 	}
+	startTurnStatuses(animatePlayerStatus, animateCurrentEnemies, true);
 	startTurn();
 }
 /*******************************************************/

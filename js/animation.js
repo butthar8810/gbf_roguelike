@@ -13,7 +13,7 @@ const playerDamageWaitTime = 1000;
 const defeatedWaitTime = 1000;
 const drawWaitTime = 300;
 const trashWaitTime = 500;
-const showWaitTime = 1500;
+const showWaitTime = 1200;
 const enemyAttackGoWaitTime = 500;
 const enemyAttackReturnWaitTime = 500;
 /*************************************************************************************/
@@ -187,7 +187,7 @@ function animatePlayerAddTrash(cards){
 /* animatePlayerAddTrash：手札にカードを追加するアニメーション
 /*******************************************************/
 function animatePlayerAddHand(cards){
-	cardDrawPromise = new Promise((resolve) => {
+	cardAddHandPromise = new Promise((resolve) => {
 		$('.show-area').removeClass('hidden');
 		$('.show-area-inner').html('');
 		cards.forEach((card, i) => {

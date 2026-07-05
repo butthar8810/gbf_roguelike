@@ -19,54 +19,66 @@ const stages = {
 /*****************************************************************************/
 // バフ
 const bufStatus = {
+	//永続
 	attackUp: {name: '攻撃力アップ', amount: '',effect: '攻撃ダメージが+{X}。',image: 'images/status/status_1001.png'},
-	defenseUp: {name: '防御力アップ', amount: '', effect: 'アタックで受けるダメージが50%減少。{X}ターン有効。',image: 'images/status/status_1019.png'},
 	dexterity: {name: '回避率アップ', amount: '', effect: 'カードから得られるブロックが+{X}。', image: 'images/status/status_1566.png'},
-	reflection: {name: '反射', amount: '', effect: '攻撃を受けるたび、攻撃した敵に{X}ダメージを与える。1ターン有効。', image: 'images/status/status_1062_3.png'},
 	counter: {name: 'カウンター', amount: '', effect: '攻撃を受けるたび、攻撃を行った敵に{X}ダメージを与える。', image: 'images/status/status_1541.png'},
-	wind: {name: '風の障壁', amount: '', effect: '「アタック」をプレイするたび{X}ブロックを得る。1ターン有効。', image: 'images/status/status_6132_4.png'},
-	combo: {name: '連撃アップ', amount: '', effect: '次の{X}枚の「アタック」を2回プレイする。1ターン有効。', image: 'images/status/status_1004.png'},
 	lamentation: {name: '嘆きの盾', amount: '', effect: 'ブロックを得るたび、ランダムな敵に{X}ダメージを与える。', image: 'images/status/status_6132_5.png'},
 	compensation: {name: '血の代償', amount: '', effect: 'カードのプレイによってHPが失われるたび、攻撃力アップ{X}を得る。', image: 'images/status/status_6568.png'},
 	barrage: {name: '弾幕', amount: '', effect: '状態異常を引くたび、敵全体に{X}ダメージを与える。', image: 'images/status/status_14311.png'},
 	adversity: {name: '逆境', amount: '', effect: '状態異常を引くたび、カードを{X}枚引く。', image: 'images/status/status_1181.png'},
 	painless: {name: '無痛', amount: '', effect: 'カードを廃棄するたび、{X}ブロックを得る。', image: 'images/status/status_6083.png'},
 	eye: {name: '慧眼', amount: '', effect: 'カードを廃棄するたび、カードを{X}枚引く。', image: 'images/status/status_7122.png'},
-	activity: {name: '活性', amount: '', effect: '次のターン開始時、{X}エナジーを得る。1ターン有効', image: 'images/status/status_2.png'},
-	energized: {name: '活性化', amount: '', effect: '次のターン開始時、{X}エナジーを得る。', image: 'images/status/status_1638.png'},
-	drawCard: {name: 'ヘイスト', amount: '', effect: '次のターン開始時、{X}枚のカードを引く。', image: 'images/status/status_1058.png'},
-	lightWall: {name: '光の盾', amount: '', effect: 'ターン開始時にブロック値を失わない。1ターン有効', image: 'images/status/status_7343.png'},
+	energized: {name: '活性化', amount: '', effect: 'ターン開始時、{X}エナジーを得る。', image: 'images/status/status_1638.png'},
 	wall: {name: '炎の盾', amount: '', effect: 'ターン開始時にブロック値を失わない。', image: 'images/status/status_7343.png'},
 	end: {name: '果ての力', amount: '', effect: 'ターン開始時に、攻撃力アップ{X}を得る。', image: 'images/status/status_7980_1.png'},
 	hrunting: {name: 'フルンティング', amount: '', effect: 'ターン開始時に、HPを1失いカードを{X}枚引く。', image: 'images/status/status_3170.png'},
-	nextTurnBlock: {name: '次ターンブロック', amount: '', effect: '次ターン開始時、ブロック{X}を得る。1ターン有効', image: 'images/status/status_1075.png'},
-	phantasmal: {name: '幻影', amount: '', effect: '次のターン開始時、ダブルアタックを得る。{X}ターン有効。', image: 'images/status/status_1313.png'},
-	doubleDamage: {name: 'ダブルアタック', amount: '', effect: 'アタックのダメージが2倍になる。1ターン有効。', image: 'images/status/status_1004.png'},
+	grudge: {name: '怨念', amount: '', effect: 'ターン開始時に、敵全体に毒{X}を与える。', image: 'images/status/status_8_2.png'},
 	barrier: {name: 'バリア', amount: '', effect: 'ターン終了時、{X}ブロックを得る。', image: 'images/status/status_1314.png'},
 	regeneration: {name: '再生', amount: '', effect: 'ターン終了時、HPを{X}回復する。', image: 'images/status/status_2.png'},
 	madness: {name: '狂化', amount: '', effect: 'ターン終了時にHPを1失い、すべての敵に{X}ダメージを与える。', image: 'images/status/status_3097.png'},
 	sacred: {name: '禁聖', amount: '', effect: '「スキル」がエナジーを消費しない。プレイした「スキル」は廃棄する。', image: 'images/status/status_7758.png'},
+	hitRate: {name: '命中率アップ', amount: '', effect: 'ナイフが{X}の追加ダメージを与える。', image: 'images/status/status_1057.png'},
+	infinite: {name: '無限の飛刃', amount: '', effect: 'ターン開始時に、ナイフを{X}枚手札に加える。', image: 'images/status/status_7769_1.png'},
+	repair: {name: 'リペア', amount: '', effect: 'ターン終了時に、カードを{X}枚保留する。', image: 'images/status/status_1609.png'},
+	// ターン制
+	defenseUp: {name: '防御力アップ', amount: '', effect: 'アタックで受けるダメージが50%減少。{X}ターン有効。',image: 'images/status/status_1019.png'},
+	phantasmal: {name: '幻影', amount: '', effect: 'ターン開始時、ダブルアタックを得る。{X}ターン有効。', image: 'images/status/status_1313.png'},
+	Ereshkigal: {name: 'エレシュキガル', amount: '', effect: 'ターン開始時、ダブルアタックを得る。{X}ターン有効。', image: 'images/status/status_1413_8.png'},
+	doubleDamage: {name: 'ダブルアタック', amount: '', effect: 'アタックのダメージが2倍になる。1ターン有効', image: 'images/status/status_7608.png'},
+	// 1ターン有効
+	reflection: {name: '反射', amount: '', effect: '攻撃を受けるたび、攻撃した敵に{X}ダメージを与える。1ターン有効。', image: 'images/status/status_1062_3.png'},
+	wind: {name: '風の障壁', amount: '', effect: '「アタック」をプレイするたび{X}ブロックを得る。1ターン有効。', image: 'images/status/status_6132_4.png'},
+	attackCombo: {name: '連撃アップ(アタック)', amount: '', effect: '次の{X}枚の「アタック」を2回プレイする。1ターン有効。', image: 'images/status/status_1004.png'},
+	skillCombo: {name: '連撃アップ(スキル)', amount: '', effect: '次の{X}枚の「スキル」を2回プレイする。1ターン有効。', image: 'images/status/status_7980_3.png'},
+	activity: {name: '活性', amount: '', effect: '次のターン開始時、{X}エナジーを得る。1ターン有効', image: 'images/status/status_2.png'},
+	lightWall: {name: '光の盾', amount: '', effect: 'ターン開始時にブロック値を失わない。1ターン有効', image: 'images/status/status_7343.png'},
+	nextTurnBlock: {name: '次ターンブロック', amount: '', effect: '次ターン開始時、ブロック{X}を得る。1ターン有効', image: 'images/status/status_1075.png'},
+	nextTurnDraw: {name: 'ヘイスト', amount: '', effect: 'ターン開始時、{X}枚のカードを引く。1ターン有効。', image: 'images/status/status_1058.png'},
+	reproduction: {name: '複製', amount: '', effect: '次のターン開始時、選択したカードを{X}枚手札に加える。1ターン有効', image: 'images/status/status_7631.png'},
 
+	//実装待ち
 	mount: {name: '弱体無効', amount: '', effect: 'デバフを{X}回無効化。', image: 'images/status/status_1003.png'},
 	afterImage: {name: '残像', amount: '', effect: 'カードを1枚プレイするたび、{X}ブロックを得る。', image: 'images/status/status_1566.png'},
 	invincible: {name: '無敵', amount: '', effect: 'このターン中に減らせるHPは、残り{X}。', image: 'images/status/status_62.png'},
-	penetration: {name: '貫通', amount: '', effect: '攻撃ダメージがブロックを無視する。{X}ターン有効。', image: 'images/status/status_1240.png'},
-	grudge: {name: '怨念', amount: '', effect: 'ターン開始時に、敵全体に毒{X}を与える。', image: 'images/status/status_8_2.png'},
-	infinite: {name: '無限の飛刃', amount: '', effect: 'ターン開始時に、ナイフを{X}枚手札に加える。', image: 'images/status/status_7769_1.png'},
-	hitRate: {name: '命中率アップ', amount: '', effect: 'ナイフが{X}の追加ダメージを与える。', image: 'images/status/status_1057.png'},
+	Bonus: {name: '追撃', amount: '', effect: 'カードを1枚プレイするたび、敵全体に{X}ダメージを与える。', image: 'images/status/status_1383.png'},
 };
 // デバフ
 const debufStatus = {
+	// 永続
 	attackDown: {name: '攻撃力ダウン', amount: '', effect: '攻撃ダメージが-{X}。', image: 'images/status/status_1010.png'},
+	autophagy: {name: '自壊因子', amount: '', effect: 'この敵が死亡した時、その最大HPの{X}倍に等しいダメージを敵全体に与える。', image: 'images/status/status_3096.png'},
+	// ターン制
 	defenseDown: {name: '防御力ダウン', amount: '', effect: 'アタックで受けるダメージが50%増加。{X}ターン有効。', image: 'images/status/status_1020.png'},
 	frail: {name: '脆弱化', amount: '', effect: 'カードから得られるブロックが25%減少。{X}ターン有効。', image: 'images/status/status_1011.png'},
 	weak: {name: '恐怖', amount: '', effect: 'アタックで与えるダメージが25%減少。{X}ターン有効。', image: 'images/status/status_1374.png'},
-	noDraw: {name: 'ドロー不可', amount: '', effect: 'カードからブロックを得られない。{X}ターン有効。', image: 'images/status/status_3270.png'},
+	poison: {name: '毒', amount: '', effect: 'ターン開始時、HPを{X}失い、毒が1減少。', image: 'images/status/status_8.png'},
+	// 1ターン有効
+	noDraw: {name: 'ドロー不可', amount: '', effect: 'ターン終了時までカードが引けない。1ターン有効', image: 'images/status/status_3270.png'},
 	invalidAttackUp: {name: '攻UP削除', amount: '',effect: 'ターン終了時、攻撃力アップを{X}下げる',image: 'images/status/status_9999.png'},
 	invalidAttackDown: {name: '攻Down削除', amount: '',effect: 'ターン終了時、攻撃力ダウンを{X}下げる',image: 'images/status/status_9999_2.png'},
 	suffocation: {name: '窒息', amount: '', effect: 'カードをプレイするたび、HPを{X}失う。1ターン有効', image: 'images/status/status_1103.png'},
 
-	poison: {name: '毒', amount: '', effect: 'ターン開始時、HPを{X}失い、毒が1減少。', image: 'images/status/status_8.png'},
 	sleep: {name: '眠り', amount: '', effect: 'この敵はまだ目覚めていない…', image: 'images/status/status_1263.png'},
 	paralysis: {name: '麻痺', amount: '', effect: '{X}ターンの間「アタック」をプレイできない。', image: 'images/status/status_102.png'},
 	heat: {name: '灼熱', amount: '', effect: 'カードをプレイするたび、あなたは{X}ダメージを受ける。', image: 'images/status/status_83.png'},
@@ -130,6 +142,7 @@ const keyContinueTurn = 'Babu.Continue.Turn';
 const keyContinueEnemy = 'Babu.Continue.Enemy';
 const keyContinueLevel = 'Babu.Continue.Level';
 const keyContinueReward = 'Babu.Continue.Reward';
+const keyContinueHold = 'Babu.Continue.hold';
 const keyContinuePhase = 'Babu.Continue.Phase';
 
 
@@ -148,6 +161,8 @@ const phase = {
 	unshiftDeckAndZero: 'アンシフトデッキアンドゼロフェイズ', // 手札をデッキに
 	reproductionToHand: '複製フェイズ', // 複製を手札に
 	twoReproductionToHand: '2枚複製フェイズ', // 複製を手札に
+	reproductionToNextTurn: 'ミラーフェイズ', // 複製をミラーエリアに
+	repair: 'リペアフェイズ', // 保留カード選定
 };
 
 /*****************************************************************************/
@@ -180,8 +195,8 @@ let myTrash = [];
 let playArea = [];
 let discard = [];
 let tmpArea =[];
-let stackCard = [];
-let myBlock = 0;
+let stackCards = [];
+let holdCard =[];
 let currentTurn = 0;
 let currentEnemies = [];
 let currentTarget = {};
@@ -197,6 +212,7 @@ let cardTrashPromise = Promise.resolve();
 let cardDiscardPromise = Promise.resolve();
 let cardRestorePromise = Promise.resolve();
 let cardShowPromise = Promise.resolve();
+let cardAddHandPromise = Promise.resolve();
 let playerAttackPromise = Promise.resolve();
 let playerAbnormalityPromise = Promise.resolve();
 let playerGetBlockPromise = Promise.resolve();

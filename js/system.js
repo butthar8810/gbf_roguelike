@@ -405,22 +405,22 @@ function deleteAllTemporaryArea(){
 	return tmpArea.splice(0, tmpArea.length);
 }
 /*******************************************************/
-/* pushStackCard：カード効果実行キューの末尾にカードを追加する
+/* pushStackCards：カード効果実行キューの末尾にカードを追加する
 /*******************************************************/
-function pushStackCard(func){
-	stackCard.push(func);
+function pushStackCards(func){
+	stackCards.push(func);
 }
 /*******************************************************/
-/* shiftStackCard：カード効果実行キューの先頭からデータを取り出す
+/* shiftStackCards：カード効果実行キューの先頭からデータを取り出す
 /*******************************************************/
-function shiftStackCard(){
-	return stackCard.shift();
+function shiftStackCards(){
+	return stackCards.shift();
 }
 /*******************************************************/
-/* deleteAllStackCard：カード効果実行キューをすべて削除する
+/* deleteAllStackCards：カード効果実行キューをすべて削除する
 /*******************************************************/
-function deleteAllStackCard(){
-	return stackCard.splice(0, stackCard.length);
+function deleteAllStackCards(){
+	return stackCards.splice(0, stackCards.length);
 }
 /*******************************************************/
 /* shuffleArray：配列のシャッフル

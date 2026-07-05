@@ -91,6 +91,10 @@ function createCardDom(card){
 			case granEnhancedCardList.Dig.name:
 				attackDamage = calcDamage(card.amount.attack, currentTarget, card.amount.magnification);
 				break;
+			case commonCardList.Knife.name:
+			case commonEnhancedCardList.Knife.name:
+				attackDamage = calcKnifeDamage(card.amount.attack, currentTarget);
+				break;
 			default:
 				attackDamage = calcDamage(card.amount.attack, currentTarget);
 				break;
@@ -389,6 +393,7 @@ function updatePlayerStatusDom(argPlayerStatus){
 	$('.player-statuses').html('');
 	$('.player-modals').html('');
 	argPlayerStatus.statuses.forEach((status) => {
+		console.log(status);
 		// ステータス[status]の要素
 		const statusImage = $('<img>')
 			.attr('src', status.image);
@@ -866,7 +871,13 @@ function disabledEndBtn(flag){
 	} else {
 		$('.end-btn').off();
 		$('.end-btn').click((e) => {
-			startPhase(phase.enemy);
+			const repair = playerStatus.statuses
+				.find((status) => status.name === bufStatus.repair.name);
+			if (repair){
+				startPhase(phase.repair);
+			}else{
+				startPhase(phase.enemy);
+			}
 		});
 	}
 	return $('.end-btn').prop('disabled', flag);
