@@ -3481,7 +3481,7 @@ const djeetaCardList = {
 		effect: `毒6を与える。対象の敵が死亡した時、その最大HPに等しいダメージをすべての敵に与える。`,
 		amount: {
 			cost: 2,
-			debuff1: 2,
+			debuff1: 6,
 			debuffType1: 'poison',
 			debuff2: 1,
 			debuffType2: 'autophagy',
@@ -3495,13 +3495,12 @@ const djeetaCardList = {
 		class: cardClass.djeeta,
 		rarity: rarity.rare,
 		type: type.skill,
-		func: '',
+		func: 'effectAlTrashAndGetKnife',
 		image:'images/card/djeeta_Mirror.jpg',
 		effect: `手札をすべて捨てる。捨てたカード1枚につきナイフを1枚手札に加える。`,
 		amount: {
 			cost: 3,
-			buff: 3,
-			buffType: 'mirror',
+			commonCard: 'Knife',
 			discard: false,
 		}
 	},
@@ -3515,10 +3514,10 @@ const djeetaCardList = {
 		type: type.power,
 		func: 'effectBuff',
 		image:'images/card/djeeta_Parazonium.jpg',
-		effect: `カードをプレイするたび、敵全体に1ダメージを与える。`,
+		effect: `カードをプレイするたび、敵全体に{F}ダメージを与える。`,
 		amount: {
 			cost: 2,
-			buff: 3,
+			buff: 1,
 			buffType: 'Bonus',
 		}
 	},
@@ -3531,11 +3530,11 @@ const djeetaCardList = {
 		type: type.power,
 		func: 'effectBuff',
 		image:'images/card/djeeta_CaitSea.jpg',
-		effect: `ターン開始時に、カードを1枚引き、1枚捨てる。`,
+		effect: `ターン開始時に、カードを{F}枚引き、{F}枚捨てる。`,
 		amount: {
 			cost: 1,
-			buff: 3,
-			buffType: '',
+			buff: 1,
+			buffType: 'caitSea',
 		}
 	},
 	//死霊化
@@ -3547,13 +3546,13 @@ const djeetaCardList = {
 		type: type.power,
 		func: 'effectBuffAndDebuff',
 		image:'images/card/djeeta_NewWarld.jpg',
-		effect: `無形2を得る。ターン終了時に敏捷性1を失う。`,
+		effect: `ダメージカット{F}を得る。ターン終了時ごとに回避率ダウン{D}を得る。`,
 		amount: {
 			cost: 3,
 			buff: 2,
-			buffType: '',
+			buffType: 'damageCut',
 			debuff: 1,
-			debuffType: '',
+			debuffType: 'slowing',
 		}
 	},
 	//残像
@@ -3744,9 +3743,9 @@ function setupDeck(){
 			addCardToOriginalDeck(djeetaCardList.Defense, 5);
 			addCardToOriginalDeck(djeetaCardList.Assassin, 1);
 			addCardToOriginalDeck(djeetaCardList.Pulverizer, 1);
-			addCardToOriginalDeck(djeetaCardList.FlyingBlade, 2);
-			addCardToOriginalDeck(djeetaCardList.Decomposition, 2);
-			addCardToOriginalDeck(djeetaCardList.Mirror, 2);
+			addCardToOriginalDeck(djeetaCardList.Autophagy, 2);
+			addCardToOriginalDeck(djeetaCardList.CaitSea, 2);
+			addCardToOriginalDeck(djeetaCardList.NewWarld, 2);
 		}
 	}
 }
@@ -4839,7 +4838,24 @@ function effectReproductionToNextTurn(amount){
 	actionReproductionToNextTurn();
 	return true;
 }
-
+function effectAlTrashAndGetKnife(amount){
+	// 手札をすべて捨てる。捨てたカード1枚につきナイフを1枚手札に加える。
+	console.log('effectAlTrashAndGetKnife');
+	const trashHand = deleteAllHand();
+	trashHand.forEach((card) => {
+		animateHandToTrash(card);
+	});
+	updateTrashDom();
+	if('commonCard' in amount){
+		const commonCard = [];
+		for(let i = 0; i < trashHand.length; i++){
+			pushHand(commonCardList[amount.commonCard]);
+			commonCard.push(commonCardList[amount.commonCard]);
+		}
+		animatePlayerAddHand(commonCard);
+	}
+	return true;
+}
 
 
 
@@ -4939,13 +4955,8 @@ function calcDamage(attackCount, targetEnemy, AttackUpMag = 1){
 		// エネミーの状態異常を確認
 		targetEnemy.currentStatus.status.forEach((status) => {
 			switch(status.name){
-				case bufStatus.invincible.name:// 無敵(このターン中に減らせるHPは、残りX。)
-					if (totalAttack > status.amount){
-						totalAttack = status.amount;
-						status.amount = 0;
-					} else {
-						status.amount -= totalAttack;
-					}
+				case bufStatus.damageCut.name://ダメージカット
+					
 					break;
 				default:
 					break;
@@ -5129,12 +5140,12 @@ function calcBlock(blockCount){
 	if (dexterity){
 		totalBlock += dexterity.amount;
 	}
-	// 石化の効果
-	const petrification = playerStatus.statuses
-		.find((status) => status.name === debufStatus.petrification.name);
-	if (petrification){
-		if(totalBlock > petrification.amount){
-			totalBlock -= petrification.amount;
+	// 回避率ダウンの効果
+	const dexterityDown = playerStatus.statuses
+		.find((status) => status.name === debufStatus.dexterityDown.name);
+	if (dexterityDown){
+		if(totalBlock > dexterityDown.amount){
+			totalBlock -= dexterityDown.amount;
 		} else {
 			totalBlock = 0;
 		}
@@ -5326,8 +5337,6 @@ function trashCard(){
 		updateTrashDom();
 	});
 	startPhase(phase.action);
-	
-	endAction();
 }
 
 /*******************************************************/

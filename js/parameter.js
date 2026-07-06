@@ -41,11 +41,13 @@ const bufStatus = {
 	hitRate: {name: '命中率アップ', amount: '', effect: 'ナイフが{X}の追加ダメージを与える。', image: 'images/status/status_1057.png'},
 	infinite: {name: '無限の飛刃', amount: '', effect: 'ターン開始時に、ナイフを{X}枚手札に加える。', image: 'images/status/status_7769_1.png'},
 	repair: {name: 'リペア', amount: '', effect: 'ターン終了時に、カードを{X}枚保留する。', image: 'images/status/status_1609.png'},
+	caitSea: {name: 'ケット・シー', amount: '', effect: 'ターン開始時に、カードを{X}枚引き、{X}枚捨てる。', image: 'images/status/status_1609.png'},
 	// ターン制
 	defenseUp: {name: '防御力アップ', amount: '', effect: 'アタックで受けるダメージが50%減少。{X}ターン有効。',image: 'images/status/status_1019.png'},
 	phantasmal: {name: '幻影', amount: '', effect: 'ターン開始時、ダブルアタックを得る。{X}ターン有効。', image: 'images/status/status_1313.png'},
 	Ereshkigal: {name: 'エレシュキガル', amount: '', effect: 'ターン開始時、ダブルアタックを得る。{X}ターン有効。', image: 'images/status/status_1413_8.png'},
 	doubleDamage: {name: 'ダブルアタック', amount: '', effect: 'アタックのダメージが2倍になる。1ターン有効', image: 'images/status/status_7608.png'},
+	damageCut: {name: 'ダメージカット', amount: '', effect: 'すべてのダメージとHPを失う効果を1に軽減する。{X}ターン有効。', image: 'images/status/status_1609.png'},
 	// 1ターン有効
 	reflection: {name: '反射', amount: '', effect: '攻撃を受けるたび、攻撃した敵に{X}ダメージを与える。1ターン有効。', image: 'images/status/status_1062_3.png'},
 	wind: {name: '風の障壁', amount: '', effect: '「アタック」をプレイするたび{X}ブロックを得る。1ターン有効。', image: 'images/status/status_6132_4.png'},
@@ -67,7 +69,9 @@ const bufStatus = {
 const debufStatus = {
 	// 永続
 	attackDown: {name: '攻撃力ダウン', amount: '', effect: '攻撃ダメージが-{X}。', image: 'images/status/status_1010.png'},
+	dexterityDown: {name: '回避率ダウン', amount: '', effect: 'カードから得られるブロックが-{X}。', image: 'images/status/status_1566.png'},
 	autophagy: {name: '自壊因子', amount: '', effect: 'この敵が死亡した時、その最大HPの{X}倍に等しいダメージを敵全体に与える。', image: 'images/status/status_3096.png'},
+	slowing: {name: '鈍化', amount: '', effect: 'ターン終了時に回避率ダウン1を得る。', image: 'images/status/status_3270.png'},
 	// ターン制
 	defenseDown: {name: '防御力ダウン', amount: '', effect: 'アタックで受けるダメージが50%増加。{X}ターン有効。', image: 'images/status/status_1020.png'},
 	frail: {name: '脆弱化', amount: '', effect: 'カードから得られるブロックが25%減少。{X}ターン有効。', image: 'images/status/status_1011.png'},
@@ -163,6 +167,7 @@ const phase = {
 	twoReproductionToHand: '2枚複製フェイズ', // 複製を手札に
 	reproductionToNextTurn: 'ミラーフェイズ', // 複製をミラーエリアに
 	repair: 'リペアフェイズ', // 保留カード選定
+	caitSea: 'ケットシーフェイズ', // 捨てるカード選定
 };
 
 /*****************************************************************************/

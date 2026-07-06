@@ -83,7 +83,7 @@ function continueBattle(){
 	
 	// フェイズ開始
 	if (currentPhase !== null){
-		startPhase(currentPhase);
+		startPhase();
 	} else {
 		startPhase(phase.action);
 	}
@@ -214,6 +214,14 @@ function setupBtn(){
 				}
 				trashCard();
 				break;
+			case phase.caitSea:
+				const caitSea = playerStatus.statuses
+					.find((status) => status.name === bufStatus.caitSea.name);
+				if(tmpArea.length < caitSea.amount){
+					break;
+				}
+				trashCard();
+				break;
 			case phase.discard:
 				discardCard();
 				break;
@@ -260,13 +268,21 @@ function setupBtn(){
 /* プレイヤー処理関連
 /*************************************************************************************/
 /*******************************************************/
-/* startPhase: 各フェイズを開始する
+/* changePhase: 各フェイズを開始する
 /*******************************************************/
-function startPhase(ph){
-	console.log(ph);
+function changePhase(ph){
 	currentPhase = ph;
 	setLocalStorage(keyContinuePhase, currentPhase);
-	switch(ph){
+}
+/*******************************************************/
+/* startPhase: 各フェイズを開始する
+/*******************************************************/
+function startPhase(ph = false){
+	console.log(currentPhase);
+	if(ph){
+		changePhase(ph);
+	}
+	switch(currentPhase){
 		case phase.action:
 			disabledEndBtn(false);
 			disabledMyHand(false);
@@ -282,6 +298,7 @@ function startPhase(ph){
 			break;
 		case phase.trash:
 		case phase.threeTrash:
+		case phase.caitSea:
 			if (myHand.length <= 0) {
 				console.log('手札がありません。');
 				startPhase(phase.action);
@@ -479,7 +496,7 @@ async function startTurn(){
 		disabledMyHand(false);
 		updateDeckDom();
 	});
-	startPhase(phase.action);
+	startPhase();
 }
 /*******************************************************/
 /* startTurnStatuses：ターン開始時のステータス処理を行う
@@ -546,7 +563,7 @@ function startTurnStatuses(playerInfo, enemiesInfo, animateFlag){
 	if (end){
 		actionStatusBufForAnimate(playerInfo, bufStatus.attackUp, end.amount, animateFlag);
 	}
-	//「炎の盾」がある場合はブロックを初期化しないlightWall
+	//「炎の盾」がある場合はブロックを初期化しない
 	const wall = playerInfo.statuses
 		.find((status) => status.name === bufStatus.wall.name);
 	const lightWall = playerInfo.statuses
@@ -583,6 +600,7 @@ function startTurnStatuses(playerInfo, enemiesInfo, animateFlag){
 			case bufStatus.defenseUp.name:
 			case bufStatus.phantasmal.name:
 			case bufStatus.doubleDamage.name:
+			case bufStatus.damageCut.name:
 			case debufStatus.defenseDown.name:
 			case debufStatus.frail.name:
 			case debufStatus.weak.name:
@@ -641,6 +659,7 @@ function startTurnStatuses(playerInfo, enemiesInfo, animateFlag){
 			switch(status.name){
 				case bufStatus.defenseUp.name:
 				case bufStatus.phantasmal.name:
+				case bufStatus.damageCut.name:
 				case debufStatus.defenseDown.name:
 				case debufStatus.frail.name:
 				case debufStatus.weak.name:
@@ -701,14 +720,26 @@ function startTurnProcess(){
 	if (nextTurnDraw){
 		drawCardFromDeck(nextTurnDraw.amount);
 	}
+	// 「ケット・シー」で追加1枚
+	const caitSea = playerStatus.statuses
+		.find((status) => status.name === bufStatus.caitSea.name);
+	if (caitSea){
+		drawCardFromDeck(caitSea.amount);
+	}
 	// カードを5枚引く
 	drawCardFromDeck(initialHandNum);
-
+	//フェイズを決定
+	if (caitSea){
+		console.log('ケットシー');
+		changePhase(phase.caitSea);
+	}else{
+		changePhase(phase.action);
+	}
+	// ターンを進める
+	currentTurn++;
 	// 次の予測を決定する
 	decideNextAction();
 
-	// ターンを進める
-	currentTurn++;
 }
 /*******************************************************/
 /* startAbility：敵やAFの開始時効果処理を行う
@@ -784,20 +815,25 @@ function endTurn(){
 		.find((status) => status.name === bufStatus.barrier.name);
 	if (barrier){
 		actionBlock(barrier.amount);
-		updatePlayerStatusDom(playerStatus);
 	}
 	//「狂化」の効果発動
 	const madness = playerStatus.statuses
 		.find((status) => status.name === bufStatus.madness.name);
 	if (madness){
 		damageHP(1);
-		updatePlayerStatusDom(playerStatus);
 		actionAllAttackSimple(madness.amount);
 		updateEnemyStatusDom(currentEnemies);
 	}
-
+	//「鈍化」の効果発動
+	const slowing = playerStatus.statuses
+		.find((status) => status.name === debufStatus.slowing.name);
+	if (slowing){
+		actionStatusBuf(debufStatus.dexterityDown, slowing.amount);
+	}
 	// エネミーの状態変化処理
 	currentEnemies.forEach((enemy) => {
+		// ブロックの初期化
+		enemy.currentStatus.block = 0;
 		// 「毒」の効果発動
 		const poison = enemy.currentStatus.status
 			.find((status) => status.name === debufStatus.poison.name);
@@ -810,6 +846,7 @@ function endTurn(){
 			return status.amount !== 0;
 		});
 	});
+	updatePlayerStatusDom(playerStatus);
 	updateEnemyStatusDom(currentEnemies);
 	startEnemiesTurn();
 }
@@ -930,6 +967,25 @@ function playHandCard(index){
 		});
 		skillCombo.amount--;
 	}
+	const Bonus = playerStatus.statuses
+		.find((status) => status.name === bufStatus.Bonus.name);
+	if (Bonus && Bonus.amount > 0){
+		currentEnemies.forEach((enemy) => {
+			let totalAttack = Bonus.amount;
+			// ブロック計算
+			const enemyBlock = enemy.currentStatus.block;
+			if(enemyBlock > 0){
+				if(enemyBlock >= totalAttack){
+					enemy.currentStatus.block -= totalAttack;
+					totalAttack = 0;
+				} else if (enemyBlock < totalAttack){
+					enemy.currentStatus.block = 0;
+					totalAttack = totalAttack - enemyBlock;
+				}
+			}
+			enemy.currentStatus.remainHP -= totalAttack;
+		});
+	}
 	currentEnemies.forEach((enemy) => {
 		//「窒息」効果
 		const suffocation = enemy.currentStatus.status
@@ -1013,7 +1069,8 @@ function endAction(){
 	$.when(
 		cardDrawPromise,
 		cardTrashPromise,
-		cardDiscardPromise
+		cardDiscardPromise,
+		cardAddHandPromise
 	).done(() => {
 		updateHandDom();
 		updateTrashDom();
@@ -1158,8 +1215,26 @@ function clickHandProcess(handCardDiv, hand){
 		case phase.repair:
 			const repair = playerStatus.statuses
 				.find((status) => status.name === bufStatus.repair.name);
-			if (index === -1) {
+			if (index === -1 && repair) {
 				if (tmpArea.length < repair.amount){
+					pushTemporaryArea(hand);
+					handCardDiv.addClass("select");
+				} else {
+					const cancelCard = shiftTemporaryArea();
+					$(`#hand-card${cancelCard.id}`).removeClass("select");
+					pushTemporaryArea(hand);
+					handCardDiv.addClass("select");
+				}
+			} else {
+				spliceTemporaryArea(index);
+				handCardDiv.removeClass("select");
+			}
+			break;
+		case phase.caitSea:
+			const caitSea = playerStatus.statuses
+				.find((status) => status.name === bufStatus.caitSea.name);
+			if (index === -1 && caitSea) {
+				if (tmpArea.length < caitSea.amount){
 					pushTemporaryArea(hand);
 					handCardDiv.addClass("select");
 				} else {
@@ -1346,7 +1421,6 @@ async function startEnemiesTurn(){
 	}
 	startTurnStatuses(playerStatus, currentEnemies, false);
 	startTurnProcess();
-	currentPhase = phase.action;
 	setLocalStorage(keyContinuePhase, currentPhase);
 	setLocalStorage(keyContinueDeck, myDeck);
 	setLocalStorage(keyContinueHand, myHand);
@@ -1409,18 +1483,43 @@ function decideNextAction(){
 /*******************************************************/
 function checkEnemyDefeated(Enemies){
 	allDefeatedFlag = true;
-	Enemies.forEach((enemy, i) => {
+	let autophagyFlag = false;
+	Enemies.forEach((enemy) => {
 		if(!enemy.currentStatus.status.some(status => status.name === dead.name)){
 			if(enemy.currentStatus.remainHP <= 0){
-				enemy.currentStatus.status.splice(0);
-				enemy.currentStatus.status.push(dead);
+				//「自壊因子」の効果発動
+				const autophagy = enemy.currentStatus.status
+					.find((status) => status.name === debufStatus.autophagy.name);
+				if (autophagy){
+					autophagyFlag = true;
+					for(const targetenemy of currentEnemies){
+						let totalAttack = enemy.currentStatus.maxHP;
+						// ブロック計算
+						const enemyBlock = targetenemy.currentStatus.block;
+						if(enemyBlock > 0){
+							if(enemyBlock >= totalAttack){
+								targetenemy.currentStatus.block -= totalAttack;
+								totalAttack = 0;
+							} else if (enemyBlock < totalAttack){
+								targetenemy.currentStatus.block = 0;
+								totalAttack = totalAttack - enemyBlock;
+							}
+						}
+						targetenemy.currentStatus.remainHP -= totalAttack;
+					}
+				}
 				targetingEnemy();
 				animateDefeated(enemy);
+				enemy.currentStatus.status.splice(0);
+				enemy.currentStatus.status.push(dead);
 			} else {
 				allDefeatedFlag = false;
 			}
 		}
 	});
+	if(autophagyFlag){
+		checkEnemyDefeated(currentEnemies);
+	}
 }
 
 /*******************************************************/

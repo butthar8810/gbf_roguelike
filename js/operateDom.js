@@ -100,46 +100,46 @@ function createCardDom(card){
 				break;
 		}
 		if (card.amount.attack > attackDamage) {
-			effect = effect.replace('{A}', `<span class='down'>${attackDamage}</span>`);
+			effect = effect.replace(/{A}/g, `<span class='down'>${attackDamage}</span>`);
 		} else if (card.amount.attack < attackDamage){
-			effect = effect.replace('{A}', `<span class='up'>${attackDamage}</span>`);
+			effect = effect.replace(/{A}/g, `<span class='up'>${attackDamage}</span>`);
 		} else {
-			effect = effect.replace('{A}', `${attackDamage}`);
+			effect = effect.replace(/{A}/g, `${attackDamage}`);
 		}
 	}
 	if('block' in card.amount){
 		blockCount = calcBlock(card.amount.block);
 		if (card.amount.block > blockCount) {
-			effect = effect.replace('{B}', `<span class='down'>${blockCount}</span>`);
+			effect = effect.replace(/{B}/g, `<span class='down'>${blockCount}</span>`);
 		} else if (card.amount.block < blockCount){
-			effect = effect.replace('{B}', `<span class='up'>${blockCount}</span>`);
+			effect = effect.replace(/{B}/g, `<span class='up'>${blockCount}</span>`);
 		} else {
-			effect = effect.replace('{B}', `${blockCount}`);
+			effect = effect.replace(/{B}/g, `${blockCount}`);
 		}
 	}
 	if('count' in card.amount){
-		effect = effect.replace('{C}', `${card.amount.count}`);
+		effect = effect.replace(/{C}/g, `${card.amount.count}`);
 	}
 	if('debuff' in card.amount){
-		effect = effect.replace('{D}', `${card.amount.debuff}`);
+		effect = effect.replace(/{D}/g, `${card.amount.debuff}`);
 	}
 	if('debuff1' in card.amount){
-		effect = effect.replace('{D1}', `${card.amount.debuff1}`);
+		effect = effect.replace(/{D1}/g, `${card.amount.debuff1}`);
 	}
 	if('debuff1' in card.amount){
-		effect = effect.replace('{D2}', `${card.amount.debuff2}`);
+		effect = effect.replace(/{D2}/g, `${card.amount.debuff2}`);
 	}
 	if('draw' in card.amount){
-		effect = effect.replace('{Dr}', `${card.amount.draw}`);
+		effect = effect.replace(/{Dr}/g, `${card.amount.draw}`);
 	}
 	if('energy' in card.amount){
-		effect = effect.replace('{E}', `${card.amount.energy}`);
+		effect = effect.replace(/{E}/g, `${card.amount.energy}`);
 	}
 	if('buff' in card.amount){
-		effect = effect.replace('{F}', `${card.amount.buff}`);
+		effect = effect.replace(/{F}/g, `${card.amount.buff}`);
 	}
 	if('harm' in card.amount){
-		effect = effect.replace('{HP}', `${card.amount.harm}`);
+		effect = effect.replace(/{HP}/g, `${card.amount.harm}`);
 	}
 	const textParagraph = $('<p>')
 		.addClass('effect')
