@@ -1126,35 +1126,35 @@ const granCardList = {
 	},
 	//******************************パワー******************************//
 	//ジャガーノート
-	Lamentation: {
+	Bahamut: {
 		key: 'Lamentation',
-		name: '嘆きの盾',
+		name: 'バハムートシールド',
 		class: cardClass.gran,
 		rarity: rarity.rare,
 		type: type.power,
 		func: 'effectBuff',
-		image:'images/card/gran_Lamentation.jpg',
+		image:'images/card/gran_Bahamut.jpg',
 		effect: 'ブロックを得るたび、ランダムな敵に{F}ダメージを与える。',
 		amount: {
 			cost: 2,
 			buff: 5,
-			buffType: 'lamentation',
+			buffType: 'bahamut',
 		}
 	},
 	//バリケード
-	Colossus: {
+	Hero: {
 		key: 'Colossus',
-		name: 'コロッサスウォール',
+		name: '英雄の盾',
 		class: cardClass.gran,
 		rarity: rarity.rare,
 		type: type.power,
 		func: 'effectBuff',
-		image:'images/card/gran_Colossus.jpg',
+		image:'images/card/gran_Hero.jpg',
 		effect: 'ターン開始時にブロック値を失わない。',
 		amount: {
 			cost: 3,
 			buff: '',
-			buffType: 'wall',
+			buffType: 'hero',
 		}
 	},
 	//堕落
@@ -2232,33 +2232,33 @@ const granEnhancedCardList = {
 	},
 	//******************************パワー******************************//
 	//ジャガーノート
-	Lamentation: {
-		name: '<span class="upgrade">嘆きの盾+</span>',
+	Bahamut: {
+		name: '<span class="upgrade">バハムートシールド+</span>',
 		class: cardClass.gran,
 		rarity: rarity.rare,
 		type: type.power,
 		func: 'effectBuff',
-		image:'images/card/gran_Lamentation.jpg',
+		image:'images/card/gran_Bahamut.jpg',
 		effect: 'ブロックを得るたび、ランダムな敵に<span class="upgrade">{F}</span>ダメージを与える。',
 		amount: {
 			cost: 2,
 			buff: 7,
-			buffType: 'lamentation',
+			buffType: 'bahamut',
 		}
 	},
 	//バリケード
-	Colossus: {
-		name: '<span class="upgrade">コロッサスウォール+</span>',
+	Hero: {
+		name: '<span class="upgrade">英雄の盾+</span>',
 		class: cardClass.gran,
 		rarity: rarity.rare,
 		type: type.power,
 		func: 'effectBuff',
-		image:'images/card/gran_Colossus.jpg',
+		image:'images/card/gran_Hero.jpg',
 		effect: 'ターン開始時にブロック値を失わない。',
 		amount: {
 			cost: 2,
 			buff: '',
-			buffType: 'wall',
+			buffType: 'hero',
 		}
 	},
 	//堕落
@@ -3556,19 +3556,19 @@ const djeetaCardList = {
 		}
 	},
 	//残像
-	Archangel: {
+	Lamentation: {
 		key: 'Archangel',
-		name: '天司の盾',
+		name: '嘆きの盾',
 		class: cardClass.djeeta,
 		rarity: rarity.rare,
 		type: type.power,
 		func: 'effectBuff',
-		image:'images/card/djeeta_Archangel.jpg',
-		effect: `カードを1枚プレイするたび、1ブロックを得る。`,
+		image:'images/card/djeeta_Lamentation.jpg',
+		effect: `カードを1枚プレイするたび、{F}ブロックを得る。`,
 		amount: {
 			cost: 1,
-			buff: 3,
-			buffType: '',
+			buff: 1,
+			buffType: 'lamentation',
 		}
 	},
 	//猛毒の仕込み
@@ -3583,8 +3583,8 @@ const djeetaCardList = {
 		effect: `「アタック」でダメージを与えるたび、毒1を与える。`,
 		amount: {
 			cost: 2,
-			buff: 3,
-			buffType: '',
+			buff: 1,
+			buffType: 'lich',
 		}
 	},
 };
@@ -3743,9 +3743,9 @@ function setupDeck(){
 			addCardToOriginalDeck(djeetaCardList.Defense, 5);
 			addCardToOriginalDeck(djeetaCardList.Assassin, 1);
 			addCardToOriginalDeck(djeetaCardList.Pulverizer, 1);
-			addCardToOriginalDeck(djeetaCardList.Autophagy, 2);
-			addCardToOriginalDeck(djeetaCardList.CaitSea, 2);
 			addCardToOriginalDeck(djeetaCardList.NewWarld, 2);
+			addCardToOriginalDeck(djeetaCardList.Lamentation, 2);
+			addCardToOriginalDeck(djeetaCardList.Lich, 2);
 		}
 	}
 }
@@ -4956,7 +4956,9 @@ function calcDamage(attackCount, targetEnemy, AttackUpMag = 1){
 		targetEnemy.currentStatus.status.forEach((status) => {
 			switch(status.name){
 				case bufStatus.damageCut.name://ダメージカット
-					
+					if(totalAttack > 0){
+						totalAttack = 1;
+					}
 					break;
 				default:
 					break;
@@ -4989,11 +4991,17 @@ function actionAttack(attackCount, magnification = 1){
 			currentTarget.currentStatus.block -= totalAttack;
 			totalAttack = 0;
 		} else if (enemyBlock < totalAttack){
+			totalAttack -= enemyBlock;
 			currentTarget.currentStatus.block = 0;
-			totalAttack = totalAttack - enemyBlock;
 		}
 	}
 	currentTarget.currentStatus.remainHP -= totalAttack;
+	//「不死王の刃」の効果発動
+	const lich = playerStatus.statuses
+		.find((status) => status.name === bufStatus.lich.name);
+	if(lich && totalAttack > 0){
+		actionStatusDebuf(debufStatus.poison, lich.amount);
+	}
 	// アニメーション
 	animatePlayerAttack();
 }
@@ -5014,6 +5022,12 @@ function actionKnifeAttack(attackCount){
 		}
 	}
 	currentTarget.currentStatus.remainHP -= totalAttack;
+	//「不死王の刃」の効果発動
+	const lich = playerStatus.statuses
+		.find((status) => status.name === bufStatus.lich.name);
+	if(lich && totalAttack > 0){
+		actionStatusDebuf(debufStatus.poison, lich.amount);
+	}
 	// アニメーション
 	animatePlayerAttack();
 }
@@ -5035,6 +5049,12 @@ function actionAttackAndAbsorb(attackCount){
 	}
 	currentTarget.currentStatus.remainHP -= totalAttack;
 	recoveryHP(totalAttack);
+	//「不死王の刃」の効果発動
+	const lich = playerStatus.statuses
+		.find((status) => status.name === bufStatus.lich.name);
+	if(lich && totalAttack > 0){
+		actionStatusDebuf(debufStatus.poison, lich.amount);
+	}
 	// アニメーション
 	animatePlayerAttack();
 }
@@ -5056,6 +5076,12 @@ function actionAllAttack(attackCount){
 			}
 		}
 		enemy.currentStatus.remainHP -= totalAttack;
+		//「不死王の刃」の効果発動
+		const lich = playerStatus.statuses
+			.find((status) => status.name === bufStatus.lich.name);
+		if(lich && totalAttack > 0){
+			actionStatusDebufToTarget(debufStatus.poison, lich.amount, enemy);
+		}
 	});
 	// アニメーション
 	animatePlayerAttack();
@@ -5079,6 +5105,12 @@ function actionAllAttackAndAbsorb(attackCount){
 		}
 		enemy.currentStatus.remainHP -= totalAttack;
 		recoveryHP(totalAttack);
+		//「不死王の刃」の効果発動
+		const lich = playerStatus.statuses
+			.find((status) => status.name === bufStatus.lich.name);
+		if(lich && totalAttack > 0){
+			actionStatusDebufToTarget(debufStatus.poison, lich.amount, enemy);
+		}
 	});
 	// アニメーション
 	animatePlayerAttack();
@@ -5103,6 +5135,12 @@ function actionRandomAttack(attackCount){
 		}
 	}
 	enemy.currentStatus.remainHP -= totalAttack;
+	//「不死王の刃」の効果発動
+	const lich = playerStatus.statuses
+		.find((status) => status.name === bufStatus.lich.name);
+	if(lich && totalAttack > 0){
+		actionStatusDebufToTarget(debufStatus.poison, lich.amount, enemy);
+	}
 	// アニメーション
 	animatePlayerAttack();
 }
@@ -5125,6 +5163,12 @@ function actionAllAttackSimple(attackCount){
 		}
 		enemy.currentStatus.remainHP -= totalAttack;
 		recoveryHP(totalAttack);
+		//「不死王の刃」の効果発動
+		const lich = playerStatus.statuses
+			.find((status) => status.name === bufStatus.lich.name);
+		if(lich && totalAttack > 0){
+			actionStatusDebufToTarget(debufStatus.poison, lich.amount, enemy);
+		}
 	});
 	// アニメーション
 	animatePlayerAttack();
@@ -5162,15 +5206,15 @@ function calcBlock(blockCount){
 /*******************************************************/
 function actionBlock(blockCount, animateFlag = true){
 	playerStatus.block += calcBlock(blockCount);
+	//「バハムートシールド」の効果
+	const bahamut = playerStatus.statuses
+		.find((status) => status.name === bufStatus.bahamut.name);
+	if (bahamut){
+		actionRandomAttack(bahamut.amount);
+	}
 	// アニメーション
 	if(animateFlag){
 		animatePlayerBlocked();
-	}
-	//「嘆きの盾」の効果
-	const lamentation = playerStatus.statuses
-		.find((status) => status.name === bufStatus.lamentation.name);
-	if (lamentation){
-		actionRandomAttack(lamentation.amount);
 	}
 }
 /*******************************************************/
@@ -5218,13 +5262,16 @@ function actionLoseHP(loseHP){
 /* 状態異常を与える関数
 /*******************************************************/
 function actionStatusDebuf(debuf, amountCount){
+	return actionStatusDebufToTarget(debuf, amountCount, currentTarget);
+}
+function actionStatusDebufToTarget(debuf, amountCount, target){
 	console.log(debuf);
 	// すでに同じデバフがかかってないか確認
 	// 同じデバフは累積する
 	let sameDebufFlag = false;
 	// すでに同じデバフがかかってないか確認
 	// 同じバフは累積する
-	for (const status of currentTarget.currentStatus.status) {
+	for (const status of target.currentStatus.status) {
 		if (status.name == debuf.name) {
 			status.amount += amountCount;
 			sameDebufFlag = true;
@@ -5233,10 +5280,10 @@ function actionStatusDebuf(debuf, amountCount){
 	const receivedDebuf = {...debuf};
 	receivedDebuf.amount = amountCount;
 	if (!sameDebufFlag) {
-		currentTarget.currentStatus.status.push(receivedDebuf);
+		target.currentStatus.status.push(receivedDebuf);
 	}
 	// アニメーション
-	animateEnemyAbnormality(currentTarget, receivedDebuf);
+	animateEnemyAbnormality(target, receivedDebuf);
 }
 /*******************************************************/
 /* 状態異常を与える関数(全体デバフ)
@@ -5576,7 +5623,7 @@ function reproductionToHandCard(count){
 /* 手札1枚を次のターンに複製する関数
 /*******************************************************/
 function actionReproductionToNextTurn(){
-	startPhase(phase.mirror);
+	startPhase(phase.reproductionToNextTurn);
 	return true;
 }
 function reproductionToNextTurnCard(count){

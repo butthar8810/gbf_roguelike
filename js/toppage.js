@@ -42,6 +42,7 @@ function loadTopPage(){
 			removeLocalStorage(keyContinueEnemy);
 			removeLocalStorage(keyContinueLevel);
 			removeLocalStorage(keyContinueReward);
+			removeLocalStorage(keyContinueHold);
 			removeLocalStorage(keyContinuePhase);
 			window.location.href = 'roguelike.html';
 		} else {

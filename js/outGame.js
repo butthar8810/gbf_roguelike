@@ -16,13 +16,7 @@ function startGame(){
 		console.log('再開');
 		climbTowerContinue();
 	}else {
-		$('.rest-area').removeClass('hidden');
-		$('.talk-area').removeClass('hidden');
-		const btn = appendTalkingBtn('準備を整える');
-		btn.click((e) => {
-			deleteTalkingBtn();
-			getReady();
-		});
+		getReady();
 	}
 }
 /*******************************************************/

@@ -151,7 +151,7 @@ body{
 /*****************************************************************************/
 .main{
 	width: 100%;
-	max-width: 925px;
+	max-width: 1100px;
 	height: 100vh;
 	position: relative;
 	margin: 0 auto;
@@ -371,7 +371,7 @@ header{
 }
 .header-area{
 	width: 100%;
-	max-width: 925px;
+	max-width: 1100px;
 	height: 100%;
 	display: flex;
 	justify-content: space-between;
@@ -488,11 +488,11 @@ header{
 }
 
 .battle-area{
-	height: 500px;
+	width: 1100px;
 	position: relative;
 }
 .battle-area>img {
-	height: 100%;
+	width: 100%;
 }
 .front-effect{
 	position: absolute;
@@ -695,7 +695,7 @@ header{
 /*****************************************************************************/
 .enemies-area{
 	height: 222px;
-	width: 650px;
+	width: 700px;
 	position: absolute;
 	bottom: 40px;
 	left: 0px;
@@ -949,7 +949,7 @@ header{
 /*****************************************************************************/
 .info-area{
 	width: 100%;
-	max-width: 925px;
+	max-width: 1100px;
 	display: flex;
 	justify-content: space-between;
 	margin: 0 auto;
@@ -1183,14 +1183,14 @@ header{
 .talk-area{
 	width: 100%;
 	display: flex;
-	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+	flex-wrap: wrap;
 	transition: all 0.5s ease;
 }
 .talking-btn{
 	width: 450px;
-	margin: 5px 0px;
+	margin: 5px 5px;
 	text-decoration: none;
 	display: flex;
 	justify-content: center;
@@ -1243,7 +1243,7 @@ header{
 
 .black-back-area .btn-area{
 	width: 100%;
-	max-width: 925px;
+	max-width: 1100px;
 	display: flex;
 	justify-content: flex-end;
 }

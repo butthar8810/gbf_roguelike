@@ -15,6 +15,7 @@ function recoveryHP(recovery){
 /* damageHP：HPが減少する
 /*******************************************************/
 function damageHP(damage, playerInfo = playerStatus){
+	console.log(`Damage: ${damage}`);
 	playerInfo.playerCount.HPDownCount++;
 	setLocalStorage(keyContinuePlayerStatus, playerStatus);
 	if (playerInfo.remainHP > damage){

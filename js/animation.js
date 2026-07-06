@@ -2,11 +2,11 @@
 /* アニメーション用変数関連
 /*************************************************************************************/
 const coordinateDeckForHandArea = {top: '40px', left: '-70px', width: '80px', size: '10px'};
-const coordinateHnadForHandArea = {top: '0px', left: '350px', width: '150px', size: '16px'};
-const coordinateTrashForHandArea = {top: '50px', left: '820px', width: '80px', size: '10px'};
-const coordinateShowForShowArea = {top: '0px', left: '400px', width: '150px', size: '16px'};
-const coordinateTrashForShowArea = {top: '290px', left: '860px', width: '80px', size: '10px'};
-const coordinateHandForShowArea = {top: '240px', left: '400px', width: '150px', size: '16px'};
+const coordinateHandForHandArea = {top: '0px', left: '450px', width: '150px', size: '16px'};
+const coordinateTrashForHandArea = {top: '50px', left: '970px', width: '80px', size: '10px'};
+const coordinateShowForShowArea = {top: '0px', left: '500px', width: '150px', size: '16px'};
+const coordinateTrashForShowArea = {top: '290px', left: '1040px', width: '80px', size: '10px'};
+const coordinateHandForShowArea = {top: '240px', left: '500px', width: '150px', size: '16px'};
 
 const playerAttackWaitTime = 1500;
 const playerDamageWaitTime = 1000;
@@ -46,10 +46,10 @@ async function animateDrawDeck(card){
 	$('.hand-area').append(drawCardDiv);
 
 	cardDrawPromise = drawCardDiv.animate({
-		left: coordinateHnadForHandArea.left, 
-		top: coordinateHnadForHandArea.top,
-		width: coordinateHnadForHandArea.width,
-		fontSize: coordinateHnadForHandArea.size
+		left: coordinateHandForHandArea.left, 
+		top: coordinateHandForHandArea.top,
+		width: coordinateHandForHandArea.width,
+		fontSize: coordinateHandForHandArea.size
 	}, drawWaitTime);
 	await sleep(drawWaitTime - 100);
 }
@@ -62,8 +62,8 @@ function animateHandToTrash(card){
 		.addClass('is-hover-disabled')
 		.prop('disabled', true)
 		.css('position', 'absolute')
-		.css('top', coordinateHnadForHandArea.top)
-		.css('left', coordinateHnadForHandArea.left);
+		.css('top', coordinateHandForHandArea.top)
+		.css('left', coordinateHandForHandArea.left);
 
 	cardTrashPromise = handCardDiv.animate({
 		left: coordinateTrashForHandArea.left, 
@@ -128,10 +128,10 @@ function animateHandToDeck(card){
 		.addClass('is-hover-disabled')
 		.prop('disabled', true)
 		.css('position', 'absolute')
-		.css('font-size', coordinateHnadForHandArea.size)
-		.css('width', coordinateHnadForHandArea.width)
-		.css('top', coordinateHnadForHandArea.top)
-		.css('left', coordinateHnadForHandArea.left);
+		.css('font-size', coordinateHandForHandArea.size)
+		.css('width', coordinateHandForHandArea.width)
+		.css('top', coordinateHandForHandArea.top)
+		.css('left', coordinateHandForHandArea.left);
 	if (card.class == cardClass.gran) {
 		restoreCardDiv.addClass('gran-card');
 	} else if (card.class == cardClass.djeeta) {

@@ -46,6 +46,7 @@ function endBattle(){
 	removeLocalStorage(keyContinueEnemy);
 	removeLocalStorage(keyContinueLevel);
 	removeLocalStorage(keyContinueReward);
+	removeLocalStorage(keyContinueHold);
 	removeLocalStorage(keyContinuePhase);
 	initialize();
 	$('.result-modal').removeClass('active');
@@ -563,12 +564,12 @@ function startTurnStatuses(playerInfo, enemiesInfo, animateFlag){
 	if (end){
 		actionStatusBufForAnimate(playerInfo, bufStatus.attackUp, end.amount, animateFlag);
 	}
-	//「炎の盾」がある場合はブロックを初期化しない
-	const wall = playerInfo.statuses
-		.find((status) => status.name === bufStatus.wall.name);
+	//「英雄の盾」がある場合はブロックを初期化しない
+	const hero = playerInfo.statuses
+		.find((status) => status.name === bufStatus.hero.name);
 	const lightWall = playerInfo.statuses
 		.find((status) => status.name === bufStatus.lightWall.name);
-	if (!wall && !lightWall){
+	if (!hero && !lightWall){
 		// ブロックを解除する
 		playerInfo.block = 0;
 	}
@@ -598,7 +599,6 @@ function startTurnStatuses(playerInfo, enemiesInfo, animateFlag){
 	playerInfo.statuses.forEach((status, index) => {
 		switch(status.name){
 			case bufStatus.defenseUp.name:
-			case bufStatus.phantasmal.name:
 			case bufStatus.doubleDamage.name:
 			case bufStatus.damageCut.name:
 			case debufStatus.defenseDown.name:
@@ -614,6 +614,7 @@ function startTurnStatuses(playerInfo, enemiesInfo, animateFlag){
 			case bufStatus.lightWall.name:
 			case bufStatus.nextTurnBlock.name:
 			case bufStatus.nextTurnDraw.name:
+			case bufStatus.reproduction.name:
 			case debufStatus.noDraw.name:
 			case debufStatus.invalidAttackUp.name:
 			case debufStatus.invalidAttackDown.name:
@@ -658,7 +659,6 @@ function startTurnStatuses(playerInfo, enemiesInfo, animateFlag){
 		enemy.currentStatus.status.forEach((status) => {
 			switch(status.name){
 				case bufStatus.defenseUp.name:
-				case bufStatus.phantasmal.name:
 				case bufStatus.damageCut.name:
 				case debufStatus.defenseDown.name:
 				case debufStatus.frail.name:
@@ -730,7 +730,6 @@ function startTurnProcess(){
 	drawCardFromDeck(initialHandNum);
 	//フェイズを決定
 	if (caitSea){
-		console.log('ケットシー');
 		changePhase(phase.caitSea);
 	}else{
 		changePhase(phase.action);
@@ -985,6 +984,11 @@ function playHandCard(index){
 			}
 			enemy.currentStatus.remainHP -= totalAttack;
 		});
+	}
+	const lamentation = playerStatus.statuses
+		.find((status) => status.name === bufStatus.lamentation.name);
+	if (lamentation && lamentation.amount > 0){
+		actionBlock(lamentation.amount);
 	}
 	currentEnemies.forEach((enemy) => {
 		//「窒息」効果
@@ -1419,8 +1423,8 @@ async function startEnemiesTurn(){
 			}
 		}
 	}
-	startTurnStatuses(playerStatus, currentEnemies, false);
 	startTurnProcess();
+	startTurnStatuses(playerStatus, currentEnemies, false);
 	setLocalStorage(keyContinuePhase, currentPhase);
 	setLocalStorage(keyContinueDeck, myDeck);
 	setLocalStorage(keyContinueHand, myHand);

@@ -347,6 +347,14 @@ function impWeb(enemyInfo, playerInfo, animationFlag){
 /*******************************************************/
 function calcEnemyDamage(attackCount, enemyInfo){
 	let totalAttack = attackCount;
+	// 「ダメージカット」の効果発動
+	const damageCut = playerStatus.statuses
+		.find((status) => status.name === bufStatus.damageCut.name);
+	if (damageCut && totalAttack > 0){
+		totalAttack = 1;
+		return totalDamage;
+	}
+
 	// 倍率計算
 	let magnification = 1;
 	// 恐怖（攻撃力25%減少）
@@ -383,14 +391,6 @@ function calcEnemyDamage(attackCount, enemyInfo){
 	// プレイヤーの状態異常を確認
 	playerStatus.statuses.forEach((status) => {
 		switch(status.name){
-			case bufStatus.invincible.name:// 無敵(このターン中に減らせるHPは、残りX。)
-				if (totalAttack > status.amount){
-					totalAttack = status.amount;
-					status.amount = 0;
-				} else {
-					status.amount -= totalAttack;
-				}
-				break;
 			default:
 				break;
 		}
@@ -402,14 +402,14 @@ function calcEnemyDamage(attackCount, enemyInfo){
 /*******************************************************/
 function enemyAttack(enemyInfo, playerInfo, animationFlag, attackCount){
 	let totalAttack = calcEnemyDamage(attackCount, enemyInfo);
-
-	if(playerInfo.block > 0){
-		if(playerInfo.block >= attackCount){
-			playerInfo.block -= attackCount;
+	const playerBlock = playerInfo.block;
+	if(playerBlock > 0){
+		if(playerBlock >= totalAttack){
+			playerInfo.block -= totalAttack;
 			totalAttack = 0;
-		} else if (playerInfo.block < attackCount){
+		} else if (playerInfo.block < totalAttack){
+			totalAttack -= playerBlock;
 			playerInfo.block = 0;
-			totalAttack = attackCount - playerInfo.block;
 		}
 	}
 	if(totalAttack > 0){

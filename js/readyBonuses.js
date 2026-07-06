@@ -34,11 +34,22 @@ const fourthReadyBonus = {
 
 function bonusDammy(){
 }
-
+/*******************************************************/
+/* getReady：準備を整える
+/*******************************************************/
+function getReady(){
+	$('.rest-area').removeClass('hidden');
+	$('.talk-area').removeClass('hidden');
+	const btn = appendTalkingBtn('準備を整える');
+	btn.click((e) => {
+		deleteTalkingBtn();
+		chooseBonus();
+	});
+}
 /*******************************************************/
 /* getReady：準備を整える（4つから選ぶ）
 /*******************************************************/
-function getReady(){
+function chooseBonus(){
 	const firstReadyBonus = shuffleArray(firstReadyBonuses).slice(0, 1)[0];
 	const firstBtn = appendTalkingBtn(firstReadyBonus.text);
 	firstBtn.click((e) => {

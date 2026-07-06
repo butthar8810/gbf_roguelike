@@ -334,7 +334,7 @@ function updatePlayerAreaDom(argPlayerStatus){
 		const modalDiv = $('<div>')
 			.addClass('player-modal')
 			.append(modalName)
-			.append(status.effect.replace('{X}', `<span>${status.amount}</span>`));
+			.append(status.effect.replace(/{X}/g, `<span>${status.amount}</span>`));
 		modalsDiv.append(modalDiv);
 	});
 	const playerAreaInnerDiv = $('<div>')
@@ -414,7 +414,7 @@ function updatePlayerStatusDom(argPlayerStatus){
 		const modalDiv = $('<div>')
 			.addClass('player-modal')
 			.append(modalName)
-			.append(status.effect.replace('{X}', `<span>${status.amount}</span>`));
+			.append(status.effect.replace(/{X}/g, `<span>${status.amount}</span>`));
 		$('.player-modals').append(modalDiv);
 	});
 }
@@ -499,7 +499,7 @@ function updateEnemyAreaDom(argEnemies, omenFlag = false){
 			const modalDiv = $('<div>')
 				.addClass('enemy-modal')
 				.append(modalName)
-				.append(status.effect.replace('{X}', `<span>${status.amount}</span>`));
+				.append(status.effect.replace(/{X}/g, `<span>${status.amount}</span>`));
 			modalsDiv.append(modalDiv);
 		});
 		// 「enemy-area」要素
@@ -628,7 +628,7 @@ function updateEnemyStatusDom(argEnemies){
 			const modalDiv = $('<div>')
 				.addClass('enemy-modal')
 				.append(modalName)
-				.append(status.effect.replace('{X}', `<span>${status.amount}</span>`));
+				.append(status.effect.replace(/{X}/g, `<span>${status.amount}</span>`));
 			modalsDiv.append(modalDiv);
 		});
 	});
