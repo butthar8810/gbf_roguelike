@@ -131,12 +131,28 @@ const enemyList = {
 			divId: ''
 		}
 	},
-	imp:{
-		name: 'インプ', 
+	wolf:{
+		name: 'ウルフ', 
 		minHP: 46, 
 		maxHP: 50, 
-		image: 'images/enemy/imp.png', 
-		actionAlgorithm: 'actionImp', 
+		image: 'images/enemy/wolf.png', 
+		actionAlgorithm: 'actionWolf', 
+		actionFirst: '',
+		currentStatus:{
+			remainHP: 0, 
+			maxHP: 0, 
+			block: 0,
+			status: [], 
+			nextAction: {},
+			divId: ''
+		}
+	},
+	silverWolf:{
+		name: 'シルヴァーウルフ', 
+		minHP: 46, 
+		maxHP: 50, 
+		image: 'images/enemy/wolf_silver.png', 
+		actionAlgorithm: 'actionSilverWolf', 
 		actionFirst: '',
 		currentStatus:{
 			remainHP: 0, 
@@ -168,7 +184,7 @@ const bossEnemyList = {
 	kinggold:{name: 'キングゴールドスライム', minHP: 8, maxHP: 12, image: 'images/enemy/kinggold.gif', currentStatus:{remainHP: 0, maxHP: 0, status: [], nextAction: ''}},
 };
 const testEnemies = [
-	{weight: 100, enemies: [enemyList.slime, enemyList.slime, enemyList.slime, enemyList.slime, enemyList.slime]},
+	{weight: 100, enemies: [enemyList.test, enemyList.test]},
 ];
 const easyEnemiesPool = [
 	{weight: 25, enemies: [enemyList.slime, enemyList.silver]},
@@ -177,13 +193,14 @@ const easyEnemiesPool = [
 	{weight: 25, enemies: [enemyList.bee, enemyList.fangBee]},
 ];
 const strongEnemiesPool = [
-	{weight: 12500, enemies: [enemyList.imp]},
+	{weight: 12500, enemies: [enemyList.wolf]},
+	{weight: 6250, enemies: [enemyList.wolf]},
 	{weight: 3100, enemies: [enemyList.bee, enemyList.bee, enemyList.bee]},
 	{weight: 3100, enemies: [enemyList.bee, enemyList.bee, enemyList.fangBee]},
 	{weight: 3100, enemies: [enemyList.bee, enemyList.fangBee, enemyList.fangBee]},
 	{weight: 3100, enemies: [enemyList.fangBee, enemyList.fangBee, enemyList.fangBee]},
 	{weight: 12500, enemies: [enemyList.rafflesia, enemyList.rafflesia]},
-	{weight: 6250, enemies: [enemyList.slime, enemyList.slime, enemyList.slime, enemyList.slime, enemyList.slime]},
+	{weight: 6250, enemies: [enemyList.slime, enemyList.battleSlime, enemyList.slime, enemyList.battleSlime, enemyList.slime]},
 
 ];
 const eliteEnemiesPool = [
@@ -203,14 +220,209 @@ const enemyActionType = {
 	debuffAndAttack: 'デバフとアタック',
 };
 /*****************************************************************************/
+/* エネミーアクション関数
+/*****************************************************************************/
+function enemyAttack(enemyInfo, playerInfo, animationFlag){
+	// アタック〇点ダメージ
+	enemyAttack(
+		enemyInfo, 
+		playerInfo, 
+		animationFlag, 
+		enemyInfo.currentStatus.nextAction.damage,
+	);
+}
+function enemyAttackAndBlock(enemyInfo, playerInfo, animationFlag){
+	// アタック+ブロック
+	enemyAttack(
+		enemyInfo, 
+		playerInfo, 
+		animationFlag, 
+		enemyInfo.currentStatus.nextAction.damage,
+	);
+	enemyBlock(
+		enemyInfo, 
+		animationFlag, 
+		enemyInfo.currentStatus.nextAction.block,
+	);
+}
+function enemyAttackAndBuff(enemyInfo, playerInfo, animationFlag){
+	// デバフ+アタック
+	enemyAttack(
+		enemyInfo, 
+		playerInfo, 
+		animationFlag, 
+		enemyInfo.currentStatus.nextAction.damage,
+	);
+	enemyStatusBuf(
+		enemyInfo, 
+		animationFlag, 
+		enemyInfo.currentStatus.nextAction.buffType, 
+		enemyInfo.currentStatus.nextAction.buff,
+	);
+}
+function enemyAttackAndDebuf(enemyInfo, playerInfo, animationFlag){
+	// デバフ+アタック
+	enemyAttack(
+		enemyInfo, 
+		playerInfo, 
+		animationFlag, 
+		enemyInfo.currentStatus.nextAction.damage,
+	);
+	enemyStatusDebuf(
+		enemyInfo, 
+		playerInfo, 
+		animationFlag, 
+		enemyInfo.currentStatus.nextAction.debuffType, 
+		enemyInfo.currentStatus.nextAction.debuff,
+	);
+}
+function enemyBlock(enemyInfo, playerInfo, animationFlag){
+	// ブロック
+	enemyBlock(
+		enemyInfo, 
+		animationFlag, 
+		enemyInfo.currentStatus.nextAction.block,
+	);
+}
+function enemyBlockAndBuff(enemyInfo, playerInfo, animationFlag){
+	// バフ+ブロック
+	enemyBlock(
+		enemyInfo, 
+		animationFlag, 
+		enemyInfo.currentStatus.nextAction.block,
+	);
+	enemyStatusBuf(
+		enemyInfo, 
+		animationFlag, 
+		enemyInfo.currentStatus.nextAction.buffType, 
+		enemyInfo.currentStatus.nextAction.buff,
+	);
+}
+function enemyBlockAndDebuf(enemyInfo, playerInfo, animationFlag){
+	// デバフ+ブロック
+	enemyBlock(
+		enemyInfo, 
+		animationFlag, 
+		enemyInfo.currentStatus.nextAction.block,
+	);
+	enemyStatusDebuf(
+		enemyInfo, 
+		playerInfo, 
+		animationFlag, 
+		enemyInfo.currentStatus.nextAction.debuffType, 
+		enemyInfo.currentStatus.nextAction.debuff,
+	);
+}
+function enemyBuff(enemyInfo, playerInfo, animationFlag){
+	// バフ
+	enemyStatusBuf(
+		enemyInfo, 
+		animationFlag, 
+		enemyInfo.currentStatus.nextAction.buffType, 
+		enemyInfo.currentStatus.nextAction.buff,
+	);
+}
+function enemyDebuf(enemyInfo, playerInfo, animationFlag){
+	// デバフ
+	enemyStatusDebuf(
+		enemyInfo, 
+		playerInfo, 
+		animationFlag, 
+		enemyInfo.currentStatus.nextAction.debuffType, 
+		enemyInfo.currentStatus.nextAction.debuff,
+	);
+}
+function enemyBuffAndDebuf(enemyInfo, playerInfo, animationFlag){
+	// バフ+デバフ
+	enemyStatusBuf(
+		enemyInfo, 
+		animationFlag, 
+		enemyInfo.currentStatus.nextAction.buffType, 
+		enemyInfo.currentStatus.nextAction.buff,
+	);
+	enemyStatusDebuf(
+		enemyInfo, 
+		playerInfo, 
+		animationFlag, 
+		enemyInfo.currentStatus.nextAction.debuffType, 
+		enemyInfo.currentStatus.nextAction.debuff,
+	);
+}
+function enemyCardDebuf(enemyInfo, playerInfo, animationFlag){
+	// 粘液1枚を捨て札に加える
+	const cards = [];
+	for(let i=0; i < enemyInfo.currentStatus.nextAction.abnormal; i++){
+		cards.push(abnormalCardList[enemyInfo.currentStatus.nextAction.abnormalType]);
+	}
+	enemyCardDebuf(animationFlag, cards);
+}
+function enemyAttackAndCardDebuf(enemyInfo, playerInfo, animationFlag){
+	// 8ダメージ+粘液1枚を捨て札に加える
+	enemyAttack(
+		enemyInfo, 
+		playerInfo, 
+		animationFlag, 
+		enemyInfo.currentStatus.nextAction.damage
+	);
+	const cards = [];
+	for(let i=0; i < enemyInfo.currentStatus.nextAction.abnormal; i++){
+		cards.push(abnormalCardList[enemyInfo.currentStatus.nextAction.abnormalType]);
+	}
+	enemyCardDebuf(animationFlag, cards);
+}
+/*****************************************************************************/
 /* エネミーアクション
 /*****************************************************************************/
 function actionTEST(){
 	const actions = [
-		{weight: 30, omen:{name: 'Test1', func: 'testAttack', type: enemyActionType.attack, damage: 6, image: 'images/enemy/omen/Attack.png'}},
-		{weight: 30, omen:{name: 'Test2', func: 'testStrategy', type: enemyActionType.debuff, damage: 0, image: 'images/enemy/omen/Weakness1.png'}},
-		{weight: 30, omen:{name: 'Test3', func: 'testSpell', type: enemyActionType.buff, damage: 0, image: 'images/enemy/omen/Power2.png'}},
-		{weight: 30, omen:{name: 'Test4', func: 'testMucus', type: enemyActionType.debuffAndAttack, damage: 8, image: 'images/enemy/omen/poison.png'}},
+		{
+			weight: 30, 
+			omen:{
+				name: 'Test1', 
+				func: 'enemyAttackAndDebuf', 
+				type: enemyActionType.debuffAndAttack, 
+				damage: 6, 
+				debuff: 2, 
+				debuffType: 'poison',
+				image: 'images/enemy/omen/poison.png'
+			}
+		},
+		{
+			weight: 30, 
+			omen:{
+				name: 'Test2', 
+				func: 'enemyDebuf', 
+				type: enemyActionType.debuff, 
+				damage: 0, 
+				debuff: 2, 
+				debuffType: 'defenseDown',
+				image: 'images/enemy/omen/Weakness2.png'
+			}
+		},
+		{
+			weight: 30, 
+			omen:{
+				name: 'Test3', 
+				func: 'enemyBuff', 
+				type: enemyActionType.buff, 
+				damage: 0, 
+				buff: 2, 
+				buffType: 'attackUp',
+				image: 'images/enemy/omen/Power1.png'
+			}
+		},
+		{
+			weight: 30, 
+			omen:{
+				name: 'Test3', 
+				func: 'enemyAttackAndCardDebuf', 
+				type: enemyActionType.debuffAndAttack, 
+				damage: 8, 
+				abnormal: 2, 
+				abnormalType: 'Mucus',
+				image: 'images/enemy/omen/poison.png'
+			}
+		},
 	];
 	const totalWeight = actions.reduce((sum, item) => sum + item.weight, 0);
 	let random = Math.floor(Math.random() * totalWeight);
@@ -222,30 +434,10 @@ function actionTEST(){
 	}
 	return false;
 }
-function testAttack(enemyInfo, playerInfo, animationFlag){
-	// 毒2+アタック6
-	enemyAttack(enemyInfo, playerInfo, animationFlag, 6);
-	enemyStatusDebuf(enemyInfo, playerInfo, animationFlag, debufStatus.poison, 2);
-}
-function testStrategy(enemyInfo, playerInfo, animationFlag){
-	// 攻撃力アップ2+ブロック5
-	enemyStatusDebuf(enemyInfo, playerInfo, animationFlag, debufStatus.defenseDown, 2);
-}
-function testSpell(enemyInfo, playerInfo, animationFlag){
-	// 攻撃力アップ2+ブロック5
-	enemyStatusBuf(enemyInfo, animationFlag, bufStatus.attackUp, 2);
-	enemyBlock(enemyInfo, animationFlag, 5);
-}
-function testMucus(enemyInfo, playerInfo, animationFlag){
-	// 8ダメージ+粘液1枚を捨て札に加える
-	enemyAttack(enemyInfo, playerInfo, animationFlag, 8);
-	const debufCards = [abnormalCardList.Mucus,abnormalCardList.Mucus];
-	enemyCardDebuf(animationFlag, debufCards);
 
-}
 function testFirst(enemyInfo, playerInfo, animationFlag){
 	// 開始時効果
-	enemyStatusBuf(enemyInfo, animationFlag, bufStatus.defenseUp, 2);
+	enemyStatusBuf(enemyInfo, animationFlag, 'defenseUp', 2);
 }
 /*******************************************************/
 /* スライム
@@ -253,8 +445,26 @@ function testFirst(enemyInfo, playerInfo, animationFlag){
 function actionSlime(){
 	console.log('actionSlime');
 	const actions = [
-		{weight: 0, omen:{name: '攻撃', func: 'slimeAttack', type: enemyActionType.attack, damage: 6, image: 'images/enemy/omen/Attack.png'}},
-		{weight: 0, omen:{name: '舐める', func: 'slimeStrategy', type: enemyActionType.debuff, damage: 0, image: 'images/enemy/omen/Weakness1.png'}},
+		{	weight: 0, 
+			omen:{
+				name: '攻撃', 
+				func: 'enemyAttack', 
+				type: enemyActionType.attack, 
+				damage: 6, 
+				image: 'images/enemy/omen/Attack.png'
+			}
+		},
+		{	weight: 0, 
+			omen:{
+				name: '舐める', 
+				func: 'enemyDebuf', 
+				type: enemyActionType.debuff, 
+				damage: 0, 
+				debuff: 2, 
+				debuffType: 'weak', 
+				image: 'images/enemy/omen/Weakness1.png'
+			}
+		},
 	];
 	if (0 === currentTurn % 2){
 		return actions[0].omen;
@@ -263,38 +473,63 @@ function actionSlime(){
 		return actions[1].omen;
 	}
 }
-function slimeAttack(enemyInfo, playerInfo, animationFlag){
-	// 6点ダメージ
-	enemyAttack(enemyInfo, playerInfo, animationFlag, 6);
-}
-function slimeStrategy(enemyInfo, playerInfo, animationFlag){
-	// 恐怖1を付与
-	enemyStatusDebuf(enemyInfo, playerInfo, animationFlag, debufStatus.weak, 2);
-}
+
 /*******************************************************/
 /* バトルスライム
 /*******************************************************/
 function actionBattleSlime(){
-	console.log('actionSlime');
+	console.log('actionBattleSlime');
 	const actions = [
-		{weight: 0, omen:{name: '攻撃', func: 'slimeAttack', type: enemyActionType.attack, damage: 5, image: 'images/enemy/omen/Attack.png'}},
+		{	weight: 0, 
+			omen:{
+				name: '攻撃', 
+				func: 'enemyAttack', 
+				type: enemyActionType.attack, 
+				damage: 5, 
+				image: 'images/enemy/omen/Attack.png'
+			}
+		},
 	];
 	return actions[0].omen;
 }
-function slimeAttack(enemyInfo, playerInfo, animationFlag){
-	console.log(enemyInfo);
-	// 6点ダメージ
-	enemyAttack(enemyInfo, playerInfo, animationFlag, 5);
-}
+
 /*******************************************************/
 /* シルバースライム
 /*******************************************************/
 function actionSilver(){
 	console.log('actionSilver');
 	const actions = [
-		{weight: 40, omen:{name: '攻撃', func: 'silverAttack', type: enemyActionType.attack, damage: 10, image: 'images/enemy/omen/Attack.png'}},
-		{weight: 30, omen:{name: '腐食性の粘液', func: 'silverMucus', type: enemyActionType.buffAndAttack, damage: 8, image: 'images/enemy/omen/poison.png'}},
-		{weight: 30, omen:{name: '舐める', func: 'silverStrategy', type: enemyActionType.debuff, damage: 0, image: 'images/enemy/omen/Weakness1.png'}},
+		{	weight: 40, 
+			omen:{
+				name: '攻撃', 
+				func: 'enemyAttack', 
+				type: enemyActionType.attack, 
+				damage: 10, 
+				image: 'images/enemy/omen/Attack.png'
+			}
+		},
+		{	weight: 30, 
+			omen:{
+				name: '腐食性の粘液', 
+				func: 'enemyAttackAndCardDebuf', 
+				type: enemyActionType.debuffAndAttack, 
+				damage: 7, 
+				abnormal: 1, 
+				abnormalType: 'Mucus',
+				image: 'images/enemy/omen/poison.png'
+			}
+		},
+		{	weight: 30, 
+			omen:{
+				name: '舐める', 
+				func: 'enemyDebuf', 
+				type: enemyActionType.debuff, 
+				damage: 0, 
+				debuff: 2, 
+				debuffType: 'weak',
+				image: 'images/enemy/omen/Weakness1.png'
+			}
+		},
 	];
 	const totalWeight = actions.reduce((sum, item) => sum + item.weight, 0);
 	let random = Math.floor(Math.random() * totalWeight);
@@ -306,28 +541,33 @@ function actionSilver(){
 	}
 	return false;
 }
-function silverAttack(enemyInfo, playerInfo, animationFlag){
-	// 10点ダメージ
-	enemyAttack(enemyInfo, playerInfo, animationFlag, 10);
-}
-function silverMucus(enemyInfo, playerInfo, animationFlag){
-	// 8ダメージ+粘液1枚を捨て札に加える
-	enemyAttack(enemyInfo, playerInfo, animationFlag, 8);
-	const debufCards = [abnormalCardList.Mucus];
-	enemyCardDebuf(animationFlag, debufCards);
-}
-function silverStrategy(enemyInfo, playerInfo, animationFlag){
-	// 恐怖1を付与
-	enemyStatusDebuf(enemyInfo, playerInfo, animationFlag, debufStatus.weak, 2);
-}
+
 /*******************************************************/
 /* モンク
 /*******************************************************/
 function actionMonk(){
 	console.log('actionMonk');
 	const actions = [
-		{weight: 0, omen:{name: '強化', func: 'monkSpell', type: enemyActionType.buff, damage: 0, image: 'images/enemy/omen/Power2.png'}},
-		{weight: 0, omen:{name: '攻撃', func: 'monkAttack', type: enemyActionType.attack, damage: 6, image: 'images/enemy/omen/Attack.png'}},
+		{	weight: 0, 
+			omen:{
+				name: '精神統一', 
+				func: 'enemyBuff', 
+				type: enemyActionType.buff, 
+				damage: 0, 
+				buff: 3,
+				buffType: 'spiritual',
+				image: 'images/enemy/omen/Power2.png'
+			}
+		},
+		{	weight: 40, 
+			omen:{
+				name: '攻撃', 
+				func: 'enemyAttack', 
+				type: enemyActionType.attack, 
+				damage: 6, 
+				image: 'images/enemy/omen/Attack.png'
+			}
+		},
 	];
 	if (currentTurn === 1){// 1ターン目に必ず使用する。
 		return actions[0].omen;
@@ -335,23 +575,43 @@ function actionMonk(){
 		return actions[1].omen;
 	}
 }
-function monkSpell(enemyInfo, playerInfo, animationFlag){
-	// 攻撃力アップ2を自身に付与
-	enemyStatusBuf(enemyInfo, animationFlag, bufStatus.spiritual, 3);
-}
-function monkAttack(enemyInfo, playerInfo, animationFlag){
-	// 6点ダメージ
-	enemyAttack(enemyInfo, playerInfo, animationFlag, 6);
-}
+
 /*******************************************************/
 /* プテシス
 /*******************************************************/
 function actionPutesis(){
 	console.log('actionPutesis');
 	const actions = [
-		{weight: 25, omen:{name: '攻撃', func: 'putesisAttack', type: enemyActionType.attack, damage: 11, image: 'images/enemy/omen/Attack.png'}},
-		{weight: 30, omen:{name: '攻撃+防御', func: 'putesisAttackAndDefense', type: enemyActionType.blockAndAttack, damage: 7, image: 'images/enemy/omen/PowerAttack.png'}},
-		{weight: 45, omen:{name: '怒号', func: 'putesisDefense', type: enemyActionType.blockAndBuff, damage: 0, image: 'images/enemy/omen/Defense1.png'}},
+		{	weight: 25, 
+			omen:{name: '攻撃', 
+				func: 'enemyAttack', 
+				type: enemyActionType.attack, 
+				damage: 11, 
+				image: 'images/enemy/omen/Attack.png'
+			}
+		},
+		{	weight: 30, 
+			omen:{
+				name: '攻撃+防御', 
+				func: 'enemyAttackAndBlock', 
+				type: enemyActionType.blockAndAttack, 
+				damage: 7, 
+				block: 5,
+				image: 'images/enemy/omen/PowerAttack.png'
+			}
+		},
+		{	weight: 45, 
+			omen:{
+				name: '怒号', 
+				func: 'enemyBlockAndBuff', 
+				type: enemyActionType.blockAndBuff, 
+				damage: 0, 
+				block: 6,
+				buff: 3,
+				buffType: 'attackUp',
+				image: 'images/enemy/omen/Defense1.png'
+			}
+		},
 	];
 	const totalWeight = actions.reduce((sum, item) => sum + item.weight, 0);
 	let random = Math.floor(Math.random() * totalWeight);
@@ -363,29 +623,33 @@ function actionPutesis(){
 	}
 	return false;
 }
-function putesisAttack(enemyInfo, playerInfo, animationFlag){
-	// 11点ダメージ');
-	enemyAttack(enemyInfo, playerInfo, animationFlag, 11);
-}
-function putesisAttackAndDefense(enemyInfo, playerInfo, animationFlag){
-	// 7点ダメージ+5ブロック');
-	enemyAttack(enemyInfo, playerInfo, animationFlag, 7);
-	enemyBlock(enemyInfo, animationFlag, 5);
-}
-function putesisDefense(enemyInfo, playerInfo, animationFlag){
-	// 6ブロック+攻撃力アップ3');
-	enemyBlock(enemyInfo, animationFlag, 6);
-	enemyStatusBuf(enemyInfo, animationFlag, bufStatus.attackUp, 3);
 
-}
 /*******************************************************/
 /* キラービー
 /*******************************************************/
 function actionBee(){
-	console.log('actionImp');
+	console.log('actionBee');
 	const actions = [
-		{weight: 75, omen:{name: '攻撃', func: 'beeAttack', type: enemyActionType.attack, damage: 6, image: 'images/enemy/omen/Attack.png'}},
-		{weight: 25, omen:{name: '威嚇', func: 'beeWeb', type: enemyActionType.debuff, damage: 0, image: 'images/enemy/omen/Weakness1.png'}},
+		{	weight: 75, 
+			omen:{
+				name: '攻撃', 
+				func: 'enemyAttack', 
+				type: enemyActionType.attack, 
+				damage: 6, 
+				image: 'images/enemy/omen/Attack.png'
+			}
+		},
+		{	weight: 25, 
+			omen:{
+				name: '威嚇', 
+				func: 'enemyDebuf', 
+				type: enemyActionType.debuff, 
+				damage: 0, 
+				debuff: 2,
+				debuffType: 'weak',
+				image: 'images/enemy/omen/Weakness1.png'
+			}
+		},
 	];
 	const totalWeight = actions.reduce((sum, item) => sum + item.weight, 0);
 	let random = Math.floor(Math.random() * totalWeight);
@@ -396,23 +660,33 @@ function actionBee(){
 		random -= action.weight;
 	}
 	return false;
-}
-function beeAttack(enemyInfo, playerInfo, animationFlag){
-	// 6点ダメージ
-	enemyAttack(enemyInfo, playerInfo, animationFlag, 6);
-}
-function beeWeb(enemyInfo, playerInfo, animationFlag){
-	// 恐怖2を付与
-	enemyStatusDebuf(enemyInfo, playerInfo, animationFlag, debufStatus.weak, 2);
 }
 /*******************************************************/
 /* ファングビー
 /*******************************************************/
 function actionFangBee(){
-	console.log('actionImp');
+	console.log('actionFangBee');
 	const actions = [
-		{weight: 75, omen:{name: '攻撃', func: 'beeAttack', type: enemyActionType.attack, damage: 6, image: 'images/enemy/omen/Attack.png'}},
-		{weight: 25, omen:{name: '成長', func: 'fangBeeGrowth', type: enemyActionType.buff, damage: 0, image: 'images/enemy/omen/Power1.png'}},
+		{	weight: 75, 
+			omen:{
+				name: '攻撃', 
+				func: 'enemyAttack', 
+				type: enemyActionType.attack, 
+				damage: 6, 
+				image: 'images/enemy/omen/Attack.png'
+			}
+		},
+		{	weight: 25, 
+			omen:{
+				name: '成長', 
+				func: 'enemyBuff', 
+				type: enemyActionType.buff, 
+				damage: 0, 
+				buff: 3,
+				buffType: 'attackUp',
+				image: 'images/enemy/omen/Power1.png'
+			}
+		},
 	];
 	const totalWeight = actions.reduce((sum, item) => sum + item.weight, 0);
 	let random = Math.floor(Math.random() * totalWeight);
@@ -425,18 +699,32 @@ function actionFangBee(){
 	return false;
 }
 
-function fangBeeGrowth(enemyInfo, playerInfo, animationFlag){
-	// 攻撃力アップ3を付与
-	enemyStatusBuf(enemyInfo, animationFlag, bufStatus.attackUp, 3);
-}
 /*******************************************************/
-/* インプ
+/* ウルフ
 /*******************************************************/
-function actionImp(){
-	console.log('actionImp');
+function actionWolf(){
+	console.log('actionWolf');
 	const actions = [
-		{weight: 60, omen:{name: '攻撃', func: 'impAttack', type: enemyActionType.attack, damage: 12, image: 'images/enemy/omen/Attack.png'}},
-		{weight: 40, omen:{name: '呪術', func: 'impSkill', type: enemyActionType.debuffAndAttack, damage: 7, image: 'images/enemy/omen/Break.png'}},
+		{	weight: 60, 
+			omen:{
+				name: '攻撃', 
+				func: 'enemyAttack', 
+				type: enemyActionType.attack, 
+				damage: 12, 
+				image: 'images/enemy/omen/Attack.png'
+			}
+		},
+		{	weight: 40, 
+			omen:{
+				name: '咆哮', 
+				func: 'enemyAttackAndDebuf', 
+				type: enemyActionType.debuffAndAttack, 
+				damage: 7, 
+				debuff: 2,
+				debuffType: 'weak',
+				image: 'images/enemy/omen/Break.png'
+			}
+		},
 	];
 	const totalWeight = actions.reduce((sum, item) => sum + item.weight, 0);
 	let random = Math.floor(Math.random() * totalWeight);
@@ -448,24 +736,83 @@ function actionImp(){
 	}
 	return false;
 }
-function impAttack(enemyInfo, playerInfo, animationFlag){
-	// 12点ダメージ
-	enemyAttack(enemyInfo, playerInfo, animationFlag, 12);
+
+/*******************************************************/
+/* シルヴァーウルフ
+/*******************************************************/
+function actionSilverWolf(){
+	console.log('actionImp');
+	const actions = [
+		{	weight: 60, 
+			omen:{name: '攻撃', 
+				func: 'enemyAttack', 
+				type: enemyActionType.attack, 
+				damage: 13, 
+				image: 'images/enemy/omen/Attack.png'
+			}
+		},
+		{	weight: 40, 
+			omen:{
+				name: '咆哮', 
+				func: 'enemyAttackAndDebuf', 
+				type: enemyActionType.debuffAndAttack, 
+				damage: 8, 
+				debuff: 2,
+				debuffType: 'defenseDown',
+				image: 'images/enemy/omen/Break.png'
+			}
+		},
+		{	weight: 40, 
+			omen:{
+				name: '包囲', 
+				func: 'enemyAttackAndDebuf', 
+				type: enemyActionType.debuff, 
+				damage: 0, 
+				debuff: 2,
+				debuffType: 'paralysis',
+				image: 'images/enemy/omen/Break.png'
+			}
+		},
+	];
+	const totalWeight = actions.reduce((sum, item) => sum + item.weight, 0);
+	let random = Math.floor(Math.random() * totalWeight);
+	for (const action of actions) {
+		if (random < action.weight) {
+			return action.omen;
+		}
+		random -= action.weight;
+	}
+	return false;
 }
-function impSkill(enemyInfo, playerInfo, animationFlag){
-	// 7ダメージ+脱力1を付与
-	enemyAttack(enemyInfo, playerInfo, animationFlag, 7);
-	enemyStatusDebuf(enemyInfo, playerInfo, animationFlag, debufStatus.weak, 2);
-}
+
 /*******************************************************/
 /* ラフレシア
 /*******************************************************/
 function actionRafflesia(){
 	console.log('actionRafflesia');
 	const actions = [
-		{weight: 60, omen:{name: '攻撃', func: 'rafflesiaAttack', type: enemyActionType.attack, damage: 6, image: 'images/enemy/omen/Attack.png'}},
-		{weight: 40, omen:{name: '成長', func: 'rafflesiaSkill', type: enemyActionType.buff, damage: 0, image: 'images/enemy/omen/Power1.png'}},
+		{	weight: 60, 
+			omen:{
+				name: '攻撃', 
+				func: 'rafflesiaAttack', 
+				type: enemyActionType.attack, 
+				damage: 6, 
+				image: 'images/enemy/omen/Attack.png'
+			}
+		},
+		{	weight: 40, 
+			omen:{
+				name: '成長', 
+				func: 'rafflesiaSkill', 
+				type: enemyActionType.buff, 
+				damage: 0, 
+				buff: 3,
+				buffType: 'attackUp',
+				image: 'images/enemy/omen/Power1.png'
+			}
+		},
 	];
+
 	const totalWeight = actions.reduce((sum, item) => sum + item.weight, 0);
 	let random = Math.floor(Math.random() * totalWeight);
 	for (const action of actions) {
@@ -478,7 +825,7 @@ function actionRafflesia(){
 }
 function rafflesiaAttack(enemyInfo, playerInfo, animationFlag){
 	// 12点ダメージ
-	enemyAttack(enemyInfo, playerInfo, animationFlag, 6);
+	enemyAttack(enemyInfo, playerInfo, animationFlag, enemyInfo.currentStatus.nextAction.damage);
 }
 function rafflesiaSkill(enemyInfo, playerInfo, animationFlag){
 	// 筋力3を自身に付与
@@ -623,12 +970,12 @@ function enemyStatusBuf(enemyInfo, animationFlag, buf, amountCount){
 	// すでに同じバフがかかってないか確認
 	// 同じバフは累積する
 	for (const status of enemyInfo.currentStatus.status) {
-		if (status.name == buf.name) {
+		if (status.name == bufStatus[buf].name) {
 			status.amount += amountCount;
 			sameBufFlag = true;
 		}
 	}
-	const receivedBuf = {...buf};
+	const receivedBuf = {...bufStatus[buf]};
 	receivedBuf.amount = amountCount;
 	if (!sameBufFlag) {
 		enemyInfo.currentStatus.status.push(receivedBuf);
@@ -658,12 +1005,12 @@ function enemyStatusDebuf(enemyInfo, playerInfo, animationFlag, debuf, amountCou
 	// すでに同じデバフがかかってないか確認
 	// 同じデバフは累積する
 	for (const status of playerInfo.statuses) {
-		if (status.name == debuf.name) {
+		if (status.name == debufStatus[debuf].name) {
 			status.amount += amountCount;
 			sameDebufFlag = true;
 		}
 	}
-	const receivedDebuf = {...debuf};
+	const receivedDebuf = {...debufStatus[debuf]};
 	receivedDebuf.amount = amountCount;
 	if (!sameDebufFlag) {
 		playerInfo.statuses.push(receivedDebuf);

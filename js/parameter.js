@@ -68,7 +68,7 @@ const bufStatus = {
 	invincible: {name: '無敵', amount: '', effect: 'このターン中に減らせるHPは、残り{X}。', image: 'images/status/status_62.png'},
 
 	// エネミー専用
-	pollen: {name: '花粉', amount: '', effect: '死亡時、プレイヤーに防御力ダウン{X}を与える。', image: 'images/status/status_9999.png'},
+	pollen: {name: '花粉', amount: '', effect: '死亡時、プレイヤーに防御力ダウン{X}を与える。', image: 'images/status/status_7176.png'},
 
 };
 // デバフ
@@ -83,6 +83,7 @@ const debufStatus = {
 	frail: {name: '脆弱化', amount: '', effect: 'カードから得られるブロックが25%減少。{X}ターン有効。', image: 'images/status/status_1011.png'},
 	weak: {name: '恐怖', amount: '', effect: 'アタックで与えるダメージが25%減少。{X}ターン有効。', image: 'images/status/status_1374.png'},
 	poison: {name: '毒', amount: '', effect: 'ターン開始時、HPを{X}失い、毒が1減少。', image: 'images/status/status_8.png'},
+	paralysis: {name: '麻痺', amount: '', effect: '{X}ターンの間「アタック」をプレイできない。', image: 'images/status/status_102.png'},
 	// 1ターン有効
 	noDraw: {name: 'ショート', amount: '', effect: 'ターン終了時までカードが引けない。1ターン有効', image: 'images/status/status_1472.png'},
 	invalidAttackUp: {name: '攻UP削除', amount: '',effect: 'ターン終了時、攻撃力アップを{X}下げる',image: 'images/status/status_9999.png'},
@@ -90,7 +91,6 @@ const debufStatus = {
 	suffocation: {name: '窒息', amount: '', effect: 'カードをプレイするたび、HPを{X}失う。1ターン有効', image: 'images/status/status_1103.png'},
 
 	sleep: {name: '眠り', amount: '', effect: 'この敵はまだ目覚めていない…', image: 'images/status/status_1263.png'},
-	paralysis: {name: '麻痺', amount: '', effect: '{X}ターンの間「アタック」をプレイできない。', image: 'images/status/status_102.png'},
 	heat: {name: '灼熱', amount: '', effect: 'カードをプレイするたび、あなたは{X}ダメージを受ける。', image: 'images/status/status_83.png'},
 	petrification: {name: '石化', amount: '', effect: 'カードから得られるブロックが-{X}。', image: 'images/status/status_1241.png'},
 	noBlock: {name: 'ブロック不可', amount: '', effect: 'カードからブロックを得られない。{X}ターン有効。', image: 'images/status/status_6765.png'},
@@ -138,6 +138,7 @@ const keyContinueArtifact = 'Babu.Continue.Artifact';
 const keyContinuePlayerStatus = 'Babu.Continue.Player.Status';
 const keyContinueMap = 'Babu.Continue.Map';
 const keyContinueCurrentMap = 'Babu.Continue.Current.Map';
+const keyContinueBattleCount = 'Babu.Continue.Battle.Count';
 const keyContinueOriginalDeck = 'Babu.Continue.Original.Deck';
 // 戦闘用ストレージキー
 const keyContinueBattleFlag = 'Babu.Continue.Battle.Flag';// 途中戦闘があるかのフラグ

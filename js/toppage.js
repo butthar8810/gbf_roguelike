@@ -73,6 +73,21 @@ function loadTopPage(){
 			cardDiv.addClass('enhance-card');
 			$('.card-list-area').append(cardDiv);
 		});
+		Object.values(djeetaEnhancedCardList).forEach((card) => {
+			const cardDiv = createCardDom(card);
+			cardDiv.addClass('enhance-card');
+			$('.card-list-area').append(cardDiv);
+		});
+		Object.values(commonCardList).forEach((card) => {
+			const cardDiv = createCardDom(card);
+			cardDiv.addClass('enhance-card');
+			$('.card-list-area').append(cardDiv);
+		});
+		Object.values(commonEnhancedCardList).forEach((card) => {
+			const cardDiv = createCardDom(card);
+			cardDiv.addClass('enhance-card');
+			$('.card-list-area').append(cardDiv);
+		});
 	});
 	$('.close-list-btn').click((e) => {
 		$('.black-back-area').removeClass('active');

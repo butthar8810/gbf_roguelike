@@ -2456,7 +2456,7 @@ const djeetaCardList = {
 		effect: `{A}ダメージを与える。恐怖{D}を与える。`,
 		amount: {
 			cost: 1,
-			attack: 9,
+			attack: 7,
 			debuff: 1,
 			debuffType: 'weak',
 			discard: false,
@@ -2989,7 +2989,7 @@ const djeetaCardList = {
 		effect: `ランダムな敵に毒{D}を{C}回与える。`,
 		amount: {
 			cost: 2,
-			debuff: 4,
+			debuff: 3,
 			debuffType: 'invalidAttackUp',
 			count: 3,
 			discard: false,
@@ -3589,24 +3589,1199 @@ const djeetaCardList = {
 	},
 };
 
-const djeetaEnhancedCardList = {};
-const commonCardList = {
-	testAttack: {
-		key: 'testAttack',
-		name: 'エーターナルフォースブリザード',
-		class: cardClass.common,
+const djeetaEnhancedCardList = {
+	Wide: {
+		name: '<span class="upgrade">ワイドブレード+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.starter,
+		type: type.attack,
+		func: 'effectAttack',
+		image:'images/card/djeeta_Wide.jpg',
+		effect: '<span class="upgrade">{A}</span>のダメージを与える。',
+		amount: {
+			cost: 1,
+			attack: 9,
+			discard: false,
+		}
+	},
+	//無力化
+	Assassin: {
+		name: '<span class="upgrade">アサシンブレード+</span>',
+		class: cardClass.djeeta,
 		rarity: rarity.common,
 		type: type.attack,
-		func: 'effectAllAttack',
-		image:'images/card/common_Knife.jpg',
-		effect: `天賦。敵全体に{A}ダメージを与える。廃棄。`,
+		func: 'effectAttackAndDebuff',
+		image:'images/card/djeeta_Assassin.jpg',
+		effect: `<span class="upgrade">{A}</span>ダメージを与える。恐怖<span class="upgrade">{D}</span>を与える。`,
 		amount: {
-			gift: true,
 			cost: 0,
-			attack: 999,
+			attack: 4,
+			debuff: 2,
+			debuffType: 'weak',
+			discard: false,
+		}
+	},
+	Defense: {
+		name: '<span class="upgrade">防御+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.starter,
+		type: type.skill,
+		func: 'effectDefense',
+		image:'images/card/djeeta_Defense.jpg',
+		effect: '<span class="upgrade">{B}</span>ブロックを得る。',
+		amount: {
+			cost: 1,
+			block: 8,
+			discard: false,
+		}
+	},
+	//サバイバー
+	Pulverizer: {
+		name: '<span class="upgrade">パルバライザー+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.starter,
+		type: type.skill,
+		func: 'effectDefenseAndTrash',
+		image:'images/card/djeeta_Pulverizer.jpg',
+		effect: '<span class="upgrade">{B}</span>ブロックを得る。カードを1枚捨てる。',
+		amount: {
+			cost: 1,
+			block: 11,
+			discard: false,
+		}
+	},
+	/********************************************* コモン *********************************************/
+	//はやぶさ斬り
+	Removal: {
+		name: '<span class="upgrade">芽摘+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.common,
+		type: type.attack,
+		func: 'effectAttackAndDraw',
+		image:'images/card/djeeta_Removal.jpg',
+		effect: `<span class="upgrade">{A}</span>ダメージを与える。カードを{Dr}枚引く。`,
+		amount: {
+			cost: 1,
+			attack: 12,
+			draw: 1,
+			discard: false,
+		}
+	},
+	//スライス
+	Kill: {
+		name: '<span class="upgrade">キリング・ダガー+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.common,
+		type: type.attack,
+		func: 'effectAttack',
+		image:'images/card/djeeta_Kill.jpg',
+		effect: `<span class="upgrade">{A}</span>ダメージを与える。`,
+		amount: {
+			cost: 0,
+			attack: 9,
+			discard: false,
+		}
+	},
+	//ダガースロー
+	World: {
+		name: '<span class="upgrade">アラウンドザワールド+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.common,
+		type: type.attack,
+		func: 'effectAttackAndDrawAndTrash',
+		image:'images/card/djeeta_World.jpg',
+		effect: `<span class="upgrade">{A}</span>ダメージを与える。カードを1枚引き、1枚捨てる。`,
+		amount: {
+			cost: 1,
+			attack: 12,
+			draw: 1,
+			discard: false,
+		}
+	},
+	//不意打ち
+	Fast: {
+		name: '<span class="upgrade">ファストスライサー+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.starter,
+		type: type.attack,
+		func: 'effectAttackAndDebuff',
+		image:'images/card/djeeta_Fast.jpg',
+		effect: `<span class="upgrade">{A}</span>ダメージを与える。恐怖<span class="upgrade">{D}</span>を与える。`,
+		amount: {
+			cost: 1,
+			attack: 9,
+			debuff: 2,
+			debuffType: 'weak',
+			discard: false,
+		}
+	},
+	//五月雨ダガー
+	Rain: {
+		name: '<span class="upgrade">アローレイン+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.common,
+		type: type.attack,
+		func: 'effectTimesAllAttack',
+		image:'images/card/djeeta_Rain.jpg',
+		effect: `全ての敵に<span class="upgrade">{A}</span>ダメージを{C}回与える。`,
+		amount: {
+			cost: 1,
+			attack: 6,
+			count: 2,
+			discard: false,
+		}
+	},
+	//スニーキーストライク
+	Kamaitachi: {
+		name: '<span class="upgrade">鎌鼬+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.common,
+		type: type.attack,
+		func: 'effectAttackAndGetEnergy',
+		image:'images/card/djeeta_Kamaitachi.jpg',
+		effect: `<span class="upgrade">{A}</span>ダメージを与える。このターンにカードを捨てていれば、{E}エナジーを得る。`,
+		amount: {
+			cost: 2,
+			attack: 16,
+			energy: 2,
+			discard: false,
+		}
+	},
+	//毒の一刺し
+	True: {
+		name: '<span class="upgrade">ポイズンスラスト+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.common,
+		type: type.attack,
+		func: 'effectAttackAndDebuff',
+		image:'images/card/djeeta_True.jpg',
+		effect: `<span class="upgrade">{A}</span>ダメージを与える。毒<span class="upgrade">{D}</span>を与える。`,
+		amount: {
+			cost: 1,
+			attack: 8,
+			debuff: 4,
+			debuffType: 'poison',
+			discard: false,
+		}
+	},
+	//破滅
+	Dead: {
+		name: '<span class="upgrade">デッドウェッジ+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.common,
+		type: type.attack,
+		func: 'effectAttackAndConditionsPoison',
+		image:'images/card/djeeta_Dead.jpg',
+		effect: `<span class="upgrade">{A}</span>ダメージを与える。敵が毒を受けている場合、さらに<span class="upgrade">{A}</span>ダメージを与える。`,
+		amount: {
+			cost: 1,
+			attack: 10,
+			additionalAttack: 10,
+			discard: false,
+		}
+	},
+	//飛び膝蹴り
+	Circle: {
+		name: '<span class="upgrade">サークル+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.common,
+		type: type.attack,
+		func: 'effectAttackAndBuff',
+		image:'images/card/djeeta_Circle.jpg',
+		effect: `<span class="upgrade">{A}</span>ダメージを与える。次のターン、{F}エナジーを得る。`,
+		amount: {
+			cost: 1,
+			attack: 11,
+			buff: 1,
+			buffType: 'activity',
+			discard: false,
+		}
+	},
+	//******************************スキル******************************//
+	//アクロバット
+	Preparation: {
+		name: '<span class="upgrade">戦闘準備+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.common,
+		type: type.skill,
+		func: 'effectDrawAndTrash',
+		image:'images/card/djeeta_Preparation.jpg',
+		effect: `カードを<span class="upgrade">{Dr}</span>枚引く。カードを1枚捨てる。`,
+		amount: {
+			cost: 1,
+			draw: 4,
+			discard: false,
+		}
+	},
+	//ディフレクト
+	Twill: {
+		name: '<span class="upgrade">ツイルコート+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.common,
+		type: type.skill,
+		func: 'effectDefense',
+		image:'images/card/djeeta_Twill.jpg',
+		effect: `<span class="upgrade">{B}</span>ブロックを得る。`,
+		amount: {
+			cost: 0,
+			block: 7,
+			discard: false,
+		}
+	},
+	//ドッジロール
+	Knight: {
+		name: '<span class="upgrade">ナイトシールド+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.common,
+		type: type.skill,
+		func: 'effectDefenseAndBuff',
+		image:'images/card/djeeta_Knight.jpg',
+		effect: `<span class="upgrade">{B}</span>ブロックを得る。次のターン、<span class="upgrade">{F}</span>ブロックを得る。`,
+		amount: {
+			cost: 1,
+			block: 6,
+			buff: 6,
+			buffType: 'nextTurnBlock',
+			discard: false,
+		}
+	},
+	//バックフリップ
+	Yggdrasil: {
+		name: '<span class="upgrade">ユグドラシル・ミニステル+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.common,
+		type: type.skill,
+		func: 'effectDefenseAndDraw',
+		image:'images/card/djeeta_Yggdrasil.jpg',
+		effect: `<span class="upgrade">{B}</span>ブロックを得る。カードを{Dr}枚引く。`,
+		amount: {
+			cost: 1,
+			block: 8,
+			draw: 2,
+			discard: false,
+		}
+	},
+	//先読み
+	Extinction: {
+		name: '<span class="upgrade">滅尽の覇気+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.common,
+		type: type.skill,
+		func: 'effectBuff',
+		image:'images/card/djeeta_Extinction.jpg',
+		effect: `次のターン<span class="upgrade">{F}</span>エナジーを得る。`,
+		amount: {
+			cost: 1,
+			buff: 3,
+			buffType: 'activity',
+			discard: false,
+		}
+	},
+	//剣の舞
+	Leiomano: {
+		name: '<span class="upgrade">レイオマノ+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.common,
+		type: type.skill,
+		func: 'effectAddCommonCard',
+		image:'images/card/djeeta_Leiomano.jpg',
+		effect: `ナイフを<span class="upgrade">{C}</span>枚手札に加える。`,
+		amount: {
+			cost: 1,
+			commonCard: 'Knife',
+			count: 4,
+			discard: false,
+		}
+	},
+	//外套と短剣
+	Rune: {
+		name: '<span class="upgrade">ルーンナイフ+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.common,
+		type: type.skill,
+		func: 'effectDefenseAndAddCommonCard',
+		image:'images/card/djeeta_Rune.jpg',
+		effect: `{B}ブロックを得る。ナイフを<span class="upgrade">{C}</span>枚手札に加える。`,
+		amount: {
+			cost: 1,
+			block: 6,
+			commonCard: 'Knife',
+			count: 2,
+			discard: false,
+		}
+	},
+	//準備
+	Refrain: {
+		name: '<span class="upgrade">リフレイン+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.common,
+		type: type.skill,
+		func: 'effectDrawAndTrash',
+		image:'images/card/djeeta_Refrain.jpg',
+		effect: `カードを<span class="upgrade">{Dr}</span>枚引き、<span class="upgrade">2</span>枚捨てる。`,
+		amount: {
+			cost: 0,
+			draw: 2,
+			discard: false,
+		}
+	},
+	//致死毒
+	Cocktail: {
+		name: '<span class="upgrade">ポイズンカクテル+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.common,
+		type: type.skill,
+		func: 'effectDebuff',
+		image:'images/card/djeeta_Cocktail.jpg',
+		effect: `毒<span class="upgrade">{D}</span>を与える。`,
+		amount: {
+			cost: 1,
+			debuff: 7,
+			debuffType: 'poison',
+			discard: false,
+		}
+	},
+	//金切り声
+	Sleep: {
+		name: '<span class="upgrade">催眠針+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.common,
+		type: type.skill,
+		func: 'effectALLDoubleDebuff',
+		image:'images/card/djeeta_Sleep.jpg',
+		effect: `ターン終了まで、敵全体に攻撃力ダウン<span class="upgrade">{D1}</span>を与える。廃棄。`,
+		amount: {
+			cost: 1,
+			debuff1: 8,
+			debuffType1: 'attackDown',
+			debuff2: 8,
+			debuffType2: 'invalidAttackDown',
 			discard: true,
 		}
 	},
+	//*********************************************アンコモン*********************************************//
+	//とどめの一撃
+	Shigure: {
+		name: '<span class="upgrade">秋時雨+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.uncommon,
+		type: type.attack,
+		func: 'effectTimesAttackEveryAttack',
+		image:'images/card/djeeta_Shigure.jpg',
+		effect: `このターン使用した「アタック」の枚数ｘ<span class="upgrade">{A}</span>ダメージを与える。`,
+		amount: {
+			cost: 1,
+			attack: 8,
+			discard: false,
+		}
+	},
+	//ダッシュ
+	Smash: {
+		name: '<span class="upgrade">スマッシュライザー+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.uncommon,
+		type: type.attack,
+		func: 'effectAttackAndDefense',
+		image:'images/card/djeeta_Smash.jpg',
+		effect: `<span class="upgrade">{B}</span>ブロックを得る。<span class="upgrade">{A}</span>ダメージを与える。`,
+		amount: {
+			cost: 2,
+			attack: 13,
+			block: 13,
+			discard: false,
+		}
+	},
+	//ハチの巣
+	Doobie: {
+		name: '<span class="upgrade">ドゥービーショット+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.uncommon,
+		type: type.attack,
+		func: 'effectTimesAttack',
+		image:'images/card/djeeta_Doobie.jpg',
+		effect: `<span class="upgrade">{A}</span>ダメージを{C}回与える。`,
+		amount: {
+			cost: 2,
+			attack: 4,
+			count: 5,
+			discard: false,
+		}
+	},
+	//ヒールフック
+	Wheel: {
+		name: '<span class="upgrade">セラフホウィール+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.uncommon,
+		type: type.attack,
+		func: 'effectAttackAndConditionsWeak',
+		image:'images/card/djeeta_Wheel.jpg',
+		effect: `<span class="upgrade">{A}</span>ダメージを与える。敵が恐怖を受けている場合は{E}エナジーを得てカードを{Dr}枚引く。`,
+		amount: {
+			cost: 1,
+			attack: 7,
+			energy: 1,
+			draw: 1,
+			discard: false,
+		}
+	},
+	//フルアタック
+	Blaze: {
+		name: '<span class="upgrade">セラフブレイズ+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.uncommon,
+		type: type.attack,
+		func: 'effectAllAttackAndRandomTrash',
+		image:'images/card/djeeta_Blaze.jpg',
+		effect: `敵全体に<span class="upgrade">{A}</span>ダメージを与える。手札をランダムに1枚捨てる。`,
+		amount: {
+			cost: 1,
+			attack: 14,
+			discard: false,
+		}
+	},
+	//フレシェット
+	Instruction: {
+		name: '<span class="upgrade">魔星の指南書+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.uncommon,
+		type: type.attack,
+		func: 'effectTimesAttackEverySkillCard',
+		image:'images/card/djeeta_Instruction.jpg',
+		effect: `手札にある「スキル」の枚数ｘ<span class="upgrade">{A}</span>ダメージを与える。`,
+		amount: {
+			cost: 1,
+			attack: 6,
+			discard: false,
+		}
+	},
+	//一撃必殺
+	Perfeed: {
+		name: '<span class="upgrade">ペルフィード+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.uncommon,
+		type: type.attack,
+		func: 'effectAttack',
+		image:'images/card/djeeta_Perfeed.jpg',
+		effect: `<span class="upgrade">{A}</span>ダメージを与える。ダメージを受けるたび、このカードのコストが1増加。`,
+		amount: {
+			cost: 0,
+			originCost: 0,
+			costChange:'changeCostUpEveryDamage',
+			attack: 16,
+			discard: false,
+		}
+	},
+	//串刺し
+	Agastia: {
+		name: '<span class="upgrade">アガスティア・ダブル+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.uncommon,
+		type: type.attack,
+		func: 'effectAttackXTimes',
+		image:'images/card/djeeta_Agastia.jpg',
+		effect: `<span class="upgrade">{A}</span>ダメージをX回与える。`,
+		amount: {
+			cost: 'X',
+			variable: 0,
+			attack: 10,
+			discard: false,
+		}
+	},
+	//略奪
+	Mimic: {
+		name: '<span class="upgrade">ミニック+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.uncommon,
+		type: type.attack,
+		func: 'effectAttackAndBuff',
+		image:'images/card/djeeta_Mimic.jpg',
+		effect: `<span class="upgrade">{A}</span>ダメージを与える。次のターン開始時、カードを{F}枚引く。`,
+		amount: {
+			cost: 2,
+			attack: 20,
+			buff: 2,
+			buffType: 'nextTurnDraw',
+			discard: false,
+		}
+	},
+	//窒息
+	Leviathan: {
+		name: '<span class="upgrade">リヴァイアサン・ミニステル+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.uncommon,
+		type: type.attack,
+		func: 'effectAttackAndDebuff',
+		image:'images/card/djeeta_Leviathan.jpg',
+		effect: `{A}ダメージを与える。このターンでカードを使用するたび、ターゲットの敵がHP<span class="upgrade">{D}</span>を失う。`,
+		amount: {
+			cost: 2,
+			attack: 12,
+			debuff: 5,
+			debuffType: 'suffocation',
+			discard: false,
+		}
+	},
+	//終わりなき苦痛
+	Spada: {
+		name: '<span class="upgrade">イルジオーネ・スパーダ+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.uncommon,
+		type: type.attack,
+		func: 'effectAttack',
+		image:'images/card/djeeta_Spada.jpg',
+		effect: `このカードを引くたび、「イルジオーネ・スパーダ」を手札に加える。<span class="upgrade">{A}</span>ダメージを与える。廃棄。`,
+		amount: {
+			cost: 0,
+			attack: 6,
+			discard: true,
+		}
+	},
+	//腹裂き
+	GiveUp: {
+		name: '<span class="upgrade">ネバーギブアップ+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.uncommon,
+		type: type.attack,
+		func: 'effectTimesAllAttack',
+		image:'images/card/djeeta_GiveUp.jpg',
+		effect: `このターンに捨てたカード1枚につき、使用コストが-1。<span class="upgrade">{A}</span>ダメージを3回与える。`,
+		amount: {
+			cost: 3,
+			originCost: 3,
+			costChange:'changeCostDownEveryTrash',
+			attack: 9,
+			count: 3,
+			discard: false,
+		}
+	},
+	//騙し討ち
+	Iai: {
+		name: '<span class="upgrade">居合スラッシュ+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.uncommon,
+		type: type.attack,
+		func: 'effectAttack',
+		image:'images/card/djeeta_Iai.jpg',
+		effect: `<span class="upgrade">{A}</span>ダメージを与える。天賦。廃棄。`,
+		amount: {
+			gift: true,
+			cost: 0,
+			attack: 15,
+			discard: true,
+		}
+	},
+	//******************************スキル******************************//
+	//イカサマ
+	Branch: {
+		name: '<span class="upgrade">天導樹の枝+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: 'effectAllTrashAndDraw',
+		image:'images/card/djeeta_Branch.jpg',
+		effect: `手札をすべて捨て、同じ枚数だけカードを引く。`,
+		amount: {
+			cost: 0,
+			discard: false,
+		}
+	},
+	//セットアップ
+	Justice: {
+		name: '<span class="upgrade">ザ・ジャスティス+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: 'effectPutCardDeckTop',
+		image:'images/card/djeeta_Justice.jpg',
+		effect: `手札のカード1枚を山札の1番上に置く。プレイされるまでそのコストは0`,
+		amount: {
+			cost: 0,
+			discard: false,
+		}
+	},
+	//バウンドフラスコ
+	BlackishPurple: {
+		name: '<span class="upgrade">黒紫羽+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: 'effectTimesRandomDebuff',
+		image:'images/card/djeeta_BlackishPurple.jpg',
+		effect: `ランダムな敵に毒{D}を<span class="upgrade">{C}</span>回与える。`,
+		amount: {
+			cost: 2,
+			debuff: 3,
+			debuffType: 'invalidAttackUp',
+			count: 4,
+			discard: false,
+		}
+	},
+	//劇毒
+	Cell: {
+		name: '<span class="upgrade">壊獣細胞+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: 'effectALLDoubleDebuff',
+		image:'images/card/djeeta_Cell.jpg',
+		effect: `敵全体に毒<span class="upgrade">{D1}</span>と恐怖{D2}を与える。廃棄。`,
+		amount: {
+			cost: 2,
+			debuff1: 7,
+			debuffType1: 'poison',
+			debuff2: 2,
+			debuffType2: 'weak',
+			discard: true,
+		}
+	},
+/*	//動揺
+	test1: {
+		name: '',
+		class: cardClass.djeeta,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: '',
+		image:'images/card/djeeta_.jpg',
+		effect: `ランダムな「スキル」を1枚手札に加える。このターンそのカードのコストは0。廃棄`,
+		amount: {
+			cost: 0,
+			discard: true,
+		}
+	},
+*/
+	//反射
+	Tactics: {
+		name: '<span class="upgrade">戦術+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: '',
+		image:'images/card/djeeta_Tactics.jpg',
+		effect: `使用不可。このカードを捨てたとき、カードを<span class="upgrade">{Dr}</span>枚引く。`,
+		amount: {
+			cost: 99,
+			draw: 3,
+			discard: false,
+			trashFunc: 'effectDraw',
+		}
+	},
+	//恐怖
+	Penalty: {
+		name: '<span class="upgrade">ペナルティ+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: 'effectDebuff',
+		image:'images/card/djeeta_Penalty.jpg',
+		effect: `防御ダウン99を与える。廃棄。`,
+		amount: {
+			cost: 0,
+			debuff: 99,
+			debuffType: 'defenseDown',
+			discard: true,
+		}
+	},
+	//策士
+	Supply: {
+		name: '<span class="upgrade">補給+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: '',
+		image:'images/card/djeeta_Supply.jpg',
+		effect: `使用不可。このカードを捨てた時、<span class="upgrade">{E}</span>エナジーを得る。`,
+		amount: {
+			cost: 99,
+			energy: 2,
+			discard: false,
+			trashFunc: 'effectGetEnergy'
+		}
+	},
+	//職人技
+	Sun: {
+		name: '<span class="upgrade">ザ・サン+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: 'effectCountDraw',
+		image:'images/card/djeeta_Sun.jpg',
+		effect: `手札が<span class="upgrade">{C}</span>枚になるまでカードを引く。`,
+		amount: {
+			cost: 1,
+			count: 7,
+			discard: false,
+		}
+	},
+	//脱出計画
+	Shell: {
+		name: '<span class="upgrade">執明真甲+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: 'effectDrawAndSkillDefense',
+		image:'images/card/djeeta_Shell.jpg',
+		effect: `カードを{Dr}枚引く。引いたカードが「スキル」の場合、<span class="upgrade">{B}</span>ブロックを得る。`,
+		amount: {
+			cost: 0,
+			drow: 1,
+			block: 5,
+			discard: false,
+		}
+	},
+	//触媒
+	// 毒3倍関数未実装
+	Chain: {
+		name: '<span class="upgrade">凶毒の穿鎖+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: '',
+		image:'images/card/djeeta_Chain.jpg',
+		effect: `敵の毒を<span class="upgrade">3</span>倍にする。廃棄。`,
+		amount: {
+			cost: 1,
+			debuffType: 'poison',
+			discard: true,
+		}
+	},
+	//足払い
+	LawWheel: {
+		name: '<span class="upgrade">転舞法輪+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: 'effectDefenseAndBuff',
+		image:'images/card/djeeta_LawWheel.jpg',
+		effect: `恐怖<span class="upgrade">{D}</span>を与える。<span class="upgrade">{B}</span>のブロックを得る。`,
+		amount: {
+			cost: 2,
+			block: 14,
+			debuff: 3,
+			debuffType: 'weak',
+			discard: false,
+		}
+	},
+	//集中
+	// 2枚捨て関数未実装
+	Noodles: {
+		name: '<span class="upgrade">替え玉一丁！+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: '',
+		image:'images/card/djeeta_Noodles.jpg',
+		effect: `カードを<span class="upgrade">2</span>枚捨てる。{E}エナジーを得る。`,
+		amount: {
+			cost: 0,
+			energy: 2,
+			discard: false,
+		}
+	},
+	//ブラー
+	LuWoh: {
+		name: '<span class="upgrade">ル・オー・ミニステル+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: 'effectDefenseAndBuff',
+		image:'images/card/djeeta_LuWoh.jpg',
+		effect: `<span class="upgrade">{B}</span>ブロックを得る。次のターン開始時にブロックを失わない。`,
+		amount: {
+			cost: 1,
+			block: 8,
+			buff: '',
+			buffType: 'lightWall',
+			discard: false,
+		}
+	},
+	
+	//******************************パワー******************************//
+	//まきびし
+	Aura: {
+		name: '<span class="upgrade">闇のオーラ+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: 'effectBuff',
+		image:'images/card/djeeta_Aura.jpg',
+		effect: `攻撃を受けるたび、攻撃を行った敵に<span class="upgrade">{F}</span>ダメージを与える。`,
+		amount: {
+			cost: 1,
+			buff: 5,
+			buffType: 'counter',
+		}
+	},
+	//フットワーク
+	Runner: {
+		name: '<span class="upgrade">ランナーズハイ+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: 'effectBuff',
+		image:'images/card/djeeta_Runner.jpg',
+		effect: `回避率アップ<span class="upgrade">{F}</span>を得る。`,
+		amount: {
+			cost: 1,
+			buff: 3,
+			buffType: 'dexterity',
+		}
+	},
+	//有毒ガス
+	Grudge: {
+		name: '<span class="upgrade">怨怨+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: 'effectBuff',
+		image:'images/card/djeeta_Grudge.jpg',
+		effect: `ターン開始時に、敵全体に毒<span class="upgrade">{F}</span>を与える。`,
+		amount: {
+			cost: 1,
+			buff: 3,
+			buffType: 'grudge',
+		}
+	},
+	//無限の刃
+	FlyingBlade: {
+		name: '<span class="upgrade">無限の飛刃+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: 'effectBuff',
+		image:'images/card/djeeta_FlyingBlade.jpg',
+		effect: `<span class="upgrade">天賦。</span>ターン開始時に、ナイフを{F}枚手札に加える。`,
+		amount: {
+			gift: true,
+			cost: 1,
+			buff: 1,
+			buffType: 'infinite',
+		}
+	},
+	//用意周到
+	Decomposition: {
+		name: '<span class="upgrade">再利用+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: 'effectBuff',
+		image:'images/card/djeeta_Decomposition.jpg',
+		effect: `ターン終了時に、カードを<span class="upgrade">{F}</span>枚保留する。`,
+		amount: {
+			cost: 1,
+			buff: 2,
+			buffType: 'repair',
+		}
+	},
+
+	//精度上昇
+	Telescope: {
+		name: '<span class="upgrade">精度上昇+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: 'effectBuff',
+		image:'images/card/djeeta_Telescope.jpg',
+		effect: `ナイフが<span class="upgrade">{F}</span>の追加ダメージを与える。`,
+		amount: {
+			cost: 1,
+			buff: 6,
+			buffType: 'hitRate',
+		}
+	},
+	//*********************************************レア*********************************************//
+	//アンロード
+	Roses: {
+		name: '<span class="upgrade">ブルー・ローゼス+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.rare,
+		type: type.attack,
+		func: 'effectAttackAndNoAttackTrash',
+		image:'images/card/djeeta_Roses.jpg',
+		effect: `<span class="upgrade">{A}</span>ダメージを与える。「アタック」以外の全てのカードを捨てる。`,
+		amount: {
+			cost: 1,
+			attack: 18,
+			discard: false,
+		}
+	},
+	//ガラスのナイフ
+	Ominous: {
+		name: '<span class="upgrade">ウルヴォルラーネ+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.rare,
+		type: type.attack,
+		func: 'effectTimesAttackAndDamageDown',
+		image:'images/card/djeeta_Ominous.jpg',
+		effect: `<span class="upgrade">{A}</span>ダメージを2回与える。この戦闘中はウルヴォルラーネのダメージが-2低下する。`,
+		amount: {
+			cost: 1,
+			attack: 12,
+			count: 2,
+			attackDown: 2,
+			discard: false,
+		}
+	},
+	//グランドフィナーレ
+	Blossom: {
+		name: '<span class="upgrade">デスブロッサム+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.rare,
+		type: type.attack,
+		func: 'effectAllAttack',
+		image:'images/card/djeeta_Blossom.jpg',
+		effect: `山札にカードがない時だけ使用可能。敵全体に<span class="upgrade">{A}</span>ダメージを与える。`,
+		amount: {
+			conditions: 'conditionsNoDeck', // 発動条件
+			cost: 0,
+			attack: 60,
+			discard: false,
+		}
+	},
+	//ダイ、ダイ、ダイ！
+	Zetsu: {
+		name: '<span class="upgrade">絶+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.rare,
+		type: type.attack,
+		func: 'effectAllAttack',
+		image:'images/card/djeeta_Zetsu.jpg',
+		effect: `敵全体に<span class="upgrade">{A}</span>ダメージを与える。廃棄。`,
+		amount: {
+			cost: 1,
+			attack: 17,
+			discard: true,
+		}
+	},
+	//******************************スキル******************************//
+	//アドレナリン
+	Record: {
+		name: '<span class="upgrade">シーイング・レコード+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.rare,
+		type: type.skill,
+		func: 'effectGetEnergyAndDraw',
+		image:'images/card/djeeta_Record.jpg',
+		effect: `<span class="upgrade">{E}</span>エナジーを得る。カードを{Dr}枚引く。廃棄`,
+		amount: {
+			cost: 0,
+			energy: 2,
+			draw: 2,
+			discard: true,
+		}
+	},
+	//ドッペルゲンガー
+	// X+1関数未実装
+	Aethos: {
+		name: '<span class="upgrade">アエトス・オブ・ワールド+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.rare,
+		type: type.skill,
+		func: '',
+		image:'images/card/djeeta_Aethos.jpg',
+		effect: `次のターンに<span class="upgrade">X+1</span>枚のカードを引き<span class="upgrade">X+1</span>のエナジーを得る。廃棄。`,
+		amount: {
+			cost: 'X',
+			variable: 0,
+			discard: true,
+		}
+	},
+	//バレットタイム
+	Bailout: {
+		name: '<span class="upgrade">ベイルアウト+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.rare,
+		type: type.skill,
+		func: 'effectDebuffAndCostDown',
+		image:'images/card/djeeta_Bailout.jpg',
+		effect: `このターン、カードを引くことができない。このターン、あなたの手札のコストは0になる。`,
+		amount: {
+			cost: 2,
+			debuff: '',
+			debuffType: 'noDraw',
+			discard: false,
+		}
+	},
+	//バースト
+	Cat: {
+		name: '<span class="upgrade">新神気鋭・猫の印+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.rare,
+		type: type.skill,
+		func: 'effectBuff',
+		image:'images/card/djeeta_Cat.jpg',
+		effect: `このターン、次の<span class="upgrade">2つの</span>「スキル」を2回プレイする。`,
+		amount: {
+			cost: 1,
+			buff: 2,
+			buffType: 'skillCombo',
+			discard: true,
+		}
+	},
+	//不快感
+	// X+1関数未実装
+	Petrification: {
+		name: '<span class="upgrade">フルグライト+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.rare,
+		type: type.skill,
+		func: '',
+		image:'images/card/djeeta_Petrification.jpg',
+		effect: `敵は攻撃力ダウン<span class="upgrade">X+1</span>と恐怖<span class="upgrade">X+1</span>を与える。廃棄。`,
+		amount: {
+			cost: 'X',
+			variable: 0,
+			debuffType1: 'attackDown',
+			debuffType2: 'weak',
+			discard: true,
+		}
+	},
+	//幻影の暗殺者
+	Ereshkigal: {
+		name: '<span class="upgrade">エレシュキガル+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.rare,
+		type: type.skill,
+		func: 'effectBuff',
+		image:'images/card/djeeta_Ereshkigal.jpg',
+		effect: `次のターン、「アタック」のダメージが2倍になる。`,
+		amount: {
+			cost: 0,
+			buff: 1,
+			buffType: 'Ereshkigal',
+			discard: false,
+		}
+	},
+	//悪夢
+	Cerberus: {
+		name: '<span class="upgrade">ケルベロス+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.rare,
+		type: type.skill,
+		func: 'effectReproductionToNextTurn',
+		image:'images/card/djeeta_Cerberus.jpg',
+		effect: `手札のカード1枚を選ぶ、次のターン、そのカードの複製を3枚手札に加える。廃棄。`,
+		amount: {
+			cost: 2,
+			buff: 3,
+			buffType: 'mirror',
+			discard: false,
+		}
+	},
+	//死体爆破
+	Autophagy: {
+		name: '<span class="upgrade">自壊因子+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.rare,
+		type: type.skill,
+		func: 'effectDoubleDebuff',
+		image:'images/card/djeeta_Autophagy.jpg',
+		effect: `毒<span class="upgrade">{D1}</span>を与える。対象の敵が死亡した時、その最大HPに等しいダメージをすべての敵に与える。`,
+		amount: {
+			cost: 2,
+			debuff1: 9,
+			debuffType1: 'poison',
+			debuff2: 1,
+			debuffType2: 'autophagy',
+			discard: false,
+		}
+	},
+	//鋼の嵐
+	// アップグレード版関数未実装
+	Mirror: {
+		name: '<span class="upgrade">刃鏡の短剣+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.rare,
+		type: type.skill,
+		func: '',
+		image:'images/card/djeeta_Mirror.jpg',
+		effect: `手札をすべて捨てる。捨てたカード1枚につき<span class="upgrade">アップグレードした</span>ナイフを1枚手札に加える。`,
+		amount: {
+			cost: 3,
+			commonCard: 'Knife',
+			discard: false,
+		}
+	},
+	//******************************パワー******************************//
+	//メッタ切り
+	Parazonium: {
+		name: '<span class="upgrade">パラゾニウム+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.rare,
+		type: type.power,
+		func: 'effectBuff',
+		image:'images/card/djeeta_Parazonium.jpg',
+		effect: `カードをプレイするたび、敵全体に<span class="upgrade">{F}</span>ダメージを与える。`,
+		amount: {
+			cost: 2,
+			buff: 2,
+			buffType: 'Bonus',
+		}
+	},
+	//商売道具
+	CaitSea: {
+		name: '<span class="upgrade">ケット・シー+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.rare,
+		type: type.power,
+		func: 'effectBuff',
+		image:'images/card/djeeta_CaitSea.jpg',
+		effect: `ターン開始時に、カードを{F}枚引き、{F}枚捨てる。`,
+		amount: {
+			cost: 0,
+			buff: 1,
+			buffType: 'caitSea',
+		}
+	},
+	//死霊化
+	NewWarld: {
+		name: '<span class="upgrade">新世界の盾+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.rare,
+		type: type.power,
+		func: 'effectBuffAndDebuff',
+		image:'images/card/djeeta_NewWarld.jpg',
+		effect: `ダメージカット<span class="upgrade">{F}</span>を得る。ターン終了時ごとに回避率ダウン{D}を得る。`,
+		amount: {
+			cost: 3,
+			buff: 3,
+			buffType: 'damageCut',
+			debuff: 1,
+			debuffType: 'slowing',
+		}
+	},
+	//残像
+	Lamentation: {
+		name: '<span class="upgrade">嘆きの盾+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.rare,
+		type: type.power,
+		func: 'effectBuff',
+		image:'images/card/djeeta_Lamentation.jpg',
+		effect: `<span class="upgrade">天賦。</span>カードを1枚プレイするたび、{F}ブロックを得る。`,
+		amount: {
+			gift: true,
+			cost: 1,
+			buff: 1,
+			buffType: 'lamentation',
+		}
+	},
+	//猛毒の仕込み
+	Lich: {
+		name: '<span class="upgrade">リッチ+</span>',
+		class: cardClass.djeeta,
+		rarity: rarity.rare,
+		type: type.power,
+		func: 'effectBuff',
+		image:'images/card/djeeta_Lich.jpg',
+		effect: `「アタック」でダメージを与えるたび、毒1を与える。`,
+		amount: {
+			cost: 1,
+			buff: 1,
+			buffType: 'lich',
+		}
+	},
+};
+const commonCardList = {
 	Knife: {
 		key: 'Knife',
 		name: '投げナイフ',
@@ -3711,6 +4886,24 @@ const abnormalCardList = {
 		}
 	},
 };
+
+const testCardList = {
+	testAttack: {
+		name: 'テスト用一撃カード',
+		class: cardClass.common,
+		rarity: rarity.common,
+		type: type.attack,
+		func: 'effectAllAttack',
+		image:'images/card/common_Knife.jpg',
+		effect: `天賦。敵全体に{A}ダメージを与える。廃棄。`,
+		amount: {
+			gift: true,
+			cost: 0,
+			attack: 999,
+			discard: true,
+		}
+	},
+}
 /*************************************************************************************/
 /* カード報酬抽選
 /*************************************************************************************/
@@ -3761,7 +4954,7 @@ function setupDeck(){
 			addCardToOriginalDeck(djeetaCardList.Pulverizer, 1);
 			addCardToOriginalDeck(djeetaCardList.Blaze, 2);
 			addCardToOriginalDeck(djeetaCardList.World, 2);
-			addCardToOriginalDeck(commonCardList.testAttack, 2);
+			addCardToOriginalDeck(testCardList.testAttack, 2);
 		}
 	}
 }

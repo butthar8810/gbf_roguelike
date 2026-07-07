@@ -6,6 +6,7 @@ function startGame(){
 	setupCharaStatus();
 	setupDeck();
 	setupArtifact();
+	setupOutGameInfomation();
 	if (getLocalStorage(keyContinueBattleFlag)) {
 		console.log('戦闘再開');
 		continueBattle();
@@ -64,7 +65,13 @@ function setupCharaStatus(){
 	updateHP();
 	updateMoney();
 }
-
+/*******************************************************/
+/* climbTowerStart：塔を上る（クライムスタート）
+/*******************************************************/
+function setupOutGameInfomation(){
+	const lastBattleCount = getLocalStorage(keyContinueBattleCount);
+	if(lastBattleCount !== null){battleCount = lastBattleCount}
+}
 /*******************************************************/
 /* climbTowerStart：塔を上る（クライムスタート）
 /*******************************************************/
@@ -197,6 +204,7 @@ function admissionStage(stageInfo){
 	switch(stageInfo.name){
 		case stages.boss.name:
 			battleCount++;
+			setLocalStorage(keyContinueBattleCount, battleCount);
 			currentLevel = stageLevel.boss;
 			startBattle();
 			break;
@@ -214,15 +222,19 @@ function admissionStage(stageInfo){
 			break;
 		case stages.special.name:
 			battleCount++;
+			setLocalStorage(keyContinueBattleCount, battleCount);
 			currentLevel = stageLevel.special;
 			startBattle();
 			break;
 		case stages.normal.name:
 			battleCount++;
+			setLocalStorage(keyContinueBattleCount, battleCount);
 			currentLevel = stageLevel.normal;
 			startBattle();
 			break;
 		default:
+			battleCount++;
+			setLocalStorage(keyContinueBattleCount, battleCount);
 			currentLevel = stageLevel.test;
 			console.log(`currentLevel: ${currentLevel}`);
 			startBattle();
