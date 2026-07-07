@@ -523,7 +523,7 @@ function updateEnemyAreaDom(argEnemies, omenFlag = false){
 				.addClass('omen-inner')
 				.append(nextActionImage);
 			if(enemy.currentStatus.nextAction.damage > 0){
-				let totalAttack = calcEnemyDamage(enemy.currentStatus.nextAction.damage, enemy);
+				let totalAttack = calcEnemyDamage(enemy.currentStatus.nextAction.damage, enemy, playerStatus);
 				const damageDiv = $('<div>')
 					.addClass('damage')
 					.html(totalAttack);

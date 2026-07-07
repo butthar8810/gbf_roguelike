@@ -35,6 +35,22 @@ const enemyList = {
 			divId: ''
 		}
 	},
+	battleSlime:{
+		name: 'バトルスライム', 
+		minHP: 10, 
+		maxHP: 14, 
+		image: 'images/enemy/kingbronze.gif',
+		actionAlgorithm: 'actionBattleSlime', 
+		actionFirst: '',
+		currentStatus:{
+			remainHP: 0, 
+			maxHP: 0, 
+			block: 0,
+			status: [], 
+			nextAction: {},
+			divId: ''
+		}
+	},
 	silver:{
 		name: 'シルバースライム', 
 		minHP: 28, 
@@ -51,12 +67,12 @@ const enemyList = {
 			divId: ''
 		}
 	},
-	golem:{
-		name: 'ゴーレム', 
+	monk:{
+		name: 'モンク', 
 		minHP: 48, 
 		maxHP: 55, 
-		image: 'images/enemy/golem.png', 
-		actionAlgorithm: 'actionGolem', 
+		image: 'images/enemy/monk.png', 
+		actionAlgorithm: 'actionMonk', 
 		actionFirst: '',
 		currentStatus:{
 			remainHP: 0, 
@@ -67,12 +83,44 @@ const enemyList = {
 			divId: ''
 		}
 	},
-	zombie:{
-		name: 'ゾンビ', 
+	putesis:{
+		name: 'プテシス', 
 		minHP: 40, 
 		maxHP: 44, 
-		image: 'images/enemy/zombie.png', 
-		actionAlgorithm: 'actionZombie', 
+		image: 'images/enemy/putesis.png', 
+		actionAlgorithm: 'actionPutesis', 
+		actionFirst: '',
+		currentStatus:{
+			remainHP: 0, 
+			maxHP: 0, 
+			block: 0,
+			status: [], 
+			nextAction: {},
+			divId: ''
+		}
+	},
+	bee:{
+		name: 'キラー・ビー', 
+		minHP: 10, 
+		maxHP: 17, 
+		image: 'images/enemy/bee.png', 
+		actionAlgorithm: 'actionBee', 
+		actionFirst: '',
+		currentStatus:{
+			remainHP: 0, 
+			maxHP: 0, 
+			block: 0,
+			status: [], 
+			nextAction: {},
+			divId: ''
+		}
+	},
+	fangBee:{
+		name: 'ファング・ビー', 
+		minHP: 10, 
+		maxHP: 17, 
+		image: 'images/enemy/fang-bee.png', 
+		actionAlgorithm: 'actionFangBee', 
 		actionFirst: '',
 		currentStatus:{
 			remainHP: 0, 
@@ -85,8 +133,8 @@ const enemyList = {
 	},
 	imp:{
 		name: 'インプ', 
-		minHP: 10, 
-		maxHP: 17, 
+		minHP: 46, 
+		maxHP: 50, 
 		image: 'images/enemy/imp.png', 
 		actionAlgorithm: 'actionImp', 
 		actionFirst: '',
@@ -99,39 +147,51 @@ const enemyList = {
 			divId: ''
 		}
 	},
-/*
-	angelcore:{name: 'エンジェル・コア', minHP: 8, maxHP: 12, image: 'images/enemy/angelcore.png', currentStatus:{remainHP: 0, maxHP: 0, status: [], nextAction: ''}},
-	bee:{name: 'キラービー', minHP: 8, maxHP: 12, image: 'images/enemy/bee.png', currentStatus:{remainHP: 0, maxHP: 0, status: [], nextAction: ''}},
-	baru:{name: 'バル・ザレニア', minHP: 8, maxHP: 12, image: 'images/enemy/baru.png', currentStatus:{remainHP: 0, maxHP: 0, status: [], nextAction: ''}},
-	ghost:{name: 'ゴースト', minHP: 8, maxHP: 12, image: 'images/enemy/ghost.png', currentStatus:{remainHP: 0, maxHP: 0, status: [], nextAction: ''}},
-	hellhound:{name: 'ヘルハウンド', minHP: 8, maxHP: 12, image: 'images/enemy/hellhound.png', currentStatus:{remainHP: 0, maxHP: 0, status: [], nextAction: ''}},
-	jerry:{name: 'ジェリー', minHP: 8, maxHP: 12, image: 'images/enemy/jerry.png', currentStatus:{remainHP: 0, maxHP: 0, status: [], nextAction: ''}},
-	rafflesia:{name: 'ラフレシア', minHP: 8, maxHP: 12, image: 'images/enemy/rafflesia.png', currentStatus:{remainHP: 0, maxHP: 0, status: [], nextAction: ''}},
-	agnu:{name: '火霊・アーグヌ', minHP: 8, maxHP: 12, image: 'images/enemy/agnu.png', currentStatus:{remainHP: 0, maxHP: 0, status: [], nextAction: ''}},
-	shell:{name: 'シェル', minHP: 8, maxHP: 12, image: 'images/enemy/shell.png', currentStatus:{remainHP: 0, maxHP: 0, status: [], nextAction: ''}},
-	snipper:{name: 'スニッパー', minHP: 8, maxHP: 12, image: 'images/enemy/snipper.png', currentStatus:{remainHP: 0, maxHP: 0, status: [], nextAction: ''}},
-	wita:{name: '水霊・ウィタ', minHP: 8, maxHP: 12, image: 'images/enemy/wita.png', currentStatus:{remainHP: 0, maxHP: 0, status: [], nextAction: ''}},
-	goblin:{name: 'ゴブリン戦士', minHP: 8, maxHP: 12, image: 'images/enemy/goblin.png', currentStatus:{remainHP: 0, maxHP: 0, status: [], nextAction: ''}},
-	wolf:{name: 'ウルフ', minHP: 8, maxHP: 12, image: 'images/enemy/wolf.png', currentStatus:{remainHP: 0, maxHP: 0, status: [], nextAction: ''}},
-*/
+	rafflesia:{
+		name: 'ラフレシア', 
+		minHP: 22, 
+		maxHP: 28, 
+		image: 'images/enemy/rafflesia.png', 
+		actionAlgorithm: 'actionRafflesia', 
+		actionFirst: 'rafflesiaFirst',
+		currentStatus:{
+			remainHP: 0, 
+			maxHP: 0, 
+			block: 0,
+			status: [], 
+			nextAction: {},
+			divId: ''
+		}
+	},
 };
 const bossEnemyList = {
 	kinggold:{name: 'キングゴールドスライム', minHP: 8, maxHP: 12, image: 'images/enemy/kinggold.gif', currentStatus:{remainHP: 0, maxHP: 0, status: [], nextAction: ''}},
-	juanitta:{name: 'ジュアニッタ', minHP: 8, maxHP: 12, image: 'images/enemy/juanitta.png', currentStatus:{remainHP: 0, maxHP: 0, status: [], nextAction: ''}},
 };
 const testEnemies = [
-	{weight: 100, enemies: [enemyList.test, enemyList.test]},
+	{weight: 100, enemies: [enemyList.slime, enemyList.slime, enemyList.slime, enemyList.slime, enemyList.slime]},
 ];
-const easyEnemies = [
+const easyEnemiesPool = [
 	{weight: 25, enemies: [enemyList.slime, enemyList.silver]},
-	{weight: 25, enemies: [enemyList.golem]},
-	{weight: 25, enemies: [enemyList.zombie]},
-	{weight: 25, enemies: [enemyList.imp, enemyList.imp]},
+	{weight: 25, enemies: [enemyList.monk]},
+	{weight: 25, enemies: [enemyList.putesis]},
+	{weight: 25, enemies: [enemyList.bee, enemyList.fangBee]},
 ];
-const strongEnemies = [
+const strongEnemiesPool = [
+	{weight: 12500, enemies: [enemyList.imp]},
+	{weight: 3100, enemies: [enemyList.bee, enemyList.bee, enemyList.bee]},
+	{weight: 3100, enemies: [enemyList.bee, enemyList.bee, enemyList.fangBee]},
+	{weight: 3100, enemies: [enemyList.bee, enemyList.fangBee, enemyList.fangBee]},
+	{weight: 3100, enemies: [enemyList.fangBee, enemyList.fangBee, enemyList.fangBee]},
+	{weight: 12500, enemies: [enemyList.rafflesia, enemyList.rafflesia]},
+	{weight: 6250, enemies: [enemyList.slime, enemyList.slime, enemyList.slime, enemyList.slime, enemyList.slime]},
 
 ];
+const eliteEnemiesPool = [
 
+];
+const Enemies = [
+
+];
 const enemyActionType = {
 	attack: 'アタック',
 	block: 'ブロック',
@@ -196,9 +256,10 @@ function actionSlime(){
 		{weight: 0, omen:{name: '攻撃', func: 'slimeAttack', type: enemyActionType.attack, damage: 6, image: 'images/enemy/omen/Attack.png'}},
 		{weight: 0, omen:{name: '舐める', func: 'slimeStrategy', type: enemyActionType.debuff, damage: 0, image: 'images/enemy/omen/Weakness1.png'}},
 	];
-	if (0 === currentTurn % 2){// 1ターン目に必ず使用する。
+	if (0 === currentTurn % 2){
 		return actions[0].omen;
 	} else {
+		// 1ターン目に必ず使用する。
 		return actions[1].omen;
 	}
 }
@@ -208,7 +269,22 @@ function slimeAttack(enemyInfo, playerInfo, animationFlag){
 }
 function slimeStrategy(enemyInfo, playerInfo, animationFlag){
 	// 恐怖1を付与
-	enemyStatusDebuf(enemyInfo, playerInfo, animationFlag, debufStatus.weak, 1);
+	enemyStatusDebuf(enemyInfo, playerInfo, animationFlag, debufStatus.weak, 2);
+}
+/*******************************************************/
+/* バトルスライム
+/*******************************************************/
+function actionBattleSlime(){
+	console.log('actionSlime');
+	const actions = [
+		{weight: 0, omen:{name: '攻撃', func: 'slimeAttack', type: enemyActionType.attack, damage: 5, image: 'images/enemy/omen/Attack.png'}},
+	];
+	return actions[0].omen;
+}
+function slimeAttack(enemyInfo, playerInfo, animationFlag){
+	console.log(enemyInfo);
+	// 6点ダメージ
+	enemyAttack(enemyInfo, playerInfo, animationFlag, 5);
 }
 /*******************************************************/
 /* シルバースライム
@@ -242,16 +318,16 @@ function silverMucus(enemyInfo, playerInfo, animationFlag){
 }
 function silverStrategy(enemyInfo, playerInfo, animationFlag){
 	// 恐怖1を付与
-	enemyStatusDebuf(enemyInfo, playerInfo, animationFlag, debufStatus.weak, 1);
+	enemyStatusDebuf(enemyInfo, playerInfo, animationFlag, debufStatus.weak, 2);
 }
 /*******************************************************/
-/* ゴーレム
+/* モンク
 /*******************************************************/
-function actionGolem(){
-	console.log('actionGolem');
+function actionMonk(){
+	console.log('actionMonk');
 	const actions = [
-		{weight: 0, omen:{name: '強化', func: 'golemSpell', type: enemyActionType.buff, damage: 0, image: 'images/enemy/omen/Power1.png'}},
-		{weight: 0, omen:{name: '攻撃', func: 'golemAttack', type: enemyActionType.attack, damage: 6, image: 'images/enemy/omen/Attack.png'}},
+		{weight: 0, omen:{name: '強化', func: 'monkSpell', type: enemyActionType.buff, damage: 0, image: 'images/enemy/omen/Power2.png'}},
+		{weight: 0, omen:{name: '攻撃', func: 'monkAttack', type: enemyActionType.attack, damage: 6, image: 'images/enemy/omen/Attack.png'}},
 	];
 	if (currentTurn === 1){// 1ターン目に必ず使用する。
 		return actions[0].omen;
@@ -259,23 +335,23 @@ function actionGolem(){
 		return actions[1].omen;
 	}
 }
-function golemSpell(enemyInfo, playerInfo, animationFlag){
+function monkSpell(enemyInfo, playerInfo, animationFlag){
 	// 攻撃力アップ2を自身に付与
-	enemyStatusBuf(enemyInfo, animationFlag, bufStatus.attackUp, 2);
+	enemyStatusBuf(enemyInfo, animationFlag, bufStatus.spiritual, 3);
 }
-function golemAttack(enemyInfo, playerInfo, animationFlag){
-	// 6点ダメージ');
+function monkAttack(enemyInfo, playerInfo, animationFlag){
+	// 6点ダメージ
 	enemyAttack(enemyInfo, playerInfo, animationFlag, 6);
 }
 /*******************************************************/
-/* ゾンビ
+/* プテシス
 /*******************************************************/
-function actionZombie(){
-	console.log('actionZombie');
+function actionPutesis(){
+	console.log('actionPutesis');
 	const actions = [
-		{weight: 25, omen:{name: '攻撃', func: 'zombieAttack', type: enemyActionType.attack, damage: 11, image: 'images/enemy/omen/Attack.png'}},
-		{weight: 30, omen:{name: '攻撃+防御', func: 'zombieAttackAndDefense', type: enemyActionType.blockAndAttack, damage: 7, image: 'images/enemy/omen/PowerAttack.png'}},
-		{weight: 45, omen:{name: '怒号', func: 'zombieDefense', type: enemyActionType.blockAndBuff, damage: 0, image: 'images/enemy/omen/Defense1.png'}},
+		{weight: 25, omen:{name: '攻撃', func: 'putesisAttack', type: enemyActionType.attack, damage: 11, image: 'images/enemy/omen/Attack.png'}},
+		{weight: 30, omen:{name: '攻撃+防御', func: 'putesisAttackAndDefense', type: enemyActionType.blockAndAttack, damage: 7, image: 'images/enemy/omen/PowerAttack.png'}},
+		{weight: 45, omen:{name: '怒号', func: 'putesisDefense', type: enemyActionType.blockAndBuff, damage: 0, image: 'images/enemy/omen/Defense1.png'}},
 	];
 	const totalWeight = actions.reduce((sum, item) => sum + item.weight, 0);
 	let random = Math.floor(Math.random() * totalWeight);
@@ -287,20 +363,71 @@ function actionZombie(){
 	}
 	return false;
 }
-function zombieAttack(enemyInfo, playerInfo, animationFlag){
+function putesisAttack(enemyInfo, playerInfo, animationFlag){
 	// 11点ダメージ');
 	enemyAttack(enemyInfo, playerInfo, animationFlag, 11);
 }
-function zombieAttackAndDefense(enemyInfo, playerInfo, animationFlag){
+function putesisAttackAndDefense(enemyInfo, playerInfo, animationFlag){
 	// 7点ダメージ+5ブロック');
 	enemyAttack(enemyInfo, playerInfo, animationFlag, 7);
 	enemyBlock(enemyInfo, animationFlag, 5);
 }
-function zombieDefense(enemyInfo, playerInfo, animationFlag){
+function putesisDefense(enemyInfo, playerInfo, animationFlag){
 	// 6ブロック+攻撃力アップ3');
 	enemyBlock(enemyInfo, animationFlag, 6);
 	enemyStatusBuf(enemyInfo, animationFlag, bufStatus.attackUp, 3);
 
+}
+/*******************************************************/
+/* キラービー
+/*******************************************************/
+function actionBee(){
+	console.log('actionImp');
+	const actions = [
+		{weight: 75, omen:{name: '攻撃', func: 'beeAttack', type: enemyActionType.attack, damage: 6, image: 'images/enemy/omen/Attack.png'}},
+		{weight: 25, omen:{name: '威嚇', func: 'beeWeb', type: enemyActionType.debuff, damage: 0, image: 'images/enemy/omen/Weakness1.png'}},
+	];
+	const totalWeight = actions.reduce((sum, item) => sum + item.weight, 0);
+	let random = Math.floor(Math.random() * totalWeight);
+	for (const action of actions) {
+		if (random < action.weight) {
+			return action.omen;
+		}
+		random -= action.weight;
+	}
+	return false;
+}
+function beeAttack(enemyInfo, playerInfo, animationFlag){
+	// 6点ダメージ
+	enemyAttack(enemyInfo, playerInfo, animationFlag, 6);
+}
+function beeWeb(enemyInfo, playerInfo, animationFlag){
+	// 恐怖2を付与
+	enemyStatusDebuf(enemyInfo, playerInfo, animationFlag, debufStatus.weak, 2);
+}
+/*******************************************************/
+/* ファングビー
+/*******************************************************/
+function actionFangBee(){
+	console.log('actionImp');
+	const actions = [
+		{weight: 75, omen:{name: '攻撃', func: 'beeAttack', type: enemyActionType.attack, damage: 6, image: 'images/enemy/omen/Attack.png'}},
+		{weight: 25, omen:{name: '成長', func: 'fangBeeGrowth', type: enemyActionType.buff, damage: 0, image: 'images/enemy/omen/Power1.png'}},
+	];
+	const totalWeight = actions.reduce((sum, item) => sum + item.weight, 0);
+	let random = Math.floor(Math.random() * totalWeight);
+	for (const action of actions) {
+		if (random < action.weight) {
+			return action.omen;
+		}
+		random -= action.weight;
+	}
+	return false;
+}
+
+function fangBeeGrowth(enemyInfo, playerInfo, animationFlag){
+	// 攻撃力アップ3を付与
+	enemyStatusBuf(enemyInfo, animationFlag, bufStatus.attackUp, 3);
 }
 /*******************************************************/
 /* インプ
@@ -308,9 +435,8 @@ function zombieDefense(enemyInfo, playerInfo, animationFlag){
 function actionImp(){
 	console.log('actionImp');
 	const actions = [
-		{weight: 70, omen:{name: '攻撃', func: 'impAttack', type: enemyActionType.attack, damage: 6, image: 'images/enemy/omen/Attack.png'}},
-		{weight: 15, omen:{name: '成長', func: 'impGrowth', type: enemyActionType.buff, damage: 0, image: 'images/enemy/omen/Power1.png'}},
-		{weight: 15, omen:{name: '呪術', func: 'impWeb', type: enemyActionType.debuff, damage: 0, image: 'images/enemy/omen/Weakness1.png'}},
+		{weight: 60, omen:{name: '攻撃', func: 'impAttack', type: enemyActionType.attack, damage: 12, image: 'images/enemy/omen/Attack.png'}},
+		{weight: 40, omen:{name: '呪術', func: 'impSkill', type: enemyActionType.debuffAndAttack, damage: 7, image: 'images/enemy/omen/Break.png'}},
 	];
 	const totalWeight = actions.reduce((sum, item) => sum + item.weight, 0);
 	let random = Math.floor(Math.random() * totalWeight);
@@ -323,19 +449,45 @@ function actionImp(){
 	return false;
 }
 function impAttack(enemyInfo, playerInfo, animationFlag){
-	// 6点ダメージ
-	enemyAttack(enemyInfo, playerInfo, animationFlag, 6);
+	// 12点ダメージ
+	enemyAttack(enemyInfo, playerInfo, animationFlag, 12);
 }
-function impGrowth(enemyInfo, playerInfo, animationFlag){
-	// 攻撃力アップ3を付与
-	enemyStatusBuf(enemyInfo, animationFlag, bufStatus.attackUp, 3);
-}
-function impWeb(enemyInfo, playerInfo, animationFlag){
-	// 恐怖2を付与
+function impSkill(enemyInfo, playerInfo, animationFlag){
+	// 7ダメージ+脱力1を付与
+	enemyAttack(enemyInfo, playerInfo, animationFlag, 7);
 	enemyStatusDebuf(enemyInfo, playerInfo, animationFlag, debufStatus.weak, 2);
 }
-
-
+/*******************************************************/
+/* ラフレシア
+/*******************************************************/
+function actionRafflesia(){
+	console.log('actionRafflesia');
+	const actions = [
+		{weight: 60, omen:{name: '攻撃', func: 'rafflesiaAttack', type: enemyActionType.attack, damage: 6, image: 'images/enemy/omen/Attack.png'}},
+		{weight: 40, omen:{name: '成長', func: 'rafflesiaSkill', type: enemyActionType.buff, damage: 0, image: 'images/enemy/omen/Power1.png'}},
+	];
+	const totalWeight = actions.reduce((sum, item) => sum + item.weight, 0);
+	let random = Math.floor(Math.random() * totalWeight);
+	for (const action of actions) {
+		if (random < action.weight) {
+			return action.omen;
+		}
+		random -= action.weight;
+	}
+	return false;
+}
+function rafflesiaAttack(enemyInfo, playerInfo, animationFlag){
+	// 12点ダメージ
+	enemyAttack(enemyInfo, playerInfo, animationFlag, 6);
+}
+function rafflesiaSkill(enemyInfo, playerInfo, animationFlag){
+	// 筋力3を自身に付与
+	enemyStatusBuf(enemyInfo, animationFlag, bufStatus.attackUp, 3);
+}
+function rafflesiaFirst(enemyInfo, playerInfo, animationFlag){
+	// 花粉2を自身に付与
+	enemyStatusBuf(enemyInfo, animationFlag, bufStatus.pollen, 2);
+}
 
 
 
@@ -345,16 +497,8 @@ function impWeb(enemyInfo, playerInfo, animationFlag){
 /*******************************************************/
 /* 与ダメージ計算関数
 /*******************************************************/
-function calcEnemyDamage(attackCount, enemyInfo){
+function calcEnemyDamage(attackCount, enemyInfo, playerInfo){
 	let totalAttack = attackCount;
-	// 「ダメージカット」の効果発動
-	const damageCut = playerStatus.statuses
-		.find((status) => status.name === bufStatus.damageCut.name);
-	if (damageCut && totalAttack > 0){
-		totalAttack = 1;
-		return totalDamage;
-	}
-
 	// 倍率計算
 	let magnification = 1;
 	// 恐怖（攻撃力25%減少）
@@ -389,8 +533,14 @@ function calcEnemyDamage(attackCount, enemyInfo){
 		}
 	});
 	// プレイヤーの状態異常を確認
-	playerStatus.statuses.forEach((status) => {
+	playerInfo.statuses.forEach((status) => {
 		switch(status.name){
+			// 「ダメージカット」の効果発動
+			case bufStatus.damageCut.name:
+				if (totalAttack > 0){
+					totalAttack = 1;
+				}
+				break;
 			default:
 				break;
 		}
@@ -401,13 +551,14 @@ function calcEnemyDamage(attackCount, enemyInfo){
 /* 与ダメージ関数
 /*******************************************************/
 function enemyAttack(enemyInfo, playerInfo, animationFlag, attackCount){
-	let totalAttack = calcEnemyDamage(attackCount, enemyInfo);
+	let totalAttack = calcEnemyDamage(attackCount, enemyInfo, playerInfo);
+	console.log(`totalAttack: ${totalAttack}`);
 	const playerBlock = playerInfo.block;
 	if(playerBlock > 0){
 		if(playerBlock >= totalAttack){
 			playerInfo.block -= totalAttack;
 			totalAttack = 0;
-		} else if (playerInfo.block < totalAttack){
+		} else if (playerBlock < totalAttack){
 			totalAttack -= playerBlock;
 			playerInfo.block = 0;
 		}
@@ -426,8 +577,8 @@ function enemyAttack(enemyInfo, playerInfo, animationFlag, attackCount){
 				enemyInfo.currentStatus.block -= playerReflection;
 				playerReflection = 0;
 			} else if (enemyBlock < playerReflection){
-				enemyInfo.currentStatus.block = 0;
 				playerReflection -= enemyBlock;
+				enemyInfo.currentStatus.block = 0;
 			}
 		}
 		enemyInfo.currentStatus.remainHP -= playerReflection;
@@ -443,8 +594,8 @@ function enemyAttack(enemyInfo, playerInfo, animationFlag, attackCount){
 				enemyInfo.currentStatus.block -= playerCounter;
 				playerCounter = 0;
 			} else if (enemyBlock < playerCounter){
-				enemyInfo.currentStatus.block = 0;
 				playerCounter -= enemyBlock;
+				enemyInfo.currentStatus.block = 0;
 			}
 		}
 		enemyInfo.currentStatus.remainHP -= playerCounter;

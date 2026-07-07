@@ -7,7 +7,6 @@
 function startBattle(){
 	// 各キューの初期化
 	initialize();
-	currentTurn = 0;
 	// デッキの準備
 	readyDeck();
 	// デッキとした後にそこからカードを5枚引き、手札とする。
@@ -288,7 +287,7 @@ function startPhase(ph = false){
 			disabledEndBtn(false);
 			disabledMyHand(false);
 			endAction();
-			checkEnemyDefeated(currentEnemies);
+			checkEnemyDefeated(currentEnemies, playerStatus);
 			if (allDefeatedFlag){
 				allEnemiesDefeated();
 			}
@@ -642,7 +641,7 @@ function startTurnStatuses(playerInfo, enemiesInfo, animateFlag){
 	
 	// エネミーの状態変化処理
 	enemiesInfo.forEach((enemy) => {
-		//「防Down削除」で攻撃力ダウンが減る
+		//「攻Down削除」で攻撃力ダウンが減る
 		const invalidAttackDown = enemy.currentStatus.status
 			.find((status) => status.name === debufStatus.invalidAttackDown.name);
 		if (invalidAttackDown){
@@ -655,6 +654,11 @@ function startTurnStatuses(playerInfo, enemiesInfo, animateFlag){
 					attackDown.amount = 0;
 				}
 			}
+		}
+		const spiritual = enemy.currentStatus.status
+			.find((status) => status.name === bufStatus.spiritual.name);
+		if (spiritual){
+			enemyStatusBuf(enemy, animateFlag, bufStatus.attackUp, spiritual.amount)
 		}
 		enemy.currentStatus.status.forEach((status) => {
 			switch(status.name){
@@ -828,6 +832,12 @@ function endTurn(){
 		.find((status) => status.name === debufStatus.slowing.name);
 	if (slowing){
 		actionStatusBuf(debufStatus.dexterityDown, slowing.amount);
+	}
+	//「精神統一」の効果
+	const spiritual = playerStatus.statuses
+		.find((status) => status.name === bufStatus.spiritual.name);
+	if (spiritual){
+		actionStatusBuf(debufStatus.attackUp, spiritual.amount);
 	}
 	// エネミーの状態変化処理
 	currentEnemies.forEach((enemy) => {
@@ -1048,7 +1058,7 @@ function endAction(){
 			ret = storedFunc(cardInfo.amount);
 		} 
 	}
-	checkEnemyDefeated(currentEnemies);
+	checkEnemyDefeated(currentEnemies, playerStatus);
 	setLocalStorage(keyContinueHand, myHand);
 	setLocalStorage(keyContinueTrash, myTrash);
 	setLocalStorage(keyContinueDiscard, discard);
@@ -1067,7 +1077,10 @@ function endAction(){
 	).done(() => {
 		updatePlayerAreaDom(playerStatus);
 	});
-	$.when(enemyAbnormalityPromise).done(() => {
+	$.when(
+		enemyAbnormalityPromise,
+		enemyDefeatedPromise
+	).done(() => {
 		updateEnemyAreaDom(currentEnemies, true);
 	});
 	$.when(
@@ -1083,10 +1096,10 @@ function endAction(){
 	
 	if (allDefeatedFlag){
 		console.log('全滅');
-		console.log(enemyDefeatedPromise);
 		$.when(
 			enemyDefeatedPromise
 		).done(() => {
+			console.log('allEnemiesDefeated');
 			allEnemiesDefeated();
 		});
 	}
@@ -1286,7 +1299,7 @@ function clickTrashCardProcess(trashCardDiv, card){
 	return true;
 }
 /*******************************************************/
-/* clickTrashCardProcess：廃棄札クリック時の処理
+/* clickDiscardCardProcess：廃棄札クリック時の処理
 /*******************************************************/
 function clickDiscardCardProcess(trashCardDiv, card){
 	const discardIndex = findIndexTemporaryArea('id', card.id);
@@ -1317,6 +1330,8 @@ function clickDiscardCardProcess(trashCardDiv, card){
 /* trashCardProcess：捨て札にする際の処理
 /*******************************************************/
 function trashCardProcess(trashCard){
+	console.log('trashCardProcess');
+	console.log(playerStatus);
 	if('trashFunc' in trashCard.amount && trashCard.amount.trashFunc !== ''){
 		pushStackCards({
 			func: trashCard.trashFunc,
@@ -1372,15 +1387,30 @@ function setupEnemy(){
 	} else {
 		switch(currentLevel) {
 			case stageLevel.normal:
-				const totalWeight = easyEnemies.reduce((sum, item) => sum + item.weight, 0);
-				let enemyGroupWeight = mt.nextInt(0, totalWeight);
-				for (const enemy of Object.values(easyEnemies)) {
-					if (enemyGroupWeight < enemy.weight) {
-						currentEnemies = deepCopyEnemies(enemy.enemies);
-						break;
+				if(battleCount < 3){
+					// 弱プール
+					const totalWeight = easyEnemiesPool.reduce((sum, item) => sum + item.weight, 0);
+					let enemyGroupWeight = mt.nextInt(0, totalWeight);
+					for (const enemy of Object.values(easyEnemiesPool)) {
+						if (enemyGroupWeight < enemy.weight) {
+							currentEnemies = deepCopyEnemies(enemy.enemies);
+							break;
+						}
+						enemyGroupWeight -= enemy.weight;
 					}
-					enemyGroupWeight -= enemy.weight;
+				} else {
+					// 強プール
+					const totalWeight = strongEnemiesPool.reduce((sum, item) => sum + item.weight, 0);
+					let enemyGroupWeight = mt.nextInt(0, totalWeight);
+					for (const enemy of Object.values(strongEnemiesPool)) {
+						if (enemyGroupWeight < enemy.weight) {
+							currentEnemies = deepCopyEnemies(enemy.enemies);
+							break;
+						}
+						enemyGroupWeight -= enemy.weight;
+					}
 				}
+				
 				break;
 			case stageLevel.special:
 				break;
@@ -1485,7 +1515,7 @@ function decideNextAction(){
 /*******************************************************/
 /* checkEnemyDefeated：敵が倒されたかチェックする
 /*******************************************************/
-function checkEnemyDefeated(Enemies){
+function checkEnemyDefeated(Enemies, playerInfo, animationFlag = true){
 	allDefeatedFlag = true;
 	let autophagyFlag = false;
 	Enemies.forEach((enemy) => {
@@ -1512,6 +1542,12 @@ function checkEnemyDefeated(Enemies){
 						targetenemy.currentStatus.remainHP -= totalAttack;
 					}
 				}
+				//「花粉」の効果発動
+				const pollen = enemy.currentStatus.status
+					.find((status) => status.name === bufStatus.pollen.name);
+				if (pollen){
+					enemyStatusDebuf(enemy, playerInfo, animationFlag, debufStatus.defenseDown, pollen.amount);
+				}
 				targetingEnemy();
 				animateDefeated(enemy);
 				enemy.currentStatus.status.splice(0);
@@ -1522,7 +1558,7 @@ function checkEnemyDefeated(Enemies){
 		}
 	});
 	if(autophagyFlag){
-		checkEnemyDefeated(currentEnemies);
+		checkEnemyDefeated(Enemies, playerInfo);
 	}
 }
 
@@ -1634,48 +1670,3 @@ function decideMoneyReward(){
 	return {type: 'money', getFlag: true, amount: money};
 }
 
-/***************************************************************************************/
-/* モーダル要素の更新処理
-/***************************************************************************************/
-/*******************************************************/
-/* setupExplanationModal：説明モーダルの初期設定
-/*******************************************************/
-function setupExplanationModal(){
-	//モーダルの外側をクリックしたらモーダルを閉じる
-	$(document).click((e) => {
-		if(!$(e.target).closest('.explanation-modal-body').length) {
-			closeExplanationModalDom();
-		}
-	});
-}
-
-/*******************************************************/
-/* openExplanationModalDom：説明モーダル表示処理
-/*******************************************************/
-function openExplanationModalDom(card){
-	const explanationModal = $('<div>');
-	explanationModal.html(`
-		<h1>${card.name}</h1>
-		<img src="${card.image}">
-		<div>${card.effect}</div>
-	`);
-	if (card.class == cardClass.gran) {
-		explanationModal.addClass('gran-card');
-	} else if (card.class == cardClass.djeeta) {
-		explanationModal.addClass('djeeta-card');
-	} else if (card.class == cardClass.common) {
-		explanationModal.addClass('common-card');
-	} else if (card.class == cardClass.abnormal) {
-		drawCardDiv.addClass('abnormal-card');
-	}
-	explanationModal.addClass('explanation-modal-card');
-	$('.explanation-modal-body').append(explanationModal);
-	$('.explanation-modal').addClass('active');
-}
-/*******************************************************/
-/* closeExplanationModalDom：説明モーダル非表示処理
-/*******************************************************/
-function closeExplanationModalDom(){
-	$('.explanation-modal').removeClass('active');
-	$('.explanation-modal-body').html('');
-}

@@ -196,6 +196,7 @@ function admissionStage(stageInfo){
 	console.log(stageInfo);
 	switch(stageInfo.name){
 		case stages.boss.name:
+			battleCount++;
 			currentLevel = stageLevel.boss;
 			startBattle();
 			break;
@@ -212,10 +213,12 @@ function admissionStage(stageInfo){
 			startRandomEvent();
 			break;
 		case stages.special.name:
+			battleCount++;
 			currentLevel = stageLevel.special;
 			startBattle();
 			break;
 		case stages.normal.name:
+			battleCount++;
 			currentLevel = stageLevel.normal;
 			startBattle();
 			break;

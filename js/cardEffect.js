@@ -3591,6 +3591,22 @@ const djeetaCardList = {
 
 const djeetaEnhancedCardList = {};
 const commonCardList = {
+	testAttack: {
+		key: 'testAttack',
+		name: 'エーターナルフォースブリザード',
+		class: cardClass.common,
+		rarity: rarity.common,
+		type: type.attack,
+		func: 'effectAllAttack',
+		image:'images/card/common_Knife.jpg',
+		effect: `天賦。敵全体に{A}ダメージを与える。廃棄。`,
+		amount: {
+			gift: true,
+			cost: 0,
+			attack: 999,
+			discard: true,
+		}
+	},
 	Knife: {
 		key: 'Knife',
 		name: '投げナイフ',
@@ -3743,9 +3759,9 @@ function setupDeck(){
 			addCardToOriginalDeck(djeetaCardList.Defense, 5);
 			addCardToOriginalDeck(djeetaCardList.Assassin, 1);
 			addCardToOriginalDeck(djeetaCardList.Pulverizer, 1);
-			addCardToOriginalDeck(djeetaCardList.NewWarld, 2);
-			addCardToOriginalDeck(djeetaCardList.Lamentation, 2);
-			addCardToOriginalDeck(djeetaCardList.Lich, 2);
+			addCardToOriginalDeck(djeetaCardList.Blaze, 2);
+			addCardToOriginalDeck(djeetaCardList.World, 2);
+			addCardToOriginalDeck(commonCardList.testAttack, 2);
 		}
 	}
 }
@@ -3945,7 +3961,7 @@ function effectAttackAndAbnormal(amount){
 	if('abnormal' in amount && 'count' in amount){
 		const abnormal = [];
 		for(let i = 0; i < amount.count; i++){
-			trashCardProcess(abnormalCardList[amount.abnormal]);
+			pushTrash(abnormalCardList[amount.abnormal]);
 			abnormal.push(abnormalCardList[amount.abnormal]);
 		}
 		animatePlayerAddTrash(abnormal);
@@ -3962,7 +3978,7 @@ function effectAllAttackAndAbnormal(amount){
 	if('abnormal' in amount && 'count' in amount){
 		const abnormal = [];
 		for(let i = 0; i < amount.count; i++){
-			trashCardProcess(abnormalCardList[amount.abnormal]);
+			pushTrash(abnormalCardList[amount.abnormal]);
 			abnormal.push(abnormalCardList[amount.abnormal]);
 		}
 		animatePlayerAddTrash(abnormal);
@@ -4191,7 +4207,7 @@ function effectDefenseAndAbnormal(amount){
 	if('abnormal' in amount && 'count' in amount){
 		const abnormal = [];
 		for(let i = 0; i < amount.count; i++){
-			trashCardProcess(abnormalCardList[amount.abnormal]);
+			pushTrash(abnormalCardList[amount.abnormal]);
 			abnormal.push(abnormalCardList[amount.abnormal]);
 		}
 		animatePlayerAddTrash(abnormal);
@@ -4324,7 +4340,7 @@ function effectAttackAndReproduction(amount){
 	if('attack' in amount){
 		actionAttack(amount.attack);
 	}
-	trashCardProcess(granCardList.Bullet);
+	pushTrash(granCardList.Bullet);
 	animatePlayerAddTrash([granCardList.Bullet]);
 	endAction();
 	return true;
