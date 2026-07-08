@@ -194,27 +194,47 @@ const enemyList = {
 	},
 };
 const bossEnemyList = {
-	kinggold:{name: 'キングゴールドスライム', minHP: 8, maxHP: 12, image: 'images/enemy/kinggold.gif', currentStatus:{remainHP: 0, maxHP: 0, status: [], nextAction: ''}},
+
 };
 const testEnemies = [
-	{weight: 100, enemies: [enemyList.silverWolf]},
+	{weight: 100, enemiesFunc(){
+		return enemyComboOrganize(
+			[enemyList.rafflesia, enemyList.putesis],
+			[enemyList.bee, enemyList.fangBee, enemyList.silver]
+		);
+	}},
 ];
 const easyEnemiesPool = [
-	{weight: 25, enemies: [enemyList.slime, enemyList.silver]},
-	{weight: 25, enemies: [enemyList.monk]},
-	{weight: 25, enemies: [enemyList.putesis]},
-	{weight: 25, enemies: [enemyList.bee, enemyList.fangBee]},
+	{weight: 25, enemiesFunc(){return [enemyList.slime, enemyList.silver]}},
+	{weight: 25, enemiesFunc(){return [enemyList.monk]}},
+	{weight: 25, enemiesFunc(){return [enemyList.putesis]}},
+	{weight: 25, enemiesFunc(){return [enemyList.bee, enemyList.fangBee]}},
 ];
 const strongEnemiesPool = [
-	{weight: 12500, enemies: [enemyList.wolf]},
-	{weight: 6250, enemies: [enemyList.silverWolf]},
-	{weight: 3100, enemies: [enemyList.bee, enemyList.bee, enemyList.bee]},
-	{weight: 3100, enemies: [enemyList.bee, enemyList.bee, enemyList.fangBee]},
-	{weight: 3100, enemies: [enemyList.bee, enemyList.fangBee, enemyList.fangBee]},
-	{weight: 3100, enemies: [enemyList.fangBee, enemyList.fangBee, enemyList.fangBee]},
-	{weight: 12500, enemies: [enemyList.rafflesia, enemyList.rafflesia]},
-	{weight: 6250, enemies: [enemyList.slime, enemyList.battleSlime, enemyList.slime, enemyList.battleSlime, enemyList.slime]},
-
+	{weight: 12500, enemiesFunc(){return [enemyList.wolf]} },
+	{weight: 12500, 
+		enemiesFunc(){
+			return enemyRandomOrganize(3, [enemyList.bee, enemyList.fangBee]);
+		}
+	},
+	{weight: 12500, enemiesFunc(){return [enemyList.rafflesia, enemyList.rafflesia]}},
+	{weight: 9375, enemiesFunc(){
+		return enemyComboOrganize(
+			[enemyList.bee, enemyList.fangBee, enemyList.silver], 
+			[enemyList.wolf, enemyList.silverWolf, enemyList.monk]
+		);
+	}},
+	{weight: 9375, enemiesFunc(){
+		return enemyComboOrganize(
+			[enemyList.rafflesia, enemyList.putesis],
+			[enemyList.bee, enemyList.fangBee, enemyList.silver]
+		);
+	}},
+	{weight: 6250, enemiesFunc(){return [enemyList.silverWolf]}},
+	{weight: 6250, enemiesFunc(){
+		return [enemyList.slime, enemyList.battleSlime, enemyList.slime, enemyList.battleSlime, enemyList.slime]
+	}},
+	
 ];
 const eliteEnemiesPool = [
 
@@ -232,6 +252,29 @@ const enemyActionType = {
 	buffAndAttack: 'バフとアタック',
 	debuffAndAttack: 'デバフとアタック',
 };
+/*****************************************************************************/
+/* エネミー編成生成関数
+/*****************************************************************************/
+function enemyRandomOrganize(count, enemyArg = []){
+	const enemiesOrganization = [];
+	let randomIndex;
+	for(let i = 0; i < count; i++){
+		randomIndex = Math.floor(Math.random() * enemyArg.length);
+		enemiesOrganization.push(enemyArg[randomIndex]);
+	}
+	return enemiesOrganization;
+}
+function enemyComboOrganize(firstEnemyArg = [], secondEnemyArg = []){
+	const enemiesOrganization = [];
+	let randomIndex;
+	randomIndex = Math.floor(Math.random() * firstEnemyArg.length);
+	enemiesOrganization.push(firstEnemyArg[randomIndex]);
+	
+	randomIndex = Math.floor(Math.random() * secondEnemyArg.length);
+	enemiesOrganization.push(secondEnemyArg[randomIndex]);
+	
+	return enemiesOrganization;
+}
 /*****************************************************************************/
 /* エネミーアクション関数
 /*****************************************************************************/
@@ -269,7 +312,7 @@ function enemyAttackAndBuff(enemyInfo, playerInfo, animationFlag){
 	enemyStatusBuf(
 		enemyInfo, 
 		animationFlag, 
-		enemyInfo.currentStatus.nextAction.buffType, 
+		bufStatus[enemyInfo.currentStatus.nextAction.buffType], 
 		enemyInfo.currentStatus.nextAction.buff,
 	);
 }
@@ -285,7 +328,7 @@ function enemyAttackAndDebuf(enemyInfo, playerInfo, animationFlag){
 		enemyInfo, 
 		playerInfo, 
 		animationFlag, 
-		enemyInfo.currentStatus.nextAction.debuffType, 
+		debufStatus[enemyInfo.currentStatus.nextAction.debuffType], 
 		enemyInfo.currentStatus.nextAction.debuff,
 	);
 }
@@ -307,7 +350,7 @@ function enemyBlockAndBuff(enemyInfo, playerInfo, animationFlag){
 	enemyStatusBuf(
 		enemyInfo, 
 		animationFlag, 
-		enemyInfo.currentStatus.nextAction.buffType, 
+		bufStatus[enemyInfo.currentStatus.nextAction.buffType], 
 		enemyInfo.currentStatus.nextAction.buff,
 	);
 }
@@ -322,7 +365,7 @@ function enemyBlockAndDebuf(enemyInfo, playerInfo, animationFlag){
 		enemyInfo, 
 		playerInfo, 
 		animationFlag, 
-		enemyInfo.currentStatus.nextAction.debuffType, 
+		debufStatus[enemyInfo.currentStatus.nextAction.debuffType], 
 		enemyInfo.currentStatus.nextAction.debuff,
 	);
 }
@@ -331,7 +374,7 @@ function enemyBuff(enemyInfo, playerInfo, animationFlag){
 	enemyStatusBuf(
 		enemyInfo, 
 		animationFlag, 
-		enemyInfo.currentStatus.nextAction.buffType, 
+		bufStatus[enemyInfo.currentStatus.nextAction.buffType], 
 		enemyInfo.currentStatus.nextAction.buff,
 	);
 }
@@ -341,7 +384,7 @@ function enemyDebuf(enemyInfo, playerInfo, animationFlag){
 		enemyInfo, 
 		playerInfo, 
 		animationFlag, 
-		enemyInfo.currentStatus.nextAction.debuffType, 
+		debufStatus[enemyInfo.currentStatus.nextAction.debuffType], 
 		enemyInfo.currentStatus.nextAction.debuff,
 	);
 }
@@ -350,14 +393,14 @@ function enemyBuffAndDebuf(enemyInfo, playerInfo, animationFlag){
 	enemyStatusBuf(
 		enemyInfo, 
 		animationFlag, 
-		enemyInfo.currentStatus.nextAction.buffType, 
+		bufStatus[enemyInfo.currentStatus.nextAction.buffType], 
 		enemyInfo.currentStatus.nextAction.buff,
 	);
 	enemyStatusDebuf(
 		enemyInfo, 
 		playerInfo, 
 		animationFlag, 
-		enemyInfo.currentStatus.nextAction.debuffType, 
+		debufStatus[enemyInfo.currentStatus.nextAction.debuffType], 
 		enemyInfo.currentStatus.nextAction.debuff,
 	);
 }
@@ -450,7 +493,7 @@ function actionTEST(statuses){
 
 function testFirst(enemyInfo, playerInfo, animationFlag){
 	// 開始時効果
-	enemyStatusBuf(enemyInfo, animationFlag, 'defenseUp', 2);
+	enemyStatusBuf(enemyInfo, animationFlag, bufStatus.defenseUp, 2);
 }
 /*******************************************************/
 /* スライム
@@ -791,15 +834,17 @@ function actionSilverWolf(statuses){
 	const selectActions = [];
 	selectActions.push(actions[0]);
 	selectActions.push(actions[1]);
-	if(!statuses.actionCount.onceAttackFlag){
+	if(!statuses.actionCount.onceAttackFlag && currentTurn !== 1){
 		selectActions.push(actions[2]);
 	}
+	console.log(statuses.actionCount);
 	const totalWeight = selectActions.reduce((sum, item) => sum + item.weight, 0);
 	let random = Math.floor(Math.random() * totalWeight);
 	console.log(random);
 	for (const action of selectActions) {
 		if (random < action.weight) {
-			if(action.omen.name === actions[2].name){
+			console.log(action.omen.name);
+			if(action.omen.name === actions[2].omen.name){
 				statuses.actionCount.onceAttackFlag = true;
 			}
 			return action.omen;

@@ -977,10 +977,13 @@ function giftDrawFromDeck(){
 		}
 		return acc;
 	}, []);
-	giftCardIndex.forEach((index) => {
-		const giftCard = spliceDeck(index);
+	console.log(myDeck);
+	console.log(giftCardIndex);
+	for(let i = giftCardIndex.length - 1; i >= 0; i--){
+		const giftCard = spliceDeck(giftCardIndex[i]);
 		pushHand(giftCard);
-	});
+	}
+	
 	return giftCardIndex.length;
 }
 /*******************************************************/
@@ -1466,7 +1469,9 @@ function setupEnemy(){
 					let enemyGroupWeight = mt.nextInt(0, totalWeight);
 					for (const enemy of Object.values(easyEnemiesPool)) {
 						if (enemyGroupWeight < enemy.weight) {
-							currentEnemies = deepCopyEnemies(enemy.enemies);
+							const enemiesOrganization = enemy.enemiesFunc();
+							console.log(enemiesOrganization);
+							currentEnemies = deepCopyEnemies(enemiesOrganization);
 							break;
 						}
 						enemyGroupWeight -= enemy.weight;
@@ -1477,7 +1482,8 @@ function setupEnemy(){
 					let enemyGroupWeight = mt.nextInt(0, totalWeight);
 					for (const enemy of Object.values(strongEnemiesPool)) {
 						if (enemyGroupWeight < enemy.weight) {
-							currentEnemies = deepCopyEnemies(enemy.enemies);
+							const enemiesOrganization = enemy.enemiesFunc();
+							currentEnemies = deepCopyEnemies(enemiesOrganization);
 							break;
 						}
 						enemyGroupWeight -= enemy.weight;
@@ -1490,7 +1496,8 @@ function setupEnemy(){
 			case stageLevel.boss:
 				break;
 			default:
-				currentEnemies = deepCopyEnemies(testEnemies[0].enemies);
+				const enemiesOrganization = testEnemies[0].enemiesFunc();
+				currentEnemies = deepCopyEnemies(enemiesOrganization);
 				break;
 		}
 		currentEnemies.forEach((enemy, i) => {
