@@ -16,6 +16,7 @@ const enemyList = {
 			block: 0,
 			status: [], 
 			nextAction: {},
+			actionCount: {},
 			divId: ''
 		}
 	},
@@ -32,6 +33,7 @@ const enemyList = {
 			block: 0,
 			status: [], 
 			nextAction: {},
+			actionCount: {},
 			divId: ''
 		}
 	},
@@ -48,6 +50,7 @@ const enemyList = {
 			block: 0,
 			status: [], 
 			nextAction: {},
+			actionCount: {},
 			divId: ''
 		}
 	},
@@ -64,6 +67,7 @@ const enemyList = {
 			block: 0,
 			status: [], 
 			nextAction: {},
+			actionCount: {},
 			divId: ''
 		}
 	},
@@ -80,6 +84,7 @@ const enemyList = {
 			block: 0,
 			status: [], 
 			nextAction: {},
+			actionCount: {},
 			divId: ''
 		}
 	},
@@ -96,6 +101,7 @@ const enemyList = {
 			block: 0,
 			status: [], 
 			nextAction: {},
+			actionCount: {},
 			divId: ''
 		}
 	},
@@ -112,6 +118,7 @@ const enemyList = {
 			block: 0,
 			status: [], 
 			nextAction: {},
+			actionCount: {},
 			divId: ''
 		}
 	},
@@ -128,6 +135,7 @@ const enemyList = {
 			block: 0,
 			status: [], 
 			nextAction: {},
+			actionCount: {},
 			divId: ''
 		}
 	},
@@ -144,6 +152,7 @@ const enemyList = {
 			block: 0,
 			status: [], 
 			nextAction: {},
+			actionCount: {},
 			divId: ''
 		}
 	},
@@ -160,6 +169,9 @@ const enemyList = {
 			block: 0,
 			status: [], 
 			nextAction: {},
+			actionCount: {
+				onceAttackFlag: false,
+			},
 			divId: ''
 		}
 	},
@@ -176,6 +188,7 @@ const enemyList = {
 			block: 0,
 			status: [], 
 			nextAction: {},
+			actionCount: {},
 			divId: ''
 		}
 	},
@@ -184,7 +197,7 @@ const bossEnemyList = {
 	kinggold:{name: 'キングゴールドスライム', minHP: 8, maxHP: 12, image: 'images/enemy/kinggold.gif', currentStatus:{remainHP: 0, maxHP: 0, status: [], nextAction: ''}},
 };
 const testEnemies = [
-	{weight: 100, enemies: [enemyList.test, enemyList.test]},
+	{weight: 100, enemies: [enemyList.silverWolf]},
 ];
 const easyEnemiesPool = [
 	{weight: 25, enemies: [enemyList.slime, enemyList.silver]},
@@ -194,7 +207,7 @@ const easyEnemiesPool = [
 ];
 const strongEnemiesPool = [
 	{weight: 12500, enemies: [enemyList.wolf]},
-	{weight: 6250, enemies: [enemyList.wolf]},
+	{weight: 6250, enemies: [enemyList.silverWolf]},
 	{weight: 3100, enemies: [enemyList.bee, enemyList.bee, enemyList.bee]},
 	{weight: 3100, enemies: [enemyList.bee, enemyList.bee, enemyList.fangBee]},
 	{weight: 3100, enemies: [enemyList.bee, enemyList.fangBee, enemyList.fangBee]},
@@ -373,7 +386,7 @@ function enemyAttackAndCardDebuf(enemyInfo, playerInfo, animationFlag){
 /*****************************************************************************/
 /* エネミーアクション
 /*****************************************************************************/
-function actionTEST(){
+function actionTEST(statuses){
 	const actions = [
 		{
 			weight: 30, 
@@ -442,7 +455,7 @@ function testFirst(enemyInfo, playerInfo, animationFlag){
 /*******************************************************/
 /* スライム
 /*******************************************************/
-function actionSlime(){
+function actionSlime(statuses){
 	console.log('actionSlime');
 	const actions = [
 		{	weight: 0, 
@@ -477,7 +490,7 @@ function actionSlime(){
 /*******************************************************/
 /* バトルスライム
 /*******************************************************/
-function actionBattleSlime(){
+function actionBattleSlime(statuses){
 	console.log('actionBattleSlime');
 	const actions = [
 		{	weight: 0, 
@@ -496,7 +509,7 @@ function actionBattleSlime(){
 /*******************************************************/
 /* シルバースライム
 /*******************************************************/
-function actionSilver(){
+function actionSilver(statuses){
 	console.log('actionSilver');
 	const actions = [
 		{	weight: 40, 
@@ -545,7 +558,7 @@ function actionSilver(){
 /*******************************************************/
 /* モンク
 /*******************************************************/
-function actionMonk(){
+function actionMonk(statuses){
 	console.log('actionMonk');
 	const actions = [
 		{	weight: 0, 
@@ -564,7 +577,7 @@ function actionMonk(){
 				name: '攻撃', 
 				func: 'enemyAttack', 
 				type: enemyActionType.attack, 
-				damage: 6, 
+				damage: 3, 
 				image: 'images/enemy/omen/Attack.png'
 			}
 		},
@@ -579,7 +592,7 @@ function actionMonk(){
 /*******************************************************/
 /* プテシス
 /*******************************************************/
-function actionPutesis(){
+function actionPutesis(statuses){
 	console.log('actionPutesis');
 	const actions = [
 		{	weight: 25, 
@@ -627,7 +640,7 @@ function actionPutesis(){
 /*******************************************************/
 /* キラービー
 /*******************************************************/
-function actionBee(){
+function actionBee(statuses){
 	console.log('actionBee');
 	const actions = [
 		{	weight: 75, 
@@ -664,7 +677,7 @@ function actionBee(){
 /*******************************************************/
 /* ファングビー
 /*******************************************************/
-function actionFangBee(){
+function actionFangBee(statuses){
 	console.log('actionFangBee');
 	const actions = [
 		{	weight: 75, 
@@ -702,7 +715,7 @@ function actionFangBee(){
 /*******************************************************/
 /* ウルフ
 /*******************************************************/
-function actionWolf(){
+function actionWolf(statuses){
 	console.log('actionWolf');
 	const actions = [
 		{	weight: 60, 
@@ -740,10 +753,11 @@ function actionWolf(){
 /*******************************************************/
 /* シルヴァーウルフ
 /*******************************************************/
-function actionSilverWolf(){
+function actionSilverWolf(statuses){
 	console.log('actionImp');
+	console.log(statuses);
 	const actions = [
-		{	weight: 60, 
+		{	weight: 45, 
 			omen:{name: '攻撃', 
 				func: 'enemyAttack', 
 				type: enemyActionType.attack, 
@@ -751,7 +765,7 @@ function actionSilverWolf(){
 				image: 'images/enemy/omen/Attack.png'
 			}
 		},
-		{	weight: 40, 
+		{	weight: 55, 
 			omen:{
 				name: '咆哮', 
 				func: 'enemyAttackAndDebuf', 
@@ -762,7 +776,7 @@ function actionSilverWolf(){
 				image: 'images/enemy/omen/Break.png'
 			}
 		},
-		{	weight: 40, 
+		{	weight: 25, 
 			omen:{
 				name: '包囲', 
 				func: 'enemyAttackAndDebuf', 
@@ -774,27 +788,38 @@ function actionSilverWolf(){
 			}
 		},
 	];
-	const totalWeight = actions.reduce((sum, item) => sum + item.weight, 0);
+	const selectActions = [];
+	selectActions.push(actions[0]);
+	selectActions.push(actions[1]);
+	if(!statuses.actionCount.onceAttackFlag){
+		selectActions.push(actions[2]);
+	}
+	const totalWeight = selectActions.reduce((sum, item) => sum + item.weight, 0);
 	let random = Math.floor(Math.random() * totalWeight);
-	for (const action of actions) {
+	console.log(random);
+	for (const action of selectActions) {
 		if (random < action.weight) {
+			if(action.omen.name === actions[2].name){
+				statuses.actionCount.onceAttackFlag = true;
+			}
 			return action.omen;
 		}
 		random -= action.weight;
 	}
+	console.log('選べなかった');
 	return false;
 }
 
 /*******************************************************/
 /* ラフレシア
 /*******************************************************/
-function actionRafflesia(){
+function actionRafflesia(statuses){
 	console.log('actionRafflesia');
 	const actions = [
 		{	weight: 60, 
 			omen:{
 				name: '攻撃', 
-				func: 'rafflesiaAttack', 
+				func: 'enemyAttack', 
 				type: enemyActionType.attack, 
 				damage: 6, 
 				image: 'images/enemy/omen/Attack.png'
@@ -803,7 +828,7 @@ function actionRafflesia(){
 		{	weight: 40, 
 			omen:{
 				name: '成長', 
-				func: 'rafflesiaSkill', 
+				func: 'enemyBuff', 
 				type: enemyActionType.buff, 
 				damage: 0, 
 				buff: 3,
@@ -822,14 +847,6 @@ function actionRafflesia(){
 		random -= action.weight;
 	}
 	return false;
-}
-function rafflesiaAttack(enemyInfo, playerInfo, animationFlag){
-	// 12点ダメージ
-	enemyAttack(enemyInfo, playerInfo, animationFlag, enemyInfo.currentStatus.nextAction.damage);
-}
-function rafflesiaSkill(enemyInfo, playerInfo, animationFlag){
-	// 筋力3を自身に付与
-	enemyStatusBuf(enemyInfo, animationFlag, bufStatus.attackUp, 3);
 }
 function rafflesiaFirst(enemyInfo, playerInfo, animationFlag){
 	// 花粉2を自身に付与

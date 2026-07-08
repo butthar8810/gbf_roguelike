@@ -30,6 +30,7 @@ function damageHP(damage, playerInfo = playerStatus){
 /*******************************************************/
 function deepCopyCard(cardOjt){
 	const cloneOjt = {};
+	cloneOjt.No = cardOjt.No;
 	cloneOjt.key = cardOjt.key;
 	cloneOjt.name = cardOjt.name;
 	cloneOjt.class = cardOjt.class;
@@ -48,6 +49,7 @@ function deepCopyCardList(arrayCard){
 	const cloneArray = [];
 	arrayCard.forEach((cardOjt) => {
 		const cloneOjt = {};
+		cloneOjt.No = cardOjt.No;
 		cloneOjt.key = cardOjt.key;
 		cloneOjt.name = cardOjt.name;
 		cloneOjt.class = cardOjt.class;
@@ -112,6 +114,7 @@ function deepCopyEnemies(arrayEnemies){
 			cloneCurrentStatus.status.push(cloneStatus);
 		});
 		cloneCurrentStatus.nextAction = {...EnemyOjt.currentStatus.nextAction};
+		cloneCurrentStatus.actionCount = {...EnemyOjt.currentStatus.actionCount};
 		cloneCurrentStatus.divId = EnemyOjt.currentStatus.divId;
 		cloneOjt.currentStatus = cloneCurrentStatus;
 		cloneArray.push(cloneOjt);
@@ -125,6 +128,7 @@ function deepCopyEnemies(arrayEnemies){
 function pushOriginalDeck(card){
 	if ('id' in card) {
 		myOriginalDeck.push({
+			No: card.No,
 			key: card.key,
 			name: card.name,
 			class: card.class,
@@ -145,6 +149,7 @@ function pushOriginalDeck(card){
 function unshiftOriginalDeck(card){
 	if ('id' in card) {
 		myOriginalDeck.unshift({
+			No: card.No,
 			key: card.key,
 			name: card.name,
 			class: card.class,
@@ -177,6 +182,7 @@ function deletAllOriginalDeck(){
 function pushDeck(card){
 	if ('id' in card) {
 		myDeck.push({
+			No: card.No,
 			key: card.key,
 			name: card.name,
 			class: card.class,
@@ -197,6 +203,7 @@ function pushDeck(card){
 function unshiftDeck(card){
 	if ('id' in card) {
 		myDeck.unshift({
+			No: card.No,
 			key: card.key,
 			name: card.name,
 			class: card.class,
@@ -233,6 +240,7 @@ function deleteAllDeck(){
 /* pushHand：手札キューの末尾にカードを追加する
 /*******************************************************/
 function pushHand(card){
+	console.log(card);
 	// IDを採番しなおす
 	myHand = myHand.map((user, index) => ({
 		...user,
@@ -241,6 +249,7 @@ function pushHand(card){
 	// デッキから手札へカードを引く
 	myHand.push({
 		id: myHand.length+1,
+		No: card.No,
 		key: card.key,
 		name: card.name,
 		class: card.class,
@@ -280,6 +289,7 @@ function pushTrash(card){
 	}));
 	myTrash.push({
 		id: myTrash.length+1,
+		No: card.No,
 		key: card.key,
 		name: card.name,
 		class: card.class,
@@ -315,6 +325,7 @@ function deleteAllTrash(){
 function pushPlayArea(card){
 	if ('id' in card) {
 		playArea.push({
+			No: card.No,
 			key: card.key,
 			name: card.name,
 			class: card.class,
@@ -345,6 +356,7 @@ function pushDiscard(card){
 	}));
 	discard.push({
 		id: discard.length+1,
+		No: card.No,
 		key: card.key,
 		name: card.name,
 		class: card.class,

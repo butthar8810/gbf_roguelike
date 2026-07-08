@@ -38,9 +38,9 @@ function createStartBtnDom(){
 	const creditBtn1Image = $('<img>')
 		.attr('src', 'images/btn1.png');
 	const creditSpan = $('<span>')
-		.html('プレイ');
+		.html('クレジット');
 	const creditAnchor = $('<a>')
-		.addClass('toppage-play-btn')
+		.addClass('toppage-credit-btn')
 		.append(creditBtn1Image)
 		.append(creditSpan);
 	$('.start-btn-area').append(creditAnchor);
@@ -795,6 +795,22 @@ function updateReturnDecideTitleDom(text){
 	$('.return-decide-title').html(text);
 }
 /*******************************************************/
+/* createDeckListDom：デッキ一覧のDOM生成
+/*******************************************************/
+function createDeckListDom(){
+	$('.card-list').html('');
+	const copyDeck = deepCopyCardList(myDeck);
+	copyDeck.sort((a, b) => {
+		return a.No > b.No ? 1 : -1;
+	});
+	copyDeck.forEach((card) => {
+		const deckCardDiv = createCardDom(card);
+		deckCardDiv
+			.addClass('enhance-card');
+		$('.card-list').append(deckCardDiv);
+	});
+}
+/*******************************************************/
 /* createTrashListDom：捨て札一覧のDOM生成
 /*******************************************************/
 function createTrashListDom(){
@@ -806,7 +822,6 @@ function createTrashListDom(){
 		$('.card-list').append(trashCardDiv);
 	});
 }
-
 /*******************************************************/
 /* createTrashListDom：廃棄札一覧のDOM生成
 /*******************************************************/

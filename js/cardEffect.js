@@ -11,6 +11,7 @@ const type = {attack: 'アタック', skill: 'スキル', power: 'パワー', ab
 const granCardList = {
 	/********************************************* スターター *********************************************/
 	Wide: {
+		No: 111001,
 		key: 'Wide',
 		name: 'ワイドブレード',
 		class: cardClass.gran,
@@ -26,6 +27,7 @@ const granCardList = {
 		}
 	},
 	PowerSwing: {
+		No: 111002,
 		key: 'PowerSwing',
 		name: 'パワースウィング',
 		class: cardClass.gran,
@@ -43,6 +45,7 @@ const granCardList = {
 		}
 	},
 	Defense: {
+		No: 112001,
 		key: 'Defense',
 		name: '防御',
 		class: cardClass.gran,
@@ -60,6 +63,7 @@ const granCardList = {
 	/********************************************* コモン *********************************************/
 	//なぎ払い
 	Ichimonji: {
+		No: 121001,
 		key: 'Ichimonji',
 		name: '一文字切り',
 		class: cardClass.gran,
@@ -76,6 +80,7 @@ const granCardList = {
 	},
 	//アイアンウェーブ
 	Swing: {
+		No: 121002,
 		key: 'Swing',
 		name: 'スウィング',
 		class: cardClass.gran,
@@ -93,6 +98,7 @@ const granCardList = {
 	},
 	//クラッシュ
 	Straight: {
+		No: 121003,
 		key: 'Straight',
 		name: '正拳突き',
 		class: cardClass.gran,
@@ -110,6 +116,7 @@ const granCardList = {
 	},
 	//サンダークラップ
 	Pain: {
+		No: 121004,
 		key: 'Pain',
 		name: 'ペインメロディ',
 		class: cardClass.gran,
@@ -128,6 +135,7 @@ const granCardList = {
 	},
 	//ソードブーメラン
 	ThreeBurst: {
+		No: 121005,
 		key: 'ThreeBurst',
 		name: 'スリーバースト',
 		class: cardClass.gran,
@@ -145,6 +153,7 @@ const granCardList = {
 	},
 	//ツインストライク
 	CrossSlash: {
+		No: 121006,
 		key: 'CrossSlash',
 		name: 'クロススラッシュ',
 		class: cardClass.gran,
@@ -162,6 +171,7 @@ const granCardList = {
 	},
 	//ヘッドバット
 	Heavy: {
+		No: 121007,
 		key: 'Heavy',
 		name: 'ヘヴィショット',
 		class: cardClass.gran,
@@ -178,6 +188,7 @@ const granCardList = {
 	},
 	//ヘヴィブレード
 	Dig: {
+		No: 121008,
 		key: 'Dig',
 		name: 'クレイター・ディグ',
 		class: cardClass.gran,
@@ -195,6 +206,7 @@ const granCardList = {
 	},
 	//ポンメルストライク
 	Fire: {
+		No: 121009,
 		key: 'Fire',
 		name: 'ファイアグライド',
 		class: cardClass.gran,
@@ -212,6 +224,7 @@ const granCardList = {
 	},
 	//ラリアット
 	BrainShake: {
+		No: 121010,
 		key: 'BrainShake',
 		name: 'ブレインシェイク',
 		class: cardClass.gran,
@@ -230,6 +243,7 @@ const granCardList = {
 	},
 	//ワイルドストライク
 	Crash: {
+		No: 121011,
 		key: 'Crash',
 		name: 'クラッシュブロー',
 		class: cardClass.gran,
@@ -248,6 +262,7 @@ const granCardList = {
 	},
 	//怒り
 	Bullet: {
+		No: 121012,
 		key: 'Bullet',
 		name: '弾突拳',
 		class: cardClass.gran,
@@ -265,6 +280,7 @@ const granCardList = {
 	//******************************スキル******************************//
 	//フレックス
 	Stimulant: {
+		No: 122001,
 		key: 'Stimulant',
 		name: '興奮剤',
 		class: cardClass.gran,
@@ -284,6 +300,7 @@ const granCardList = {
 	},
 	//不屈の闘志
 	Coat: {
+		No: 122002,
 		key: 'Coat',
 		name: 'ナイトコート',
 		class: cardClass.gran,
@@ -300,6 +317,7 @@ const granCardList = {
 	},
 	//受け流し
 	Smokescreen: {
+		No: 122003,
 		key: 'Smokescreen',
 		name: '白煙弾',
 		class: cardClass.gran,
@@ -317,6 +335,7 @@ const granCardList = {
 	},
 	//武装
 	Adrenal: {
+		No: 122004,
 		key: 'Adrenal',
 		name: 'アドレナル',
 		class: cardClass.gran,
@@ -333,6 +352,7 @@ const granCardList = {
 	},
 	//荒廃
 	OverPower: {
+		No: 122005,
 		key: 'OverPower',
 		name: 'オーバーパワー',
 		class: cardClass.gran,
@@ -348,6 +368,7 @@ const granCardList = {
 	},
 	//雄叫び
 	Bell: {
+		No: 122006,
 		key: 'Bell',
 		name: '銅鈴の響',
 		class: cardClass.gran,
@@ -366,6 +387,7 @@ const granCardList = {
 	/********************************************* アンコモン ********************************************/
 	//アッパーカット
 	Melee: {
+		No: 131001,
 		key: 'Melee',
 		name: 'メレーブロウ',
 		class: cardClass.gran,
@@ -386,6 +408,7 @@ const granCardList = {
 	},
 	//ドロップキック
 	EarthKilling: {
+		No: 131002,
 		key: 'EarthKilling',
 		name: '地烈斬',
 		class: cardClass.gran,
@@ -404,6 +427,7 @@ const granCardList = {
 	},
 	//ヘモキネシス
 	Zetsusen: {
+		No: 131003,
 		key: 'Zetsusen',
 		name: '絶閃',
 		class: cardClass.gran,
@@ -421,6 +445,7 @@ const granCardList = {
 	},
 	//ランページ
 	Reaper: {
+		No: 131004,
 		key: 'Reaper',
 		name: 'ヴァイスリーパー',
 		class: cardClass.gran,
@@ -438,6 +463,7 @@ const granCardList = {
 	},
 	//大虐殺
 	Shrieking: {
+		No: 131005,
 		key: 'Shrieking',
 		name: '断切の慟哭',
 		class: cardClass.gran,
@@ -455,6 +481,7 @@ const granCardList = {
 	},
 	//旋風刃
 	Rush: {
+		No: 131006,
 		key: 'Rush',
 		name: 'ラッシュスマイト',
 		class: cardClass.gran,
@@ -472,6 +499,7 @@ const granCardList = {
 	},
 	//無謀なる突進
 	ArtilleryShell: {
+		No: 131007,
 		key: 'ArtilleryShell',
 		name: '砲弾',
 		class: cardClass.gran,
@@ -490,6 +518,7 @@ const granCardList = {
 	},
 	//猛撃
 	Revision: {
+		No: 131008,
 		key: 'Revision',
 		name: 'リビジョン',
 		class: cardClass.gran,
@@ -507,6 +536,7 @@ const granCardList = {
 	},
 	//血には血を
 	Bloody: {
+		No: 131009,
 		key: 'Bloody',
 		name: 'ブラッディ・ヴォウ',
 		class: cardClass.gran,
@@ -525,6 +555,7 @@ const granCardList = {
 	},
 	//霊魂切断
 	Tempest: {
+		No: 131010,
 		key: 'Tempest',
 		name: 'テンペストブレード',
 		class: cardClass.gran,
@@ -542,6 +573,7 @@ const granCardList = {
 	//******************************スキル******************************//
 	//やせ我慢
 	Mantle: {
+		No: 132001,
 		key: 'Mantle',
 		name: '闇蕩外套',
 		class: cardClass.gran,
@@ -560,6 +592,7 @@ const granCardList = {
 	},
 	//ゴーストアーマー
 	Belief: {
+		No: 132002,
 		key: 'Belief',
 		name: '戦士の信念',
 		class: cardClass.gran,
@@ -577,6 +610,7 @@ const granCardList = {
 	},
 	//セカンドウィンド
 	Helm: {
+		No: 132003,
 		key: 'Helm',
 		name: 'ナイツヘルム',
 		class: cardClass.gran,
@@ -593,6 +627,7 @@ const granCardList = {
 	},
 	//バトルトランス
 	Script: {
+		No: 132004,
 		key: 'Script',
 		name: '探偵の台本',
 		class: cardClass.gran,
@@ -611,6 +646,7 @@ const granCardList = {
 	},
 	//二刀流
 	HangedMan: {
+		No: 132005,
 		key: 'HangedMan',
 		name: 'ザ・ハングドマン',
 		class: cardClass.gran,
@@ -626,12 +662,13 @@ const granCardList = {
 	},
 	//塹壕
 	Scutum: {
+		No: 132006,
 		key: 'Scutum',
 		name: 'スクトゥム',
 		class: cardClass.gran,
 		rarity: rarity.uncommon,
 		type: type.skill,
-		func: 'effectDoubleBlock',
+		func: 'effectTwiceDefense',
 		image:'images/card/gran_Scutum.jpg',
 		effect: '現在のブロックの値を2倍にする。',
 		amount: {
@@ -641,6 +678,7 @@ const granCardList = {
 	},
 	//威嚇
 	KillKnife: {
+		No: 132007,
 		key: 'KillKnife',
 		name: 'キルナイフ',
 		class: cardClass.gran,
@@ -658,6 +696,7 @@ const granCardList = {
 	},
 	//弱点発見
 	Headband: {
+		No: 132008,
 		key: 'Headband',
 		name: '心眼鉢巻',
 		class: cardClass.gran,
@@ -675,6 +714,7 @@ const granCardList = {
 	},
 	//激怒
 	Tiamat: {
+		No: 132009,
 		key: 'Tiamat',
 		name: 'ティアマトシールド',
 		class: cardClass.gran,
@@ -692,6 +732,7 @@ const granCardList = {
 	},
 	//武装解除
 	Devil: {
+		No: 132010,
 		key: 'Devil',
 		name: 'ザ・デビル',
 		class: cardClass.gran,
@@ -709,6 +750,7 @@ const granCardList = {
 	},
 	//激昂
 	Tamtam: {
+		No: 132011,
 		key: 'Tamtam',
 		name: '汝、食い改めよ！',
 		class: cardClass.gran,
@@ -725,6 +767,7 @@ const granCardList = {
 	},
 	//瀉血
 	Stagnation: {
+		No: 132012,
 		key: 'Stagnation',
 		name: '闇の淀み',
 		class: cardClass.gran,
@@ -742,6 +785,7 @@ const granCardList = {
 	},
 	//炎の障壁
 	Rose: {
+		No: 132013,
 		key: 'Rose',
 		name: 'ローズシールド',
 		class: cardClass.gran,
@@ -760,6 +804,7 @@ const granCardList = {
 	},
 	//焦熱の契約
 	Truce: {
+		No: 132014,
 		key: 'Truce',
 		name: '一時休戦',
 		class: cardClass.gran,
@@ -776,6 +821,7 @@ const granCardList = {
 	},
 	//衝撃波
 	Cane: {
+		No: 132015,
 		key: 'Cane',
 		name: 'カースドケーン',
 		class: cardClass.gran,
@@ -795,6 +841,7 @@ const granCardList = {
 	},
 	//見張り
 	Carbuncle: {
+		No: 132016,
 		key: 'Carbuncle',
 		name: 'カーバンクル',
 		class: cardClass.gran,
@@ -830,6 +877,7 @@ const granCardList = {
 	//******************************パワー******************************//
 	// 炎の吐息
 	Samsara: {
+		No: 133001,
 		key: 'Samsara',
 		name: 'サンサーラ',
 		class: cardClass.gran,
@@ -846,6 +894,7 @@ const granCardList = {
 	},
 	//無痛
 	Jasseron: {
+		No: 133002,
 		key: 'Jasseron',
 		name: 'ジャセロン',
 		class: cardClass.gran,
@@ -862,6 +911,7 @@ const granCardList = {
 	},
 	//燃焼
 	Stamp: {
+		No: 133003,
 		key: 'Stamp',
 		name: 'ショロトルスタンプ',
 		class: cardClass.gran,
@@ -878,6 +928,7 @@ const granCardList = {
 	},
 	//破裂
 	Vamp: {
+		No: 133004,
 		key: 'Vamp',
 		name: 'ヴァンプネイル',
 		class: cardClass.gran,
@@ -894,6 +945,7 @@ const granCardList = {
 	},
 	//発火
 	Fist: {
+		No: 133005,
 		key: 'Fist',
 		name: 'ダンディフィスト',
 		class: cardClass.gran,
@@ -910,6 +962,7 @@ const granCardList = {
 	},
 	//進化
 	Wander: {
+		No: 133006,
 		key: 'Wander',
 		name: '彷徨の刃',
 		class: cardClass.gran,
@@ -926,6 +979,7 @@ const granCardList = {
 	},
 	//金属化
 	Holy: {
+		No: 133007,
 		key: 'Holy',
 		name: 'ホーリーシールド',
 		class: cardClass.gran,
@@ -942,6 +996,7 @@ const granCardList = {
 	},
 	//闇の抱擁
 	Lynette: {
+		No: 133008,
 		key: 'Lynette',
 		name: 'リネット',
 		class: cardClass.gran,
@@ -959,6 +1014,7 @@ const granCardList = {
 	/********************************************* レア *********************************************/
 	//捕食
 	Ignorance: {
+		No: 141001,
 		key: 'Ignorance',
 		name: '無明剣',
 		class: cardClass.gran,
@@ -976,6 +1032,7 @@ const granCardList = {
 	},
 	//死神
 	Meteor: {
+		No: 141002,
 		key: 'Meteor',
 		name: 'ミーティアライト',
 		class: cardClass.gran,
@@ -992,6 +1049,7 @@ const granCardList = {
 	},
 	//焼身
 	Weke: {
+		No: 141003,
 		key: 'Weke',
 		name: 'ローエンドヴェーク',
 		class: cardClass.gran,
@@ -1010,6 +1068,7 @@ const granCardList = {
 	},
 	//脳天割り
 	Cutting: {
+		No: 141004,
 		key: 'Cutting',
 		name: '大切断',
 		class: cardClass.gran,
@@ -1026,6 +1085,7 @@ const granCardList = {
 	},
 	//鬼火
 	Getsuga: {
+		No: 141005,
 		key: 'Getsuga',
 		name: '月牙',
 		class: cardClass.gran,
@@ -1044,6 +1104,7 @@ const granCardList = {
 	//******************************スキル******************************//
 	//ダブルタップ
 	Lyman: {
+		No: 142001,
 		key: 'Lyman',
 		name: 'ライマンブレイク',
 		class: cardClass.gran,
@@ -1061,22 +1122,25 @@ const granCardList = {
 	},
 	//リミットブレイク
 	Lion: {
+		No: 142002,
 		key: 'Lion',
 		name: 'フラム・デュ・リオン',
 		class: cardClass.gran,
 		rarity: rarity.rare,
 		type: type.skill,
-		func: 'effectTwiceBuff',
+		func: 'effectTimesBuff',
 		image:'images/card/gran_Lion.jpg',
 		effect: '「攻撃力アップ」を2倍にする。廃棄。',
 		amount: {
 			cost: 1, 
 			buffType: 'attackUp',
+			times: 2,
 			discard: true,
 		}
 	},
 	//不動
 	Solar: {
+		No: 142003,
 		key: 'Solar',
 		name: '日輪の鈴',
 		class: cardClass.gran,
@@ -1093,6 +1157,7 @@ const granCardList = {
 	},
 	//供物
 	Naan: {
+		No: 142004,
 		key: 'Naan',
 		name: 'ハッル・ラディーズ',
 		class: cardClass.gran,
@@ -1111,6 +1176,7 @@ const granCardList = {
 	},
 	//発掘
 	Reuse: {
+		No: 142005,
 		key: 'Reuse',
 		name: '再利用',
 		class: cardClass.gran,
@@ -1127,6 +1193,7 @@ const granCardList = {
 	//******************************パワー******************************//
 	//ジャガーノート
 	Bahamut: {
+		No: 143001,
 		key: 'Lamentation',
 		name: 'バハムートシールド',
 		class: cardClass.gran,
@@ -1143,6 +1210,7 @@ const granCardList = {
 	},
 	//バリケード
 	Hero: {
+		No: 143002,
 		key: 'Colossus',
 		name: '英雄の盾',
 		class: cardClass.gran,
@@ -1158,7 +1226,9 @@ const granCardList = {
 		}
 	},
 	//堕落
+	//未実装
 	Manuscript: {
+		No: 143003,
 		key: 'Manuscript',
 		name: '禁聖の写本',
 		class: cardClass.gran,
@@ -1175,6 +1245,7 @@ const granCardList = {
 	},
 	//悪魔化
 	Wear: {
+		No: 143004,
 		key: 'Wear',
 		name: '十天光輝の佩剣',
 		class: cardClass.gran,
@@ -1191,6 +1262,7 @@ const granCardList = {
 	},
 	//残虐
 	Hrunting: {
+		No: 143005,
 		key: 'Hrunting',
 		name: 'フルンティング',
 		class: cardClass.gran,
@@ -1207,6 +1279,7 @@ const granCardList = {
 	},
 	//狂戦士
 	Lancet: {
+		No: 143006,
 		key: 'Lancet',
 		name: 'ランセット',
 		class: cardClass.gran,
@@ -1229,6 +1302,7 @@ const granCardList = {
 /********************************************************************************************************/
 const granEnhancedCardList = {
 	Wide: {
+		No: 211001,
 		name: '<span class="upgrade">ワイドブレード+</span>',
 		class: cardClass.gran,
 		rarity: rarity.starter,
@@ -1243,6 +1317,7 @@ const granEnhancedCardList = {
 		}
 	},
 	PowerSwing: {
+		No: 211002,
 		name: '<span class="upgrade">パワースウィング+</span>',
 		class: cardClass.gran,
 		rarity: rarity.starter,
@@ -1259,6 +1334,7 @@ const granEnhancedCardList = {
 		}
 	},
 	Defense: {
+		No: 212001,
 		name: '<span class="upgrade">防御+</span>',
 		class: cardClass.gran,
 		rarity: rarity.starter,
@@ -1274,6 +1350,7 @@ const granEnhancedCardList = {
 	},
 	/********************************************* コモン *********************************************/
 	Ichimonji: {
+		No: 221001,
 		name: '<span class="upgrade">一文字切り+</span>',
 		class: cardClass.gran,
 		rarity: rarity.common,
@@ -1288,6 +1365,7 @@ const granEnhancedCardList = {
 		}
 	},
 	Swing: {
+		No: 221002,
 		name: '<span class="upgrade">スウィング+</span>',
 		class: cardClass.gran,
 		cost: 1,
@@ -1304,6 +1382,7 @@ const granEnhancedCardList = {
 		}
 	},
 	Straight: {
+		No: 221003,
 		name: '<span class="upgrade">正拳突き+</span>',
 		class: cardClass.gran,
 		rarity: rarity.common,
@@ -1319,6 +1398,7 @@ const granEnhancedCardList = {
 		}
 	},
 	Pain: {
+		No: 221004,
 		name: '<span class="upgrade">ペインメロディ+</span>',
 		class: cardClass.gran,
 		rarity: rarity.common,
@@ -1335,6 +1415,7 @@ const granEnhancedCardList = {
 		}
 	},
 	ThreeBurst: {
+		No: 221005,
 		name: '<span class="upgrade">スリーバースト+</span>',
 		class: cardClass.gran,
 		rarity: rarity.common,
@@ -1350,6 +1431,7 @@ const granEnhancedCardList = {
 		}
 	},
 	CrossSlash: {
+		No: 221006,
 		name: '<span class="upgrade">クロススラッシュ+</span>',
 		class: cardClass.gran,
 		rarity: rarity.common,
@@ -1365,6 +1447,7 @@ const granEnhancedCardList = {
 		}
 	},
 	Heavy: {
+		No: 221007,
 		name: '<span class="upgrade">ヘヴィショット+</span>',
 		class: cardClass.gran,
 		rarity: rarity.common,
@@ -1379,6 +1462,7 @@ const granEnhancedCardList = {
 		}
 	},
 	Dig: {
+		No: 221008,
 		key: 'Dig',
 		name: '<span class="upgrade">クレイター・ディグ+</span>',
 		class: cardClass.gran,
@@ -1395,6 +1479,7 @@ const granEnhancedCardList = {
 		}
 	},
 	Fire: {
+		No: 221009,
 		name: '<span class="upgrade">ファイアグライド+</span>',
 		class: cardClass.gran,
 		rarity: rarity.common,
@@ -1410,6 +1495,7 @@ const granEnhancedCardList = {
 		}
 	},
 	BrainShake: {
+		No: 221010,
 		name: '<span class="upgrade">ブレインシェイク+</span>',
 		class: cardClass.gran,
 		rarity: rarity.common,
@@ -1426,6 +1512,7 @@ const granEnhancedCardList = {
 		}
 	},
 	Crash: {
+		No: 221011,
 		name: '<span class="upgrade">クラッシュブロー+</span>',
 		class: cardClass.gran,
 		rarity: rarity.common,
@@ -1442,6 +1529,7 @@ const granEnhancedCardList = {
 		}
 	},
 	Bullet: {
+		No: 221012,
 		name: '<span class="upgrade">弾突拳+</span>',
 		class: cardClass.gran,
 		rarity: rarity.common,
@@ -1457,6 +1545,7 @@ const granEnhancedCardList = {
 	},
 	//******************************スキル******************************//
 	Stimulant: {
+		No: 222001,
 		name: '<span class="upgrade">興奮剤+</span>',
 		class: cardClass.gran,
 		rarity: rarity.common,
@@ -1474,6 +1563,7 @@ const granEnhancedCardList = {
 		}
 	},
 	Coat: {
+		No: 222002,
 		name: '<span class="upgrade">ナイトコート+</span>',
 		class: cardClass.gran,
 		rarity: rarity.common,
@@ -1488,6 +1578,7 @@ const granEnhancedCardList = {
 		}
 	},
 	Smokescreen: {
+		No: 222003,
 		name: '<span class="upgrade">白煙弾+</span>',
 		class: cardClass.gran,
 		rarity: rarity.common,
@@ -1503,6 +1594,7 @@ const granEnhancedCardList = {
 		}
 	},
 	Adrenal: {
+		No: 222004,
 		name: '<span class="upgrade">アドレナル+</span>',
 		class: cardClass.gran,
 		rarity: rarity.common,
@@ -1517,6 +1609,7 @@ const granEnhancedCardList = {
 		}
 	},
 	OverPower: {
+		No: 222005,
 		name: '<span class="upgrade">オーバーパワー+</span>',
 		class: cardClass.gran,
 		rarity: rarity.common,
@@ -1530,6 +1623,7 @@ const granEnhancedCardList = {
 		}
 	},
 	Bell: {
+		No: 222006,
 		name: '<span class="upgrade">銅鈴の響+</span>',
 		class: cardClass.gran,
 		rarity: rarity.common,
@@ -1545,6 +1639,7 @@ const granEnhancedCardList = {
 	},
 	/********************************************* アンコモン *********************************************/
 	Melee: {
+		No: 231001,
 		name: '<span class="upgrade">メレーブロウ+</span>',
 		class: cardClass.gran,
 		rarity: rarity.uncommon,
@@ -1564,6 +1659,7 @@ const granEnhancedCardList = {
 		}
 	},
 	EarthKilling: {
+		No: 231002,
 		name: '<span class="upgrade">地烈斬+</span>',
 		class: cardClass.gran,
 		rarity: rarity.uncommon,
@@ -1580,6 +1676,7 @@ const granEnhancedCardList = {
 		}
 	},
 	Zetsusen: {
+		No: 231003,
 		name: '<span class="upgrade">絶閃+</span>',
 		class: cardClass.gran,
 		rarity: rarity.uncommon,
@@ -1595,6 +1692,7 @@ const granEnhancedCardList = {
 		}
 	},
 	Reaper: {
+		No: 231004,
 		name: '<span class="upgrade">ヴァイスリーパー+</span>',
 		class: cardClass.gran,
 		rarity: rarity.uncommon,
@@ -1610,6 +1708,7 @@ const granEnhancedCardList = {
 		}
 	},
 	Shrieking: {
+		No: 231005,
 		name: '<span class="upgrade">断切の慟哭+</span>',
 		class: cardClass.gran,
 		rarity: rarity.uncommon,
@@ -1625,6 +1724,7 @@ const granEnhancedCardList = {
 		}
 	},
 	Rush: {
+		No: 231006,
 		name: '<span class="upgrade">ラッシュスマイト+</span>',
 		class: cardClass.gran,
 		rarity: rarity.uncommon,
@@ -1640,6 +1740,7 @@ const granEnhancedCardList = {
 		}
 	},
 	ArtilleryShell: {
+		No: 231007,
 		name: '<span class="upgrade">砲弾+</span>',
 		class: cardClass.gran,
 		rarity: rarity.uncommon,
@@ -1656,6 +1757,7 @@ const granEnhancedCardList = {
 		}
 	},
 	Revision: {
+		No: 231008,
 		name: '<span class="upgrade">リビジョン+</span>',
 		class: cardClass.gran,
 		rarity: rarity.uncommon,
@@ -1671,6 +1773,7 @@ const granEnhancedCardList = {
 		}
 	},
 	Bloody: {
+		No: 231009,
 		name: '<span class="upgrade">ブラッディ・ヴォウ+</span>',
 		class: cardClass.gran,
 		rarity: rarity.uncommon,
@@ -1687,6 +1790,7 @@ const granEnhancedCardList = {
 		}
 	},
 	Tempest: {
+		No: 231010,
 		name: '<span class="upgrade">テンペストブレード+</span>',
 		class: cardClass.gran,
 		rarity: rarity.uncommon,
@@ -1703,6 +1807,7 @@ const granEnhancedCardList = {
 	},
 	//******************************スキル******************************//
 	Mantle: {
+		No: 232001,
 		name: '<span class="upgrade">闇蕩外套+</span>',
 		class: cardClass.gran,
 		rarity: rarity.uncommon,
@@ -1719,6 +1824,7 @@ const granEnhancedCardList = {
 		}
 	},
 	Belief: {
+		No: 232002,
 		name: '<span class="upgrade">戦士の信念+</span>',
 		class: cardClass.gran,
 		rarity: rarity.uncommon,
@@ -1734,6 +1840,7 @@ const granEnhancedCardList = {
 		}
 	},
 	Helm: {
+		No: 232003,
 		name: '<span class="upgrade">ナイツヘルム+</span>',
 		class: cardClass.gran,
 		rarity: rarity.uncommon,
@@ -1748,6 +1855,7 @@ const granEnhancedCardList = {
 		}
 	},
 	Script: {
+		No: 232004,
 		name: '<span class="upgrade">探偵の台本+</span>',
 		class: cardClass.gran,
 		rarity: rarity.uncommon,
@@ -1764,6 +1872,7 @@ const granEnhancedCardList = {
 		}
 	},
 	HangedMan: {
+		No: 232005,
 		name: '<span class="upgrade">ザ・ハングドマン+</span>',
 		class: cardClass.gran,
 		rarity: rarity.uncommon,
@@ -1777,11 +1886,12 @@ const granEnhancedCardList = {
 		}
 	},
 	Scutum: {
+		No: 232006,
 		name: '<span class="upgrade">スクトゥム+</span>',
 		class: cardClass.gran,
 		rarity: rarity.uncommon,
 		type: type.skill,
-		func: 'effectDoubleBlock',
+		func: 'effectTwiceDefense',
 		image:'images/card/gran_Scutum.jpg',
 		effect: '現在のブロックの値を2倍にする。',
 		amount: {
@@ -1790,6 +1900,7 @@ const granEnhancedCardList = {
 		}
 	},
 	KillKnife: {
+		No: 232007,
 		name: '<span class="upgrade">キルナイフ+</span>',
 		class: cardClass.gran,
 		rarity: rarity.uncommon,
@@ -1805,6 +1916,7 @@ const granEnhancedCardList = {
 		}
 	},
 	Headband: {
+		No: 232008,
 		name: '<span class="upgrade">心眼鉢巻+</span>',
 		class: cardClass.gran,
 		rarity: rarity.uncommon,
@@ -1820,6 +1932,7 @@ const granEnhancedCardList = {
 		}
 	},
 	Tiamat: {
+		No: 232009,
 		name: '<span class="upgrade">ティアマトシールド+</span>',
 		class: cardClass.gran,
 		rarity: rarity.uncommon,
@@ -1835,6 +1948,7 @@ const granEnhancedCardList = {
 		}
 	},
 	Devil: {
+		No: 232010,
 		name: '<span class="upgrade">ザ・デビル+</span>',
 		class: cardClass.gran,
 		rarity: rarity.uncommon,
@@ -1850,6 +1964,7 @@ const granEnhancedCardList = {
 		}
 	},
 	Tamtam: {
+		No: 232011,
 		name: '<span class="upgrade">汝、食い改めよ！+</span>',
 		class: cardClass.gran,
 		rarity: rarity.uncommon,
@@ -1864,6 +1979,7 @@ const granEnhancedCardList = {
 		}
 	},//瀉血
 	Stagnation: {
+		No: 232012,
 		name: '<span class="upgrade">闇の淀み+</span>',
 		class: cardClass.gran,
 		rarity: rarity.uncommon,
@@ -1880,6 +1996,7 @@ const granEnhancedCardList = {
 	},
 	//炎の障壁
 	Rose: {
+		No: 232013,
 		name: '<span class="upgrade">ローズシールド+</span>',
 		class: cardClass.gran,
 		rarity: rarity.uncommon,
@@ -1897,6 +2014,7 @@ const granEnhancedCardList = {
 	},
 	//焦熱の契約
 	Truce: {
+		No: 232014,
 		name: '<span class="upgrade">一時休戦+</span>',
 		class: cardClass.gran,
 		rarity: rarity.uncommon,
@@ -1912,6 +2030,7 @@ const granEnhancedCardList = {
 	},
 	//衝撃波
 	Cane: {
+		No: 232015,
 		name: '<span class="upgrade">カースドケーン+</span>',
 		class: cardClass.gran,
 		rarity: rarity.uncommon,
@@ -1930,6 +2049,7 @@ const granEnhancedCardList = {
 	},
 	//見張り
 	Carbuncle: {
+		No: 232016,
 		name: '<span class="upgrade">カーバンクル+</span>',
 		class: cardClass.gran,
 		rarity: rarity.uncommon,
@@ -1963,6 +2083,7 @@ const granEnhancedCardList = {
 	//******************************パワー******************************//
 	// 炎の吐息
 	Samsara: {
+		No: 233001,
 		name: '<span class="upgrade">サンサーラ+</span>',
 		class: cardClass.gran,
 		rarity: rarity.uncommon,
@@ -1978,6 +2099,7 @@ const granEnhancedCardList = {
 	},
 	//無痛
 	Jasseron: {
+		No: 233002,
 		name: '<span class="upgrade">ジャセロン+</span>',
 		class: cardClass.gran,
 		rarity: rarity.uncommon,
@@ -1993,6 +2115,7 @@ const granEnhancedCardList = {
 	},
 	//燃焼
 	Stamp: {
+		No: 233003,
 		name: '<span class="upgrade">ショロトルスタンプ+</span>',
 		class: cardClass.gran,
 		rarity: rarity.uncommon,
@@ -2008,6 +2131,7 @@ const granEnhancedCardList = {
 	},
 	//破裂
 	Vamp: {
+		No: 233004,
 		name: '<span class="upgrade">ヴァンプネイル+</span>',
 		class: cardClass.gran,
 		rarity: rarity.uncommon,
@@ -2023,6 +2147,7 @@ const granEnhancedCardList = {
 	},
 	//発火
 	Fist: {
+		No: 233005,
 		name: '<span class="upgrade">ダンディフィスト+</span>',
 		class: cardClass.gran,
 		rarity: rarity.uncommon,
@@ -2038,6 +2163,7 @@ const granEnhancedCardList = {
 	},
 	//進化
 	Wander: {
+		No: 233006,
 		name: '<span class="upgrade">彷徨の刃+</span>',
 		class: cardClass.gran,
 		rarity: rarity.uncommon,
@@ -2053,6 +2179,7 @@ const granEnhancedCardList = {
 	},
 	//金属化
 	Holy: {
+		No: 233007,
 		name: '<span class="upgrade">ホーリーシールド+</span>',
 		class: cardClass.gran,
 		rarity: rarity.uncommon,
@@ -2068,6 +2195,7 @@ const granEnhancedCardList = {
 	},
 	//闇の抱擁
 	Lynette: {
+		No: 233008,
 		name: '<span class="upgrade">リネット+</span>',
 		class: cardClass.gran,
 		rarity: rarity.uncommon,
@@ -2083,6 +2211,7 @@ const granEnhancedCardList = {
 	},
 	/********************************************* レア *********************************************/
 	Ignorance: {
+		No: 241001,
 		name: '<span class="upgrade">無明剣+</span>',
 		class: cardClass.gran,
 		rarity: rarity.rare,
@@ -2098,6 +2227,7 @@ const granEnhancedCardList = {
 		}
 	},
 	Meteor: {
+		No: 241002,
 		name: '<span class="upgrade">ミーティアライト+</span>',
 		class: cardClass.gran,
 		rarity: rarity.rare,
@@ -2112,6 +2242,7 @@ const granEnhancedCardList = {
 		}
 	},
 	Weke: {
+		No: 241003,
 		name: '<span class="upgrade">ローエンドヴェーク+</span>',
 		class: cardClass.gran,
 		rarity: rarity.rare,
@@ -2128,6 +2259,7 @@ const granEnhancedCardList = {
 		}
 	},
 	Cutting: {
+		No: 241004,
 		name: '<span class="upgrade">大切断+</span>',
 		class: cardClass.gran,
 		rarity: rarity.rare,
@@ -2142,6 +2274,7 @@ const granEnhancedCardList = {
 		}
 	},
 	Getsuga: {
+		No: 241005,
 		name: '<span class="upgrade">月牙+</span>',
 		class: cardClass.gran,
 		rarity: rarity.rare,
@@ -2158,6 +2291,7 @@ const granEnhancedCardList = {
 	},
 	//******************************スキル******************************//
 	Lyman: {
+		No: 242001,
 		name: '<span class="upgrade">ライマンブレイク+</span>',
 		class: cardClass.gran,
 		rarity: rarity.rare,
@@ -2173,20 +2307,23 @@ const granEnhancedCardList = {
 		}
 	},
 	Lion: {
+		No: 242002,
 		name: '<span class="upgrade">フラム・デュ・リオン+</span>',
 		class: cardClass.gran,
 		rarity: rarity.rare,
 		type: type.skill,
-		func: 'effect',
+		func: 'effectTimesBuff',
 		image:'images/card/gran_Lion.jpg',
 		effect: '「攻撃力アップ」を2倍にする。',
 		amount: {
 			cost: 1, 
 			buffType: 'attackUp',
+			times: 2,
 			discard: false,
 		}
 	},
 	Solar: {
+		No: 242003,
 		name: '<span class="upgrade">日輪の鈴+</span>',
 		class: cardClass.gran,
 		rarity: rarity.rare,
@@ -2201,6 +2338,7 @@ const granEnhancedCardList = {
 		}
 	},
 	Naan: {
+		No: 242004,
 		name: '<span class="upgrade">ハッル・ラディーズ+</span>',
 		class: cardClass.gran,
 		rarity: rarity.rare,
@@ -2218,6 +2356,7 @@ const granEnhancedCardList = {
 	},
 	//発掘
 	Reuse: {
+		No: 242005,
 		name: '<span class="upgrade">再利用+</span>',
 		class: cardClass.gran,
 		rarity: rarity.rare,
@@ -2233,6 +2372,7 @@ const granEnhancedCardList = {
 	//******************************パワー******************************//
 	//ジャガーノート
 	Bahamut: {
+		No: 243001,
 		name: '<span class="upgrade">バハムートシールド+</span>',
 		class: cardClass.gran,
 		rarity: rarity.rare,
@@ -2248,6 +2388,7 @@ const granEnhancedCardList = {
 	},
 	//バリケード
 	Hero: {
+		No: 243002,
 		name: '<span class="upgrade">英雄の盾+</span>',
 		class: cardClass.gran,
 		rarity: rarity.rare,
@@ -2262,7 +2403,9 @@ const granEnhancedCardList = {
 		}
 	},
 	//堕落
+	//未実装
 	Manuscript: {
+		No: 243003,
 		name: '<span class="upgrade">禁聖の写本+</span>',
 		class: cardClass.gran,
 		rarity: rarity.rare,
@@ -2278,6 +2421,7 @@ const granEnhancedCardList = {
 	},
 	//悪魔化
 	Wear: {
+		No: 243004,
 		name: '<span class="upgrade">十天光輝の佩剣+</span>',
 		class: cardClass.gran,
 		rarity: rarity.rare,
@@ -2293,6 +2437,7 @@ const granEnhancedCardList = {
 	},
 	//残虐
 	Hrunting: {
+		No: 243005,
 		name: '<span class="upgrade">フルンティング+</span>',
 		class: cardClass.gran,
 		rarity: rarity.rare,
@@ -2309,6 +2454,7 @@ const granEnhancedCardList = {
 	},
 	//狂戦士
 	Lancet: {
+		No: 243006,
 		name: '<span class="upgrade">ランセット+</span>',
 		class: cardClass.gran,
 		rarity: rarity.rare,
@@ -2330,6 +2476,7 @@ const granEnhancedCardList = {
 /*****************************************************************************************/
 const djeetaCardList = {
 	Wide: {
+		No: 311001,
 		key: 'Wide',
 		name: 'ワイドブレード',
 		class: cardClass.djeeta,
@@ -2346,6 +2493,7 @@ const djeetaCardList = {
 	},
 	//無力化
 	Assassin: {
+		No: 311002,
 		key: 'Assassin',
 		name: 'アサシンブレード',
 		class: cardClass.djeeta,
@@ -2363,6 +2511,7 @@ const djeetaCardList = {
 		}
 	},
 	Defense: {
+		No: 312001,
 		key: 'Defense',
 		name: '防御',
 		class: cardClass.djeeta,
@@ -2379,6 +2528,7 @@ const djeetaCardList = {
 	},
 	//サバイバー
 	Pulverizer: {
+		No: 312002,
 		key: 'Pulverizer',
 		name: 'パルバライザー',
 		class: cardClass.djeeta,
@@ -2396,6 +2546,7 @@ const djeetaCardList = {
 	/********************************************* コモン *********************************************/
 	//はやぶさ斬り
 	Removal: {
+		No: 321001,
 		key: 'Removal',
 		name: '芽摘',
 		class: cardClass.djeeta,
@@ -2413,6 +2564,7 @@ const djeetaCardList = {
 	},
 	//スライス
 	Kill: {
+		No: 321002,
 		key: 'Kill',
 		name: 'キリング・ダガー',
 		class: cardClass.djeeta,
@@ -2429,6 +2581,7 @@ const djeetaCardList = {
 	},
 	//ダガースロー
 	World: {
+		No: 321003,
 		key: 'World',
 		name: 'アラウンドザワールド',
 		class: cardClass.djeeta,
@@ -2446,6 +2599,7 @@ const djeetaCardList = {
 	},
 	//不意打ち
 	Fast: {
+		No: 321004,
 		key: 'Fast',
 		name: 'ファストスライサー',
 		class: cardClass.djeeta,
@@ -2464,6 +2618,7 @@ const djeetaCardList = {
 	},
 	//五月雨ダガー
 	Rain: {
+		No: 321005,
 		key: 'Rain',
 		name: 'アローレイン',
 		class: cardClass.djeeta,
@@ -2481,6 +2636,7 @@ const djeetaCardList = {
 	},
 	//スニーキーストライク
 	Kamaitachi: {
+		No: 321006,
 		key: 'Kamaitachi',
 		name: '鎌鼬',
 		class: cardClass.djeeta,
@@ -2498,6 +2654,7 @@ const djeetaCardList = {
 	},
 	//毒の一刺し
 	True: {
+		No: 321007,
 		key: 'True',
 		name: 'ポイズンスラスト',
 		class: cardClass.djeeta,
@@ -2516,6 +2673,7 @@ const djeetaCardList = {
 	},
 	//破滅
 	Dead: {
+		No: 321008,
 		key: 'Dead',
 		name: 'デッドウェッジ',
 		class: cardClass.djeeta,
@@ -2533,6 +2691,7 @@ const djeetaCardList = {
 	},
 	//飛び膝蹴り
 	Circle: {
+		No: 321009,
 		key: 'Circle',
 		name: 'サークル',
 		class: cardClass.djeeta,
@@ -2552,6 +2711,7 @@ const djeetaCardList = {
 	//******************************スキル******************************//
 	//アクロバット
 	Preparation: {
+		No: 322001,
 		key: 'Preparation',
 		name: '戦闘準備',
 		class: cardClass.djeeta,
@@ -2568,6 +2728,7 @@ const djeetaCardList = {
 	},
 	//ディフレクト
 	Twill: {
+		No: 322002,
 		key: 'Twill',
 		name: 'ツイルコート',
 		class: cardClass.djeeta,
@@ -2584,6 +2745,7 @@ const djeetaCardList = {
 	},
 	//ドッジロール
 	Knight: {
+		No: 322003,
 		key: 'Knight',
 		name: 'ナイトシールド',
 		class: cardClass.djeeta,
@@ -2602,6 +2764,7 @@ const djeetaCardList = {
 	},
 	//バックフリップ
 	Yggdrasil: {
+		No: 322004,
 		key: 'Yggdrasil',
 		name: 'ユグドラシル・ミニステル',
 		class: cardClass.djeeta,
@@ -2619,6 +2782,7 @@ const djeetaCardList = {
 	},
 	//先読み
 	Extinction: {
+		No: 322005,
 		key: 'Extinction',
 		name: '滅尽の覇気',
 		class: cardClass.djeeta,
@@ -2636,6 +2800,7 @@ const djeetaCardList = {
 	},
 	//剣の舞
 	Leiomano: {
+		No: 322006,
 		key: 'Leiomano',
 		name: 'レイオマノ',
 		class: cardClass.djeeta,
@@ -2653,6 +2818,7 @@ const djeetaCardList = {
 	},
 	//外套と短剣
 	Rune: {
+		No: 322007,
 		key: 'Rune',
 		name: 'ルーンナイフ',
 		class: cardClass.djeeta,
@@ -2671,6 +2837,7 @@ const djeetaCardList = {
 	},
 	//準備
 	Refrain: {
+		No: 322008,
 		key: 'Refrain',
 		name: 'リフレイン',
 		class: cardClass.djeeta,
@@ -2687,6 +2854,7 @@ const djeetaCardList = {
 	},
 	//致死毒
 	Cocktail: {
+		No: 322009,
 		key: 'Cocktail',
 		name: 'ポイズンカクテル',
 		class: cardClass.djeeta,
@@ -2704,6 +2872,7 @@ const djeetaCardList = {
 	},
 	//金切り声
 	Sleep: {
+		No: 322010,
 		key: 'Sleep',
 		name: '催眠針',
 		class: cardClass.djeeta,
@@ -2724,6 +2893,7 @@ const djeetaCardList = {
 	//*********************************************アンコモン*********************************************//
 	//とどめの一撃
 	Shigure: {
+		No: 331001,
 		key: 'Shigure',
 		name: '秋時雨',
 		class: cardClass.djeeta,
@@ -2740,6 +2910,7 @@ const djeetaCardList = {
 	},
 	//ダッシュ
 	Smash: {
+		No: 331002,
 		key: 'Smash',
 		name: 'スマッシュライザー',
 		class: cardClass.djeeta,
@@ -2757,6 +2928,7 @@ const djeetaCardList = {
 	},
 	//ハチの巣
 	Doobie: {
+		No: 331003,
 		key: 'Doobie',
 		name: 'ドゥービーショット',
 		class: cardClass.djeeta,
@@ -2774,6 +2946,7 @@ const djeetaCardList = {
 	},
 	//ヒールフック
 	Wheel: {
+		No: 331004,
 		key: 'Wheel',
 		name: 'セラフホウィール',
 		class: cardClass.djeeta,
@@ -2792,6 +2965,7 @@ const djeetaCardList = {
 	},
 	//フルアタック
 	Blaze: {
+		No: 331005,
 		key: 'Blaze',
 		name: 'セラフブレイズ',
 		class: cardClass.djeeta,
@@ -2808,6 +2982,7 @@ const djeetaCardList = {
 	},
 	//フレシェット
 	Instruction: {
+		No: 331006,
 		key: 'Instruction',
 		name: '魔星の指南書',
 		class: cardClass.djeeta,
@@ -2824,6 +2999,7 @@ const djeetaCardList = {
 	},
 	//一撃必殺
 	Perfeed: {
+		No: 331007,
 		key: 'Perfeed',
 		name: 'ペルフィード',
 		class: cardClass.djeeta,
@@ -2842,6 +3018,7 @@ const djeetaCardList = {
 	},
 	//串刺し
 	Agastia: {
+		No: 331008,
 		key: 'Agastia',
 		name: 'アガスティア・ダブル',
 		class: cardClass.djeeta,
@@ -2859,6 +3036,7 @@ const djeetaCardList = {
 	},
 	//略奪
 	Mimic: {
+		No: 331009,
 		key: 'Mimic',
 		name: 'ミニック',
 		class: cardClass.djeeta,
@@ -2877,6 +3055,7 @@ const djeetaCardList = {
 	},
 	//窒息
 	Leviathan: {
+		No: 331010,
 		key: 'Leviathan',
 		name: 'リヴァイアサン・ミニステル',
 		class: cardClass.djeeta,
@@ -2894,8 +3073,8 @@ const djeetaCardList = {
 		}
 	},
 	//終わりなき苦痛
-	// 「このカードを引くたび、～」、未実装
 	Spada: {
+		No: 331011,
 		key: 'Spada',
 		name: 'イルジオーネ・スパーダ',
 		class: cardClass.djeeta,
@@ -2906,12 +3085,14 @@ const djeetaCardList = {
 		effect: `このカードを引くたび、「イルジオーネ・スパーダ」を手札に加える。{A}ダメージを与える。廃棄。`,
 		amount: {
 			cost: 0,
+			drawFanc: 'drawReproduction',
 			attack: 4,
 			discard: true,
 		}
 	},
 	//腹裂き
 	GiveUp: {
+		No: 331012,
 		key: 'GiveUp',
 		name: 'ネバーギブアップ',
 		class: cardClass.djeeta,
@@ -2931,6 +3112,7 @@ const djeetaCardList = {
 	},
 	//騙し討ち
 	Iai: {
+		No: 331013,
 		key: 'Iai',
 		name: '居合スラッシュ',
 		class: cardClass.djeeta,
@@ -2949,6 +3131,7 @@ const djeetaCardList = {
 	//******************************スキル******************************//
 	//イカサマ
 	Branch: {
+		No: 332001,
 		key: 'Branch',
 		name: '天導樹の枝',
 		class: cardClass.djeeta,
@@ -2964,6 +3147,7 @@ const djeetaCardList = {
 	},
 	//セットアップ
 	Justice: {
+		No: 332002,
 		key: 'Justice',
 		name: 'ザ・ジャスティス',
 		class: cardClass.djeeta,
@@ -2979,6 +3163,7 @@ const djeetaCardList = {
 	},
 	//バウンドフラスコ
 	BlackishPurple: {
+		No: 332003,
 		key: 'BlackishPurple',
 		name: '黒紫羽',
 		class: cardClass.djeeta,
@@ -2997,6 +3182,7 @@ const djeetaCardList = {
 	},
 	//劇毒
 	Cell: {
+		No: 332004,
 		key: 'Cell',
 		name: '壊獣細胞',
 		class: cardClass.djeeta,
@@ -3014,24 +3200,9 @@ const djeetaCardList = {
 			discard: true,
 		}
 	},
-/*	//動揺
-	test1: {
-		key: '',
-		name: '',
-		class: cardClass.djeeta,
-		rarity: rarity.uncommon,
-		type: type.skill,
-		func: '',
-		image:'images/card/djeeta_.jpg',
-		effect: `ランダムな「スキル」を1枚手札に加える。このターンそのカードのコストは0。廃棄`,
-		amount: {
-			cost: 0,
-			discard: true,
-		}
-	},
-*/
 	//反射
 	Tactics: {
+		No: 332005,
 		key: 'Tactics',
 		name: '戦術',
 		class: cardClass.djeeta,
@@ -3049,6 +3220,7 @@ const djeetaCardList = {
 	},
 	//恐怖
 	Penalty: {
+		No: 332006,
 		key: 'Penalty',
 		name: 'ペナルティ',
 		class: cardClass.djeeta,
@@ -3066,6 +3238,7 @@ const djeetaCardList = {
 	},
 	//策士
 	Supply: {
+		No: 332007,
 		key: 'Supply',
 		name: '補給',
 		class: cardClass.djeeta,
@@ -3083,6 +3256,7 @@ const djeetaCardList = {
 	},
 	//職人技
 	Sun: {
+		No: 332008,
 		key: 'Sun',
 		name: 'ザ・サン',
 		class: cardClass.djeeta,
@@ -3099,6 +3273,7 @@ const djeetaCardList = {
 	},
 	//脱出計画
 	Shell: {
+		No: 332009,
 		key: 'Shell',
 		name: '執明真甲',
 		class: cardClass.djeeta,
@@ -3116,22 +3291,25 @@ const djeetaCardList = {
 	},
 	//触媒
 	Chain: {
+		No: 332010,
 		key: 'Chain',
 		name: '凶毒の穿鎖',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
 		type: type.skill,
-		func: 'effectTwiceDebuff',
+		func: 'effectTimesDebuff',
 		image:'images/card/djeeta_Chain.jpg',
 		effect: `敵の毒を2倍にする。廃棄。`,
 		amount: {
 			cost: 1,
 			debuffType: 'poison',
+			times: 2,
 			discard: true,
 		}
 	},
 	//足払い
 	LawWheel: {
+		No: 332011,
 		key: 'LawWheel',
 		name: '転舞法輪',
 		class: cardClass.djeeta,
@@ -3150,6 +3328,7 @@ const djeetaCardList = {
 	},
 	//集中
 	Noodles: {
+		No: 332012,
 		key: 'Noodles',
 		name: '替え玉一丁！',
 		class: cardClass.djeeta,
@@ -3166,6 +3345,7 @@ const djeetaCardList = {
 	},
 	//ブラー
 	LuWoh: {
+		No: 332013,
 		key: 'LuWoh',
 		name: 'ル・オー・ミニステル',
 		class: cardClass.djeeta,
@@ -3183,9 +3363,26 @@ const djeetaCardList = {
 		}
 	},
 	
+/*	//動揺
+	test1: {
+		key: '',
+		name: '',
+		class: cardClass.djeeta,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: '',
+		image:'images/card/djeeta_.jpg',
+		effect: `ランダムな「スキル」を1枚手札に加える。このターンそのカードのコストは0。廃棄`,
+		amount: {
+			cost: 0,
+			discard: true,
+		}
+	},
+*/
 	//******************************パワー******************************//
 	//まきびし
 	Aura: {
+		No: 333001,
 		key: 'Aura',
 		name: '闇のオーラ',
 		class: cardClass.djeeta,
@@ -3202,6 +3399,7 @@ const djeetaCardList = {
 	},
 	//フットワーク
 	Runner: {
+		No: 333002,
 		key: 'Runner',
 		name: 'ランナーズハイ',
 		class: cardClass.djeeta,
@@ -3218,6 +3416,7 @@ const djeetaCardList = {
 	},
 	//有毒ガス
 	Grudge: {
+		No: 333003,
 		key: 'Grudge',
 		name: '怨怨',
 		class: cardClass.djeeta,
@@ -3234,6 +3433,7 @@ const djeetaCardList = {
 	},
 	//無限の刃
 	FlyingBlade: {
+		No: 333004,
 		key: 'FlyingBlade',
 		name: '無限の飛刃',
 		class: cardClass.djeeta,
@@ -3250,6 +3450,7 @@ const djeetaCardList = {
 	},
 	//用意周到
 	Decomposition: {
+		No: 333005,
 		key: 'Decomposition',
 		name: '再構築',
 		class: cardClass.djeeta,
@@ -3267,6 +3468,7 @@ const djeetaCardList = {
 
 	//精度上昇
 	Telescope: {
+		No: 333006,
 		key: 'Telescope',
 		name: '精度上昇',
 		class: cardClass.djeeta,
@@ -3284,6 +3486,7 @@ const djeetaCardList = {
 	//*********************************************レア*********************************************//
 	//アンロード
 	Roses: {
+		No: 341001,
 		key: 'Roses',
 		name: 'ブルー・ローゼス',
 		class: cardClass.djeeta,
@@ -3300,6 +3503,7 @@ const djeetaCardList = {
 	},
 	//ガラスのナイフ
 	Ominous: {
+		No: 341002,
 		key: 'Ominous',
 		name: 'ウルヴォルラーネ',
 		class: cardClass.djeeta,
@@ -3318,6 +3522,7 @@ const djeetaCardList = {
 	},
 	//グランドフィナーレ
 	Blossom: {
+		No: 341003,
 		key: 'Blossom',
 		name: 'デスブロッサム',
 		class: cardClass.djeeta,
@@ -3335,6 +3540,7 @@ const djeetaCardList = {
 	},
 	//ダイ、ダイ、ダイ！
 	Zetsu: {
+		No: 341004,
 		key: 'Zetsu',
 		name: '絶',
 		class: cardClass.djeeta,
@@ -3352,6 +3558,7 @@ const djeetaCardList = {
 	//******************************スキル******************************//
 	//アドレナリン
 	Record: {
+		No: 342001,
 		key: 'Record',
 		name: 'シーイング・レコード',
 		class: cardClass.djeeta,
@@ -3369,6 +3576,7 @@ const djeetaCardList = {
 	},
 	//ドッペルゲンガー
 	Aethos: {
+		No: 342002,
 		key: 'Aethos',
 		name: 'アエトス・オブ・ワールド',
 		class: cardClass.djeeta,
@@ -3385,6 +3593,7 @@ const djeetaCardList = {
 	},
 	//バレットタイム
 	Bailout: {
+		No: 342003,
 		key: 'Bailout',
 		name: 'ベイルアウト',
 		class: cardClass.djeeta,
@@ -3402,6 +3611,7 @@ const djeetaCardList = {
 	},
 	//バースト
 	Cat: {
+		No: 342004,
 		key: 'Cat',
 		name: '新神気鋭・猫の印',
 		class: cardClass.djeeta,
@@ -3419,6 +3629,7 @@ const djeetaCardList = {
 	},
 	//不快感
 	Petrification: {
+		No: 342005,
 		key: 'Petrification',
 		name: 'フルグライト',
 		class: cardClass.djeeta,
@@ -3437,6 +3648,7 @@ const djeetaCardList = {
 	},
 	//幻影の暗殺者
 	Ereshkigal: {
+		No: 342006,
 		key: 'Ereshkigal',
 		name: 'エレシュキガル',
 		class: cardClass.djeeta,
@@ -3454,6 +3666,7 @@ const djeetaCardList = {
 	},
 	//悪夢
 	Cerberus: {
+		No: 342007,
 		key: 'Cerberus',
 		name: 'ケルベロス',
 		class: cardClass.djeeta,
@@ -3471,6 +3684,7 @@ const djeetaCardList = {
 	},
 	//死体爆破
 	Autophagy: {
+		No: 342008,
 		key: 'Autophagy',
 		name: '自壊因子',
 		class: cardClass.djeeta,
@@ -3490,12 +3704,13 @@ const djeetaCardList = {
 	},
 	//鋼の嵐
 	Mirror: {
+		No: 342009,
 		key: 'Mirror',
 		name: '刃鏡の短剣',
 		class: cardClass.djeeta,
 		rarity: rarity.rare,
 		type: type.skill,
-		func: 'effectAlTrashAndGetKnife',
+		func: 'effectAllTrashAndGetCommonCard',
 		image:'images/card/djeeta_Mirror.jpg',
 		effect: `手札をすべて捨てる。捨てたカード1枚につきナイフを1枚手札に加える。`,
 		amount: {
@@ -3507,6 +3722,7 @@ const djeetaCardList = {
 	//******************************パワー******************************//
 	//メッタ切り
 	Parazonium: {
+		No: 343001,
 		key: 'Parazonium',
 		name: 'パラゾニウム',
 		class: cardClass.djeeta,
@@ -3523,6 +3739,7 @@ const djeetaCardList = {
 	},
 	//商売道具
 	CaitSea: {
+		No: 343002,
 		key: 'CaitSea',
 		name: 'ケット・シー',
 		class: cardClass.djeeta,
@@ -3539,6 +3756,7 @@ const djeetaCardList = {
 	},
 	//死霊化
 	NewWarld: {
+		No: 343003,
 		key: 'NewWarld',
 		name: '新世界の盾',
 		class: cardClass.djeeta,
@@ -3557,6 +3775,7 @@ const djeetaCardList = {
 	},
 	//残像
 	Lamentation: {
+		No: 343004,
 		key: 'Archangel',
 		name: '嘆きの盾',
 		class: cardClass.djeeta,
@@ -3573,6 +3792,7 @@ const djeetaCardList = {
 	},
 	//猛毒の仕込み
 	Lich: {
+		No: 343005,
 		key: 'Lich',
 		name: 'リッチ',
 		class: cardClass.djeeta,
@@ -3591,6 +3811,7 @@ const djeetaCardList = {
 
 const djeetaEnhancedCardList = {
 	Wide: {
+		No:411001,
 		name: '<span class="upgrade">ワイドブレード+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.starter,
@@ -3606,6 +3827,7 @@ const djeetaEnhancedCardList = {
 	},
 	//無力化
 	Assassin: {
+		No:411002,
 		name: '<span class="upgrade">アサシンブレード+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.common,
@@ -3622,6 +3844,7 @@ const djeetaEnhancedCardList = {
 		}
 	},
 	Defense: {
+		No:412001,
 		name: '<span class="upgrade">防御+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.starter,
@@ -3637,6 +3860,7 @@ const djeetaEnhancedCardList = {
 	},
 	//サバイバー
 	Pulverizer: {
+		No:412002,
 		name: '<span class="upgrade">パルバライザー+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.starter,
@@ -3653,6 +3877,7 @@ const djeetaEnhancedCardList = {
 	/********************************************* コモン *********************************************/
 	//はやぶさ斬り
 	Removal: {
+		No:421001,
 		name: '<span class="upgrade">芽摘+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.common,
@@ -3669,6 +3894,7 @@ const djeetaEnhancedCardList = {
 	},
 	//スライス
 	Kill: {
+		No:421002,
 		name: '<span class="upgrade">キリング・ダガー+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.common,
@@ -3684,6 +3910,7 @@ const djeetaEnhancedCardList = {
 	},
 	//ダガースロー
 	World: {
+		No:421003,
 		name: '<span class="upgrade">アラウンドザワールド+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.common,
@@ -3700,6 +3927,7 @@ const djeetaEnhancedCardList = {
 	},
 	//不意打ち
 	Fast: {
+		No:421004,
 		name: '<span class="upgrade">ファストスライサー+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.starter,
@@ -3717,6 +3945,7 @@ const djeetaEnhancedCardList = {
 	},
 	//五月雨ダガー
 	Rain: {
+		No:421005,
 		name: '<span class="upgrade">アローレイン+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.common,
@@ -3733,6 +3962,7 @@ const djeetaEnhancedCardList = {
 	},
 	//スニーキーストライク
 	Kamaitachi: {
+		No:421006,
 		name: '<span class="upgrade">鎌鼬+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.common,
@@ -3749,6 +3979,7 @@ const djeetaEnhancedCardList = {
 	},
 	//毒の一刺し
 	True: {
+		No:421007,
 		name: '<span class="upgrade">ポイズンスラスト+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.common,
@@ -3766,6 +3997,7 @@ const djeetaEnhancedCardList = {
 	},
 	//破滅
 	Dead: {
+		No:421008,
 		name: '<span class="upgrade">デッドウェッジ+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.common,
@@ -3782,6 +4014,7 @@ const djeetaEnhancedCardList = {
 	},
 	//飛び膝蹴り
 	Circle: {
+		No:421009,
 		name: '<span class="upgrade">サークル+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.common,
@@ -3800,6 +4033,7 @@ const djeetaEnhancedCardList = {
 	//******************************スキル******************************//
 	//アクロバット
 	Preparation: {
+		No:422001,
 		name: '<span class="upgrade">戦闘準備+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.common,
@@ -3815,6 +4049,7 @@ const djeetaEnhancedCardList = {
 	},
 	//ディフレクト
 	Twill: {
+		No:422002,
 		name: '<span class="upgrade">ツイルコート+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.common,
@@ -3830,6 +4065,7 @@ const djeetaEnhancedCardList = {
 	},
 	//ドッジロール
 	Knight: {
+		No:422003,
 		name: '<span class="upgrade">ナイトシールド+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.common,
@@ -3847,6 +4083,7 @@ const djeetaEnhancedCardList = {
 	},
 	//バックフリップ
 	Yggdrasil: {
+		No:422004,
 		name: '<span class="upgrade">ユグドラシル・ミニステル+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.common,
@@ -3863,6 +4100,7 @@ const djeetaEnhancedCardList = {
 	},
 	//先読み
 	Extinction: {
+		No:422005,
 		name: '<span class="upgrade">滅尽の覇気+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.common,
@@ -3879,6 +4117,7 @@ const djeetaEnhancedCardList = {
 	},
 	//剣の舞
 	Leiomano: {
+		No:422006,
 		name: '<span class="upgrade">レイオマノ+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.common,
@@ -3895,6 +4134,7 @@ const djeetaEnhancedCardList = {
 	},
 	//外套と短剣
 	Rune: {
+		No:422007,
 		name: '<span class="upgrade">ルーンナイフ+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.common,
@@ -3912,6 +4152,7 @@ const djeetaEnhancedCardList = {
 	},
 	//準備
 	Refrain: {
+		No:422008,
 		name: '<span class="upgrade">リフレイン+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.common,
@@ -3927,6 +4168,7 @@ const djeetaEnhancedCardList = {
 	},
 	//致死毒
 	Cocktail: {
+		No:422009,
 		name: '<span class="upgrade">ポイズンカクテル+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.common,
@@ -3943,6 +4185,7 @@ const djeetaEnhancedCardList = {
 	},
 	//金切り声
 	Sleep: {
+		No:422010,
 		name: '<span class="upgrade">催眠針+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.common,
@@ -3962,6 +4205,7 @@ const djeetaEnhancedCardList = {
 	//*********************************************アンコモン*********************************************//
 	//とどめの一撃
 	Shigure: {
+		No:431001,
 		name: '<span class="upgrade">秋時雨+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
@@ -3977,6 +4221,7 @@ const djeetaEnhancedCardList = {
 	},
 	//ダッシュ
 	Smash: {
+		No:431002,
 		name: '<span class="upgrade">スマッシュライザー+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
@@ -3993,6 +4238,7 @@ const djeetaEnhancedCardList = {
 	},
 	//ハチの巣
 	Doobie: {
+		No:431002,
 		name: '<span class="upgrade">ドゥービーショット+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
@@ -4009,6 +4255,7 @@ const djeetaEnhancedCardList = {
 	},
 	//ヒールフック
 	Wheel: {
+		No:431003,
 		name: '<span class="upgrade">セラフホウィール+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
@@ -4026,6 +4273,7 @@ const djeetaEnhancedCardList = {
 	},
 	//フルアタック
 	Blaze: {
+		No:431004,
 		name: '<span class="upgrade">セラフブレイズ+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
@@ -4041,6 +4289,7 @@ const djeetaEnhancedCardList = {
 	},
 	//フレシェット
 	Instruction: {
+		No:431005,
 		name: '<span class="upgrade">魔星の指南書+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
@@ -4056,6 +4305,7 @@ const djeetaEnhancedCardList = {
 	},
 	//一撃必殺
 	Perfeed: {
+		No:431006,
 		name: '<span class="upgrade">ペルフィード+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
@@ -4073,6 +4323,7 @@ const djeetaEnhancedCardList = {
 	},
 	//串刺し
 	Agastia: {
+		No:431007,
 		name: '<span class="upgrade">アガスティア・ダブル+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
@@ -4089,6 +4340,7 @@ const djeetaEnhancedCardList = {
 	},
 	//略奪
 	Mimic: {
+		No:431008,
 		name: '<span class="upgrade">ミニック+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
@@ -4106,6 +4358,7 @@ const djeetaEnhancedCardList = {
 	},
 	//窒息
 	Leviathan: {
+		No:431009,
 		name: '<span class="upgrade">リヴァイアサン・ミニステル+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
@@ -4123,6 +4376,7 @@ const djeetaEnhancedCardList = {
 	},
 	//終わりなき苦痛
 	Spada: {
+		No:431010,
 		name: '<span class="upgrade">イルジオーネ・スパーダ+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
@@ -4132,12 +4386,14 @@ const djeetaEnhancedCardList = {
 		effect: `このカードを引くたび、「イルジオーネ・スパーダ」を手札に加える。<span class="upgrade">{A}</span>ダメージを与える。廃棄。`,
 		amount: {
 			cost: 0,
+			drawFanc: 'drawReproduction',
 			attack: 6,
 			discard: true,
 		}
 	},
 	//腹裂き
 	GiveUp: {
+		No:431011,
 		name: '<span class="upgrade">ネバーギブアップ+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
@@ -4156,6 +4412,7 @@ const djeetaEnhancedCardList = {
 	},
 	//騙し討ち
 	Iai: {
+		No:431012,
 		name: '<span class="upgrade">居合スラッシュ+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
@@ -4173,6 +4430,7 @@ const djeetaEnhancedCardList = {
 	//******************************スキル******************************//
 	//イカサマ
 	Branch: {
+		No:432001,
 		name: '<span class="upgrade">天導樹の枝+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
@@ -4187,6 +4445,7 @@ const djeetaEnhancedCardList = {
 	},
 	//セットアップ
 	Justice: {
+		No:432002,
 		name: '<span class="upgrade">ザ・ジャスティス+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
@@ -4201,6 +4460,7 @@ const djeetaEnhancedCardList = {
 	},
 	//バウンドフラスコ
 	BlackishPurple: {
+		No:432003,
 		name: '<span class="upgrade">黒紫羽+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
@@ -4218,6 +4478,7 @@ const djeetaEnhancedCardList = {
 	},
 	//劇毒
 	Cell: {
+		No:432004,
 		name: '<span class="upgrade">壊獣細胞+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
@@ -4251,6 +4512,7 @@ const djeetaEnhancedCardList = {
 */
 	//反射
 	Tactics: {
+		No:432005,
 		name: '<span class="upgrade">戦術+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
@@ -4267,6 +4529,7 @@ const djeetaEnhancedCardList = {
 	},
 	//恐怖
 	Penalty: {
+		No:432006,
 		name: '<span class="upgrade">ペナルティ+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
@@ -4283,6 +4546,7 @@ const djeetaEnhancedCardList = {
 	},
 	//策士
 	Supply: {
+		No:432007,
 		name: '<span class="upgrade">補給+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
@@ -4299,6 +4563,7 @@ const djeetaEnhancedCardList = {
 	},
 	//職人技
 	Sun: {
+		No:432008,
 		name: '<span class="upgrade">ザ・サン+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
@@ -4314,6 +4579,7 @@ const djeetaEnhancedCardList = {
 	},
 	//脱出計画
 	Shell: {
+		No:432009,
 		name: '<span class="upgrade">執明真甲+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
@@ -4329,23 +4595,25 @@ const djeetaEnhancedCardList = {
 		}
 	},
 	//触媒
-	// 毒3倍関数未実装
 	Chain: {
+		No:432010,
 		name: '<span class="upgrade">凶毒の穿鎖+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
 		type: type.skill,
-		func: '',
+		func: 'effectTimesDebuff',
 		image:'images/card/djeeta_Chain.jpg',
 		effect: `敵の毒を<span class="upgrade">3</span>倍にする。廃棄。`,
 		amount: {
 			cost: 1,
 			debuffType: 'poison',
+			times: 3,
 			discard: true,
 		}
 	},
 	//足払い
 	LawWheel: {
+		No:432011,
 		name: '<span class="upgrade">転舞法輪+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
@@ -4362,13 +4630,13 @@ const djeetaEnhancedCardList = {
 		}
 	},
 	//集中
-	// 2枚捨て関数未実装
 	Noodles: {
+		No:432012,
 		name: '<span class="upgrade">替え玉一丁！+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
 		type: type.skill,
-		func: '',
+		func: 'effectTwoTrashAndGetEnergy',
 		image:'images/card/djeeta_Noodles.jpg',
 		effect: `カードを<span class="upgrade">2</span>枚捨てる。{E}エナジーを得る。`,
 		amount: {
@@ -4379,6 +4647,7 @@ const djeetaEnhancedCardList = {
 	},
 	//ブラー
 	LuWoh: {
+		No:432013,
 		name: '<span class="upgrade">ル・オー・ミニステル+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
@@ -4398,6 +4667,7 @@ const djeetaEnhancedCardList = {
 	//******************************パワー******************************//
 	//まきびし
 	Aura: {
+		No:433001,
 		name: '<span class="upgrade">闇のオーラ+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
@@ -4413,6 +4683,7 @@ const djeetaEnhancedCardList = {
 	},
 	//フットワーク
 	Runner: {
+		No:433002,
 		name: '<span class="upgrade">ランナーズハイ+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
@@ -4428,6 +4699,7 @@ const djeetaEnhancedCardList = {
 	},
 	//有毒ガス
 	Grudge: {
+		No:433003,
 		name: '<span class="upgrade">怨怨+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
@@ -4443,6 +4715,7 @@ const djeetaEnhancedCardList = {
 	},
 	//無限の刃
 	FlyingBlade: {
+		No:433004,
 		name: '<span class="upgrade">無限の飛刃+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
@@ -4459,6 +4732,7 @@ const djeetaEnhancedCardList = {
 	},
 	//用意周到
 	Decomposition: {
+		No:433005,
 		name: '<span class="upgrade">再利用+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
@@ -4475,6 +4749,7 @@ const djeetaEnhancedCardList = {
 
 	//精度上昇
 	Telescope: {
+		No:433006,
 		name: '<span class="upgrade">精度上昇+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
@@ -4491,6 +4766,7 @@ const djeetaEnhancedCardList = {
 	//*********************************************レア*********************************************//
 	//アンロード
 	Roses: {
+		No:441001,
 		name: '<span class="upgrade">ブルー・ローゼス+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.rare,
@@ -4506,6 +4782,7 @@ const djeetaEnhancedCardList = {
 	},
 	//ガラスのナイフ
 	Ominous: {
+		No:441002,
 		name: '<span class="upgrade">ウルヴォルラーネ+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.rare,
@@ -4523,6 +4800,7 @@ const djeetaEnhancedCardList = {
 	},
 	//グランドフィナーレ
 	Blossom: {
+		No:441003,
 		name: '<span class="upgrade">デスブロッサム+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.rare,
@@ -4539,6 +4817,7 @@ const djeetaEnhancedCardList = {
 	},
 	//ダイ、ダイ、ダイ！
 	Zetsu: {
+		No:441004,
 		name: '<span class="upgrade">絶+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.rare,
@@ -4555,6 +4834,7 @@ const djeetaEnhancedCardList = {
 	//******************************スキル******************************//
 	//アドレナリン
 	Record: {
+		No:442001,
 		name: '<span class="upgrade">シーイング・レコード+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.rare,
@@ -4570,13 +4850,13 @@ const djeetaEnhancedCardList = {
 		}
 	},
 	//ドッペルゲンガー
-	// X+1関数未実装
 	Aethos: {
+		No:442002,
 		name: '<span class="upgrade">アエトス・オブ・ワールド+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.rare,
 		type: type.skill,
-		func: '',
+		func: 'effectGetEnergyAndDrawXPlusOneTimes',
 		image:'images/card/djeeta_Aethos.jpg',
 		effect: `次のターンに<span class="upgrade">X+1</span>枚のカードを引き<span class="upgrade">X+1</span>のエナジーを得る。廃棄。`,
 		amount: {
@@ -4587,6 +4867,7 @@ const djeetaEnhancedCardList = {
 	},
 	//バレットタイム
 	Bailout: {
+		No:442003,
 		name: '<span class="upgrade">ベイルアウト+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.rare,
@@ -4603,6 +4884,7 @@ const djeetaEnhancedCardList = {
 	},
 	//バースト
 	Cat: {
+		No:442004,
 		name: '<span class="upgrade">新神気鋭・猫の印+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.rare,
@@ -4618,13 +4900,13 @@ const djeetaEnhancedCardList = {
 		}
 	},
 	//不快感
-	// X+1関数未実装
 	Petrification: {
+		No:442005,
 		name: '<span class="upgrade">フルグライト+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.rare,
 		type: type.skill,
-		func: '',
+		func: 'effectXPlusOneTimesDoubleDebuff',
 		image:'images/card/djeeta_Petrification.jpg',
 		effect: `敵は攻撃力ダウン<span class="upgrade">X+1</span>と恐怖<span class="upgrade">X+1</span>を与える。廃棄。`,
 		amount: {
@@ -4637,6 +4919,7 @@ const djeetaEnhancedCardList = {
 	},
 	//幻影の暗殺者
 	Ereshkigal: {
+		No:442006,
 		name: '<span class="upgrade">エレシュキガル+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.rare,
@@ -4653,6 +4936,7 @@ const djeetaEnhancedCardList = {
 	},
 	//悪夢
 	Cerberus: {
+		No:442007,
 		name: '<span class="upgrade">ケルベロス+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.rare,
@@ -4669,6 +4953,7 @@ const djeetaEnhancedCardList = {
 	},
 	//死体爆破
 	Autophagy: {
+		No:442008,
 		name: '<span class="upgrade">自壊因子+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.rare,
@@ -4686,13 +4971,13 @@ const djeetaEnhancedCardList = {
 		}
 	},
 	//鋼の嵐
-	// アップグレード版関数未実装
 	Mirror: {
+		No:442009,
 		name: '<span class="upgrade">刃鏡の短剣+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.rare,
 		type: type.skill,
-		func: '',
+		func: 'effectAllTrashAndGetUGCommonCard',
 		image:'images/card/djeeta_Mirror.jpg',
 		effect: `手札をすべて捨てる。捨てたカード1枚につき<span class="upgrade">アップグレードした</span>ナイフを1枚手札に加える。`,
 		amount: {
@@ -4704,6 +4989,7 @@ const djeetaEnhancedCardList = {
 	//******************************パワー******************************//
 	//メッタ切り
 	Parazonium: {
+		No:443001,
 		name: '<span class="upgrade">パラゾニウム+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.rare,
@@ -4719,6 +5005,7 @@ const djeetaEnhancedCardList = {
 	},
 	//商売道具
 	CaitSea: {
+		No:443002,
 		name: '<span class="upgrade">ケット・シー+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.rare,
@@ -4734,6 +5021,7 @@ const djeetaEnhancedCardList = {
 	},
 	//死霊化
 	NewWarld: {
+		No:443003,
 		name: '<span class="upgrade">新世界の盾+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.rare,
@@ -4751,6 +5039,7 @@ const djeetaEnhancedCardList = {
 	},
 	//残像
 	Lamentation: {
+		No:443004,
 		name: '<span class="upgrade">嘆きの盾+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.rare,
@@ -4767,6 +5056,7 @@ const djeetaEnhancedCardList = {
 	},
 	//猛毒の仕込み
 	Lich: {
+		No:443005,
 		name: '<span class="upgrade">リッチ+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.rare,
@@ -4783,6 +5073,7 @@ const djeetaEnhancedCardList = {
 };
 const commonCardList = {
 	Knife: {
+		No:511001,
 		key: 'Knife',
 		name: '投げナイフ',
 		class: cardClass.common,
@@ -4801,6 +5092,7 @@ const commonCardList = {
 };
 const commonEnhancedCardList = {
 	Knife: {
+		No:611001,
 		name: '<span class="upgrade">投げナイフ+</span>',
 		class: cardClass.common,
 		rarity: rarity.common,
@@ -4819,6 +5111,7 @@ const commonEnhancedCardList = {
 
 const abnormalCardList = {
 	Mucus: {
+		No:914001,
 		name: '粘液',
 		class: cardClass.abnormal,
 		rarity: rarity.common,
@@ -4832,6 +5125,7 @@ const abnormalCardList = {
 		}
 	},
 	Injury: {
+		No:914001,
 		name: '負傷',
 		class: cardClass.abnormal,
 		rarity: rarity.common,
@@ -4845,6 +5139,7 @@ const abnormalCardList = {
 		}
 	},
 	Curse: {
+		No:914003,
 		name: '呪いの紋章',
 		class: cardClass.abnormal,
 		cost: 99,
@@ -4859,6 +5154,7 @@ const abnormalCardList = {
 		}
 	},
 	Burn: {
+		No:914004,
 		name: '火傷',
 		class: cardClass.abnormal,
 		rarity: rarity.common,
@@ -4872,6 +5168,7 @@ const abnormalCardList = {
 		}
 	},
 	Dizziness: {
+		No:914005,
 		name: 'めまい',
 		class: cardClass.abnormal,
 		rarity: rarity.common,
@@ -4889,6 +5186,7 @@ const abnormalCardList = {
 
 const testCardList = {
 	testAttack: {
+		No:999999,
 		name: 'テスト用一撃カード',
 		class: cardClass.common,
 		rarity: rarity.common,
@@ -4953,7 +5251,7 @@ function setupDeck(){
 			addCardToOriginalDeck(djeetaCardList.Assassin, 1);
 			addCardToOriginalDeck(djeetaCardList.Pulverizer, 1);
 			addCardToOriginalDeck(djeetaCardList.Blaze, 2);
-			addCardToOriginalDeck(djeetaCardList.World, 2);
+			addCardToOriginalDeck(djeetaCardList.Spada, 2);
 			addCardToOriginalDeck(testCardList.testAttack, 2);
 		}
 	}
@@ -5229,7 +5527,7 @@ function effectDefense(amount){
 	return true;
 }
 
-function effectTwiceBuff(amount){
+function effectTwiceDefense(amount){
 	// 現在のブロックの値を2倍にする。
 	console.log('effectDefenseDouble');
 	actionBlock(playerStatus.block);
@@ -5245,14 +5543,14 @@ function effectBuff(amount){
 	endAction();
 	return true;
 }
-function effectTwiceBuff(amount){
+function effectTimesBuff(amount){
 	// 「攻撃力アップ」を2倍にする。廃棄。
 	console.log('effectDefenseDouble');
-	if('buffType' in amount){
+	if('buffType' in amount && 'times' in amount){
 		const buff = playerStatus.statuses
 			.find((status) => status.name === bufStatus[amount.buffType].name)
 		if(buff){
-			buff.amount *= 2;
+			buff.amount *= amount.times;
 		}
 	}
 	endAction();
@@ -5292,14 +5590,14 @@ function effectDoubleDebuff(amount){
 	endAction();
 	return true;
 }
-function effectTwiceDebuff(amount){
+function effectTimesDebuff(amount){
 	// 敵の毒を2倍にする。廃棄。
 	console.log('effectDefenseDouble');
-	if('debuffType' in amount){
+	if('debuffType' in amount && 'times' in amount){
 		const debuff = currentTarget.currentStatus.status
 			.find((status) => status.name === debufStatus[amount.debuffType].name)
 		if(debuff){
-			debuff.amount *= 2;
+			debuff.amount *= amount.times;
 		}
 	}
 	endAction();
@@ -5966,6 +6264,16 @@ function effectThreeTrashAndGetEnergy(amount){
 	actionThreeTrashCard();
 	return true;
 }
+function effectTwoTrashAndGetEnergy(amount){
+	// カードを2枚捨てる。{E}エナジーを得る。
+	console.log('effectDefenseAndTrash');
+	if('energy' in amount){
+		playerStatus.remainEnergy += amount.energy;
+		updateEnergyDom();
+	}
+	actionTwoTrashCard();
+	return true;
+}
 function effectAttackAndNoAttackTrash(amount){
 	// 14ダメージを与える。「アタック」以外の全てのカードを捨てる。
 	console.log('effectAttackAndNoAttackTrash');
@@ -6012,6 +6320,21 @@ function effectGetEnergyAndDrawXTimes(amount){
 	endAction();
 	return true;
 }
+function effectGetEnergyAndDrawXPlusOneTimes(amount){
+	// 次のターンにX枚のカードを引きXのエナジーを得る。廃棄。
+	console.log('effectAllAttackXTimes');
+	if('variable' in amount){
+		playerStatus.remainEnergy += amount.variable + 1;
+		updateEnergyDom();
+
+		const cards = drawCardFromDeck(amount.variable + 1);
+		cards.forEach((card) => {
+			animateDrawDeck(card);
+		});
+	}
+	endAction();
+	return true;
+}
 function effectDebuffAndCostDown(amount){
 	// このターン、カードを引くことができない。このターン、あなたの手札のコストは0になる。
 	console.log('effectDrawAndDebuff');
@@ -6041,15 +6364,29 @@ function effectXTimesDoubleDebuff(amount){
 	endAction();
 	return true;
 }
+function effectXPlusOneTimesDoubleDebuff(amount){
+	// 敵は攻撃力ダウンXと恐怖Xを与える。
+	console.log('effectALLDoubleDebuff');
+	if('variable' in amount){
+		if('debuffType1' in amount ){
+			actionStatusAllDebuf(debufStatus[amount.debuffType1], amount.variable + 1);
+		}
+		if('debuffType2' in amount ){
+			actionStatusAllDebuf(debufStatus[amount.debuffType2], amount.variable + 1);
+		}
+	}
+	endAction();
+	return true;
+}
 function effectReproductionToNextTurn(amount){
 	// 手札のカード1枚を選ぶ、次のターン、そのカードの複製を3枚手札に加える。
 	console.log('effectReproductionToNextTurn');
 	actionReproductionToNextTurn();
 	return true;
 }
-function effectAlTrashAndGetKnife(amount){
+function effectAllTrashAndGetCommonCard(amount){
 	// 手札をすべて捨てる。捨てたカード1枚につきナイフを1枚手札に加える。
-	console.log('effectAlTrashAndGetKnife');
+	console.log('effectAllTrashAndGetCommonCard');
 	const trashHand = deleteAllHand();
 	trashHand.forEach((card) => {
 		animateHandToTrash(card);
@@ -6065,7 +6402,24 @@ function effectAlTrashAndGetKnife(amount){
 	}
 	return true;
 }
-
+function effectAllTrashAndGetUGCommonCard(amount){
+	// 手札をすべて捨てる。捨てたカード1枚につきナイフを1枚手札に加える。
+	console.log('effectAllTrashAndGetEnKnife');
+	const trashHand = deleteAllHand();
+	trashHand.forEach((card) => {
+		animateHandToTrash(card);
+	});
+	updateTrashDom();
+	if('commonCard' in amount){
+		const commonCard = [];
+		for(let i = 0; i < trashHand.length; i++){
+			pushHand(commonEnhancedCardList[amount.commonCard]);
+			commonCard.push(commonEnhancedCardList[amount.commonCard]);
+		}
+		animatePlayerAddHand(commonCard);
+	}
+	return true;
+}
 
 
 
@@ -6113,6 +6467,12 @@ function changeCostDownEveryTrash(amount){
 	} else {
 		amount.cost = 0;
 	}
+}
+/*****************************************************/
+/* ドロー条件用関数
+/*****************************************************/
+function drawReproduction(card){
+	pushHand(card);
 }
 /*************************************************************************************/
 /* カードアクション用システム関数
@@ -6558,6 +6918,9 @@ function actionStatusRandomDebuf(debuf, amountCount){
 /*******************************************************/
 function actionTrashCard(){
 	startPhase(phase.trash);
+}
+function actionTwoTrashCard(){
+	startPhase(phase.twoTrash);
 }
 function actionThreeTrashCard(){
 	startPhase(phase.threeTrash);

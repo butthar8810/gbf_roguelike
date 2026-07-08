@@ -178,6 +178,15 @@ function setupHandCard(){
 /*******************************************************/
 function setupBtn(){
 	disabledEndBtn(false);
+	$('.deck-area').click((e) => {
+		if (myDeck.length <= 0) {
+			console.log('デッキがありません。');
+			return;
+		}
+		$('.black-back-area').addClass('active');
+		$('.list-area').addClass('active');
+		createDeckListDom();
+	});
 	$('.trash-area').click((e) => {
 		if (myTrash.length <= 0) {
 			console.log('捨て札がありません。');
@@ -206,6 +215,12 @@ function setupBtn(){
 	$('.hand-decide-btn').click((e) => {
 		switch(currentPhase){
 			case phase.trash:
+				trashCard();
+				break;
+			case phase.twoTrash:
+				if(tmpArea.length < 2){
+					break;
+				}
 				trashCard();
 				break;
 			case phase.threeTrash:
@@ -268,7 +283,7 @@ function setupBtn(){
 /* プレイヤー処理関連
 /*************************************************************************************/
 /*******************************************************/
-/* changePhase: 各フェイズを開始する
+/* changePhase: 各フェイズを変更する
 /*******************************************************/
 function changePhase(ph){
 	currentPhase = ph;
@@ -297,7 +312,6 @@ function startPhase(ph = false){
 			endTurn();
 			break;
 		case phase.trash:
-		case phase.threeTrash:
 		case phase.caitSea:
 			if (myHand.length <= 0) {
 				console.log('手札がありません。');
@@ -311,7 +325,46 @@ function startPhase(ph = false){
 			$.when(
 				cardDrawPromise,
 				playerAbnormalityPromise,
-				playerGetBlockPromise,
+				enemyAbnormalityPromise,
+			).done(() => {
+				$('.black-back-area').addClass('active');
+				$('.hand-decide-area').addClass('active');
+				$('.hand-area').addClass('front');
+			});
+			break;
+		case phase.twoTrash:
+			if (myHand.length <= 0) {
+				console.log('手札がありません。');
+				startPhase(phase.action);
+				break;
+			}
+			disabledEndBtn(true);
+			disabledMyHand(false);
+			updateHandDom();
+			updateHandDecideTitleDom('捨てるカードを選んでください:２枚');
+			$.when(
+				cardDrawPromise,
+				playerAbnormalityPromise,
+				enemyAbnormalityPromise,
+			).done(() => {
+				$('.black-back-area').addClass('active');
+				$('.hand-decide-area').addClass('active');
+				$('.hand-area').addClass('front');
+			});
+			break;
+		case phase.threeTrash:
+			if (myHand.length <= 0) {
+				console.log('手札がありません。');
+				startPhase(phase.action);
+				break;
+			}
+			disabledEndBtn(true);
+			disabledMyHand(false);
+			updateHandDom();
+			updateHandDecideTitleDom('捨てるカードを選んでください:３枚');
+			$.when(
+				cardDrawPromise,
+				playerAbnormalityPromise,
 				enemyAbnormalityPromise,
 			).done(() => {
 				$('.black-back-area').addClass('active');
@@ -332,7 +385,6 @@ function startPhase(ph = false){
 			$.when(
 				cardDrawPromise,
 				playerAbnormalityPromise,
-				playerGetBlockPromise,
 				enemyAbnormalityPromise,
 			).done(() => {
 				$('.black-back-area').addClass('active');
@@ -354,7 +406,6 @@ function startPhase(ph = false){
 			$.when(
 				cardDrawPromise,
 				playerAbnormalityPromise,
-				playerGetBlockPromise,
 				enemyAbnormalityPromise,
 			).done(() => {
 				$('.black-back-area').addClass('active');
@@ -375,7 +426,6 @@ function startPhase(ph = false){
 			$.when(
 				cardDrawPromise,
 				playerAbnormalityPromise,
-				playerGetBlockPromise,
 				enemyAbnormalityPromise,
 			).done(() => {
 				$('.black-back-area').addClass('active');
@@ -770,7 +820,6 @@ function startAbility(){
 		}
 	});
 	currentEnemies.forEach((enemy) => {
-		console.log(enemy.actionFirst);
 		if (enemy.actionFirst !== '') {
 			const storedFunc = globalThis[enemy.actionFirst];
 			if( typeof storedFunc === 'function'){
@@ -883,6 +932,14 @@ function drawCardFromDeck(count = 1){
 		if (card !== undefined){
 			pushHand(card);
 			drawCards.push(card);
+			if('drawFanc' in card.amount){
+				if (card.amount.drawFanc !== '') {
+					const storedFunc = globalThis[card.amount.drawFanc];
+					if( typeof storedFunc === 'function'){
+						ret = storedFunc(card);
+					} 
+				}
+			}
 			if(card.type === type.abnormal){
 				// 「弾幕」の効果
 				const barrage = playerStatus.statuses
@@ -1159,6 +1216,22 @@ function clickHandProcess(handCardDiv, hand){
 		case phase.reproductionToNextTurn:
 			if (index === -1) {
 				if (tmpArea.length < 1){
+					pushTemporaryArea(hand);
+					handCardDiv.addClass("select");
+				} else {
+					const cancelCard = shiftTemporaryArea();
+					$(`#hand-card${cancelCard.id}`).removeClass("select");
+					pushTemporaryArea(hand);
+					handCardDiv.addClass("select");
+				}
+			} else {
+				spliceTemporaryArea(index);
+				handCardDiv.removeClass("select");
+			}
+			break;
+		case phase.twoTrash:
+			if (index === -1) {
+				if (tmpArea.length < 2){
 					pushTemporaryArea(hand);
 					handCardDiv.addClass("select");
 				} else {
@@ -1504,7 +1577,7 @@ function decideNextAction(){
 			if (actionFunc !== '') {
 				const storedFunc = globalThis[actionFunc];
 				if( typeof storedFunc === 'function'){
-					enemy.currentStatus.nextAction = storedFunc();
+					enemy.currentStatus.nextAction = storedFunc(enemy.currentStatus);
 				} 
 			}
 		}
@@ -1548,10 +1621,10 @@ function checkEnemyDefeated(Enemies, playerInfo, animationFlag = true){
 				if (pollen){
 					enemyStatusDebuf(enemy, playerInfo, animationFlag, debufStatus.defenseDown, pollen.amount);
 				}
-				targetingEnemy();
 				animateDefeated(enemy);
 				enemy.currentStatus.status.splice(0);
 				enemy.currentStatus.status.push(dead);
+				targetingEnemy();
 			} else {
 				allDefeatedFlag = false;
 			}
