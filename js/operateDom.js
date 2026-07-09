@@ -506,6 +506,7 @@ function updateEnemyAreaDom(argEnemies, omenFlag = false){
 		const enemyAreaDiv = $('<div>')
 			.attr('id', enemy.currentStatus.divId)
 			.addClass('enemy-area')
+			.addClass(enemy.size)
 			.append(enemyImage)
 			.append(hpContainerDiv)
 			.append(statusesDiv)

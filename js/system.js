@@ -95,6 +95,7 @@ function deepCopyEnemies(arrayEnemies){
 	arrayEnemies.forEach((EnemyOjt) => {
 		const cloneOjt = {};
 		cloneOjt.name = EnemyOjt.name;
+		cloneOjt.size = EnemyOjt.size;
 		cloneOjt.image = EnemyOjt.image;
 		cloneOjt.minHP = EnemyOjt.minHP;
 		cloneOjt.maxHP = EnemyOjt.maxHP;

@@ -694,23 +694,33 @@ header{
 /* enemies-status: エネミー情報要素
 /*****************************************************************************/
 .enemies-area{
-	height: 222px;
-	width: 700px;
+	height: 350px;
+	width: 800px;
 	position: absolute;
 	bottom: 40px;
 	left: 0px;
 	display: flex;
 	justify-content: center;
-	align-items: center;
+	align-items: end;
 }
 .enemy-area{
-	height: 100%;
-	width: 180px;
 	margin: 0 2px;
 	border: 1px dotted rgba(0, 0, 0, 0);
 	position: relative;
 	transition: opacity all 1.0s;
 	opacity: 1;
+}
+.enemy-area.small{
+	height: 222px;
+	width: 180px;
+}
+.enemy-area.middle{
+	height: 280px;
+	width: 220px;
+}
+.enemy-area.tall{
+	height: 350px;
+	width: 280px;
 }
 .defeated{
 	opacity: 0;
@@ -724,14 +734,14 @@ header{
 .enemy-area>img{
 	height: 100%;
 	position: absolute;
-	top: 0px;
+	bottom: 0px;
 	left: 0px;
 }
 /* HPバー */
 .enemy-hp-container {
 	width: 100%;
 	position: absolute;
-	top: 205px;
+	bottom: 5px;
 	left: 0px;
 	border-radius: 6px;
 }
@@ -798,7 +808,7 @@ header{
 	width: 100%;
 	height: 30px;
 	position: absolute;
-	top: 220px;
+	bottom: -30px;
 	left: 50%;
 	transform: translateX(-50%);
 	display: flex;

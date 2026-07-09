@@ -69,6 +69,7 @@ const bufStatus = {
 
 	// エネミー専用
 	pollen: {name: '花粉', amount: '', effect: '死亡時、プレイヤーに防御力ダウン{X}を与える。', image: 'images/status/status_7176.png'},
+	rage: {name: '激怒', amount: '', effect: '「スキル」を1枚プレイするたび、筋力{X}を得る', image: 'images/status/status_9999_2.png'},
 
 };
 // デバフ

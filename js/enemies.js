@@ -5,6 +5,7 @@
 const enemyList = {
 	test:{
 		name: 'ういなす', 
+		size: 'small',
 		minHP: 50, 
 		maxHP: 100, 
 		image: 'images/enemy/uinasu.png',
@@ -22,6 +23,7 @@ const enemyList = {
 	},
 	slime:{
 		name: 'スライム', 
+		size: 'small',
 		minHP: 8, 
 		maxHP: 12, 
 		image: 'images/enemy/kingbronze.gif',
@@ -39,6 +41,7 @@ const enemyList = {
 	},
 	battleSlime:{
 		name: 'バトルスライム', 
+		size: 'small',
 		minHP: 10, 
 		maxHP: 14, 
 		image: 'images/enemy/kingbronze.gif',
@@ -56,6 +59,7 @@ const enemyList = {
 	},
 	silver:{
 		name: 'シルバースライム', 
+		size: 'small',
 		minHP: 28, 
 		maxHP: 32, 
 		image: 'images/enemy/kingsilver.gif', 
@@ -73,6 +77,7 @@ const enemyList = {
 	},
 	monk:{
 		name: 'モンク', 
+		size: 'small',
 		minHP: 48, 
 		maxHP: 55, 
 		image: 'images/enemy/monk.png', 
@@ -90,6 +95,7 @@ const enemyList = {
 	},
 	putesis:{
 		name: 'プテシス', 
+		size: 'small',
 		minHP: 40, 
 		maxHP: 44, 
 		image: 'images/enemy/putesis.png', 
@@ -107,6 +113,7 @@ const enemyList = {
 	},
 	bee:{
 		name: 'キラー・ビー', 
+		size: 'small',
 		minHP: 10, 
 		maxHP: 17, 
 		image: 'images/enemy/bee.png', 
@@ -124,6 +131,7 @@ const enemyList = {
 	},
 	fangBee:{
 		name: 'ファング・ビー', 
+		size: 'small',
 		minHP: 10, 
 		maxHP: 17, 
 		image: 'images/enemy/fang-bee.png', 
@@ -141,6 +149,7 @@ const enemyList = {
 	},
 	wolf:{
 		name: 'ウルフ', 
+		size: 'small',
 		minHP: 46, 
 		maxHP: 50, 
 		image: 'images/enemy/wolf.png', 
@@ -158,6 +167,7 @@ const enemyList = {
 	},
 	silverWolf:{
 		name: 'シルヴァーウルフ', 
+		size: 'small',
 		minHP: 46, 
 		maxHP: 50, 
 		image: 'images/enemy/wolf_silver.png', 
@@ -177,11 +187,66 @@ const enemyList = {
 	},
 	rafflesia:{
 		name: 'ラフレシア', 
+		size: 'small',
 		minHP: 22, 
 		maxHP: 28, 
 		image: 'images/enemy/rafflesia.png', 
 		actionAlgorithm: 'actionRafflesia', 
-		actionFirst: 'rafflesiaFirst',
+		actionFirst: 'buffPollen',
+		currentStatus:{
+			remainHP: 0, 
+			maxHP: 0, 
+			block: 0,
+			status: [], 
+			nextAction: {},
+			actionCount: {},
+			divId: ''
+		}
+	},
+	bear:{
+		name: 'グリズリー', 
+		size: 'middle',
+		minHP: 82, 
+		maxHP: 86, 
+		image: 'images/enemy/bear.png', 
+		actionAlgorithm: 'actionBear', 
+		actionFirst: '',
+		currentStatus:{
+			remainHP: 0, 
+			maxHP: 0, 
+			block: 0,
+			status: [], 
+			nextAction: {},
+			actionCount: {},
+			divId: ''
+		}
+	},
+	despair:{
+		name: '絶望', 
+		size: 'middle',
+		minHP: 36, 
+		maxHP: 42, 
+		image: 'images/enemy/Despair.png', 
+		actionAlgorithm: 'actionDespair', 
+		actionFirst: 'buffMount',
+		currentStatus:{
+			remainHP: 0, 
+			maxHP: 0, 
+			block: 0,
+			status: [], 
+			nextAction: {},
+			actionCount: {},
+			divId: ''
+		}
+	},
+	grief:{
+		name: '悲哀', 
+		size: 'middle',
+		minHP: 36, 
+		maxHP: 42, 
+		image: 'images/enemy/Grief.png', 
+		actionAlgorithm: 'actionGrief', 
+		actionFirst: 'buffMount',
 		currentStatus:{
 			remainHP: 0, 
 			maxHP: 0, 
@@ -198,10 +263,7 @@ const bossEnemyList = {
 };
 const testEnemies = [
 	{weight: 100, enemiesFunc(){
-		return enemyComboOrganize(
-			[enemyList.rafflesia, enemyList.putesis],
-			[enemyList.bee, enemyList.fangBee, enemyList.silver]
-		);
+		return [enemyList.despair, enemyList.grief, enemyList.despair];
 	}},
 ];
 const easyEnemiesPool = [
@@ -234,10 +296,12 @@ const strongEnemiesPool = [
 	{weight: 6250, enemiesFunc(){
 		return [enemyList.slime, enemyList.battleSlime, enemyList.slime, enemyList.battleSlime, enemyList.slime]
 	}},
-	
 ];
 const eliteEnemiesPool = [
-
+	{weight: 1000, enemiesFunc(){return [enemyList.bear];}},
+	{weight: 1000, enemiesFunc(){
+		return [enemyList.despair, enemyList.grief, enemyList.despair];
+	}},
 ];
 const Enemies = [
 
@@ -280,7 +344,7 @@ function enemyComboOrganize(firstEnemyArg = [], secondEnemyArg = []){
 /*****************************************************************************/
 function enemyAttack(enemyInfo, playerInfo, animationFlag){
 	// アタック〇点ダメージ
-	enemyAttack(
+	enemyActionAttack(
 		enemyInfo, 
 		playerInfo, 
 		animationFlag, 
@@ -289,13 +353,13 @@ function enemyAttack(enemyInfo, playerInfo, animationFlag){
 }
 function enemyAttackAndBlock(enemyInfo, playerInfo, animationFlag){
 	// アタック+ブロック
-	enemyAttack(
+	enemyActionAttack(
 		enemyInfo, 
 		playerInfo, 
 		animationFlag, 
 		enemyInfo.currentStatus.nextAction.damage,
 	);
-	enemyBlock(
+	enemyActionBlock(
 		enemyInfo, 
 		animationFlag, 
 		enemyInfo.currentStatus.nextAction.block,
@@ -303,13 +367,13 @@ function enemyAttackAndBlock(enemyInfo, playerInfo, animationFlag){
 }
 function enemyAttackAndBuff(enemyInfo, playerInfo, animationFlag){
 	// デバフ+アタック
-	enemyAttack(
+	enemyActionAttack(
 		enemyInfo, 
 		playerInfo, 
 		animationFlag, 
 		enemyInfo.currentStatus.nextAction.damage,
 	);
-	enemyStatusBuf(
+	enemyActionStatusBuf(
 		enemyInfo, 
 		animationFlag, 
 		bufStatus[enemyInfo.currentStatus.nextAction.buffType], 
@@ -318,13 +382,13 @@ function enemyAttackAndBuff(enemyInfo, playerInfo, animationFlag){
 }
 function enemyAttackAndDebuf(enemyInfo, playerInfo, animationFlag){
 	// デバフ+アタック
-	enemyAttack(
+	enemyActionAttack(
 		enemyInfo, 
 		playerInfo, 
 		animationFlag, 
 		enemyInfo.currentStatus.nextAction.damage,
 	);
-	enemyStatusDebuf(
+	enemyActionStatusDebuf(
 		enemyInfo, 
 		playerInfo, 
 		animationFlag, 
@@ -334,7 +398,7 @@ function enemyAttackAndDebuf(enemyInfo, playerInfo, animationFlag){
 }
 function enemyBlock(enemyInfo, playerInfo, animationFlag){
 	// ブロック
-	enemyBlock(
+	enemyActionBlock(
 		enemyInfo, 
 		animationFlag, 
 		enemyInfo.currentStatus.nextAction.block,
@@ -342,12 +406,12 @@ function enemyBlock(enemyInfo, playerInfo, animationFlag){
 }
 function enemyBlockAndBuff(enemyInfo, playerInfo, animationFlag){
 	// バフ+ブロック
-	enemyBlock(
+	enemyActionBlock(
 		enemyInfo, 
 		animationFlag, 
 		enemyInfo.currentStatus.nextAction.block,
 	);
-	enemyStatusBuf(
+	enemyActionStatusBuf(
 		enemyInfo, 
 		animationFlag, 
 		bufStatus[enemyInfo.currentStatus.nextAction.buffType], 
@@ -356,12 +420,12 @@ function enemyBlockAndBuff(enemyInfo, playerInfo, animationFlag){
 }
 function enemyBlockAndDebuf(enemyInfo, playerInfo, animationFlag){
 	// デバフ+ブロック
-	enemyBlock(
+	enemyActionBlock(
 		enemyInfo, 
 		animationFlag, 
 		enemyInfo.currentStatus.nextAction.block,
 	);
-	enemyStatusDebuf(
+	enemyActionStatusDebuf(
 		enemyInfo, 
 		playerInfo, 
 		animationFlag, 
@@ -371,7 +435,7 @@ function enemyBlockAndDebuf(enemyInfo, playerInfo, animationFlag){
 }
 function enemyBuff(enemyInfo, playerInfo, animationFlag){
 	// バフ
-	enemyStatusBuf(
+	enemyActionStatusBuf(
 		enemyInfo, 
 		animationFlag, 
 		bufStatus[enemyInfo.currentStatus.nextAction.buffType], 
@@ -380,7 +444,7 @@ function enemyBuff(enemyInfo, playerInfo, animationFlag){
 }
 function enemyDebuf(enemyInfo, playerInfo, animationFlag){
 	// デバフ
-	enemyStatusDebuf(
+	enemyActionStatusDebuf(
 		enemyInfo, 
 		playerInfo, 
 		animationFlag, 
@@ -390,13 +454,13 @@ function enemyDebuf(enemyInfo, playerInfo, animationFlag){
 }
 function enemyBuffAndDebuf(enemyInfo, playerInfo, animationFlag){
 	// バフ+デバフ
-	enemyStatusBuf(
+	enemyActionStatusBuf(
 		enemyInfo, 
 		animationFlag, 
 		bufStatus[enemyInfo.currentStatus.nextAction.buffType], 
 		enemyInfo.currentStatus.nextAction.buff,
 	);
-	enemyStatusDebuf(
+	enemyActionStatusDebuf(
 		enemyInfo, 
 		playerInfo, 
 		animationFlag, 
@@ -410,11 +474,11 @@ function enemyCardDebuf(enemyInfo, playerInfo, animationFlag){
 	for(let i=0; i < enemyInfo.currentStatus.nextAction.abnormal; i++){
 		cards.push(abnormalCardList[enemyInfo.currentStatus.nextAction.abnormalType]);
 	}
-	enemyCardDebuf(animationFlag, cards);
+	enemyActionAbnormal(animationFlag, cards);
 }
 function enemyAttackAndCardDebuf(enemyInfo, playerInfo, animationFlag){
 	// 8ダメージ+粘液1枚を捨て札に加える
-	enemyAttack(
+	enemyActionAttack(
 		enemyInfo, 
 		playerInfo, 
 		animationFlag, 
@@ -424,7 +488,7 @@ function enemyAttackAndCardDebuf(enemyInfo, playerInfo, animationFlag){
 	for(let i=0; i < enemyInfo.currentStatus.nextAction.abnormal; i++){
 		cards.push(abnormalCardList[enemyInfo.currentStatus.nextAction.abnormalType]);
 	}
-	enemyCardDebuf(animationFlag, cards);
+	enemyActionAbnormal(animationFlag, cards);
 }
 /*****************************************************************************/
 /* エネミーアクション
@@ -843,7 +907,6 @@ function actionSilverWolf(statuses){
 	console.log(random);
 	for (const action of selectActions) {
 		if (random < action.weight) {
-			console.log(action.omen.name);
 			if(action.omen.name === actions[2].omen.name){
 				statuses.actionCount.onceAttackFlag = true;
 			}
@@ -851,7 +914,6 @@ function actionSilverWolf(statuses){
 		}
 		random -= action.weight;
 	}
-	console.log('選べなかった');
 	return false;
 }
 
@@ -893,13 +955,112 @@ function actionRafflesia(statuses){
 	}
 	return false;
 }
-function rafflesiaFirst(enemyInfo, playerInfo, animationFlag){
+function buffPollen(enemyInfo, playerInfo, animationFlag){
 	// 花粉2を自身に付与
 	enemyStatusBuf(enemyInfo, animationFlag, bufStatus.pollen, 2);
 }
+/*******************************************************/
+/* グリズリー
+/*******************************************************/
+function actionBear(statuses){
+	console.log('actionBear');
+	const actions = [
+		{	weight: 0, 
+			omen:{
+				name: '激怒', 
+				func: 'enemyBuff', 
+				type: enemyActionType.buff, 
+				damage: 0,
+				buff: 3,
+				buffType: 'rage', 
+				image: 'images/enemy/omen/Power1.png'
+			}
+		},
+		{	weight: 67, 
+			omen:{
+				name: '攻撃', 
+				func: 'enemyAttack', 
+				type: enemyActionType.attack, 
+				damage: 6, 
+				image: 'images/enemy/omen/Attack.png'
+			}
+		},
+		{	weight: 33, 
+			omen:{
+				name: '薙ぎ払い', 
+				func: 'enemyAttackAndDebuf', 
+				type: enemyActionType.debuffAndAttack, 
+				damage: 6, 
+				debuff: 3,
+				debuffType: 'defenseDown',
+				image: 'images/enemy/omen/Break.png'
+			}
+		},
+	];
+	if(currentTurn === 1){
+		return actions[0].omen;
+	}
+	const totalWeight = actions.reduce((sum, item) => sum + item.weight, 0);
+	let random = Math.floor(Math.random() * totalWeight);
+	for (const action of actions) {
+		if (random < action.weight) {
+			return action.omen;
+		}
+		random -= action.weight;
+	}
+	return false;
+}
+/*******************************************************/
+/* 絶望・悲哀
+/*******************************************************/
+const emotionsActions = [
+	{	weight: 0, 
+		omen:{
+			name: '攻撃', 
+			func: 'enemyAttack', 
+			type: enemyActionType.attack, 
+			damage: 9, 
+			image: 'images/enemy/omen/Attack.png'
+		}
+	},
+	{	weight: 0, 
+		omen:{
+			name: 'めまい', 
+			func: 'enemyCardDebuf', 
+			type: enemyActionType.debuff, 
+			damage: 0, 
+			abnormal: 2, 
+			abnormalType: 'Dizziness',
+			image: 'images/enemy/omen/Weakness1.png'
+		}
+	},
+];
+function actionDespair(statuses){
+	console.log('actionDespair');
 
+	if (0 === currentTurn % 2){
+		return emotionsActions[0].omen;
+	} else {
+		// 1ターン目に必ず使用する。
+		return emotionsActions[1].omen;
+	}
+	return false;
+}
+function actionGrief(statuses){
+	console.log('actionGrief');
 
-
+	if (0 === currentTurn % 2){
+		return emotionsActions[1].omen;
+	} else {
+		// 1ターン目に必ず使用する。
+		return emotionsActions[0].omen;
+	}
+	return false;
+}
+function buffMount(enemyInfo, playerInfo, animationFlag){
+	// 弱体無効1を自身に付与
+	enemyStatusBuf(enemyInfo, animationFlag, bufStatus.mount, 1);
+}
 /*************************************************************************************/
 /* カードアクション用システム関数
 /*************************************************************************************/
@@ -959,7 +1120,7 @@ function calcEnemyDamage(attackCount, enemyInfo, playerInfo){
 /*******************************************************/
 /* 与ダメージ関数
 /*******************************************************/
-function enemyAttack(enemyInfo, playerInfo, animationFlag, attackCount){
+function enemyActionAttack(enemyInfo, playerInfo, animationFlag, attackCount){
 	let totalAttack = calcEnemyDamage(attackCount, enemyInfo, playerInfo);
 	console.log(`totalAttack: ${totalAttack}`);
 	const playerBlock = playerInfo.block;
@@ -1016,7 +1177,7 @@ function enemyAttack(enemyInfo, playerInfo, animationFlag, attackCount){
 /*******************************************************/
 /* ブロック関数
 /*******************************************************/
-function enemyBlock(enemyInfo, animationFlag, blockCount){
+function enemyActionBlock(enemyInfo, animationFlag, blockCount){
 	enemyInfo.currentStatus.block += blockCount;
 	if(animationFlag){
 		animateEnemyBlocked(enemyInfo);
@@ -1025,19 +1186,19 @@ function enemyBlock(enemyInfo, animationFlag, blockCount){
 /*******************************************************/
 /* バフを与える関数
 /*******************************************************/
-function enemyStatusBuf(enemyInfo, animationFlag, buf, amountCount){
+function enemyActionStatusBuf(enemyInfo, animationFlag, buf, amountCount){
 	// すでに同じデバフがかかってないか確認
 	// 同じデバフは累積する
 	let sameBufFlag = false;
 	// すでに同じバフがかかってないか確認
 	// 同じバフは累積する
 	for (const status of enemyInfo.currentStatus.status) {
-		if (status.name == bufStatus[buf].name) {
+		if (status.name == buf.name) {
 			status.amount += amountCount;
 			sameBufFlag = true;
 		}
 	}
-	const receivedBuf = {...bufStatus[buf]};
+	const receivedBuf = {...buf};
 	receivedBuf.amount = amountCount;
 	if (!sameBufFlag) {
 		enemyInfo.currentStatus.status.push(receivedBuf);
@@ -1049,30 +1210,28 @@ function enemyStatusBuf(enemyInfo, animationFlag, buf, amountCount){
 /*******************************************************/
 /* 状態異常を与える関数
 /*******************************************************/
-function enemyStatusDebuf(enemyInfo, playerInfo, animationFlag, debuf, amountCount){
+function enemyActionStatusDebuf(enemyInfo, playerInfo, animationFlag, debuf, amountCount){
 	let sameDebufFlag = false;
 	// 弱体無効がついていれば、無効になる
 	const mount = playerStatus.statuses
 		.find((status) => status.name === bufStatus.mount.name);
 	if (mount){
 		mount.amount--;
-		if (mount.amount <= 0) {
-			playerStatus.statuses = playerStatus.statuses.filter((status) => {
-				return status.amount > 0;
-			});
-		}
+		playerStatus.statuses = playerStatus.statuses.filter((status) => {
+			return status.amount > 0;
+		});
 		return;
 	}
 
 	// すでに同じデバフがかかってないか確認
 	// 同じデバフは累積する
 	for (const status of playerInfo.statuses) {
-		if (status.name == debufStatus[debuf].name) {
+		if (status.name == debuf.name) {
 			status.amount += amountCount;
 			sameDebufFlag = true;
 		}
 	}
-	const receivedDebuf = {...debufStatus[debuf]};
+	const receivedDebuf = {...debuf};
 	receivedDebuf.amount = amountCount;
 	if (!sameDebufFlag) {
 		playerInfo.statuses.push(receivedDebuf);
@@ -1087,7 +1246,7 @@ function enemyStatusDebuf(enemyInfo, playerInfo, animationFlag, debuf, amountCou
 /*******************************************************/
 /* 状態異常カードを追加する関数
 /*******************************************************/
-function enemyCardDebuf(animationFlag, cards){
+function enemyActionAbnormal(animationFlag, cards){
 	if(!animationFlag){
 		// カードを追加する
 		cards.forEach((card) => {

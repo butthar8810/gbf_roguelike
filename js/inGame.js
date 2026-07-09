@@ -653,6 +653,7 @@ function startTurnStatuses(playerInfo, enemiesInfo, animateFlag){
 			case debufStatus.defenseDown.name:
 			case debufStatus.frail.name:
 			case debufStatus.weak.name:
+			case debufStatus.paralysis.name:
 				status.amount--;
 				break;
 			case bufStatus.reflection.name:
@@ -819,6 +820,7 @@ function startAbility(){
 				break;
 		}
 	});
+	//エネミーの開始時効果発動
 	currentEnemies.forEach((enemy) => {
 		if (enemy.actionFirst !== '') {
 			const storedFunc = globalThis[enemy.actionFirst];
@@ -848,7 +850,10 @@ function endTurn(){
 		}
 	});
 	// トラッシュアニメーションが完了したら
-	$.when(cardTrashPromise).done(() => {
+	$.when(
+		cardTrashPromise,
+		cardDiscardPromise
+	).done(() => {
 		hiddenHandDom();
 		updateDiscardDom();
 		updateTrashDom();
@@ -1068,6 +1073,12 @@ function playHandCard(index){
 			//ブロック無視
 			enemy.currentStatus.remainHP -= suffocation.amount;
 		}
+		//「激怒」効果
+		const rage = enemy.currentStatus.status
+			.find((status) => status.name === bufStatus.rage.name);
+		if (rage && card.type === type.skill){
+			enemyStatusBuf(enemy, true, bufStatus.attackUp, rage.amount);
+		}
 	});
 	playerStatus.statuses = playerStatus.statuses.filter((status) => {
 		return status.amount > 0;
@@ -1172,6 +1183,12 @@ function clickHandProcess(handCardDiv, hand){
 	const index = findIndexTemporaryArea('id', hand.id);
 	switch(currentPhase) {
 		case phase.action:
+			const paralysis = playerStatus.statuses
+				.find((status) => status.name === bufStatus.paralysis.name);
+			if(paralysis && hand.type === type.attack){
+				alert('デバフによりアタックが使えません');
+				break;
+			}
 			if ('conditions' in hand.amount && hand.amount.conditions !== '') {
 				const conditionsFunc = globalThis[hand.amount.conditions];
 				if( typeof conditionsFunc === 'function'){

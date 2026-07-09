@@ -1,12 +1,12 @@
 /*************************************************************************************/
 /* アニメーション用変数関連
 /*************************************************************************************/
-const coordinateDeckForHandArea = {top: '40px', left: '-70px', width: '80px', size: '10px'};
-const coordinateHandForHandArea = {top: '0px', left: '450px', width: '150px', size: '16px'};
-const coordinateTrashForHandArea = {top: '50px', left: '970px', width: '80px', size: '10px'};
-const coordinateShowForShowArea = {top: '0px', left: '500px', width: '150px', size: '16px'};
-const coordinateTrashForShowArea = {top: '290px', left: '1040px', width: '80px', size: '10px'};
-const coordinateHandForShowArea = {top: '240px', left: '500px', width: '150px', size: '16px'};
+const coordinateDeckForHandArea = {top: '40px', left: '-70px', width: '80px', size: '8px'};
+const coordinateHandForHandArea = {top: '0px', left: '450px', width: '150px', size: '12px'};
+const coordinateTrashForHandArea = {top: '50px', left: '970px', width: '80px', size: '8px'};
+const coordinateShowForShowArea = {top: '0px', left: '500px', width: '150px', size: '12px'};
+const coordinateTrashForShowArea = {top: '290px', left: '1040px', width: '80px', size: '8px'};
+const coordinateHandForShowArea = {top: '240px', left: '500px', width: '150px', size: '12px'};
 
 const playerAttackWaitTime = 1500;
 const playerDamageWaitTime = 1000;

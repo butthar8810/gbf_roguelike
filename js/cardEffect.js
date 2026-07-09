@@ -3387,7 +3387,7 @@ const djeetaCardList = {
 		name: '闇のオーラ',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
-		type: type.skill,
+		type: type.power,
 		func: 'effectBuff',
 		image:'images/card/djeeta_Aura.jpg',
 		effect: `攻撃を受けるたび、攻撃を行った敵に{F}ダメージを与える。`,
@@ -3404,7 +3404,7 @@ const djeetaCardList = {
 		name: 'ランナーズハイ',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
-		type: type.skill,
+		type: type.power,
 		func: 'effectBuff',
 		image:'images/card/djeeta_Runner.jpg',
 		effect: `回避率アップ{F}を得る。`,
@@ -3421,7 +3421,7 @@ const djeetaCardList = {
 		name: '怨怨',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
-		type: type.skill,
+		type: type.power,
 		func: 'effectBuff',
 		image:'images/card/djeeta_Grudge.jpg',
 		effect: `ターン開始時に、敵全体に毒{F}を与える。`,
@@ -3438,7 +3438,7 @@ const djeetaCardList = {
 		name: '無限の飛刃',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
-		type: type.skill,
+		type: type.power,
 		func: 'effectBuff',
 		image:'images/card/djeeta_FlyingBlade.jpg',
 		effect: `ターン開始時に、ナイフを{F}枚手札に加える。`,
@@ -3455,7 +3455,7 @@ const djeetaCardList = {
 		name: '再構築',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
-		type: type.skill,
+		type: type.power,
 		func: 'effectBuff',
 		image:'images/card/djeeta_Decomposition.jpg',
 		effect: `ターン終了時に、カードを{F}枚保留する。`,
@@ -3473,7 +3473,7 @@ const djeetaCardList = {
 		name: '精度上昇',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
-		type: type.skill,
+		type: type.power,
 		func: 'effectBuff',
 		image:'images/card/djeeta_Telescope.jpg',
 		effect: `ナイフが{F}の追加ダメージを与える。`,
@@ -4671,7 +4671,7 @@ const djeetaEnhancedCardList = {
 		name: '<span class="upgrade">闇のオーラ+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
-		type: type.skill,
+		type: type.power,
 		func: 'effectBuff',
 		image:'images/card/djeeta_Aura.jpg',
 		effect: `攻撃を受けるたび、攻撃を行った敵に<span class="upgrade">{F}</span>ダメージを与える。`,
@@ -4687,7 +4687,7 @@ const djeetaEnhancedCardList = {
 		name: '<span class="upgrade">ランナーズハイ+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
-		type: type.skill,
+		type: type.power,
 		func: 'effectBuff',
 		image:'images/card/djeeta_Runner.jpg',
 		effect: `回避率アップ<span class="upgrade">{F}</span>を得る。`,
@@ -4703,7 +4703,7 @@ const djeetaEnhancedCardList = {
 		name: '<span class="upgrade">怨怨+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
-		type: type.skill,
+		type: type.power,
 		func: 'effectBuff',
 		image:'images/card/djeeta_Grudge.jpg',
 		effect: `ターン開始時に、敵全体に毒<span class="upgrade">{F}</span>を与える。`,
@@ -4719,7 +4719,7 @@ const djeetaEnhancedCardList = {
 		name: '<span class="upgrade">無限の飛刃+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
-		type: type.skill,
+		type: type.power,
 		func: 'effectBuff',
 		image:'images/card/djeeta_FlyingBlade.jpg',
 		effect: `<span class="upgrade">天賦。</span>ターン開始時に、ナイフを{F}枚手札に加える。`,
@@ -4736,7 +4736,7 @@ const djeetaEnhancedCardList = {
 		name: '<span class="upgrade">再利用+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
-		type: type.skill,
+		type: type.power,
 		func: 'effectBuff',
 		image:'images/card/djeeta_Decomposition.jpg',
 		effect: `ターン終了時に、カードを<span class="upgrade">{F}</span>枚保留する。`,
@@ -4753,7 +4753,7 @@ const djeetaEnhancedCardList = {
 		name: '<span class="upgrade">精度上昇+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
-		type: type.skill,
+		type: type.power,
 		func: 'effectBuff',
 		image:'images/card/djeeta_Telescope.jpg',
 		effect: `ナイフが<span class="upgrade">{F}</span>の追加ダメージを与える。`,
@@ -6795,6 +6795,19 @@ function actionStatusBuf(buf, amountCount){
 	return actionStatusBufForAnimate(playerStatus, buf, amountCount, true);
 }
 function actionStatusBufForAnimate(playerInfo, buf, amountCount, animateFlag = true){
+	// 弱体無効がついていれば、無効になる
+	const debuffFlag = Object.values(debufStatus)
+		.find((status) => status.name === buf.name);
+	const mount = playerStatus.statuses
+		.find((status) => status.name === bufStatus.mount.name);
+	if (mount && debuffFlag){
+		mount.amount--;
+		playerStatus.statuses = playerStatus.statuses.filter((status) => {
+			return status.amount > 0;
+		});
+		return;
+	}
+
 	let sameBufFlag = false;
 	// すでに同じバフがかかってないか確認
 	// 同じバフは累積する
@@ -6831,10 +6844,21 @@ function actionLoseHP(loseHP){
 /* 状態異常を与える関数
 /*******************************************************/
 function actionStatusDebuf(debuf, amountCount){
-	return actionStatusDebufToTarget(debuf, amountCount, currentTarget);
+	return actionStatusDebufToTarget(debuf, amountCount, currentTarget, true);
 }
-function actionStatusDebufToTarget(debuf, amountCount, target){
-	console.log(debuf);
+function actionStatusDebufToTarget(debuf, amountCount, target, animateFlag = true){
+	console.log(`${debuf.name}: ${amountCount}`);
+	// 弱体無効がついていれば、無効になる
+	const mount = target.currentStatus.status
+		.find((status) => status.name === bufStatus.mount.name);
+	if (mount && mount.amount > 0){
+		mount.amount--;
+		target.currentStatus.status = target.currentStatus.status.filter((status) => {
+			return status.amount !== 0;
+		});
+		return;
+	}
+
 	// すでに同じデバフがかかってないか確認
 	// 同じデバフは累積する
 	let sameDebufFlag = false;
@@ -6852,7 +6876,9 @@ function actionStatusDebufToTarget(debuf, amountCount, target){
 		target.currentStatus.status.push(receivedDebuf);
 	}
 	// アニメーション
-	animateEnemyAbnormality(target, receivedDebuf);
+	if(animateFlag){
+		animateEnemyAbnormality(target, receivedDebuf);
+	}
 }
 /*******************************************************/
 /* 状態異常を与える関数(全体デバフ)
@@ -6861,29 +6887,8 @@ function actionStatusAllDebuf(debuf, amountCount){
 	return actionStatusAllDebufForAnimate(currentEnemies, debuf, amountCount, true);
 }
 function actionStatusAllDebufForAnimate(enemiesInfo, debuf, amountCount, animateFlag){
-	console.log(`${debuf.name}: ${amountCount}`);
 	enemiesInfo.forEach((enemy) => {
-		// すでに同じデバフがかかってないか確認
-		// 同じデバフは累積する
-		let sameDebufFlag = false;
-		// すでに同じデバフがかかってないか確認
-		// 同じバフは累積する
-		for (const status of enemy.currentStatus.status) {
-			if (status.name == debuf.name) {
-				console.log(`${debuf.name}: 元${status.amount}`);
-				status.amount += amountCount;
-				sameDebufFlag = true;
-			}
-		}
-		const receivedDebuf = {...debuf};
-		receivedDebuf.amount = amountCount;
-		if (!sameDebufFlag) {
-			enemy.currentStatus.status.push(receivedDebuf);
-		}
-		// アニメーション
-		if(animateFlag){
-			animateEnemyAbnormality(enemy, receivedDebuf);
-		}
+		actionStatusDebufToTarget(debuf, amountCount, enemy, animateFlag);
 	});
 }
 /*******************************************************/
@@ -6894,24 +6899,7 @@ function actionStatusRandomDebuf(debuf, amountCount){
 	console.log(`Random Hit: ${random}`);
 	const enemy = currentEnemies[random];
 
-	// すでに同じデバフがかかってないか確認
-	// 同じデバフは累積する
-	let sameDebufFlag = false;
-	// すでに同じデバフがかかってないか確認
-	// 同じバフは累積する
-	for (const status of enemy.currentStatus.status) {
-		if (status.name == debuf.name) {
-			status.amount += amountCount;
-			sameDebufFlag = true;
-		}
-	}
-	const receivedDebuf = {...debuf};
-	receivedDebuf.amount = amountCount;
-	if (!sameDebufFlag) {
-		enemy.currentStatus.status.push(receivedDebuf);
-	}
-	// アニメーション
-	animateEnemyAbnormality(enemy, receivedDebuf);
+	actionStatusDebufToTarget(debuf, amountCount, enemy, true);
 }
 /*******************************************************/
 /* カードを捨てる関数
