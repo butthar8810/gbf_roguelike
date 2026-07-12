@@ -1,4 +1,50 @@
+/*******************************************************/
+/* appendTalkingBtn：hand-areaの会話ボタンを削除する
+/*******************************************************/
+function deleteTalkingBtn(){
+	$('.talk-area').html('')
+	return
+}
+/*******************************************************/
+/* updateMoneyDom：HPをDOM更新する
+/*******************************************************/
+function updateHPDom(){
+	$('.remainHp').html(playerStatus.remainHP);
+	$('.maxHp').html(playerStatus.maxHP);
+	return
+}
+/*******************************************************/
+/* updateMoneyDom：所持コインをDOM更新する
+/*******************************************************/
+function updateMoneyDom(){
+	$('.remainMoney').html(playerStatus.money);
+	return
+}
+/*******************************************************/
+/* バトルエリアの表示
+/*******************************************************/
+function displayBattleArea(){
+	$('.rest-area').addClass('hidden');
+	$('.shop-area').addClass('hidden');
+	$('.talk-area').addClass('hidden');
 
+	$('.battle-area').removeClass('hidden');
+	$('.info-area').removeClass('hidden');
+}
+function hiddenBattleArea(){
+	$('.result-modal').removeClass('active');
+	$('.battle-area').addClass('hidden');
+	$('.info-area').addClass('hidden');
+	$('.hand-area').html('');
+}
+/*******************************************************/
+/* ステージエリアの非表示
+/*******************************************************/
+function hiddenStageArea(){
+	$('.battle-area').addClass('hidden');
+	$('.shop-area').addClass('hidden');
+	$('.info-area').addClass('hidden');
+}
 /*******************************************************/
 /* createStartBtnDom：トップページのスタートボタンの表示
 /*******************************************************/
@@ -79,6 +125,21 @@ function updateArtifactDom(){
 		$('.artifact-area')
 			.append(artifactDiv)
 	});
+}
+/*******************************************************/
+/* createCardPrice：値段DOMを生成
+/*******************************************************/
+function createCardPrice(price, discount){
+	const moneyImage = $('<img>')
+		.attr('src', 'images/information/money.png');
+	const priceDiv = $('<p>')
+		.addClass('shop-price')
+		.append(moneyImage)
+		.append(price);
+	if(discount){
+		priceDiv.addClass('shop-discount');
+	}
+	return priceDiv;
 }
 /***************************************************************************************/
 /* カードDOM作成処理
@@ -717,7 +778,7 @@ function moneyRewardDom(money){
 			playerStatus.money += money.amount;
 			rewardDiv.remove();
 			money.getFlag = false;
-			updateMoney();
+			updateMoneyDom();
 			setLocalStorage(keyContinuePlayerStatus, playerStatus);
 			setLocalStorage(keyContinueReward, rewards);
 		});
@@ -888,7 +949,7 @@ function disabledEndBtn(flag){
 		$('.end-btn').off();
 		$('.end-btn').click((e) => {
 			const repair = playerStatus.statuses
-				.find((status) => status.name === bufStatus.repair.name);
+				.find((status) => status.name === buffStatus.repair.name);
 			if (repair){
 				startPhase(phase.repair);
 			}else{

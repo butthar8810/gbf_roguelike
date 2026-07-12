@@ -172,9 +172,9 @@ function shiftOriginalDeck(){
 	return myOriginalDeck.shift();
 }
 /*******************************************************/
-/* deletAllOriginalDeck：デッキキューをすべて削除する
+/* deleteAllOriginalDeck：デッキキューをすべて削除する
 /*******************************************************/
-function deletAllOriginalDeck(){
+function deleteAllOriginalDeck(){
 	return myOriginalDeck.splice(0, myOriginalDeck.length);
 }
 /*******************************************************/

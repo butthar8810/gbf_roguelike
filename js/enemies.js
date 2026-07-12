@@ -8,7 +8,7 @@ const enemyList = {
 		size: 'small',
 		minHP: 50, 
 		maxHP: 100, 
-		image: 'images/enemy/uinasu.png',
+		image: 'images/enemy/small/uinasu.png',
 		actionAlgorithm: 'actionTEST', 
 		actionFirst: 'testFirst',
 		currentStatus:{
@@ -21,13 +21,13 @@ const enemyList = {
 			divId: ''
 		}
 	},
-	slime:{
+	bronze:{
 		name: 'スライム', 
 		size: 'small',
 		minHP: 8, 
 		maxHP: 12, 
-		image: 'images/enemy/kingbronze.gif',
-		actionAlgorithm: 'actionSlime', 
+		image: 'images/enemy/gifs/kingbronze.gif',
+		actionAlgorithm: 'actionBronze', 
 		actionFirst: '',
 		currentStatus:{
 			remainHP: 0, 
@@ -39,13 +39,13 @@ const enemyList = {
 			divId: ''
 		}
 	},
-	battleSlime:{
-		name: 'バトルスライム', 
+	bronze_battle:{
+		name: 'スライム(バトル)', 
 		size: 'small',
 		minHP: 10, 
 		maxHP: 14, 
-		image: 'images/enemy/kingbronze.gif',
-		actionAlgorithm: 'actionBattleSlime', 
+		image: 'images/enemy/gifs/kingbronze.gif',
+		actionAlgorithm: 'actionBronzeBattle', 
 		actionFirst: '',
 		currentStatus:{
 			remainHP: 0, 
@@ -62,7 +62,7 @@ const enemyList = {
 		size: 'small',
 		minHP: 28, 
 		maxHP: 32, 
-		image: 'images/enemy/kingsilver.gif', 
+		image: 'images/enemy/gifs/kingsilver.gif', 
 		actionAlgorithm: 'actionSilver', 
 		actionFirst: '',
 		currentStatus:{
@@ -75,13 +75,13 @@ const enemyList = {
 			divId: ''
 		}
 	},
-	monk:{
-		name: 'モンク', 
+	silver_battle:{
+		name: 'シルバースライム(バトル)', 
 		size: 'small',
-		minHP: 48, 
-		maxHP: 55, 
-		image: 'images/enemy/monk.png', 
-		actionAlgorithm: 'actionMonk', 
+		minHP: 28, 
+		maxHP: 32, 
+		image: 'images/enemy/gifs/kingsilver.gif', 
+		actionAlgorithm: 'actionSilverBattle', 
 		actionFirst: '',
 		currentStatus:{
 			remainHP: 0, 
@@ -93,13 +93,31 @@ const enemyList = {
 			divId: ''
 		}
 	},
-	putesis:{
-		name: 'プテシス', 
+	Minotaur:{
+		name: 'ミノタウロス', 
+		size: 'middle',
+		minHP: 48, 
+		maxHP: 55, 
+		image: 'images/enemy/middle/Minotaur.png', 
+		actionAlgorithm: 'actionMinotaur', 
+		actionFirst: '',
+		currentStatus:{
+			remainHP: 0, 
+			maxHP: 0, 
+			block: 0,
+			status: [], 
+			nextAction: {},
+			actionCount: {},
+			divId: ''
+		}
+	},
+	Crusher:{
+		name: 'ランページシェル', 
 		size: 'small',
 		minHP: 40, 
 		maxHP: 44, 
-		image: 'images/enemy/putesis.png', 
-		actionAlgorithm: 'actionPutesis', 
+		image: 'images/enemy/small/Crab_Crusher.png', 
+		actionAlgorithm: 'actionCrusher', 
 		actionFirst: '',
 		currentStatus:{
 			remainHP: 0, 
@@ -111,13 +129,13 @@ const enemyList = {
 			divId: ''
 		}
 	},
-	bee:{
-		name: 'キラー・ビー', 
+	Skewerfish:{
+		name: 'ミートミキサー', 
 		size: 'small',
 		minHP: 10, 
 		maxHP: 17, 
-		image: 'images/enemy/bee.png', 
-		actionAlgorithm: 'actionBee', 
+		image: 'images/enemy/small/fish_Skewerfish.png', 
+		actionAlgorithm: 'actionSkewerfish', 
 		actionFirst: '',
 		currentStatus:{
 			remainHP: 0, 
@@ -129,13 +147,13 @@ const enemyList = {
 			divId: ''
 		}
 	},
-	fangBee:{
-		name: 'ファング・ビー', 
+	Rivacuda:{
+		name: 'ウラザナ', 
 		size: 'small',
 		minHP: 10, 
 		maxHP: 17, 
-		image: 'images/enemy/fang-bee.png', 
-		actionAlgorithm: 'actionFangBee', 
+		image: 'images/enemy/small/fish_Rivacuda.png', 
+		actionAlgorithm: 'actionRivacuda', 
 		actionFirst: '',
 		currentStatus:{
 			remainHP: 0, 
@@ -147,13 +165,13 @@ const enemyList = {
 			divId: ''
 		}
 	},
-	wolf:{
-		name: 'ウルフ', 
+	Skeleton:{
+		name: 'スケルトン', 
 		size: 'small',
 		minHP: 46, 
 		maxHP: 50, 
-		image: 'images/enemy/wolf.png', 
-		actionAlgorithm: 'actionWolf', 
+		image: 'images/enemy/small/Skeleton_Skeleton.png', 
+		actionAlgorithm: 'actionSkeleton', 
 		actionFirst: '',
 		currentStatus:{
 			remainHP: 0, 
@@ -165,13 +183,13 @@ const enemyList = {
 			divId: ''
 		}
 	},
-	silverWolf:{
-		name: 'シルヴァーウルフ', 
+	Purgatorian:{
+		name: '辺獄の亡者', 
 		size: 'small',
 		minHP: 46, 
 		maxHP: 50, 
-		image: 'images/enemy/wolf_silver.png', 
-		actionAlgorithm: 'actionSilverWolf', 
+		image: 'images/enemy/small/Skeleton_Purgatorian.png', 
+		actionAlgorithm: 'actionPurgatorian', 
 		actionFirst: '',
 		currentStatus:{
 			remainHP: 0, 
@@ -185,13 +203,13 @@ const enemyList = {
 			divId: ''
 		}
 	},
-	rafflesia:{
-		name: 'ラフレシア', 
+	Sleepyhead:{
+		name: 'スリーピィ', 
 		size: 'small',
 		minHP: 22, 
 		maxHP: 28, 
-		image: 'images/enemy/rafflesia.png', 
-		actionAlgorithm: 'actionRafflesia', 
+		image: 'images/enemy/Sleepyhead.png', 
+		actionAlgorithm: 'actionSleepyhead', 
 		actionFirst: 'buffPollen',
 		currentStatus:{
 			remainHP: 0, 
@@ -203,13 +221,13 @@ const enemyList = {
 			divId: ''
 		}
 	},
-	bear:{
-		name: 'グリズリー', 
+	QueenBee:{
+		name: 'クイーンビー', 
 		size: 'middle',
 		minHP: 82, 
 		maxHP: 86, 
-		image: 'images/enemy/bear.png', 
-		actionAlgorithm: 'actionBear', 
+		image: 'images/enemy/tall/QueenBee.png', 
+		actionAlgorithm: 'actionQueenBee', 
 		actionFirst: '',
 		currentStatus:{
 			remainHP: 0, 
@@ -221,12 +239,33 @@ const enemyList = {
 			divId: ''
 		}
 	},
+	Ikelos:{
+		name: 'イケロス', 
+		size: 'middle',
+		minHP: 109, 
+		maxHP: 111, 
+		image: 'images/enemy/middle/Ikelos.png', 
+		actionAlgorithm: 'actionIkelos', 
+		actionFirst: 'buffBarrier',
+		currentStatus:{
+			remainHP: 0, 
+			maxHP: 0, 
+			block: 0,
+			status: [], 
+			nextAction: {},
+			actionCount: {
+				attackCount: 0,
+				AwakeningFlag: false,
+			},
+			divId: ''
+		}
+	},
 	despair:{
 		name: '絶望', 
-		size: 'middle',
+		size: 'small',
 		minHP: 36, 
 		maxHP: 42, 
-		image: 'images/enemy/Despair.png', 
+		image: 'images/enemy/small/Despair.png', 
 		actionAlgorithm: 'actionDespair', 
 		actionFirst: 'buffMount',
 		currentStatus:{
@@ -241,12 +280,30 @@ const enemyList = {
 	},
 	grief:{
 		name: '悲哀', 
-		size: 'middle',
+		size: 'small',
 		minHP: 36, 
 		maxHP: 42, 
-		image: 'images/enemy/Grief.png', 
+		image: 'images/enemy/small/Grief.png', 
 		actionAlgorithm: 'actionGrief', 
 		actionFirst: 'buffMount',
+		currentStatus:{
+			remainHP: 0, 
+			maxHP: 0, 
+			block: 0,
+			status: [], 
+			nextAction: {},
+			actionCount: {},
+			divId: ''
+		}
+	},
+	branwen:{
+		name: 'ブランウェン', 
+		size: 'tall',
+		minHP: 20, 
+		maxHP: 20, 
+		image: 'images/enemy/tall/Branwen.png', 
+		actionAlgorithm: 'actionBranwen', 
+		actionFirst: 'buffFirstBranwen',
 		currentStatus:{
 			remainHP: 0, 
 			maxHP: 0, 
@@ -263,50 +320,61 @@ const bossEnemyList = {
 };
 const testEnemies = [
 	{weight: 100, enemiesFunc(){
-		return [enemyList.despair, enemyList.grief, enemyList.despair];
+		return [enemyList.Ikelos];
 	}},
 ];
 const easyEnemiesPool = [
-	{weight: 25, enemiesFunc(){return [enemyList.slime, enemyList.silver]}},
-	{weight: 25, enemiesFunc(){return [enemyList.monk]}},
-	{weight: 25, enemiesFunc(){return [enemyList.putesis]}},
-	{weight: 25, enemiesFunc(){return [enemyList.bee, enemyList.fangBee]}},
+	{weight: 25000, enemiesFunc(){
+		return enemyComboOrganize(
+			[enemyList.silver, enemyList.silver_battle],
+			[enemyList.bronze, enemyList.bronze_battle]
+		);
+	}},
+	{weight: 25000, enemiesFunc(){return [enemyList.Minotaur]}},
+	{weight: 25000, enemiesFunc(){return [enemyList.Crusher]}},
+	{weight: 25000, enemiesFunc(){
+		return enemyRandomOrganize(
+			2, [enemyList.Skewerfish, enemyList.Rivacuda]
+		);
+	}},
 ];
 const strongEnemiesPool = [
-	{weight: 12500, enemiesFunc(){return [enemyList.wolf]} },
+	{weight: 12500, enemiesFunc(){return [enemyList.Skeleton]} },
 	{weight: 12500, 
 		enemiesFunc(){
-			return enemyRandomOrganize(3, [enemyList.bee, enemyList.fangBee]);
+			return enemyRandomOrganize(
+				3, [enemyList.Skewerfish, enemyList.Rivacuda]
+			);
 		}
 	},
-	{weight: 12500, enemiesFunc(){return [enemyList.rafflesia, enemyList.rafflesia]}},
+	{weight: 12500, enemiesFunc(){return [enemyList.Sleepyhead, enemyList.Sleepyhead]}},
 	{weight: 9375, enemiesFunc(){
 		return enemyComboOrganize(
-			[enemyList.bee, enemyList.fangBee, enemyList.silver], 
-			[enemyList.wolf, enemyList.silverWolf, enemyList.monk]
+			[enemyList.Skewerfish, enemyList.Rivacuda, enemyList.silver, enemyList.silver_battle], 
+			[enemyList.Skeleton, enemyList.Purgatorian, enemyList.Minotaur]
 		);
 	}},
 	{weight: 9375, enemiesFunc(){
 		return enemyComboOrganize(
-			[enemyList.rafflesia, enemyList.putesis],
-			[enemyList.bee, enemyList.fangBee, enemyList.silver]
+			[enemyList.Sleepyhead, enemyList.Crusher],
+			[enemyList.Skewerfish, enemyList.Rivacuda, enemyList.silver, enemyList.silver_battle]
 		);
 	}},
-	{weight: 6250, enemiesFunc(){return [enemyList.silverWolf]}},
+	{weight: 6250, enemiesFunc(){return [enemyList.Purgatorian]}},
 	{weight: 6250, enemiesFunc(){
-		return [enemyList.slime, enemyList.battleSlime, enemyList.slime, enemyList.battleSlime, enemyList.slime]
+		return [enemyList.bronze_battle, enemyList.bronze, enemyList.bronze_battle, enemyList.bronze, enemyList.bronze_battle]
 	}},
 ];
 const eliteEnemiesPool = [
-	{weight: 1000, enemiesFunc(){return [enemyList.bear];}},
+	{weight: 1000, enemiesFunc(){return [enemyList.QueenBee];}},
 	{weight: 1000, enemiesFunc(){
 		return [enemyList.despair, enemyList.grief, enemyList.despair];
 	}},
+	{weight: 1000, enemiesFunc(){return [enemyList.QueenBee];}},
 ];
-const Enemies = [
 
-];
 const enemyActionType = {
+	none: '無し',
 	attack: 'アタック',
 	block: 'ブロック',
 	buff: 'バフ',
@@ -351,6 +419,17 @@ function enemyAttack(enemyInfo, playerInfo, animationFlag){
 		enemyInfo.currentStatus.nextAction.damage,
 	);
 }
+function enemyTimesAttack(enemyInfo, playerInfo, animationFlag){
+	// アタック〇点ダメージを〇回
+	for(let i = 0; i < enemyInfo.currentStatus.nextAction.count; i++){
+		enemyActionAttack(
+			enemyInfo, 
+			playerInfo, 
+			animationFlag, 
+			enemyInfo.currentStatus.nextAction.damage,
+		);
+	}
+}
 function enemyAttackAndBlock(enemyInfo, playerInfo, animationFlag){
 	// アタック+ブロック
 	enemyActionAttack(
@@ -376,7 +455,7 @@ function enemyAttackAndBuff(enemyInfo, playerInfo, animationFlag){
 	enemyActionStatusBuf(
 		enemyInfo, 
 		animationFlag, 
-		bufStatus[enemyInfo.currentStatus.nextAction.buffType], 
+		buffStatus[enemyInfo.currentStatus.nextAction.buffType], 
 		enemyInfo.currentStatus.nextAction.buff,
 	);
 }
@@ -392,7 +471,7 @@ function enemyAttackAndDebuf(enemyInfo, playerInfo, animationFlag){
 		enemyInfo, 
 		playerInfo, 
 		animationFlag, 
-		debufStatus[enemyInfo.currentStatus.nextAction.debuffType], 
+		debuffStatus[enemyInfo.currentStatus.nextAction.debuffType], 
 		enemyInfo.currentStatus.nextAction.debuff,
 	);
 }
@@ -414,7 +493,7 @@ function enemyBlockAndBuff(enemyInfo, playerInfo, animationFlag){
 	enemyActionStatusBuf(
 		enemyInfo, 
 		animationFlag, 
-		bufStatus[enemyInfo.currentStatus.nextAction.buffType], 
+		buffStatus[enemyInfo.currentStatus.nextAction.buffType], 
 		enemyInfo.currentStatus.nextAction.buff,
 	);
 }
@@ -429,7 +508,7 @@ function enemyBlockAndDebuf(enemyInfo, playerInfo, animationFlag){
 		enemyInfo, 
 		playerInfo, 
 		animationFlag, 
-		debufStatus[enemyInfo.currentStatus.nextAction.debuffType], 
+		debuffStatus[enemyInfo.currentStatus.nextAction.debuffType], 
 		enemyInfo.currentStatus.nextAction.debuff,
 	);
 }
@@ -438,8 +517,23 @@ function enemyBuff(enemyInfo, playerInfo, animationFlag){
 	enemyActionStatusBuf(
 		enemyInfo, 
 		animationFlag, 
-		bufStatus[enemyInfo.currentStatus.nextAction.buffType], 
+		buffStatus[enemyInfo.currentStatus.nextAction.buffType], 
 		enemyInfo.currentStatus.nextAction.buff,
+	);
+}
+function enemyDoubleBuff(enemyInfo, playerInfo, animationFlag){
+	// バフ
+	enemyActionStatusBuf(
+		enemyInfo, 
+		animationFlag, 
+		buffStatus[enemyInfo.currentStatus.nextAction.buffType1], 
+		enemyInfo.currentStatus.nextAction.buff1,
+	);
+	enemyActionStatusBuf(
+		enemyInfo, 
+		animationFlag, 
+		buffStatus[enemyInfo.currentStatus.nextAction.buffType2], 
+		enemyInfo.currentStatus.nextAction.buff2,
 	);
 }
 function enemyDebuf(enemyInfo, playerInfo, animationFlag){
@@ -448,8 +542,25 @@ function enemyDebuf(enemyInfo, playerInfo, animationFlag){
 		enemyInfo, 
 		playerInfo, 
 		animationFlag, 
-		debufStatus[enemyInfo.currentStatus.nextAction.debuffType], 
+		debuffStatus[enemyInfo.currentStatus.nextAction.debuffType], 
 		enemyInfo.currentStatus.nextAction.debuff,
+	);
+}
+function enemyDoubleDebuf(enemyInfo, playerInfo, animationFlag){
+	// デバフ
+	enemyActionStatusDebuf(
+		enemyInfo, 
+		playerInfo, 
+		animationFlag, 
+		debuffStatus[enemyInfo.currentStatus.nextAction.debuffType1], 
+		enemyInfo.currentStatus.nextAction.debuff1,
+	);
+	enemyActionStatusDebuf(
+		enemyInfo, 
+		playerInfo, 
+		animationFlag, 
+		debuffStatus[enemyInfo.currentStatus.nextAction.debuffType2], 
+		enemyInfo.currentStatus.nextAction.debuff2,
 	);
 }
 function enemyBuffAndDebuf(enemyInfo, playerInfo, animationFlag){
@@ -457,14 +568,14 @@ function enemyBuffAndDebuf(enemyInfo, playerInfo, animationFlag){
 	enemyActionStatusBuf(
 		enemyInfo, 
 		animationFlag, 
-		bufStatus[enemyInfo.currentStatus.nextAction.buffType], 
+		buffStatus[enemyInfo.currentStatus.nextAction.buffType], 
 		enemyInfo.currentStatus.nextAction.buff,
 	);
 	enemyActionStatusDebuf(
 		enemyInfo, 
 		playerInfo, 
 		animationFlag, 
-		debufStatus[enemyInfo.currentStatus.nextAction.debuffType], 
+		debuffStatus[enemyInfo.currentStatus.nextAction.debuffType], 
 		enemyInfo.currentStatus.nextAction.debuff,
 	);
 }
@@ -557,13 +668,13 @@ function actionTEST(statuses){
 
 function testFirst(enemyInfo, playerInfo, animationFlag){
 	// 開始時効果
-	enemyStatusBuf(enemyInfo, animationFlag, bufStatus.defenseUp, 2);
+	enemyActionStatusBuf(enemyInfo, animationFlag, buffStatus.defenseUp, 2);
 }
 /*******************************************************/
 /* スライム
 /*******************************************************/
-function actionSlime(statuses){
-	console.log('actionSlime');
+function actionBronze(statuses){
+	console.log('actionBronze');
 	const actions = [
 		{	weight: 0, 
 			omen:{
@@ -595,10 +706,10 @@ function actionSlime(statuses){
 }
 
 /*******************************************************/
-/* バトルスライム
+/* スライム(バトル)
 /*******************************************************/
-function actionBattleSlime(statuses){
-	console.log('actionBattleSlime');
+function actionBronzeBattle(statuses){
+	console.log('actionBronzeBattle');
 	const actions = [
 		{	weight: 0, 
 			omen:{
@@ -661,21 +772,59 @@ function actionSilver(statuses){
 	}
 	return false;
 }
-
 /*******************************************************/
-/* モンク
+/* シルバースライム(バトル)
 /*******************************************************/
-function actionMonk(statuses){
-	console.log('actionMonk');
+function actionSilverBattle(statuses){
+	console.log('actionSilverBattle');
+	const actions = [
+		{	weight: 30, 
+			omen:{
+				name: '腐食性の粘液', 
+				func: 'enemyAttackAndCardDebuf', 
+				type: enemyActionType.debuffAndAttack, 
+				damage: 8, 
+				abnormal: 1, 
+				abnormalType: 'Mucus',
+				image: 'images/enemy/omen/poison.png'
+			}
+		},
+		{	weight: 70, 
+			omen:{
+				name: '舐める', 
+				func: 'enemyDebuf', 
+				type: enemyActionType.debuff, 
+				damage: 0, 
+				debuff: 2, 
+				debuffType: 'frail',
+				image: 'images/enemy/omen/Weakness1.png'
+			}
+		},
+	];
+	const totalWeight = actions.reduce((sum, item) => sum + item.weight, 0);
+	let random = Math.floor(Math.random() * totalWeight);
+	for (const action of actions) {
+		if (random < action.weight) {
+			return action.omen;
+		}
+		random -= action.weight;
+	}
+	return false;
+}
+/*******************************************************/
+/* ミノタウロス
+/*******************************************************/
+function actionMinotaur(statuses){
+	console.log('actionMinotaur');
 	const actions = [
 		{	weight: 0, 
 			omen:{
-				name: '精神統一', 
+				name: '激怒', 
 				func: 'enemyBuff', 
 				type: enemyActionType.buff, 
 				damage: 0, 
 				buff: 3,
-				buffType: 'spiritual',
+				buffType: 'rage',
 				image: 'images/enemy/omen/Power2.png'
 			}
 		},
@@ -697,13 +846,14 @@ function actionMonk(statuses){
 }
 
 /*******************************************************/
-/* プテシス
+/* ランページシェル
 /*******************************************************/
-function actionPutesis(statuses){
-	console.log('actionPutesis');
+function actionCrusher(statuses){
+	console.log('actionCrusher');
 	const actions = [
 		{	weight: 25, 
-			omen:{name: '攻撃', 
+			omen:{
+				name: '攻撃', 
 				func: 'enemyAttack', 
 				type: enemyActionType.attack, 
 				damage: 11, 
@@ -722,7 +872,7 @@ function actionPutesis(statuses){
 		},
 		{	weight: 45, 
 			omen:{
-				name: '怒号', 
+				name: '興奮', 
 				func: 'enemyBlockAndBuff', 
 				type: enemyActionType.blockAndBuff, 
 				damage: 0, 
@@ -745,10 +895,10 @@ function actionPutesis(statuses){
 }
 
 /*******************************************************/
-/* キラービー
+/* ミートミキサー
 /*******************************************************/
-function actionBee(statuses){
-	console.log('actionBee');
+function actionSkewerfish(statuses){
+	console.log('actionSkewerfish');
 	const actions = [
 		{	weight: 75, 
 			omen:{
@@ -782,10 +932,10 @@ function actionBee(statuses){
 	return false;
 }
 /*******************************************************/
-/* ファングビー
+/* ウラザナ
 /*******************************************************/
-function actionFangBee(statuses){
-	console.log('actionFangBee');
+function actionRivacuda(statuses){
+	console.log('actionRivacuda');
 	const actions = [
 		{	weight: 75, 
 			omen:{
@@ -820,10 +970,10 @@ function actionFangBee(statuses){
 }
 
 /*******************************************************/
-/* ウルフ
+/* スケルトン
 /*******************************************************/
-function actionWolf(statuses){
-	console.log('actionWolf');
+function actionSkeleton(statuses){
+	console.log('actionSkeleton');
 	const actions = [
 		{	weight: 60, 
 			omen:{
@@ -836,7 +986,7 @@ function actionWolf(statuses){
 		},
 		{	weight: 40, 
 			omen:{
-				name: '咆哮', 
+				name: '畏怖', 
 				func: 'enemyAttackAndDebuf', 
 				type: enemyActionType.debuffAndAttack, 
 				damage: 7, 
@@ -858,10 +1008,10 @@ function actionWolf(statuses){
 }
 
 /*******************************************************/
-/* シルヴァーウルフ
+/* 辺獄の亡者
 /*******************************************************/
-function actionSilverWolf(statuses){
-	console.log('actionImp');
+function actionPurgatorian(statuses){
+	console.log('actionPurgatorian');
 	console.log(statuses);
 	const actions = [
 		{	weight: 45, 
@@ -874,7 +1024,7 @@ function actionSilverWolf(statuses){
 		},
 		{	weight: 55, 
 			omen:{
-				name: '咆哮', 
+				name: '畏怖', 
 				func: 'enemyAttackAndDebuf', 
 				type: enemyActionType.debuffAndAttack, 
 				damage: 8, 
@@ -885,12 +1035,12 @@ function actionSilverWolf(statuses){
 		},
 		{	weight: 25, 
 			omen:{
-				name: '包囲', 
+				name: '凍結', 
 				func: 'enemyAttackAndDebuf', 
 				type: enemyActionType.debuff, 
 				damage: 0, 
 				debuff: 2,
-				debuffType: 'paralysis',
+				debuffType: 'frozen',
 				image: 'images/enemy/omen/Break.png'
 			}
 		},
@@ -918,10 +1068,10 @@ function actionSilverWolf(statuses){
 }
 
 /*******************************************************/
-/* ラフレシア
+/* スリーピィ
 /*******************************************************/
-function actionRafflesia(statuses){
-	console.log('actionRafflesia');
+function actionSleepyhead(statuses){
+	console.log('actionSleepyhead');
 	const actions = [
 		{	weight: 60, 
 			omen:{
@@ -957,22 +1107,22 @@ function actionRafflesia(statuses){
 }
 function buffPollen(enemyInfo, playerInfo, animationFlag){
 	// 花粉2を自身に付与
-	enemyStatusBuf(enemyInfo, animationFlag, bufStatus.pollen, 2);
+	enemyActionStatusBuf(enemyInfo, animationFlag, buffStatus.pollen, 2);
 }
 /*******************************************************/
-/* グリズリー
+/* クイーンビー
 /*******************************************************/
-function actionBear(statuses){
-	console.log('actionBear');
+function actionQueenBee(statuses){
+	console.log('actionQueenBee');
 	const actions = [
 		{	weight: 0, 
 			omen:{
-				name: '激怒', 
+				name: '戦略', 
 				func: 'enemyBuff', 
 				type: enemyActionType.buff, 
 				damage: 0,
 				buff: 3,
-				buffType: 'rage', 
+				buffType: 'strategy', 
 				image: 'images/enemy/omen/Power1.png'
 			}
 		},
@@ -987,7 +1137,7 @@ function actionBear(statuses){
 		},
 		{	weight: 33, 
 			omen:{
-				name: '薙ぎ払い', 
+				name: '毒針', 
 				func: 'enemyAttackAndDebuf', 
 				type: enemyActionType.debuffAndAttack, 
 				damage: 6, 
@@ -1009,6 +1159,71 @@ function actionBear(statuses){
 		random -= action.weight;
 	}
 	return false;
+}
+/*******************************************************/
+/* イケロス
+/*******************************************************/
+function actionIkelos(statuses){
+	console.log('actionIkelos');
+	const actions = [
+		{	weight: 0, 
+			omen:{
+				name: '睡眠中', 
+				func: '', 
+				type: enemyActionType.none, 
+				damage: 0,
+				image: 'images/enemy/omen/Power2.png'
+			}
+		},
+		{	weight: 67, 
+			omen:{
+				name: '攻撃', 
+				func: 'enemyAttack', 
+				type: enemyActionType.attack, 
+				damage: 18, 
+				image: 'images/enemy/omen/Attack.png'
+			}
+		},
+		{	weight: 33, 
+			omen:{
+				name: '戦略', 
+				func: 'enemyAttackAndDebuf', 
+				type: enemyActionType.debuffAndAttack, 
+				damage: 0, 
+				debuff: 1,
+				debuffType: 'attackDown',
+				debuff: 1,
+				debuffType: 'dexterityDown',
+				image: 'images/enemy/omen/Break.png'
+			}
+		},
+	];
+	console.log(statuses);
+	const sleep = statuses.status
+		.find((status) => status.name === debuffStatus.sleep.name);
+	if (sleep){
+		return actions[0].omen;
+	}
+	if(statuses.actionCount.attackCount >= 2){
+		statuses.actionCount.attackCount = 0;
+		return actions[2].omen;
+	}else{
+		statuses.actionCount.attackCount++;
+		return actions[1].omen;
+	}
+	return false;
+}
+function buffBarrier(enemyInfo, playerInfo, animationFlag){
+	// ブロックを付与
+	enemyActionBlock(
+		enemyInfo, 
+		animationFlag, 
+		8,
+	);
+	// バリアを自身に付与
+	enemyActionStatusBuf(enemyInfo, animationFlag, buffStatus.barrier, 8);
+	// 睡眠を付与
+	enemyActionStatusBuf(enemyInfo, animationFlag, debuffStatus.sleep, 3);
 }
 /*******************************************************/
 /* 絶望・悲哀
@@ -1059,7 +1274,83 @@ function actionGrief(statuses){
 }
 function buffMount(enemyInfo, playerInfo, animationFlag){
 	// 弱体無効1を自身に付与
-	enemyStatusBuf(enemyInfo, animationFlag, bufStatus.mount, 1);
+	enemyActionStatusBuf(enemyInfo, animationFlag, buffStatus.mount, 1);
+}
+/*******************************************************/
+/* ブランウェン
+/*******************************************************/
+function actionBranwen(statuses){
+	console.log('actionBranwen');
+	const actions = [
+		{	weight: 0, 
+			omen:{
+				name: '防御', 
+				func: 'enemyBlock', 
+				type: enemyActionType.block, 
+				damage: 0, 
+				block: 25,
+				image: 'images/enemy/omen/Defense1.png'
+			}
+		},
+		{	weight: 0, 
+			omen:{
+				name: '攻撃+戦略', 
+				func: 'enemyAttackAndDebuf', 
+				type: enemyActionType.debuffAndAttack, 
+				damage: 10,
+				debuff: 5,
+				debuffType: 'frail',
+				image: 'images/enemy/omen/Break.png'
+			}
+		},
+		{	weight: 0, 
+			omen:{
+				name: '攻撃', 
+				func: 'enemyTimesAttack', 
+				type: enemyActionType.attack, 
+				damage: 10, 
+				count: 2,
+				image: 'images/enemy/omen/Attack.png'
+			}
+		},
+		{	weight: 0, 
+			omen:{
+				name: '攻撃+防御', 
+				func: 'enemyAttackAndBlock', 
+				type: enemyActionType.blockAndAttack, 
+				damage: 10, 
+				block: 15,
+				image: 'images/enemy/omen/Break.png'
+			}
+		},
+	];
+	if(currentTurn === 1){
+		return actions[0].omen;
+	}
+	if(currentTurn === 2){
+		return actions[1].omen;
+	}
+	if (0 === currentTurn % 2){
+		// 偶数ターン
+		return emotionsActions[3].omen;
+	} else {
+		// 奇数ターン
+		return emotionsActions[2].omen;
+	}
+	return false;
+}
+function buffFirstBranwen(enemyInfo, playerInfo, animationFlag){
+	//ブロック40を自身に付与
+	enemyActionBlock(
+		enemyInfo, 
+		animationFlag, 
+		40,
+	);
+	// 弱体無効1を自身に付与
+	enemyActionStatusBuf(enemyInfo, animationFlag, buffStatus.mount, 3);
+	// 英雄の盾を自身に付与
+	enemyActionStatusBuf(enemyInfo, animationFlag, buffStatus.tears, '');
+
 }
 /*************************************************************************************/
 /* カードアクション用システム関数
@@ -1073,25 +1364,25 @@ function calcEnemyDamage(attackCount, enemyInfo, playerInfo){
 	let magnification = 1;
 	// 恐怖（攻撃力25%減少）
 	const weakness = enemyInfo.currentStatus.status
-		.find((status) => status.name === debufStatus.weak.name);
+		.find((status) => status.name === debuffStatus.weak.name);
 	if (weakness){magnification -= 0.25;}
 	// 防御力ダウン（被ダメ50%上昇）
 	const defenseUp = playerStatus.statuses
-		.find((status) => status.name === bufStatus.defenseUp.name);
+		.find((status) => status.name === buffStatus.defenseUp.name);
 	if (defenseUp){magnification -= 0.5;}
 	// 防御力アップ（被ダメ50%減少）
 	const defenseDown = playerStatus.statuses
-		.find((status) => status.name === debufStatus.defenseDown.name);
+		.find((status) => status.name === debuffStatus.defenseDown.name);
 	if (defenseDown){magnification += 0.5;}
 	totalAttack = Math.floor(totalAttack * magnification);
 		
 	// エネミーの状態異常の確認
 	enemyInfo.currentStatus.status.forEach((status) => {
 		switch(status.name){
-			case bufStatus.attackUp.name:// 攻撃力アップ（攻撃ダメージが+X。）
+			case buffStatus.attackUp.name:// 攻撃力アップ（攻撃ダメージが+X。）
 				totalAttack += status.amount;
 				break;
-			case debufStatus.attackDown.name:// 攻撃力ダウン（攻撃ダメージがｰX。）
+			case debuffStatus.attackDown.name:// 攻撃力ダウン（攻撃ダメージがｰX。）
 				if (totalAttack > status.amount){
 					totalAttack -= status.amount;
 				} else {
@@ -1106,7 +1397,7 @@ function calcEnemyDamage(attackCount, enemyInfo, playerInfo){
 	playerInfo.statuses.forEach((status) => {
 		switch(status.name){
 			// 「ダメージカット」の効果発動
-			case bufStatus.damageCut.name:
+			case buffStatus.damageCut.name:
 				if (totalAttack > 0){
 					totalAttack = 1;
 				}
@@ -1138,7 +1429,7 @@ function enemyActionAttack(enemyInfo, playerInfo, animationFlag, attackCount){
 	}
 	// 「反射」の効果
 	const reflection = playerInfo.statuses
-		.find((status) => status.name === bufStatus.reflection.name);
+		.find((status) => status.name === buffStatus.reflection.name);
 	if(reflection){
 		const playerReflection = reflection.amount;
 		const enemyBlock = enemyInfo.currentStatus.block;
@@ -1155,7 +1446,7 @@ function enemyActionAttack(enemyInfo, playerInfo, animationFlag, attackCount){
 	}
 	// 「カウンター」の効果
 	const counter = playerInfo.statuses
-		.find((status) => status.name === bufStatus.counter.name);
+		.find((status) => status.name === buffStatus.counter.name);
 	if(counter){
 		const playerCounter = counter.amount;
 		const enemyBlock = enemyInfo.currentStatus.block;
@@ -1214,7 +1505,7 @@ function enemyActionStatusDebuf(enemyInfo, playerInfo, animationFlag, debuf, amo
 	let sameDebufFlag = false;
 	// 弱体無効がついていれば、無効になる
 	const mount = playerStatus.statuses
-		.find((status) => status.name === bufStatus.mount.name);
+		.find((status) => status.name === buffStatus.mount.name);
 	if (mount){
 		mount.amount--;
 		playerStatus.statuses = playerStatus.statuses.filter((status) => {

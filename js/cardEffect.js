@@ -3057,7 +3057,7 @@ const djeetaCardList = {
 	Leviathan: {
 		No: 331010,
 		key: 'Leviathan',
-		name: 'リヴァイアサン・ミニステル',
+		name: 'リヴァイアサン',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
 		type: type.attack,
@@ -3284,7 +3284,7 @@ const djeetaCardList = {
 		effect: `カードを{Dr}枚引く。引いたカードが「スキル」の場合、{B}ブロックを得る。`,
 		amount: {
 			cost: 0,
-			drow: 1,
+			draw: 1,
 			block: 3,
 			discard: false,
 		}
@@ -4359,7 +4359,7 @@ const djeetaEnhancedCardList = {
 	//窒息
 	Leviathan: {
 		No:431009,
-		name: '<span class="upgrade">リヴァイアサン・ミニステル+</span>',
+		name: '<span class="upgrade">リヴァイアサン+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
 		type: type.attack,
@@ -4589,7 +4589,7 @@ const djeetaEnhancedCardList = {
 		effect: `カードを{Dr}枚引く。引いたカードが「スキル」の場合、<span class="upgrade">{B}</span>ブロックを得る。`,
 		amount: {
 			cost: 0,
-			drow: 1,
+			draw: 1,
 			block: 5,
 			discard: false,
 		}
@@ -5089,6 +5089,41 @@ const commonCardList = {
 			discard: true,
 		}
 	},
+	//スイフトストライク
+	Strike: {
+		No:521001,
+		key: 'Strike',
+		name: 'スイフトストライク',
+		class: cardClass.common,
+		rarity: rarity.uncommon,
+		type: type.attack,
+		func: 'effectAttack',
+		image:'images/card/common_Knife.jpg',
+		effect: `{A}ダメージを与える。`,
+		amount: {
+			cost: 0,
+			attack: 7,
+			discard: true,
+		}
+	},
+	//強欲の手
+	Greed: {
+		No:531001,
+		key: 'Greed',
+		name: '強欲の手',
+		class: cardClass.common,
+		rarity: rarity.rare,
+		type: type.attack,
+		func: 'effectAttack',
+		image:'images/card/common_Knife.jpg',
+		effect: `{A}ダメージを与える。廃棄。`,
+		amount: {
+			cost: 2,
+			attack: 20,
+			money: 20,
+			discard: true,
+		}
+	},
 };
 const commonEnhancedCardList = {
 	Knife: {
@@ -5202,37 +5237,17 @@ const testCardList = {
 		}
 	},
 }
-/*************************************************************************************/
-/* カード報酬抽選
-/*************************************************************************************/
-const cardReward = {
-	normal:{
-		common:{weight:60, rarity: rarity.common},
-		uncommon:{weight:37, rarity: rarity.uncommon},
-		rare:{weight:3, rarity: rarity.rare},
-	},
-	special:{
-		common:{weight:50, rarity: rarity.common},
-		uncommon:{weight:40, rarity: rarity.uncommon},
-		rare:{weight:10, rarity: rarity.rare},
 
-	},
-	boss:{
-		common:{weight:0, rarity: rarity.common},
-		uncommon:{weight:0, rarity: rarity.uncommon},
-		rare:{weight:100, rarity: rarity.rare},
-	},
-};
 /*******************************************************/
 /* setupDeck：初期デッキとなる10枚のカードを配る
 /*******************************************************/
 function setupDeck(){
-	const continueFlag = getLocalStorage(keyContinueFlag);
+	const Continued = getLocalStorage(keyContinueFlag);
 	const selectChara = getLocalStorage(keySelectChara);
 	const lastDeck = getLocalStorage(keyContinueDeck);
 	const lastOriginalDeck = getLocalStorage(keyContinueOriginalDeck);
 
-	if(lastDeck !== null && continueFlag){
+	if(lastDeck !== null && Continued){
 		// 続きからの場合
 		myDeck = lastDeck;
 		myOriginalDeck = lastOriginalDeck;
@@ -5256,10 +5271,31 @@ function setupDeck(){
 		}
 	}
 }
+/*************************************************************************************/
+/* カード報酬抽選
+/*************************************************************************************/
 /*****************************************************/
 /* カード報酬決定関数
 /*****************************************************/
 function decideCardReward(){
+	const cardReward = {
+		normal:{
+			common:{weight:60, rarity: rarity.common},
+			uncommon:{weight:37, rarity: rarity.uncommon},
+			rare:{weight:3, rarity: rarity.rare},
+		},
+		special:{
+			common:{weight:50, rarity: rarity.common},
+			uncommon:{weight:40, rarity: rarity.uncommon},
+			rare:{weight:10, rarity: rarity.rare},
+
+		},
+		boss:{
+			common:{weight:0, rarity: rarity.common},
+			uncommon:{weight:0, rarity: rarity.uncommon},
+			rare:{weight:100, rarity: rarity.rare},
+		},
+	};
 	const mt = new MersenneTwister();
 	const selectChara = getLocalStorage(keySelectChara);
 	const selectCards = [];
@@ -5307,12 +5343,101 @@ function decideCardReward(){
 		selectCard = shuffleArray(
 			selectCardList.filter((card) => card.rarity === selectRarity.rarity)
 		).shift();
-		selectCards.push(selectCard);
-		i++;
+		if(!selectCards.find((status) => status.name === selectCard.name)){
+			selectCards.push(selectCard);
+			i++;
+		}
 	}
 	return {type: 'card', getFlag: true, amount: selectCards};
 }
+/*****************************************************/
+/* ショップラインナップ決定関数
+/*****************************************************/
+function decideShopLineup(){
+	const selectChara = getLocalStorage(keySelectChara);
+	const selectCards = [];
+	const selectCommonCards = [];
+	let selectCardList = [];
+	const exclusiveInfo = {
+		common:{weight:50, info:{rarity: rarity.common, minPrice: 48, maxPrice: 53}},
+		uncommon:{weight:40, info:{rarity: rarity.uncommon, minPrice: 71, maxPrice: 79}},
+		rare:{weight:10, info:{rarity: rarity.rare, minPrice: 143, maxPrice: 158}},
+	}
+	const commonInfo = [
+		{rarity: rarity.uncommon, minPrice: 82, maxPrice: 90},
+		{rarity: rarity.rare, minPrice: 164, maxPrice: 182},
+	];
+	const lineupType = [type.attack, type.attack, type.skill, type.skill, type.power];
+	const totalWeight = Object.values(exclusiveInfo).reduce((sum, item) => sum + item.weight, 0);
+	let index = 0
+	let selectRarityInfo = {};
+	//専用カードのラインナップ
+	if (selectChara == selectCharacter.gran.name){
+		selectCardList = deepCopyCardList(Object.values(granCardList));
+	} else if (selectChara == selectCharacter.djeeta.name){
+		selectCardList = deepCopyCardList(Object.values(djeetaCardList));	
+	} else {
+		alert('キャラが選択されていません。');
+		window.location.href = 'index.html';
+	}
+	while(index < 5){
+		// レアリティ抽選
+		let random = Math.floor(Math.random() * totalWeight);
+		for (const rarity of Object.values(exclusiveInfo)) {
+			if (random < rarity.weight) {
+				selectRarityInfo = rarity.info;
+				break;
+			}
+			random -= rarity.weight;
+		}
+		let randomPrice = Math.floor(
+			Math.random() * 
+			(selectRarityInfo.maxPrice - selectRarityInfo.minPrice) + selectRarityInfo.minPrice
+		);
+		const filteringCardList = selectCardList
+			.filter((card) => card.rarity === selectRarityInfo.rarity)
+			.filter((card) => card.type === lineupType[index]);
+		console.log(filteringCardList);
+		if(filteringCardList.length > 0){
+			const selectCard = shuffleArray(filteringCardList).shift();
+			if(!selectCards.find((status) => status.card.name === selectCard.name)){
+				selectCards.push({
+					id: index,
+					card: selectCard,
+					price: randomPrice,
+					discount: false,
+				});
+				index++;
+			}
+		}
+	}
+	let randomDiscount = Math.floor(Math.random() * 5);
+	selectCards[randomDiscount].price = Math.floor(selectCards[randomDiscount].price/2);
+	selectCards[randomDiscount].discount = true;
 
+	//共通カードのラインナップ
+	commonInfo.forEach((info) => {
+		let randomPrice = Math.floor(
+			Math.random() * (info.maxPrice - info.minPrice) + info.minPrice
+		);
+		const copyCardList = deepCopyCardList(Object.values(commonCardList));
+		console.log(copyCardList);
+		const filteringCardList = copyCardList.filter((card) => card.rarity === info.rarity);
+		if(filteringCardList.length > 0){
+			const selectCard = shuffleArray(filteringCardList).shift();
+			selectCommonCards.push({
+				id: index,
+				card: selectCard,
+				price: randomPrice,
+				discount: false,
+			});
+			index++;
+		}
+	});
+
+	const selectArtifacts = decideArtifactLineup();
+	return {exclusive: selectCards, common: selectCommonCards, artifacts: selectArtifacts};
+}
 /*************************************************************************************/
 /* 各カード効果関数(アタック)
 /*************************************************************************************/
@@ -5399,7 +5524,7 @@ function effectAttackAndBuff(amount){
 		actionAttack(amount.attack);
 	}
 	if('buff' in amount && 'buffType' in amount ){
-		actionStatusBuf(bufStatus[amount.buffType], amount.buff);
+		actionStatusBuf(buffStatus[amount.buffType], amount.buff);
 	}
 	endAction();
 	return true;
@@ -5411,7 +5536,7 @@ function effectAttackAndDebuff(amount){
 		actionAttack(amount.attack);
 	}
 	if('debuff' in amount && 'debuffType' in amount ){
-		actionStatusDebuf(debufStatus[amount.debuffType], amount.debuff);
+		actionStatusDebuf(debuffStatus[amount.debuffType], amount.debuff);
 	}
 	endAction();
 	return true;
@@ -5423,10 +5548,10 @@ function effectAttackAndDoubleDebuff(amount){
 		actionAttack(amount.attack);
 	}
 	if('debuff1' in amount && 'debuffType1' in amount ){
-		actionStatusDebuf(debufStatus[amount.debuffType1], amount.debuff1);
+		actionStatusDebuf(debuffStatus[amount.debuffType1], amount.debuff1);
 	}
 	if('debuff2' in amount && 'debuffType2' in amount ){
-		actionStatusDebuf(debufStatus[amount.debuffType2], amount.debuff2);
+		actionStatusDebuf(debuffStatus[amount.debuffType2], amount.debuff2);
 	}
 	endAction();
 	return true;
@@ -5438,7 +5563,7 @@ function effectALLAttackAndDebuff(amount){
 		actionAllAttack(amount.attack);
 	}
 	if('debuff' in amount && 'debuffType' in amount ){
-		actionStatusAllDebuf(debufStatus[amount.debuffType], amount.debuff);
+		actionStatusAllDebuf(debuffStatus[amount.debuffType], amount.debuff);
 	}
 	endAction();
 	return true;
@@ -5538,7 +5663,7 @@ function effectBuff(amount){
 	// 防御力ダウン{D}を与える。
 	console.log('effectBuff');
 	if('buff' in amount && 'buffType' in amount ){
-		actionStatusBuf(bufStatus[amount.buffType], amount.buff);
+		actionStatusBuf(buffStatus[amount.buffType], amount.buff);
 	}
 	endAction();
 	return true;
@@ -5548,7 +5673,7 @@ function effectTimesBuff(amount){
 	console.log('effectDefenseDouble');
 	if('buffType' in amount && 'times' in amount){
 		const buff = playerStatus.statuses
-			.find((status) => status.name === bufStatus[amount.buffType].name)
+			.find((status) => status.name === buffStatus[amount.buffType].name)
 		if(buff){
 			buff.amount *= amount.times;
 		}
@@ -5564,7 +5689,7 @@ function effectDefenseAndBuff(amount){
 		actionBlock(amount.block);
 	}
 	if('buff' in amount && 'buffType' in amount ){
-		actionStatusBuf(bufStatus[amount.buffType], amount.buff);
+		actionStatusBuf(buffStatus[amount.buffType], amount.buff);
 	}
 	endAction();
 	return true;
@@ -5573,7 +5698,7 @@ function effectDebuff(amount){
 	// 防御力ダウン{D}を与える。
 	console.log('effectDebuff');
 	if('debuff' in amount && 'debuffType' in amount ){
-		actionStatusDebuf(debufStatus[amount.debuffType], amount.debuff);
+		actionStatusDebuf(debuffStatus[amount.debuffType], amount.debuff);
 	}
 	endAction();
 	return true;
@@ -5582,10 +5707,10 @@ function effectDoubleDebuff(amount){
 	// 敵全体に毒4と恐怖2を与える。廃棄。
 	console.log('effectALLDoubleDebuff');
 	if('debuff1' in amount && 'debuffType1' in amount ){
-		actionStatusDebuf(debufStatus[amount.debuffType1], amount.debuff1);
+		actionStatusDebuf(debuffStatus[amount.debuffType1], amount.debuff1);
 	}
 	if('debuff2' in amount && 'debuffType2' in amount ){
-		actionStatusDebuf(debufStatus[amount.debuffType2], amount.debuff2);
+		actionStatusDebuf(debuffStatus[amount.debuffType2], amount.debuff2);
 	}
 	endAction();
 	return true;
@@ -5595,7 +5720,7 @@ function effectTimesDebuff(amount){
 	console.log('effectDefenseDouble');
 	if('debuffType' in amount && 'times' in amount){
 		const debuff = currentTarget.currentStatus.status
-			.find((status) => status.name === debufStatus[amount.debuffType].name)
+			.find((status) => status.name === debuffStatus[amount.debuffType].name)
 		if(debuff){
 			debuff.amount *= amount.times;
 		}
@@ -5607,7 +5732,7 @@ function effectALLDebuff(amount){
 	// 敵全体に恐怖{D}を与える。
 	console.log('effectALLDebuff');
 	if('debuff' in amount && 'debuffType' in amount ){
-		actionStatusAllDebuf(debufStatus[amount.debuffType], amount.debuff);
+		actionStatusAllDebuf(debuffStatus[amount.debuffType], amount.debuff);
 	}
 	endAction();
 	return true;
@@ -5616,10 +5741,10 @@ function effectALLDoubleDebuff(amount){
 	// 敵全体に毒4と恐怖2を与える。廃棄。
 	console.log('effectALLDoubleDebuff');
 	if('debuff1' in amount && 'debuffType1' in amount ){
-		actionStatusAllDebuf(debufStatus[amount.debuffType1], amount.debuff1);
+		actionStatusAllDebuf(debuffStatus[amount.debuffType1], amount.debuff1);
 	}
 	if('debuff2' in amount && 'debuffType2' in amount ){
-		actionStatusAllDebuf(debufStatus[amount.debuffType2], amount.debuff2);
+		actionStatusAllDebuf(debuffStatus[amount.debuffType2], amount.debuff2);
 	}
 	endAction();
 	return true;
@@ -5631,7 +5756,7 @@ function effectDefenseAndDebuff(amount){
 		actionBlock(amount.block);
 	}
 	if('debuff' in amount && 'debuffType' in amount ){
-		actionStatusDebuf(bufStatus[amount.debuffType], amount.debuff);
+		actionStatusDebuf(buffStatus[amount.debuffType], amount.debuff);
 	}
 	endAction();
 	return true;
@@ -5640,10 +5765,10 @@ function effectBuffAndDebuff(amount){
 	// 攻撃力アップ{F}を得る。ターン終了時に攻撃力アップ2を失う。
 	console.log('effectBuffAndDebuff');
 	if('buff' in amount && 'buffType' in amount ){
-		actionStatusBuf(bufStatus[amount.buffType], amount.buff);
+		actionStatusBuf(buffStatus[amount.buffType], amount.buff);
 	}
 	if('debuff' in amount && 'debuffType' in amount ){
-		actionStatusBuf(debufStatus[amount.debuffType], amount.debuff);
+		actionStatusBuf(debuffStatus[amount.debuffType], amount.debuff);
 	}
 	endAction();
 	return true;
@@ -5773,7 +5898,7 @@ function effectDrawAndDebuff(amount){
 		});
 	}
 	if('debuff' in amount && 'debuffType' in amount ){
-		actionStatusBuf(debufStatus[amount.debuffType], amount.debuff);
+		actionStatusBuf(debuffStatus[amount.debuffType], amount.debuff);
 	}
 	endAction();
 	return true;
@@ -5845,7 +5970,7 @@ function effectAttackAndConditionsDefenseDown(amount){
 	// 	敵が防御力ダウンを受けている場合
 	if (
 		currentTarget.currentStatus.status
-		.find((status) => status.name === debufStatus.defenseDown.name)
+		.find((status) => status.name === debuffStatus.defenseDown.name)
 	) {
 		if('energy' in amount){
 			playerStatus.remainEnergy += amount.energy;
@@ -5938,7 +6063,7 @@ function effectBuffForAttack(amount){
 	});
 	if(AttackFlag){
 		if('buff' in amount && 'buffType' in amount ){
-			actionStatusBuf(bufStatus[amount.buffType], amount.buff);
+			actionStatusBuf(buffStatus[amount.buffType], amount.buff);
 		}
 	}
 	endAction();
@@ -6095,7 +6220,7 @@ function effectAttackAndConditionsPoison(amount){
 	// 	敵が防御力ダウンを受けている場合
 	if (
 		currentTarget.currentStatus.status
-		.find((status) => status.name === debufStatus.poison.name)
+		.find((status) => status.name === debuffStatus.poison.name)
 	) {
 		actionAttack(amount.additionalAttack);
 	}
@@ -6146,7 +6271,7 @@ function effectAttackAndConditionsWeak(amount){
 	// 	敵が恐怖を受けている場合
 	if (
 		currentTarget.currentStatus.status
-		.find((status) => status.name === debufStatus.weak.name)
+		.find((status) => status.name === debuffStatus.weak.name)
 	) {
 		if('energy' in amount){
 			playerStatus.remainEnergy += amount.energy;
@@ -6233,7 +6358,7 @@ function effectTimesRandomDebuff(amount){
 	console.log('effectALLDebuff');
 	if('debuff' in amount && 'debuffType' in amount && 'count' in amount){
 		for(let i = 0; i < amount.count; i++){
-			actionStatusRandomDebuf(debufStatus[amount.debuffType], amount.debuff);
+			actionStatusRandomDebuf(debuffStatus[amount.debuffType], amount.debuff);
 		}
 	}
 	endAction();
@@ -6345,7 +6470,7 @@ function effectDebuffAndCostDown(amount){
 	});
 	
 	if('debuff' in amount && 'debuffType' in amount ){
-		actionStatusBuf(debufStatus[amount.debuffType], amount.debuff);
+		actionStatusBuf(debuffStatus[amount.debuffType], amount.debuff);
 	}
 	endAction();
 	return true;
@@ -6355,10 +6480,10 @@ function effectXTimesDoubleDebuff(amount){
 	console.log('effectALLDoubleDebuff');
 	if('variable' in amount){
 		if('debuffType1' in amount ){
-			actionStatusAllDebuf(debufStatus[amount.debuffType1], amount.variable);
+			actionStatusAllDebuf(debuffStatus[amount.debuffType1], amount.variable);
 		}
 		if('debuffType2' in amount ){
-			actionStatusAllDebuf(debufStatus[amount.debuffType2], amount.variable);
+			actionStatusAllDebuf(debuffStatus[amount.debuffType2], amount.variable);
 		}
 	}
 	endAction();
@@ -6369,10 +6494,10 @@ function effectXPlusOneTimesDoubleDebuff(amount){
 	console.log('effectALLDoubleDebuff');
 	if('variable' in amount){
 		if('debuffType1' in amount ){
-			actionStatusAllDebuf(debufStatus[amount.debuffType1], amount.variable + 1);
+			actionStatusAllDebuf(debuffStatus[amount.debuffType1], amount.variable + 1);
 		}
 		if('debuffType2' in amount ){
-			actionStatusAllDebuf(debufStatus[amount.debuffType2], amount.variable + 1);
+			actionStatusAllDebuf(debuffStatus[amount.debuffType2], amount.variable + 1);
 		}
 	}
 	endAction();
@@ -6478,27 +6603,27 @@ function drawReproduction(card){
 /* カードアクション用システム関数
 /*************************************************************************************/
 /*******************************************************/
-// ダメージ計算
+// バフ・デバフ計算
 /*******************************************************/
 function calcDamage(attackCount, targetEnemy, AttackUpMag = 1){
 	let totalAttack = attackCount;
 	let magnification = 1;
 	// 恐怖（攻撃力25%減少）
 	const weakness = playerStatus.statuses
-		.find((status) => status.name === debufStatus.weak.name);
+		.find((status) => status.name === debuffStatus.weak.name);
 	if (weakness){magnification -= 0.25;}
 	// ダブルアタック（アタックのダメージが2倍になる）
 	const doubleDamage = playerStatus.statuses
-		.find((status) => status.name === bufStatus.doubleDamage.name);
+		.find((status) => status.name === buffStatus.doubleDamage.name);
 	if (doubleDamage){magnification += 1.0;}
 	if (Object.keys(targetEnemy).length !== 0) {
 		// 防御力ダウン（被ダメ50%上昇）
 		const defenseUp = targetEnemy.currentStatus.status
-			.find((status) => status.name === bufStatus.defenseUp.name);
+			.find((status) => status.name === buffStatus.defenseUp.name);
 		if (defenseUp){magnification -= 0.5;}
 		// 防御力アップ（被ダメ50%減少）
 		const defenseDown = targetEnemy.currentStatus.status
-			.find((status) => status.name === debufStatus.defenseDown.name);
+			.find((status) => status.name === debuffStatus.defenseDown.name);
 		if (defenseDown){magnification += 0.5;}
 	}
 	totalAttack = Math.floor(totalAttack * magnification);
@@ -6506,10 +6631,10 @@ function calcDamage(attackCount, targetEnemy, AttackUpMag = 1){
 	// プレイヤーの状態異常の確認
 	playerStatus.statuses.forEach((status) => {
 		switch(status.name){
-			case bufStatus.attackUp.name:// 攻撃力アップ（攻撃ダメージが+X。）
+			case buffStatus.attackUp.name:// 攻撃力アップ（攻撃ダメージが+X。）
 				totalAttack += status.amount * AttackUpMag;
 				break;
-			case debufStatus.attackDown.name:// 攻撃力ダウン（攻撃ダメージがｰX。）
+			case debuffStatus.attackDown.name:// 攻撃力ダウン（攻撃ダメージがｰX。）
 				if (totalAttack > status.amount){
 					totalAttack -= status.amount;
 				} else {
@@ -6524,7 +6649,7 @@ function calcDamage(attackCount, targetEnemy, AttackUpMag = 1){
 		// エネミーの状態異常を確認
 		targetEnemy.currentStatus.status.forEach((status) => {
 			switch(status.name){
-				case bufStatus.damageCut.name://ダメージカット
+				case buffStatus.damageCut.name://ダメージカット
 					if(totalAttack > 0){
 						totalAttack = 1;
 					}
@@ -6537,16 +6662,62 @@ function calcDamage(attackCount, targetEnemy, AttackUpMag = 1){
 	return totalAttack;
 }
 /*******************************************************/
-// ダメージ計算(投げナイフ専用)
+// バフ・デバフ(投げナイフ専用)
 /*******************************************************/
 function calcKnifeDamage(attackCount, targetEnemy){
 	let totalDamage = calcDamage(attackCount, targetEnemy);
 	const hitRate = playerStatus.statuses
-		.find((status) => status.name === bufStatus.hitRate.name);
+		.find((status) => status.name === buffStatus.hitRate.name);
 	if (hitRate){
 		totalDamage = totalDamage + hitRate.amount;
 	}
 	return totalDamage;
+}
+
+/*******************************************************/
+/* 与ダメージ計算関数
+/*******************************************************/
+function calcAttackDamageToTarget(totalAttack, target){
+	const enemyBlock = target.currentStatus.block;
+	if(enemyBlock > 0){
+		if(enemyBlock >= totalAttack){
+			target.currentStatus.block -= totalAttack;
+			totalAttack = 0;
+		} else if (enemyBlock < totalAttack){
+			totalAttack -= enemyBlock;
+			target.currentStatus.block = 0;
+		}
+	}
+	target.currentStatus.remainHP -= totalAttack;
+	//実ダメージを与えた場合
+	if(totalAttack > 0){
+		const sleep = target.currentStatus.status
+			.find((status) => status.name === debuffStatus.sleep.name);
+		if(sleep){
+			sleep.amount = 0;
+			actionStatusDebufToTarget(debuffStatus.fainting, '', target);
+			if('AwakeningFlag' in target.currentStatus.actionCount){
+				target.currentStatus.actionCount.AwakeningFlag = true;
+				const barrier = target.currentStatus.status
+					.find((status) => status.name === buffStatus.barrier.name);
+				if(barrier){
+					barrier.amount = 0;
+				}
+			}
+		}
+		//「不死王の刃」の効果発動
+		const lich = playerStatus.statuses
+			.find((status) => status.name === buffStatus.lich.name);
+		if(lich){
+			actionStatusDebufToTarget(debuffStatus.poison, lich.amount, target);
+		}
+		playerStatus.statuses = playerStatus.statuses.filter((status) => {
+			return status.amount !== 0;
+		});
+	}
+	target.currentStatus.status = target.currentStatus.status.filter((status) => {
+		return status.amount !== 0;
+	});
 }
 /*******************************************************/
 /* 与ダメージ関数
@@ -6554,23 +6725,7 @@ function calcKnifeDamage(attackCount, targetEnemy){
 function actionAttack(attackCount, magnification = 1){
 	let totalAttack = calcDamage(attackCount, currentTarget, magnification);
 	// ブロック計算
-	const enemyBlock = currentTarget.currentStatus.block;
-	if(enemyBlock > 0){
-		if(enemyBlock >= totalAttack){
-			currentTarget.currentStatus.block -= totalAttack;
-			totalAttack = 0;
-		} else if (enemyBlock < totalAttack){
-			totalAttack -= enemyBlock;
-			currentTarget.currentStatus.block = 0;
-		}
-	}
-	currentTarget.currentStatus.remainHP -= totalAttack;
-	//「不死王の刃」の効果発動
-	const lich = playerStatus.statuses
-		.find((status) => status.name === bufStatus.lich.name);
-	if(lich && totalAttack > 0){
-		actionStatusDebuf(debufStatus.poison, lich.amount);
-	}
+	calcAttackDamageToTarget(totalAttack, currentTarget);
 	// アニメーション
 	animatePlayerAttack();
 }
@@ -6580,50 +6735,19 @@ function actionAttack(attackCount, magnification = 1){
 function actionKnifeAttack(attackCount){
 	let totalAttack = calcKnifeDamage(attackCount, currentTarget);
 	// ブロック計算
-	const enemyBlock = currentTarget.currentStatus.block;
-	if(enemyBlock > 0){
-		if(enemyBlock >= totalAttack){
-			currentTarget.currentStatus.block -= totalAttack;
-			totalAttack = 0;
-		} else if (enemyBlock < totalAttack){
-			currentTarget.currentStatus.block = 0;
-			totalAttack = totalAttack - enemyBlock;
-		}
-	}
-	currentTarget.currentStatus.remainHP -= totalAttack;
-	//「不死王の刃」の効果発動
-	const lich = playerStatus.statuses
-		.find((status) => status.name === bufStatus.lich.name);
-	if(lich && totalAttack > 0){
-		actionStatusDebuf(debufStatus.poison, lich.amount);
-	}
+	calcAttackDamageToTarget(totalAttack, currentTarget);
 	// アニメーション
 	animatePlayerAttack();
 }
+
 /*******************************************************/
 /* 与ダメージ&吸収関数
 /*******************************************************/
 function actionAttackAndAbsorb(attackCount){
 	let totalAttack = calcDamage(attackCount, currentTarget);
 	// ブロック計算
-	const enemyBlock = currentTarget.currentStatus.block;
-	if(enemyBlock > 0){
-		if(enemyBlock >= totalAttack){
-			currentTarget.currentStatus.block -= totalAttack;
-			totalAttack = 0;
-		} else if (enemyBlock < totalAttack){
-			currentTarget.currentStatus.block = 0;
-			totalAttack = totalAttack - enemyBlock;
-		}
-	}
-	currentTarget.currentStatus.remainHP -= totalAttack;
-	recoveryHP(totalAttack);
-	//「不死王の刃」の効果発動
-	const lich = playerStatus.statuses
-		.find((status) => status.name === bufStatus.lich.name);
-	if(lich && totalAttack > 0){
-		actionStatusDebuf(debufStatus.poison, lich.amount);
-	}
+	const actualDamage = calcAttackDamageToTarget(totalAttack, currentTarget);
+	recoveryHP(actualDamage);
 	// アニメーション
 	animatePlayerAttack();
 }
@@ -6633,24 +6757,7 @@ function actionAttackAndAbsorb(attackCount){
 function actionAllAttack(attackCount){
 	currentEnemies.forEach((enemy) => {
 		let totalAttack = calcDamage(attackCount, enemy);
-		// ブロック計算
-		const enemyBlock = enemy.currentStatus.block;
-		if(enemyBlock > 0){
-			if(enemyBlock >= totalAttack){
-				enemy.currentStatus.block -= totalAttack;
-				totalAttack = 0;
-			} else if (enemyBlock < totalAttack){
-				enemy.currentStatus.block = 0;
-				totalAttack = totalAttack - enemyBlock;
-			}
-		}
-		enemy.currentStatus.remainHP -= totalAttack;
-		//「不死王の刃」の効果発動
-		const lich = playerStatus.statuses
-			.find((status) => status.name === bufStatus.lich.name);
-		if(lich && totalAttack > 0){
-			actionStatusDebufToTarget(debufStatus.poison, lich.amount, enemy);
-		}
+		const actualDamage = calcAttackDamageToTarget(totalAttack, enemy);
 	});
 	// アニメーション
 	animatePlayerAttack();
@@ -6661,25 +6768,8 @@ function actionAllAttack(attackCount){
 function actionAllAttackAndAbsorb(attackCount){
 	currentEnemies.forEach((enemy) => {
 		let totalAttack = calcDamage(attackCount, enemy);
-		// ブロック計算
-		const enemyBlock = enemy.currentStatus.block;
-		if(enemyBlock > 0){
-			if(enemyBlock >= totalAttack){
-				enemy.currentStatus.block -= totalAttack;
-				totalAttack = 0;
-			} else if (enemyBlock < totalAttack){
-				enemy.currentStatus.block = 0;
-				totalAttack = totalAttack - enemyBlock;
-			}
-		}
-		enemy.currentStatus.remainHP -= totalAttack;
-		recoveryHP(totalAttack);
-		//「不死王の刃」の効果発動
-		const lich = playerStatus.statuses
-			.find((status) => status.name === bufStatus.lich.name);
-		if(lich && totalAttack > 0){
-			actionStatusDebufToTarget(debufStatus.poison, lich.amount, enemy);
-		}
+		const actualDamage = calcAttackDamageToTarget(totalAttack, enemy);
+		recoveryHP(actualDamage);
 	});
 	// アニメーション
 	animatePlayerAttack();
@@ -6692,24 +6782,7 @@ function actionRandomAttack(attackCount){
 	console.log(`Random Hit: ${random}`);
 	const enemy = currentEnemies[random];
 	let totalAttack = calcDamage(attackCount, enemy);
-	// ブロック計算
-	const enemyBlock = enemy.currentStatus.block;
-	if(enemyBlock > 0){
-		if(enemyBlock >= totalAttack){
-			enemy.currentStatus.block -= totalAttack;
-			totalAttack = 0;
-		} else if (enemyBlock < totalAttack){
-			enemy.currentStatus.block = 0;
-			totalAttack -= enemyBlock;
-		}
-	}
-	enemy.currentStatus.remainHP -= totalAttack;
-	//「不死王の刃」の効果発動
-	const lich = playerStatus.statuses
-		.find((status) => status.name === bufStatus.lich.name);
-	if(lich && totalAttack > 0){
-		actionStatusDebufToTarget(debufStatus.poison, lich.amount, enemy);
-	}
+	calcAttackDamageToTarget(totalAttack, currentTarget);
 	// アニメーション
 	animatePlayerAttack();
 }
@@ -6719,25 +6792,7 @@ function actionRandomAttack(attackCount){
 function actionAllAttackSimple(attackCount){
 	currentEnemies.forEach((enemy) => {
 		let totalAttack = attackCount;
-		// ブロック計算
-		const enemyBlock = enemy.currentStatus.block;
-		if(enemyBlock > 0){
-			if(enemyBlock >= totalAttack){
-				enemy.currentStatus.block -= totalAttack;
-				totalAttack = 0;
-			} else if (enemyBlock < totalAttack){
-				enemy.currentStatus.block = 0;
-				totalAttack = totalAttack - enemyBlock;
-			}
-		}
-		enemy.currentStatus.remainHP -= totalAttack;
-		recoveryHP(totalAttack);
-		//「不死王の刃」の効果発動
-		const lich = playerStatus.statuses
-			.find((status) => status.name === bufStatus.lich.name);
-		if(lich && totalAttack > 0){
-			actionStatusDebufToTarget(debufStatus.poison, lich.amount, enemy);
-		}
+		calcAttackDamageToTarget(totalAttack, currentTarget);
 	});
 	// アニメーション
 	animatePlayerAttack();
@@ -6749,13 +6804,13 @@ function calcBlock(blockCount){
 	let totalBlock = blockCount;
 	// 回避率アップの効果
 	const dexterity = playerStatus.statuses
-		.find((status) => status.name === bufStatus.dexterity.name);
+		.find((status) => status.name === buffStatus.dexterity.name);
 	if (dexterity){
 		totalBlock += dexterity.amount;
 	}
 	// 回避率ダウンの効果
 	const dexterityDown = playerStatus.statuses
-		.find((status) => status.name === debufStatus.dexterityDown.name);
+		.find((status) => status.name === debuffStatus.dexterityDown.name);
 	if (dexterityDown){
 		if(totalBlock > dexterityDown.amount){
 			totalBlock -= dexterityDown.amount;
@@ -6763,8 +6818,16 @@ function calcBlock(blockCount){
 			totalBlock = 0;
 		}
 	}
+	let magnification = 1;
+	// 脆弱化の効果
+	const frail = playerStatus.statuses
+		.find((status) => status.name === debuffStatus.frail.name);
+	if (frail){magnification -= 0.25;}
+
+	totalBlock = Math.floor(totalBlock * magnification);
+
 	const noBlock = playerStatus.statuses
-		.find((status) => status.name === debufStatus.noBlock.name);
+		.find((status) => status.name === debuffStatus.noBlock.name);
 	if (noBlock){
 		totalBlock = 0;
 	}
@@ -6777,7 +6840,7 @@ function actionBlock(blockCount, animateFlag = true){
 	playerStatus.block += calcBlock(blockCount);
 	//「バハムートシールド」の効果
 	const bahamut = playerStatus.statuses
-		.find((status) => status.name === bufStatus.bahamut.name);
+		.find((status) => status.name === buffStatus.bahamut.name);
 	if (bahamut){
 		actionRandomAttack(bahamut.amount);
 	}
@@ -6796,10 +6859,10 @@ function actionStatusBuf(buf, amountCount){
 }
 function actionStatusBufForAnimate(playerInfo, buf, amountCount, animateFlag = true){
 	// 弱体無効がついていれば、無効になる
-	const debuffFlag = Object.values(debufStatus)
+	const debuffFlag = Object.values(debuffStatus)
 		.find((status) => status.name === buf.name);
 	const mount = playerStatus.statuses
-		.find((status) => status.name === bufStatus.mount.name);
+		.find((status) => status.name === buffStatus.mount.name);
 	if (mount && debuffFlag){
 		mount.amount--;
 		playerStatus.statuses = playerStatus.statuses.filter((status) => {
@@ -6829,15 +6892,15 @@ function actionStatusBufForAnimate(playerInfo, buf, amountCount, animateFlag = t
 	console.log(playerInfo.statuses);
 }
 /*******************************************************/
-/* バフを与える関数（アニメーション後付け）
+/* バフを与える関数（アニメーションなし）
 /*******************************************************/
 function actionLoseHP(loseHP){
 	damageHP(loseHP);
 	//「血の代償」の効果発動
 	const compensation = playerStatus.statuses
-		.find((status) => status.name === bufStatus.compensation.name);
+		.find((status) => status.name === buffStatus.compensation.name);
 	if (compensation){
-		actionStatusBuf(bufStatus.attackUp, compensation.amount);
+		actionStatusBuf(buffStatus.attackUp, compensation.amount);
 	}
 }
 /*******************************************************/
@@ -6850,7 +6913,7 @@ function actionStatusDebufToTarget(debuf, amountCount, target, animateFlag = tru
 	console.log(`${debuf.name}: ${amountCount}`);
 	// 弱体無効がついていれば、無効になる
 	const mount = target.currentStatus.status
-		.find((status) => status.name === bufStatus.mount.name);
+		.find((status) => status.name === buffStatus.mount.name);
 	if (mount && mount.amount > 0){
 		mount.amount--;
 		target.currentStatus.status = target.currentStatus.status.filter((status) => {
@@ -7211,7 +7274,7 @@ function reproductionToNextTurnCard(count){
 		}
 		setLocalStorage(keyContinueHold, holdCard);
 	}
-	actionStatusBuf(bufStatus.reproduction, count);
+	actionStatusBuf(buffStatus.reproduction, count);
 	updatePlayerAreaDom(playerStatus);
 	setLocalStorage(keyContinuePlayerStatus, playerStatus);
 	startPhase(phase.action);

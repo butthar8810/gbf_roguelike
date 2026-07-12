@@ -2,18 +2,22 @@
 /* startGame：ゲームスタート
 /*******************************************************/
 function startGame(){
+	const Continued = getLocalStorage(keyContinueFlag);
 	// セットアップ
 	setupCharaStatus();
 	setupDeck();
 	setupArtifact();
 	setupOutGameInfomation();
-	if (getLocalStorage(keyContinueBattleFlag)) {
+	if (Continued === continueFlag.inGame) {
 		console.log('戦闘再開');
 		continueBattle();
-	} else if (getLocalStorage(keyContinueRestFlag)) {
+	} else if (Continued === continueFlag.restArea) {
 		console.log('休憩再開');
 		startRestEvent();
-	} else if (getLocalStorage(keyContinueFlag)) {
+	} else if (Continued === continueFlag.shopArea) {
+		console.log('ショップ再開');
+		startShopEvent();
+	} else if (Continued === continueFlag.outGame) {
 		console.log('再開');
 		climbTowerContinue();
 	}else {
@@ -24,7 +28,7 @@ function startGame(){
 /* setupCharaStatus：キャラステータスをセットアップ
 /*******************************************************/
 function setupCharaStatus(){
-	const continueFlag = getLocalStorage(keyContinueFlag);
+	const Continued = getLocalStorage(keyContinueFlag);
 	const selectChara = getLocalStorage(keySelectChara);
 	const lastPlayerStatus = getLocalStorage(keyContinuePlayerStatus);
 
@@ -43,7 +47,7 @@ function setupCharaStatus(){
 		window.location.href = 'index.html';
 	}
 
-	if (lastPlayerStatus && continueFlag) {
+	if (lastPlayerStatus && Continued) {
 		playerStatus.remainHP = lastPlayerStatus.remainHP;
 		playerStatus.maxHP = lastPlayerStatus.maxHP;
 		playerStatus.money = lastPlayerStatus.money;
@@ -62,8 +66,8 @@ function setupCharaStatus(){
 		}
 		setLocalStorage(keyContinuePlayerStatus, playerStatus);
 	}
-	updateHP();
-	updateMoney();
+	updateHPDom();
+	updateMoneyDom();
 }
 /*******************************************************/
 /* climbTowerStart：塔を上る（クライムスタート）
@@ -109,8 +113,8 @@ function climbTowerStart(){
 /*				mapDiv.html(`<img src='${stages.normal.image}'>`);
 				mapRows.push(stages.normal);
 */
-				mapDiv.html(`<img src='${stages.test.image}'>`);
-				mapRows.push(stages.test);
+				mapDiv.html(`<img src='${stages.shop.image}'>`);
+				mapRows.push(stages.shop);
 			} else {
 				let randomMap = mt.nextInt(0, totalWeight);
 				for (const stage of Object.values(stages)) {
@@ -144,7 +148,7 @@ function climbTowerStart(){
 	$('.map-modal').addClass('active');
 	$('.map-modal-body').scrollTop($('.map-modal-body')[0].scrollHeight);
 	setLocalStorage(keyContinueMap, map);
-	setLocalStorage(keyContinueFlag, true);
+	setLocalStorage(keyContinueFlag, continueFlag.outGame);
 }
 /*******************************************************/
 /* climbTowerContinue：塔登頂を再開する（クライムコンティニュー）
@@ -156,6 +160,7 @@ function climbTowerContinue(){
 		currentMap = lastCurrentMap;
 	} else {
 		alert('マップが保存されていません');
+		climbTowerStart();
 	}
 	$('.map-modal-body').html('');
 	for(let row = 0; row < mapRows; row++){
@@ -190,6 +195,7 @@ function climbTowerContinue(){
 		}
 	}
 	$('.map-modal').addClass('active');
+	setLocalStorage(keyContinueFlag, continueFlag.outGame);
 }
 /*******************************************************/
 /* admissionStage：ステージに入場する
@@ -212,7 +218,7 @@ function admissionStage(stageInfo){
 			startGiftEvent();
 			break;
 		case stages.shop.name:
-			startShop();
+			startShopEvent();
 			break;
 		case stages.rest.name:
 			startRestEvent();
@@ -269,25 +275,4 @@ function appendTalkingBtn(text){
 	$('.talk-area').append(talkingBtn);
 	return talkingBtn;
 }
-/*******************************************************/
-/* appendTalkingBtn：hand-areaの会話ボタンを削除する
-/*******************************************************/
-function deleteTalkingBtn(){
-	$('.talk-area').html('')
-	return
-}
-/*******************************************************/
-/* updateMoney：HPをDOM更新する
-/*******************************************************/
-function updateHP(){
-	$('.remainHp').html(playerStatus.remainHP);
-	$('.maxHp').html(playerStatus.maxHP);
-	return
-}
-/*******************************************************/
-/* updateMoney：所持コインをDOM更新する
-/*******************************************************/
-function updateMoney(){
-	$('.remainMoney').html(playerStatus.money);
-	return
-}
+

@@ -24,14 +24,13 @@ function loadTopPage(){
 	$('.start-btn').click((e) => {
 		if(getLocalStorage(keySelectChara)){
 			removeLocalStorage(keyContinueFlag);
-			removeLocalStorage(keyContinueRestFlag);
 			removeLocalStorage(keyContinueArtifact);
 			removeLocalStorage(keyContinuePlayerStatus);
 			removeLocalStorage(keyContinueMap);
 			removeLocalStorage(keyContinueCurrentMap);
 			removeLocalStorage(keyContinueOriginalDeck);
+			removeLocalStorage(keyContinueShopLineup);
 			
-			removeLocalStorage(keyContinueBattleFlag);
 			removeLocalStorage(keyContinueDeck);
 			removeLocalStorage(keyContinueHand);
 			removeLocalStorage(keyContinueTrash);

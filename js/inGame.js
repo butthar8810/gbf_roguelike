@@ -14,15 +14,14 @@ function startBattle(){
 	// 自分・敵のUIをセットアップする
 	updatePlayerAreaDom(playerStatus);
 	setupEnemy();
-	// 初めの敵予兆を決定する
-	decideNextAction();
 
 	setupBtn();
-
+	// 開始時効果を発揮する
 	startAbility();
-	$('.battle-area').removeClass('hidden');
-	$('.info-area').removeClass('hidden');
-	setLocalStorage(keyContinueBattleFlag, true);
+	// 初めの敵予兆を決定する
+	decideNextAction();
+	displayBattleArea();
+	setLocalStorage(keyContinueFlag, continueFlag.inGame);
 	setLocalStorage(keyContinueTrash, myTrash);
 	setLocalStorage(keyContinueTurn, currentTurn);
 	setLocalStorage(keyContinueEnemy, currentEnemies);
@@ -33,7 +32,6 @@ function startBattle(){
 /* endBattle：戦闘の終了処理を開始する
 /*******************************************************/
 function endBattle(){
-	removeLocalStorage(keyContinueBattleFlag);
 	removeLocalStorage(keyContinueDeck);
 	removeLocalStorage(keyContinueHand);
 	removeLocalStorage(keyContinueTrash);
@@ -48,10 +46,7 @@ function endBattle(){
 	removeLocalStorage(keyContinueHold);
 	removeLocalStorage(keyContinuePhase);
 	initialize();
-	$('.result-modal').removeClass('active');
-	$('.battle-area').addClass('hidden');
-	$('.info-area').addClass('hidden');
-	$('.hand-area').html('');
+	hiddenBattleArea();
 
 	playerStatus.block = 0;
 	playerStatus.statuses = [];
@@ -78,8 +73,7 @@ function continueBattle(){
 	updateHandDom();
 	updateEnergyDom();
 	updateEnemyAreaDom(currentEnemies, true);
-	$('.battle-area').removeClass('hidden');
-	$('.info-area').removeClass('hidden');
+	displayBattleArea(); 
 	
 	// フェイズ開始
 	if (currentPhase !== null){
@@ -145,9 +139,9 @@ function initialize(){
 /* readyDeck：初期デッキとなるカードを配る
 /*******************************************************/
 function readyDeck(){
-	const continueBattleFlag = getLocalStorage(keyContinueBattleFlag);
+	const Continued = getLocalStorage(keyContinueFlag);
 	const lastDeck = getLocalStorage(keyContinueDeck);
-	if(lastDeck !== null && continueBattleFlag){
+	if(lastDeck !== null && Continued === continueFlag.inGame){
 		// 続きからの場合
 		myDeck = lastDeck;
 	} else {
@@ -161,9 +155,9 @@ function readyDeck(){
 /* setupHandCard：初期手札となる5枚のカードを引く
 /*******************************************************/
 function setupHandCard(){
-	const continueBattleFlag = getLocalStorage(keyContinueBattleFlag);
+	const Continued = getLocalStorage(keyContinueFlag);
 	const lastHand = getLocalStorage(keyContinueHand);
-	if(lastHand !== null && continueBattleFlag){
+	if(lastHand !== null && Continued === continueFlag.inGame){
 		// 続きからの場合
 		myHand = lastHand;
 	} else {
@@ -231,7 +225,7 @@ function setupBtn(){
 				break;
 			case phase.caitSea:
 				const caitSea = playerStatus.statuses
-					.find((status) => status.name === bufStatus.caitSea.name);
+					.find((status) => status.name === buffStatus.caitSea.name);
 				if(tmpArea.length < caitSea.amount){
 					break;
 				}
@@ -556,10 +550,10 @@ function startTurnStatuses(playerInfo, enemiesInfo, animateFlag){
 	console.log(`endTurnStatuses`);
 	//「攻UP無効」で攻撃力アップが減る
 	const invalidAttackUp = playerInfo.statuses
-		.find((status) => status.name === debufStatus.invalidAttackUp.name);
+		.find((status) => status.name === debuffStatus.invalidAttackUp.name);
 	if (invalidAttackUp){
 		const attackUp = playerInfo.statuses
-			.find((status) => status.name === bufStatus.attackUp.name);
+			.find((status) => status.name === buffStatus.attackUp.name);
 		if(attackUp){
 			if(attackUp.amount > invalidAttackUp.amount){
 				attackUp.amount -= invalidAttackUp.amount;
@@ -570,10 +564,10 @@ function startTurnStatuses(playerInfo, enemiesInfo, animateFlag){
 	}
 	//「防Down削除」で攻撃力ダウンが減る
 	const invalidAttackDown = playerInfo.statuses
-		.find((status) => status.name === debufStatus.invalidAttackDown.name);
+		.find((status) => status.name === debuffStatus.invalidAttackDown.name);
 	if (invalidAttackDown){
 		const attackDown = playerInfo.statuses
-			.find((status) => status.name === debufStatus.attackDown.name);
+			.find((status) => status.name === debuffStatus.attackDown.name);
 		if(attackDown){
 			if(attackDown.amount > invalidAttackDown.amount){
 				attackDown.amount -= invalidAttackDown.amount;
@@ -584,7 +578,7 @@ function startTurnStatuses(playerInfo, enemiesInfo, animateFlag){
 	}
 	//「無限の飛刃」の効果発動
 	const infinite = playerInfo.statuses
-		.find((status) => status.name === bufStatus.infinite.name);
+		.find((status) => status.name === buffStatus.infinite.name);
 	if (infinite){
 		if(animateFlag){
 			// アニメーション用
@@ -603,28 +597,28 @@ function startTurnStatuses(playerInfo, enemiesInfo, animateFlag){
 
 	//「怨念」の効果発動
 	const grudge = playerInfo.statuses
-		.find((status) => status.name === bufStatus.grudge.name);
+		.find((status) => status.name === buffStatus.grudge.name);
 	if (grudge){
-		actionStatusAllDebufForAnimate(enemiesInfo, debufStatus.poison, grudge.amount, animateFlag);
+		actionStatusAllDebufForAnimate(enemiesInfo, debuffStatus.poison, grudge.amount, animateFlag);
 	}
 	//「果ての力」の効果発動
 	const end = playerInfo.statuses
-		.find((status) => status.name === bufStatus.end.name);
+		.find((status) => status.name === buffStatus.end.name);
 	if (end){
-		actionStatusBufForAnimate(playerInfo, bufStatus.attackUp, end.amount, animateFlag);
+		actionStatusBufForAnimate(playerInfo, buffStatus.attackUp, end.amount, animateFlag);
 	}
 	//「英雄の盾」がある場合はブロックを初期化しない
 	const hero = playerInfo.statuses
-		.find((status) => status.name === bufStatus.hero.name);
+		.find((status) => status.name === buffStatus.hero.name);
 	const lightWall = playerInfo.statuses
-		.find((status) => status.name === bufStatus.lightWall.name);
+		.find((status) => status.name === buffStatus.lightWall.name);
 	if (!hero && !lightWall){
 		// ブロックを解除する
 		playerInfo.block = 0;
 	}
 	// 「次ターンブロック」でブロックを得る
 	const nextTurnBlock = playerInfo.statuses
-		.find((status) => status.name === bufStatus.nextTurnBlock.name);
+		.find((status) => status.name === buffStatus.nextTurnBlock.name);
 	if (nextTurnBlock){
 		playerInfo.block += nextTurnBlock.amount;
 	}
@@ -632,13 +626,13 @@ function startTurnStatuses(playerInfo, enemiesInfo, animateFlag){
 	playerInfo.remainEnergy = playerInfo.maxEnergy;
 	// 「活性」で追加回復
 	const activity = playerInfo.statuses
-		.find((status) => status.name === bufStatus.activity.name);
+		.find((status) => status.name === buffStatus.activity.name);
 	if (activity){
 		playerInfo.remainEnergy += activity.amount;
 	}
 	// 「活性化」で追加回復
 	const energized = playerInfo.statuses
-		.find((status) => status.name === bufStatus.energized.name);
+		.find((status) => status.name === buffStatus.energized.name);
 	if (energized){
 		playerInfo.remainEnergy += energized.amount;
 	}
@@ -647,28 +641,28 @@ function startTurnStatuses(playerInfo, enemiesInfo, animateFlag){
 	// プレイヤーの状態変化処理
 	playerInfo.statuses.forEach((status, index) => {
 		switch(status.name){
-			case bufStatus.defenseUp.name:
-			case bufStatus.doubleDamage.name:
-			case bufStatus.damageCut.name:
-			case debufStatus.defenseDown.name:
-			case debufStatus.frail.name:
-			case debufStatus.weak.name:
-			case debufStatus.paralysis.name:
+			case buffStatus.defenseUp.name:
+			case buffStatus.doubleDamage.name:
+			case buffStatus.damageCut.name:
+			case debuffStatus.defenseDown.name:
+			case debuffStatus.frail.name:
+			case debuffStatus.weak.name:
+			case debuffStatus.frozen.name:
 				status.amount--;
 				break;
-			case bufStatus.reflection.name:
-			case bufStatus.wind.name:
-			case bufStatus.attackCombo.name:
-			case bufStatus.skillCombo.name:
-			case bufStatus.activity.name:
-			case bufStatus.lightWall.name:
-			case bufStatus.nextTurnBlock.name:
-			case bufStatus.nextTurnDraw.name:
-			case bufStatus.reproduction.name:
-			case debufStatus.noDraw.name:
-			case debufStatus.invalidAttackUp.name:
-			case debufStatus.invalidAttackDown.name:
-			case debufStatus.suffocation.name:
+			case buffStatus.reflection.name:
+			case buffStatus.wind.name:
+			case buffStatus.attackCombo.name:
+			case buffStatus.skillCombo.name:
+			case buffStatus.activity.name:
+			case buffStatus.lightWall.name:
+			case buffStatus.nextTurnBlock.name:
+			case buffStatus.nextTurnDraw.name:
+			case buffStatus.reproduction.name:
+			case debuffStatus.noDraw.name:
+			case debuffStatus.invalidAttackUp.name:
+			case debuffStatus.invalidAttackDown.name:
+			case debuffStatus.suffocation.name:
 				status.amount = 0;
 				break;
 			default:
@@ -680,9 +674,9 @@ function startTurnStatuses(playerInfo, enemiesInfo, animateFlag){
 		return status.amount !== 0;
 	});
 	const Ereshkigal = playerInfo.statuses
-		.find((status) => status.name === bufStatus.Ereshkigal.name);
+		.find((status) => status.name === buffStatus.Ereshkigal.name);
 	if (Ereshkigal){
-		actionStatusBufForAnimate(playerInfo, bufStatus.doubleDamage, 1, animateFlag);
+		actionStatusBufForAnimate(playerInfo, buffStatus.doubleDamage, 1, animateFlag);
 		Ereshkigal.amount--;
 	}
 	// 効果が切れた状態変化を削除する
@@ -694,10 +688,10 @@ function startTurnStatuses(playerInfo, enemiesInfo, animateFlag){
 	enemiesInfo.forEach((enemy) => {
 		//「攻Down削除」で攻撃力ダウンが減る
 		const invalidAttackDown = enemy.currentStatus.status
-			.find((status) => status.name === debufStatus.invalidAttackDown.name);
+			.find((status) => status.name === debuffStatus.invalidAttackDown.name);
 		if (invalidAttackDown){
 			const attackDown = enemy.currentStatus.status
-				.find((status) => status.name === debufStatus.attackDown.name);
+				.find((status) => status.name === debuffStatus.attackDown.name);
 			if(attackDown){
 				if(attackDown.amount > invalidAttackDown.amount){
 					attackDown.amount -= invalidAttackDown.amount;
@@ -706,32 +700,49 @@ function startTurnStatuses(playerInfo, enemiesInfo, animateFlag){
 				}
 			}
 		}
-		const spiritual = enemy.currentStatus.status
-			.find((status) => status.name === bufStatus.spiritual.name);
-		if (spiritual){
-			enemyStatusBuf(enemy, animateFlag, bufStatus.attackUp, spiritual.amount)
+		// 「激怒」の効果
+		const rage = enemy.currentStatus.status
+			.find((status) => status.name === buffStatus.rage.name);
+		if (rage){
+			enemyStatusBuf(enemy, animateFlag, buffStatus.attackUp, rage.amount);
+		}
+		// 「バリア」の効果
+		const barrier = enemy.currentStatus.status
+			.find((status) => status.name === buffStatus.barrier.name);
+		if (barrier){
+			enemyActionBlock(enemy, animateFlag, barrier.amount);
 		}
 		enemy.currentStatus.status.forEach((status) => {
 			switch(status.name){
-				case bufStatus.defenseUp.name:
-				case bufStatus.damageCut.name:
-				case debufStatus.defenseDown.name:
-				case debufStatus.frail.name:
-				case debufStatus.weak.name:
+				case buffStatus.defenseUp.name:
+				case buffStatus.damageCut.name:
+				case debuffStatus.defenseDown.name:
+				case debuffStatus.frail.name:
+				case debuffStatus.weak.name:
 					status.amount--;
 					break;
-				case bufStatus.reflection.name:
-				case bufStatus.wind.name:
-				case bufStatus.attackCombo.name:
-				case bufStatus.activity.name:
-				case bufStatus.lightWall.name:
-				case bufStatus.nextTurnBlock.name:
-				case bufStatus.nextTurnDraw.name:
-				case debufStatus.noDraw.name:
-				case debufStatus.invalidAttackUp.name:
-				case debufStatus.invalidAttackDown.name:
-				case debufStatus.suffocation.name:
+				case buffStatus.reflection.name:
+				case buffStatus.wind.name:
+				case buffStatus.attackCombo.name:
+				case buffStatus.activity.name:
+				case buffStatus.lightWall.name:
+				case buffStatus.nextTurnBlock.name:
+				case buffStatus.nextTurnDraw.name:
+				case debuffStatus.noDraw.name:
+				case debuffStatus.invalidAttackUp.name:
+				case debuffStatus.invalidAttackDown.name:
+				case debuffStatus.suffocation.name:
+				case debuffStatus.fainting.name:
 					status.amount = 0;
+					break;
+				case debuffStatus.sleep.name:// 
+					status.amount--;
+					const barrier = enemy.currentStatus.status
+						.find((status) => status.name === buffStatus.barrier.name);
+					if(barrier && status.amount === 0){
+						barrier.amount = 0;
+					}
+					break;
 				default:
 					break;
 			}
@@ -764,20 +775,20 @@ function startTurnProcess(){
 	//ドロー処理
 	//「フルンティング」の効果発動
 	const hrunting = playerStatus.statuses
-		.find((status) => status.name === bufStatus.hrunting.name);
+		.find((status) => status.name === buffStatus.hrunting.name);
 	if (hrunting){
 		damageHP(1);
 		drawCardFromDeck(hrunting.amount);
 	}
 	// 「ヘイスト」で追加2枚
 	const nextTurnDraw = playerStatus.statuses
-		.find((status) => status.name === bufStatus.nextTurnDraw.name);
+		.find((status) => status.name === buffStatus.nextTurnDraw.name);
 	if (nextTurnDraw){
 		drawCardFromDeck(nextTurnDraw.amount);
 	}
 	// 「ケット・シー」で追加1枚
 	const caitSea = playerStatus.statuses
-		.find((status) => status.name === bufStatus.caitSea.name);
+		.find((status) => status.name === buffStatus.caitSea.name);
 	if (caitSea){
 		drawCardFromDeck(caitSea.amount);
 	}
@@ -791,8 +802,6 @@ function startTurnProcess(){
 	}
 	// ターンを進める
 	currentTurn++;
-	// 次の予測を決定する
-	decideNextAction();
 
 }
 /*******************************************************/
@@ -860,7 +869,7 @@ function endTurn(){
 	});
 	// 「再生」の効果発動
 	const regeneration = playerStatus.statuses
-		.find((status) => status.name === bufStatus.regeneration.name);
+		.find((status) => status.name === buffStatus.regeneration.name);
 	if (regeneration){
 		recoveryHP(regeneration.amount);
 		updatePlayerStatusDom(playerStatus);
@@ -869,13 +878,13 @@ function endTurn(){
 	// ターン終了時効果の発動
 	// 「バリア」の効果発動
 	const barrier = playerStatus.statuses
-		.find((status) => status.name === bufStatus.barrier.name);
+		.find((status) => status.name === buffStatus.barrier.name);
 	if (barrier){
 		actionBlock(barrier.amount);
 	}
 	//「狂化」の効果発動
 	const madness = playerStatus.statuses
-		.find((status) => status.name === bufStatus.madness.name);
+		.find((status) => status.name === buffStatus.madness.name);
 	if (madness){
 		damageHP(1);
 		actionAllAttackSimple(madness.amount);
@@ -883,23 +892,27 @@ function endTurn(){
 	}
 	//「鈍化」の効果発動
 	const slowing = playerStatus.statuses
-		.find((status) => status.name === debufStatus.slowing.name);
+		.find((status) => status.name === debuffStatus.slowing.name);
 	if (slowing){
-		actionStatusBuf(debufStatus.dexterityDown, slowing.amount);
+		actionStatusBuf(debuffStatus.dexterityDown, slowing.amount);
 	}
-	//「精神統一」の効果
-	const spiritual = playerStatus.statuses
-		.find((status) => status.name === bufStatus.spiritual.name);
-	if (spiritual){
-		actionStatusBuf(debufStatus.attackUp, spiritual.amount);
+	//「激怒」の効果
+	const rage = playerStatus.statuses
+		.find((status) => status.name === buffStatus.rage.name);
+	if (rage){
+		actionStatusBuf(debuffStatus.attackUp, rage.amount);
 	}
 	// エネミーの状態変化処理
 	currentEnemies.forEach((enemy) => {
 		// ブロックの初期化
-		enemy.currentStatus.block = 0;
+		const tears = enemy.currentStatus.status
+			.find((status) => status.name === buffStatus.tears.name);
+		if (!tears){
+			enemy.currentStatus.block = 0;
+		}
 		// 「毒」の効果発動
 		const poison = enemy.currentStatus.status
-			.find((status) => status.name === debufStatus.poison.name);
+			.find((status) => status.name === debuffStatus.poison.name);
 		if (poison){
 			enemy.currentStatus.remainHP -= poison.amount;
 			poison.amount--;
@@ -922,7 +935,7 @@ function drawCardFromDeck(count = 1){
 	const drawCards = [];
 	if(
 		playerStatus.statuses
-		.find((status) => status.name === debufStatus.noDraw.name)
+		.find((status) => status.name === debuffStatus.noDraw.name)
 	){
 		console.log('デバフによって引けません');
 		return true;
@@ -948,13 +961,13 @@ function drawCardFromDeck(count = 1){
 			if(card.type === type.abnormal){
 				// 「弾幕」の効果
 				const barrage = playerStatus.statuses
-					.find((status) => status.name === bufStatus.barrage.name);
+					.find((status) => status.name === buffStatus.barrage.name);
 				if(barrage){
 					actionAllAttackSimple(barrage.amount);
 				}
 				// 「逆境」の効果
 				const adversity = playerStatus.statuses
-					.find((status) => status.name === bufStatus.adversity.name);
+					.find((status) => status.name === buffStatus.adversity.name);
 				if(adversity){
 					const cards = drawCardFromDeck(adversity.amount);
 					cards.forEach((drawcard) => {
@@ -1018,13 +1031,13 @@ function playHandCard(index){
 	pushPlayArea(card);
 	//「風の加護」効果
 	const wind = playerStatus.statuses
-		.find((status) => status.name === bufStatus.wind.name);
+		.find((status) => status.name === buffStatus.wind.name);
 	if (wind && card.type === type.attack){
 		actionBlock(wind.amount);
 	}
 	//「連撃アップ」の効果
 	const attackCombo = playerStatus.statuses
-		.find((status) => status.name === bufStatus.attackCombo.name);
+		.find((status) => status.name === buffStatus.attackCombo.name);
 	if (attackCombo && attackCombo.amount > 0 && card.type === type.attack){
 		pushStackCards({
 			func: card.func,
@@ -1033,7 +1046,7 @@ function playHandCard(index){
 		attackCombo.amount--;
 	}
 	const skillCombo = playerStatus.statuses
-		.find((status) => status.name === bufStatus.skillCombo.name);
+		.find((status) => status.name === buffStatus.skillCombo.name);
 	if (skillCombo && skillCombo.amount > 0 && card.type === type.skill){
 		pushStackCards({
 			func: card.func,
@@ -1042,7 +1055,7 @@ function playHandCard(index){
 		skillCombo.amount--;
 	}
 	const Bonus = playerStatus.statuses
-		.find((status) => status.name === bufStatus.Bonus.name);
+		.find((status) => status.name === buffStatus.Bonus.name);
 	if (Bonus && Bonus.amount > 0){
 		currentEnemies.forEach((enemy) => {
 			let totalAttack = Bonus.amount;
@@ -1061,23 +1074,23 @@ function playHandCard(index){
 		});
 	}
 	const lamentation = playerStatus.statuses
-		.find((status) => status.name === bufStatus.lamentation.name);
+		.find((status) => status.name === buffStatus.lamentation.name);
 	if (lamentation && lamentation.amount > 0){
 		actionBlock(lamentation.amount);
 	}
 	currentEnemies.forEach((enemy) => {
 		//「窒息」効果
 		const suffocation = enemy.currentStatus.status
-			.find((status) => status.name === debufStatus.suffocation.name);
+			.find((status) => status.name === debuffStatus.suffocation.name);
 		if (suffocation){
 			//ブロック無視
 			enemy.currentStatus.remainHP -= suffocation.amount;
 		}
 		//「激怒」効果
-		const rage = enemy.currentStatus.status
-			.find((status) => status.name === bufStatus.rage.name);
-		if (rage && card.type === type.skill){
-			enemyStatusBuf(enemy, true, bufStatus.attackUp, rage.amount);
+		const strategy = enemy.currentStatus.status
+			.find((status) => status.name === buffStatus.strategy.name);
+		if (strategy && card.type === type.skill){
+			enemyStatusBuf(enemy, true, buffStatus.attackUp, strategy.amount);
 		}
 	});
 	playerStatus.statuses = playerStatus.statuses.filter((status) => {
@@ -1183,9 +1196,9 @@ function clickHandProcess(handCardDiv, hand){
 	const index = findIndexTemporaryArea('id', hand.id);
 	switch(currentPhase) {
 		case phase.action:
-			const paralysis = playerStatus.statuses
-				.find((status) => status.name === bufStatus.paralysis.name);
-			if(paralysis && hand.type === type.attack){
+			const frozen = playerStatus.statuses
+				.find((status) => status.name === buffStatus.frozen.name);
+			if(frozen && hand.type === type.attack){
 				alert('デバフによりアタックが使えません');
 				break;
 			}
@@ -1324,7 +1337,7 @@ function clickHandProcess(handCardDiv, hand){
 			break;
 		case phase.repair:
 			const repair = playerStatus.statuses
-				.find((status) => status.name === bufStatus.repair.name);
+				.find((status) => status.name === buffStatus.repair.name);
 			if (index === -1 && repair) {
 				if (tmpArea.length < repair.amount){
 					pushTemporaryArea(hand);
@@ -1342,7 +1355,7 @@ function clickHandProcess(handCardDiv, hand){
 			break;
 		case phase.caitSea:
 			const caitSea = playerStatus.statuses
-				.find((status) => status.name === bufStatus.caitSea.name);
+				.find((status) => status.name === buffStatus.caitSea.name);
 			if (index === -1 && caitSea) {
 				if (tmpArea.length < caitSea.amount){
 					pushTemporaryArea(hand);
@@ -1440,14 +1453,14 @@ function trashCardProcess(trashCard){
 function discardCardProcess(discardCard){
 	//「無痛」の効果
 	const painless = playerStatus.statuses
-		.find((status) => status.name === bufStatus.painless.name);
+		.find((status) => status.name === buffStatus.painless.name);
 	if(painless){
 		actionBlock(painless.amount);
 		updatePlayerStatusDom(playerStatus);
 	}
 	//「慧眼」の効果
 	const eye = playerStatus.statuses
-		.find((status) => status.name === bufStatus.eye.name);
+		.find((status) => status.name === buffStatus.eye.name);
 	if(eye){
 		const drawCards = drawCardFromDeck(eye.amount);
 		drawCards.forEach((card) => {
@@ -1473,9 +1486,9 @@ function discardCardProcess(discardCard){
 /*******************************************************/
 function setupEnemy(){
 	const mt = new MersenneTwister();
-	const battleFlag = getLocalStorage(keyContinueBattleFlag);
+	const Continued = getLocalStorage(keyContinueFlag);
 	const lastEnemyGroup = getLocalStorage(keyContinueEnemy);
-	if (lastEnemyGroup && battleFlag) {
+	if (lastEnemyGroup && Continued === continueFlag.inGame) {
 		currentEnemies = lastEnemyGroup;
 	} else {
 		switch(currentLevel) {
@@ -1509,6 +1522,16 @@ function setupEnemy(){
 				
 				break;
 			case stageLevel.special:
+				const totalWeight = eliteEnemiesPool.reduce((sum, item) => sum + item.weight, 0);
+				let enemyGroupWeight = mt.nextInt(0, totalWeight);
+				for (const enemy of Object.values(eliteEnemiesPool)) {
+					if (enemyGroupWeight < enemy.weight) {
+						const enemiesOrganization = enemy.enemiesFunc();
+						currentEnemies = deepCopyEnemies(enemiesOrganization);
+						break;
+					}
+					enemyGroupWeight -= enemy.weight;
+				}
 				break;
 			case stageLevel.boss:
 				break;
@@ -1518,7 +1541,7 @@ function setupEnemy(){
 				break;
 		}
 		currentEnemies.forEach((enemy, i) => {
-			const randomHP = mt.nextInt(enemy.minHP, enemy.maxHP);
+			const randomHP = mt.nextInt(enemy.minHP, enemy.maxHP+1);
 			enemy.currentStatus.maxHP = randomHP;
 			enemy.currentStatus.remainHP = randomHP;
 			enemy.currentStatus.divId = `enemy${i}`;
@@ -1539,9 +1562,11 @@ async function startEnemiesTurn(){
 	const animateCurrentEnemies = deepCopyEnemies(currentEnemies);
 	// 敵の予測した攻撃を内部的に行う
 	for (const enemy of currentEnemies) {
-		if(!enemy.currentStatus.status.some(status => status.name === dead.name)){
+		if(
+			!enemy.currentStatus.status.some(status => status.name === dead.name) ||
+			!enemy.currentStatus.status.some(status => status.name === debuffStatus.fainting.name)
+		){
 			const nextAction = enemy.currentStatus.nextAction;
-			console.log(nextAction);
 			if (Object.keys(nextAction).length > 0) {
 				const storedFunc = globalThis[nextAction.func];
 				if( typeof storedFunc === 'function'){
@@ -1552,6 +1577,8 @@ async function startEnemiesTurn(){
 	}
 	startTurnProcess();
 	startTurnStatuses(playerStatus, currentEnemies, false);
+	// 次の予測を決定する
+	decideNextAction();
 	setLocalStorage(keyContinuePhase, currentPhase);
 	setLocalStorage(keyContinueDeck, myDeck);
 	setLocalStorage(keyContinueHand, myHand);
@@ -1564,23 +1591,24 @@ async function startEnemiesTurn(){
 	for (const enemy of animateCurrentEnemies) {
 		if(!enemy.currentStatus.status.some(status => status.name === dead.name)){
 			const nextAction = enemy.currentStatus.nextAction;
-			console.log(nextAction);
 			if (Object.keys(nextAction).length > 0) {
 				fadeOutEnemyOmenDom(enemy);
 				await sleep(omenFadeOutWaitTime);
-				const storedFunc = globalThis[nextAction.func];
-				if( typeof storedFunc === 'function'){
-					ret = await storedFunc(enemy, animatePlayerStatus, true);
+				if(!enemy.currentStatus.status.some(status => status.name === debuffStatus.fainting.name)){
+					const storedFunc = globalThis[nextAction.func];
+					if( typeof storedFunc === 'function'){
+						ret = await storedFunc(enemy, animatePlayerStatus, true);
+					}
+					updateEnemyStatusDom(animateCurrentEnemies);
+					if (enemyAttackWaitFlag){
+						animateEnemyAttack(enemy);
+						await sleep(enemyAttackGoWaitTime);
+						animatePlayerDamage();
+						console.log(animatePlayerStatus);
+						updatePlayerStatusDom(animatePlayerStatus);
+					}
+					await sleep(1500);
 				}
-				updateEnemyStatusDom(animateCurrentEnemies);
-				if (enemyAttackWaitFlag){
-					animateEnemyAttack(enemy);
-					await sleep(enemyAttackGoWaitTime);
-					animatePlayerDamage();
-					console.log(animatePlayerStatus);
-					updatePlayerStatusDom(animatePlayerStatus);
-				}
-				await sleep(1500);
 				enemy.currentStatus.nextAction = {};
 			}
 		}
@@ -1620,7 +1648,7 @@ function checkEnemyDefeated(Enemies, playerInfo, animationFlag = true){
 			if(enemy.currentStatus.remainHP <= 0){
 				//「自壊因子」の効果発動
 				const autophagy = enemy.currentStatus.status
-					.find((status) => status.name === debufStatus.autophagy.name);
+					.find((status) => status.name === debuffStatus.autophagy.name);
 				if (autophagy){
 					autophagyFlag = true;
 					for(const targetenemy of currentEnemies){
@@ -1641,9 +1669,9 @@ function checkEnemyDefeated(Enemies, playerInfo, animationFlag = true){
 				}
 				//「花粉」の効果発動
 				const pollen = enemy.currentStatus.status
-					.find((status) => status.name === bufStatus.pollen.name);
+					.find((status) => status.name === buffStatus.pollen.name);
 				if (pollen){
-					enemyStatusDebuf(enemy, playerInfo, animationFlag, debufStatus.defenseDown, pollen.amount);
+					enemyStatusDebuf(enemy, playerInfo, animationFlag, debuffStatus.defenseDown, pollen.amount);
 				}
 				animateDefeated(enemy);
 				enemy.currentStatus.status.splice(0);
@@ -1713,7 +1741,6 @@ function allEnemiesDefeated(){
 	console.log('allEnemiesDefeated');
 	const lastReward = getLocalStorage(keyContinueReward);
 	$('result-content').html('');
-	console.log(lastReward);
 	if (lastReward) {
 		rewards = lastReward;
 	} else {

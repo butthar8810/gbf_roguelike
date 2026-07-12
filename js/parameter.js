@@ -18,7 +18,7 @@ const stages = {
 /* ステータス情報
 /*****************************************************************************/
 // バフ
-const bufStatus = {
+const buffStatus = {
 	//永続
 	attackUp: {name: '攻撃力アップ', amount: '',effect: '攻撃ダメージが+{X}。',image: 'images/status/status_1001.png'},
 	dexterity: {name: '回避率アップ', amount: '', effect: 'カードから得られるブロックが+{X}。', image: 'images/status/status_1566.png'},
@@ -45,7 +45,6 @@ const bufStatus = {
 	Bonus: {name: 'パラゾニウム', amount: '', effect: 'カードを1枚プレイするたび、敵全体に{X}ダメージを与える。', image: 'images/status/status_6993.png'},
 	lamentation: {name: '調停の翼', amount: '', effect: 'カードを1枚プレイするたび、{X}ブロックを得る。', image: 'images/status/status_1534_6.png'},
 	lich: {name: '不死王の刃', amount: '', effect: '「アタック」でダメージを与えるたび、毒{X}を与える。', image: 'images/status/status_3126.png'},
-	spiritual: {name: '精神統一', amount: '', effect: 'ターン終了時、攻撃力アップ{X}を得る。', image: 'images/status/status_9999_2.png'},
 	// ターン制
 	defenseUp: {name: '防御力アップ', amount: '', effect: 'アタックで受けるダメージが50%減少。{X}ターン有効。',image: 'images/status/status_1019.png'},
 	Ereshkigal: {name: 'エレシュキガル', amount: '', effect: 'ターン開始時、ダブルアタックを得る。{X}ターン有効。', image: 'images/status/status_1413_8.png'},
@@ -68,12 +67,14 @@ const bufStatus = {
 	invincible: {name: '無敵', amount: '', effect: 'このターン中に減らせるHPは、残り{X}。', image: 'images/status/status_62.png'},
 
 	// エネミー専用
+	rage: {name: '激怒', amount: '', effect: 'ターン終了時、攻撃力アップ{X}を得る。', image: 'images/status/status_9999_2.png'},
 	pollen: {name: '花粉', amount: '', effect: '死亡時、プレイヤーに防御力ダウン{X}を与える。', image: 'images/status/status_7176.png'},
-	rage: {name: '激怒', amount: '', effect: '「スキル」を1枚プレイするたび、筋力{X}を得る', image: 'images/status/status_9999_2.png'},
+	strategy: {name: '戦略', amount: '', effect: '「スキル」を1枚プレイするたび、筋力{X}を得る', image: 'images/status/status_6022_1.png'},
+	tears: {name: '涙の護り', amount: '', effect: 'ターン開始時にブロック値を失わない。', image: 'images/status/status_7343.png'},
 
 };
 // デバフ
-const debufStatus = {
+const debuffStatus = {
 	// 永続
 	attackDown: {name: '攻撃力ダウン', amount: '', effect: '攻撃ダメージが-{X}。', image: 'images/status/status_1010.png'},
 	dexterityDown: {name: '回避率ダウン', amount: '', effect: 'カードから得られるブロックが-{X}。', image: 'images/status/status_1566_2.png'},
@@ -84,16 +85,17 @@ const debufStatus = {
 	frail: {name: '脆弱化', amount: '', effect: 'カードから得られるブロックが25%減少。{X}ターン有効。', image: 'images/status/status_1011.png'},
 	weak: {name: '恐怖', amount: '', effect: 'アタックで与えるダメージが25%減少。{X}ターン有効。', image: 'images/status/status_1374.png'},
 	poison: {name: '毒', amount: '', effect: 'ターン開始時、HPを{X}失い、毒が1減少。', image: 'images/status/status_8.png'},
-	paralysis: {name: '麻痺', amount: '', effect: '{X}ターンの間「アタック」をプレイできない。', image: 'images/status/status_102.png'},
+	frozen: {name: '凍結', amount: '', effect: '{X}ターンの間「アタック」をプレイできない。', image: 'images/status/status_7297.png'},
+	sleep: {name: '眠り', amount: '', effect: 'この敵はまだ目覚めていない…', image: 'images/status/status_6327.png'},
 	// 1ターン有効
 	noDraw: {name: 'ショート', amount: '', effect: 'ターン終了時までカードが引けない。1ターン有効', image: 'images/status/status_1472.png'},
 	invalidAttackUp: {name: '攻UP削除', amount: '',effect: 'ターン終了時、攻撃力アップを{X}下げる',image: 'images/status/status_9999.png'},
 	invalidAttackDown: {name: '攻Down削除', amount: '',effect: 'ターン終了時、攻撃力ダウンを{X}下げる',image: 'images/status/status_9999_2.png'},
 	suffocation: {name: '窒息', amount: '', effect: 'カードをプレイするたび、HPを{X}失う。1ターン有効', image: 'images/status/status_1103.png'},
+	fainting: {name: '気絶', amount: '', effect: '行動を制限された状態。1ターン有効', image: 'images/status/status_1412.png'},
 
-	sleep: {name: '眠り', amount: '', effect: 'この敵はまだ目覚めていない…', image: 'images/status/status_1263.png'},
 	heat: {name: '灼熱', amount: '', effect: 'カードをプレイするたび、あなたは{X}ダメージを受ける。', image: 'images/status/status_83.png'},
-	petrification: {name: '石化', amount: '', effect: 'カードから得られるブロックが-{X}。', image: 'images/status/status_1241.png'},
+	petrification: {name: '石化', amount: '', effect: '', image: 'images/status/status_1241.png'},
 	noBlock: {name: 'ブロック不可', amount: '', effect: 'カードからブロックを得られない。{X}ターン有効。', image: 'images/status/status_6765.png'},
 	Fading: {name: '死の宣告', amount: '', effect: '{X}ターン経過後、死亡する。', image: 'images/status/status_100.png'},
 };
@@ -134,15 +136,14 @@ const moneyReward = {
 /*****************************************************************************/
 const keySelectChara = 'Babu.Select.Chara';
 const keyContinueFlag = 'Babu.Continue.Flag';// 途中プレイがあるかのフラグ
-const keyContinueRestFlag = 'Babu.Continue.Rest.Flag';
 const keyContinueArtifact = 'Babu.Continue.Artifact';
 const keyContinuePlayerStatus = 'Babu.Continue.Player.Status';
 const keyContinueMap = 'Babu.Continue.Map';
 const keyContinueCurrentMap = 'Babu.Continue.Current.Map';
 const keyContinueBattleCount = 'Babu.Continue.Battle.Count';
 const keyContinueOriginalDeck = 'Babu.Continue.Original.Deck';
+const keyContinueShopLineup = 'Babu.Continue.Shop.Lineup';
 // 戦闘用ストレージキー
-const keyContinueBattleFlag = 'Babu.Continue.Battle.Flag';// 途中戦闘があるかのフラグ
 const keyContinueDeck = 'Babu.Continue.Deck';
 const keyContinueHand = 'Babu.Continue.Hand';
 const keyContinueTrash = 'Babu.Continue.Trash';
@@ -161,6 +162,13 @@ const keyContinuePhase = 'Babu.Continue.Phase';
 /*****************************************************************************/
 /* フェイズ定数
 /*****************************************************************************/
+const continueFlag = {
+	outGame: '道中',
+	inGame: 'バトル中',
+	restArea: '休憩エリア',
+	shopArea: 'ショップエリア',
+};
+
 const phase = {
 	action: 'アクションフェイズ',
 	enemy: 'エネミーフェイズ',

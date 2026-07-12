@@ -61,7 +61,9 @@ body{
 	box-shadow: 1px 1px 5px black;
 	position: relative;
 }
-
+.card-style.is-small{
+	font-size: 11px;
+}
 .card-style img{
 	width: 100%;
 }
@@ -81,9 +83,9 @@ body{
 }
 .card-style .effect{
 	font-size: 12px;
-	line-height: 18px;
+	line-height: 15px;
 	width: 100%;
-	padding: 0 5px;
+	padding: 0 3px;
 	text-shadow: 1px 1px 3px black;
 }
 .card-style .type{
@@ -363,11 +365,17 @@ body{
 /* header 要素
 /*****************************************************************************/
 header{
+	position: fixed;
 	width: 100%;
 	height: 50px;
 	display: flex;
 	justify-content: center;
 	background-color: #e4e1d6;
+	z-index: 9999;
+}
+.header-space{
+	width: 100%;
+	height: 50px;
 }
 .header-area{
 	width: 100%;
@@ -463,12 +471,14 @@ header{
 	justify-content: center;
 	align-items: center;
 }
-
+/*****************************************************************************/
+/* rest-area: 休憩エリア要素
+/*****************************************************************************/
 .rest-area{
 	height: 500px;
 	position: relative;
 }
-.rest-area img {
+.rest-area>img {
 	height: 100%;
 }
 .rest-area .player-character{
@@ -487,6 +497,45 @@ header{
 	opacity: 0;
 }
 
+/*****************************************************************************/
+/* rest-area: 休憩エリア要素
+/*****************************************************************************/
+.shop-area{
+	width: 1100px;
+	position: relative;
+	overflow: hidden;
+}
+.shop-area img {
+	width: 100%;
+}
+.shop-area .back-effect{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: black;
+	opacity: 0.5;
+}
+.shop-area .sierokarte-hukidashi{
+	width: 500px;
+	position: absolute;
+	bottom: 300px;
+	left: 50%;
+	transform: translateX(-50%);
+}
+.shop-area .sierokarte-character{
+	width: 300px;
+	position: absolute;
+	bottom: -100px;
+	left: 50%;
+	transform: translateX(-50%);
+}
+
+
+/*****************************************************************************/
+/* battle-area: バトルエリア要素
+/*****************************************************************************/
 .battle-area{
 	width: 1100px;
 	position: relative;
@@ -694,7 +743,7 @@ header{
 /* enemies-status: エネミー情報要素
 /*****************************************************************************/
 .enemies-area{
-	height: 350px;
+	height: 470px;
 	width: 800px;
 	position: absolute;
 	bottom: 40px;
@@ -704,7 +753,7 @@ header{
 	align-items: end;
 }
 .enemy-area{
-	margin: 0 2px;
+	margin: 0 10px;
 	border: 1px dotted rgba(0, 0, 0, 0);
 	position: relative;
 	transition: opacity all 1.0s;
@@ -716,11 +765,15 @@ header{
 }
 .enemy-area.middle{
 	height: 280px;
-	width: 220px;
+	width: 245px;
 }
 .enemy-area.tall{
 	height: 350px;
-	width: 280px;
+	width: 320px;
+}
+.enemy-area.boss{
+	height: 470px;
+	width: 480px;
 }
 .defeated{
 	opacity: 0;
@@ -1360,8 +1413,85 @@ header{
 	text-stroke: 1px gray;
 	-webkit-text-stroke: 1px gray;
 }
+/*****************************************************************************/
+/* return-decide-area: ショップの商品選択エリア
+/*****************************************************************************/
+.shop-buy-area{
+	width: 100%;
+	height: 100%;
+	display:none;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+.shop-buy-area.active{
+	display:flex;
+	animation-duration: 0.5s;
+	animation-name: fade-in;
+}
+.shop-modal-body{
+	position: relative;
+	width: 1050px;
+	height: 700px;
+	background-color: #eee9d8;
+	border: 3px solid #432d23;
+	padding: 50px 5px;
+	z-index: 2000;
 
+	display: grid;
+	grid-template-columns: repeat(5, 1fr);
+	grid-template-rows: repeat(2, 1fr);
+	gap: 2px;
+}
+.top-row{
+	grid-row: 1/2;
+}
+.bottom-row{
+	grid-row: 2/3;
+}
+.artifact-position{
+	grid-column: 3/5;
+	grid-row: 2/3;
+}
+.delete-position{
+	grid-column: 5/6;
+	grid-row: 2/3;
 
+}
+.shop-modal-body>div{
+	width: 100%;
+	height: 100%;
+	display:flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+.shop-modal-body>div:hover{
+	transform: scale(1.3);
+}
+.purchased{
+	visibility:hidden;
+}
+.shop-price{
+	font-size: 20px;
+	font-weight: 900;
+	color: white;
+	text-shadow: 1px 1px 3px black;
+	text-stroke: 1px gray;
+	-webkit-text-stroke: 1px gray;
+	width: 100%;
+	height: 40px;
+	display:flex;
+	justify-content: center;
+	align-items: center;
+}
+.shop-price>img{
+	width: 20px;
+	margin: 0 5px;
+}
+.shop-discount{
+	color: #7ec0db;
+}
 /*****************************************************************************/
 /* enhance-area: 黒背景の要素
 /*****************************************************************************/
