@@ -12,30 +12,31 @@ const starterArtifact = {
 	recovery: {
 		name: '剣闘士の証', 
 		effect: '戦闘終了時、HP6回復。', 
-		image: 'images/artifact/gladiator.png', 
+		image: 'images/artifact/Gladiator.png', 
 		firstFunc: 'artifactRecovery'
 	},
 	startDraw: {
 		name: '魔剣士の証', 
 		effect: '戦闘開始時、カード2枚を追加で引く。', 
-		image: 'images/artifact/swordsman.png', 
+		image: 'images/artifact/Swordsman.png', 
 		firstFunc: 'artifactStartDraw'
 	},
 };
 
 const normalArtifact = {
+	/*********************************コモン*************************************/
 	hitPoint7: {
 		name: '栄華の指輪', 
 		rarity: rtifactRarity.common,
 		effect: '最大HPが増加:7', 
-		image: 'images/artifact/crown.png', 
+		image: 'images/artifact/Crown.png', 
 		firstFunc: ''
 	},
 	agility: {
 		name: '金華羽飾', 
 		rarity: rtifactRarity.common,
 		effect: '戦闘開始時、回避率アップ1を得る。', 
-		image: 'images/artifact/feather.png', 
+		image: 'images/artifact/Feather.png', 
 		firstFunc: 'artifactAgility'
 	},
 	attackUpGrade: {
@@ -55,21 +56,21 @@ const normalArtifact = {
 		name: 'サント・キャスク', 
 		rarity: rtifactRarity.common,
 		effect: '戦闘開始時に10ブロックを得る。', 
-		image: 'images/artifact/cask.png', 
+		image: 'images/artifact/Cask.png', 
 		firstFunc: 'artifactBlock'
 	},
 	lamp: {
 		name: '幻麗の明鉱', 
 		rarity: rtifactRarity.common,
 		effect: '戦闘開始時、1エナジーを得る。', 
-		image: 'images/artifact/lamp.png', 
+		image: 'images/artifact/Lamp.png', 
 		firstFunc: 'artifactLamp'
 	},
 	noBlock: {
 		name: '守護騎士の証', 
 		rarity: rtifactRarity.common,
 		effect: 'ブロック無しでターン終了した時、6ブロックを得る',
-		image: 'images/artifact/defender.png', 
+		image: 'images/artifact/Defender.png', 
 		firstFunc: ''
 	},
 	Samurai: {
@@ -83,167 +84,170 @@ const normalArtifact = {
 		name: '双剣士の証', 
 		rarity: rtifactRarity.common,
 		effect: 'アタックの使用10回ごとにダメージが2倍になる。', 
-		image: 'images/artifact/twinSwordsman.png', 
+		image: 'images/artifact/TwinSwordsman.png', 
 		firstFunc: ''
 	},
 	codex: {
 		name: 'コーデックス', 
 		rarity: rtifactRarity.common,
 		effect: '休憩時にカードを1枚獲得する。', 
-		image: 'images/artifact/codex.png', 
+		image: 'images/artifact/Codex.png', 
 		firstFunc: ''
 	},
 	pendant: {
 		name: 'オミナス・ペンダント', 
 		rarity: rtifactRarity.common,
 		effect: 'アタックを10枚プレイするたび、1エナジーを得る。', 
-		image: 'images/artifact/pendant.png', firstFunc: ''
+		image: 'images/artifact/Pendant.png', firstFunc: ''
 	},
 	stone: {
 		name: 'オミナス・ストーン',
 		rarity: rtifactRarity.common,
 		effect: '3ターンごとに、1エナジーを得る。', 
-		image: 'images/artifact/stone.png', 
+		image: 'images/artifact/Stone.png', 
 		firstFunc: ''
 	},
 	strength: {
 		name: 'オミナス・リング', 
 		rarity: rtifactRarity.common,
 		effect: '戦闘開始時、攻撃力アップ1獲得。', 
-		image: 'images/artifact/ring.png', 
+		image: 'images/artifact/Ring.png', 
 		firstFunc: 'artifactStrength'
 	},
 	goblet: {
 		name: 'オミナス・ゴブレット', 
 		rarity: rtifactRarity.common,
 		effect: '戦闘開始時、HP2回復。', 
-		image: 'images/artifact/goblet.png', 
+		image: 'images/artifact/Goblet.png', 
 		firstFunc: 'artifactNormalRecovery'
 	},
 	gavel: {
 		name: '幻麗の小槌', 
 		rarity: rtifactRarity.common,
 		effect: 'ショップに来店するたび、HPを15回復。', 
-		image: 'images/artifact/gavel.png', 
+		image: 'images/artifact/Gavel.png', 
 		firstFunc: ''
 	},
+	/*********************************アンコモン*************************************/
 	hitPoint10: {
 		name: '覇業の指輪', 
 		rarity: rtifactRarity.uncommon,
 		effect: '最大HPが増加:10', 
-		image: 'images/artifact/conquest.png', 
+		image: 'images/artifact/Conquest.png', 
 		firstFunc: ''
 	},
 	threeAttackPower: {
 		name: 'オミナス・ホーン', 
 		rarity: rtifactRarity.uncommon,
 		effect: '1ターンに3枚の「アタック」をプレイするたび、攻撃力アップ1を得る。', 
-		image: 'images/artifact/horn.png', 
+		image: 'images/artifact/Horn.png', 
 		firstFunc: ''
 	},
 	threeAttackDexterity: {
 		name: 'オミナス・フィアン', 
 		rarity: rtifactRarity.uncommon,
 		effect: '1ターンに3枚の「アタック」をプレイするたび、回避率アップ1を得る。', 
-		image: 'images/artifact/fian.png', 
+		image: 'images/artifact/Fian.png', 
 		firstFunc: ''
 	},
 	threeSkill: {
 		name: 'オミナス・アミュレット', 
 		rarity: rtifactRarity.uncommon,
 		effect: '1ターンの間に「スキル」を3枚プレイするたび、敵全体に5ダメージを与える。', 
-		image: 'images/artifact/amulet.png', 
+		image: 'images/artifact/Amulet.png', 
 		firstFunc: ''
 	},
 	threeAttackBlock: {
 		name: 'オミナス・ホイッスル', 
 		rarity: rtifactRarity.uncommon,
 		effect: '「アタック」を3枚プレイするたび、4のブロックを得る。', 
-		image: 'images/artifact/whistle.png', 
+		image: 'images/artifact/Whistle.png', 
 		firstFunc: ''
 	},
 	emblem: {
 		name: '英勇のエンブレム', 
 		rarity: rtifactRarity.uncommon,
 		effect: '敵を倒すと、1エナジーを得て、カードを1枚引く。', 
-		image: 'images/artifact/emblem.png', 
+		image: 'images/artifact/Emblem.png', 
 		firstFunc: ''
 	},
 	tenCard: {
 		name: '幻麗の紋章', 
 		rarity: rtifactRarity.uncommon,
 		effect: 'カードを10枚プレイするたび、カードを1枚引く。', 
-		image: 'images/artifact/arms.png', 
+		image: 'images/artifact/Arms.png', 
 		firstFunc: ''
 	},
+	/*********************************レア*************************************/
 	hitPoint14: {
 		name: '至極の指輪', 
 		rarity: rtifactRarity.rare,
 		effect: '最大HPが増加:14', 
-		image: 'images/artifact/extremely.png', 
+		image: 'images/artifact/Extremely.png', 
 		firstFunc: ''
 	},
 	thelma: {
 		name: 'テルマ', 
 		rarity: rtifactRarity.rare,
 		effect: '使用しなかったエナジーが蓄積されていく。', 
-		image: 'images/artifact/thelma.png', 
+		image: 'images/artifact/Thelma.png', 
 		firstFunc: ''
 	},
 	omega: {
 		name: 'オメガの器', 
 		rarity: rtifactRarity.rare,
 		effect: '脆弱化にならない。', 
-		image: 'images/artifact/omega.png', 
+		image: 'images/artifact/Omega.png', 
 		firstFunc: ''
 	},
 	gavsky: {
 		name: 'ガフスキー', 
 		rarity: rtifactRarity.rare,
 		effect: '恐怖にならない。', 
-		image: 'images/artifact/gavsky.png', 
+		image: 'images/artifact/Gavsky.png', 
 		firstFunc: ''
 	},
-	star: {
+	starFragment: {
 		name: '星の欠片', 
 		rarity: rtifactRarity.rare,
 		effect: '7ターン目の終了時、すべての敵に52ダメージを与える。', 
-		image: 'images/artifact/star.png', 
+		image: 'images/artifact/StarFragment.png', 
 		firstFunc: ''
 	},
+	/*********************************BOSS*************************************/
 	annihilation: {
 		name: '灼滅の焔角', 
 		rarity: rtifactRarity.boss,
 		effect: 'ターン開始時に、1エナジーを得る。ゴールドを入手できなくなる。', 
-		image: 'images/artifact/annihilation.png', 
+		image: 'images/artifact/Annihilation.png', 
 		firstFunc: ''
 	},
 	prison: {
 		name: '氷獄の結晶', 
 		rarity: rtifactRarity.boss,
 		effect: 'ターン開始時に、1エナジーを得る。1ターンの間に、6枚までしかカードを使えなくなる。', 
-		image: 'images/artifact/prison.png', 
+		image: 'images/artifact/Prison.png', 
 		firstFunc: ''
 	},
 	judgment: {
 		name: '裁考の水晶', 
 		rarity: rtifactRarity.boss,
 		effect: 'ターン開始時に、1エナジーを得る。戦闘開始時、すべての敵は筋力1を得る。', 
-		image: 'images/artifact/judgment.png', 
+		image: 'images/artifact/Judgment.png', 
 		firstFunc: ''
 	},
 	horse: {
 		name: '人馬の円盤', 
 		rarity: rtifactRarity.boss,
 		effect: 'ターン開始時に、1エナジーを得る。報酬のカード選択画面で、選択できるカードが2枚減る。', 
-		image: 'images/artifact/horse.png', 
+		image: 'images/artifact/Horse.png', 
 		firstFunc: ''
 	},
 	crystal: {
 		name: '妃光の水晶', 
 		rarity: rtifactRarity.boss,
 		effect: 'ターン開始時に、1エナジーを得る。敵の行動予測がわからなくなる。', 
-		image: 'images/artifact/crystal.png', 
+		image: 'images/artifact/Crystal.png', 
 		firstFunc: ''
 	},
 	genma: {
@@ -257,28 +261,64 @@ const normalArtifact = {
 		name: '嵐竜の琥珀眼', 
 		rarity: rtifactRarity.boss,
 		effect: 'ターン終了時に、手札を捨てなくなる。', 
-		image: 'images/artifact/eye.png', 
+		image: 'images/artifact/Eye.png', 
 		firstFunc: ''
 	},
 	blue: {
 		name: '蒼の羽根', 
 		rarity: rtifactRarity.boss,
 		effect: 'エリートを倒すと2個のレリックをドロップするようになる。', 
-		image: 'images/artifact/blue.png', 
+		image: 'images/artifact/Blue.png', 
 		firstFunc: ''
 	},
 	key: {
 		name: '虚ろなる鍵', 
 		rarity: rtifactRarity.boss,
 		effect: '獲得時、2枚のカードをデッキから削除する。', 
-		image: 'images/artifact/key.png', 
+		image: 'images/artifact/Key.png', 
 		firstFunc: ''
 	},
 	thorn: {
 		name: '漆黒の棘翅', 
 		rarity: rtifactRarity.boss,
 		effect: 'ボスとエリートとの戦闘において、ターン開始時に、1エナジーを得る。', 
-		image: 'images/artifact/thorn.png', 
+		image: 'images/artifact/Thorn.png', 
+		firstFunc: ''
+	},
+	/*********************************BOSS*************************************/
+	card: {
+		name: 'よろずや会員カード', 
+		rarity: rtifactRarity.shop,
+		effect: '全商品50％割引！', 
+		image: 'images/artifact/Card.png', 
+		firstFunc: ''
+	},
+	Dawn: {
+		name: '極到の暁', 
+		rarity: rtifactRarity.shop,
+		effect: 'エリートとの戦闘開始時、筋力2を得る。', 
+		image: 'images/artifact/Dawn.png', 
+		firstFunc: ''
+	},
+	Drop: {
+		name: '極到の雫', 
+		rarity: rtifactRarity.shop,
+		effect: 'デッキをシャッフルするたび、6ブロックを得る。', 
+		image: 'images/artifact/Drop.png', 
+		firstFunc: ''
+	},
+	Star: {
+		name: '極到の星', 
+		rarity: rtifactRarity.shop,
+		effect: '戦闘開始時、弱体無効1を得る。', 
+		image: 'images/artifact/Star.png', 
+		firstFunc: ''
+	},
+	eye: {
+		name: '嵐竜の琥珀眼', 
+		rarity: rtifactRarity.shop,
+		effect: '山札を見た時、カードの並び順通りに表示される。', 
+		image: 'images/artifact/Eye.png', 
 		firstFunc: ''
 	},
 };
