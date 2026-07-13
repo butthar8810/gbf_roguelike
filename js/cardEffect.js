@@ -5434,7 +5434,7 @@ function decideShopLineup(){
 			index++;
 		}
 	});
-
+	//アーティファクトのラインナップ
 	const selectArtifacts = decideArtifactLineup();
 	return {exclusive: selectCards, common: selectCommonCards, artifacts: selectArtifacts};
 }

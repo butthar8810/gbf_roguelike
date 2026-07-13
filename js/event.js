@@ -85,7 +85,7 @@ function exchangeEnhancedCard(card, enhancedCard){
 		$('.enhance-area').removeClass('active');
 		$('.enhance-content').html('');
 		climbTowerContinue();
-	}, 1500);
+	}, 1000);
 }
 
 /*****************************************************************************************/
@@ -143,11 +143,13 @@ function shopCardList(){
 			});
 		const priceDiv = createCardPrice(selectInfo.price, selectInfo.discount);
 		const selectCardWrapperDiv = $('<div>')
+			.addClass('card-lineup')
 			.addClass('top-row')
 			.append(selectCardDiv)
 			.append(priceDiv);
 		$(`.shop-modal-body`).append(selectCardWrapperDiv);
 	});
+	// 共通カードのラインナップ
 	selectCardsInfo.common.forEach((selectInfo) => {
 		const selectCardDiv = createCardDom(selectInfo.card);
 		selectCardDiv
@@ -158,31 +160,56 @@ function shopCardList(){
 			});
 		const priceDiv = createCardPrice(selectInfo.price, selectInfo.discount);
 		const selectCardWrapperDiv = $('<div>')
+			.addClass('card-lineup')
 			.addClass('bottom-row')
 			.append(selectCardDiv)
 			.append(priceDiv);
 		$(`.shop-modal-body`).append(selectCardWrapperDiv);
 	});
 	// アーティファクトのラインナップ
-	const selectArtifactWrapperDiv = $('<div>')
+	const artifactWrapperDiv = $('<div>')
+		.addClass('artifact-wrapper');
+	const selectArtifactDiv = $('<div>')
 		.addClass('artifact-position')
-	$(`.shop-modal-body`).append(selectArtifactWrapperDiv);
-	// カード削除の
+		.append(artifactWrapperDiv);
+	$(`.shop-modal-body`).append(selectArtifactDiv);
+	selectCardsInfo.artifacts.forEach((selectInfo) => {
+		const artifactDiv = createArtifactDom(selectInfo.artifact);
+		artifactDiv
+			.addClass('shop-artifact')
+			.click(() => {
+				buyArtifact(selectInfo, selectCardsInfo.artifacts, selectArtifactsWrapperDiv);
+			});
+		const priceDiv = createCardPrice(selectInfo.price, false);
+		const selectArtifactsWrapperDiv = $('<div>')
+			.append(artifactDiv)
+			.append(priceDiv);
+		artifactWrapperDiv.append(selectArtifactsWrapperDiv);
+	});
+	// カード削除のラインナップ
+	const deleteImage = $('<img>')
+		.attr('src', `images/shop/Delete.png`);
+	const deletePriceDiv = createCardPrice(75, false);
 	const selectDeleteWrapperDiv = $('<div>')
 		.addClass('delete-position')
+		.append(deleteImage)
+		.append(deletePriceDiv);
 	$(`.shop-modal-body`).append(selectDeleteWrapperDiv);
 }
+/*******************************************************/
+/* カード購入関数
+/*******************************************************/
 function buyCard(selectInfo, cardList, selectCardWrapperDiv){
 	// 購入処理
 	if(selectInfo.price > playerStatus.money){
 		alert('お金が足りません');
 		return;
 	}
+	const index = cardList.findIndex(info => info.id === selectInfo.id);
+	const buyInfo = cardList.splice(index, 1)[0];
 	// 支払い
 	playerStatus.money -= buyInfo.price;
 	updateMoneyDom();
-	const index = cardList.findIndex(info => info.id === selectInfo.id);
-	const buyInfo = cardList.splice(index, 1)[0];
 	// 購入カードのデッキ挿入
 	const OriginCard = deepCopyCard(buyInfo.card);
 	pushOriginalDeck(OriginCard);
@@ -190,6 +217,30 @@ function buyCard(selectInfo, cardList, selectCardWrapperDiv){
 	selectCardWrapperDiv.addClass('purchased');
 	setLocalStorage(keyContinueShopLineup, selectCardsInfo);
 	setLocalStorage(keyContinueOriginalDeck, myOriginalDeck);
+	setLocalStorage(keyContinuePlayerStatus, playerStatus);
+	return;
+}
+/*******************************************************/
+/* アーティファクト購入関数
+/*******************************************************/
+function buyArtifact(selectInfo, artifactList, selectArtifactWrapperDiv){
+	// 購入処理
+	if(selectInfo.price > playerStatus.money){
+		alert('お金が足りません');
+		return;
+	}
+	const index = cardList.findIndex(info => info.id === selectInfo.id);
+	const buyInfo = cardList.splice(index, 1)[0];
+	// 支払い
+	playerStatus.money -= buyInfo.price;
+	updateMoneyDom();
+	// 購入カードのデッキ挿入
+	myArtifact.push(selectInfo.artifact);
+	updateArtifactDom();
+	//購入済み
+	selectArtifactWrapperDiv.addClass('purchased');
+	setLocalStorage(keyContinueShopLineup, selectCardsInfo);
+	setLocalStorage(keyContinueArtifact, myArtifact);
 	setLocalStorage(keyContinuePlayerStatus, playerStatus);
 	return;
 }

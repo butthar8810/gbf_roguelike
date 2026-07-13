@@ -91,37 +91,43 @@ function createStartBtnDom(){
 		.append(creditSpan);
 	$('.start-btn-area').append(creditAnchor);
 }
-
+/*******************************************************/
+/* updateArtifactDom：アーティファクトDOMを生成
+/*******************************************************/
+function createArtifactDom(artifact){
+	const modalName = $('<p>')
+		.append(artifact.name);
+	const modalDiv = $('<div>')
+		.addClass('artifact-modal')
+		.append(modalName)
+		.append(artifact.effect);
+	const modalsDiv = $('<div>')
+		.addClass('artifact-modals')
+		.addClass('hidden')
+		.append(modalDiv)
+		.hover(() => {
+			modalsDiv.addClass('hidden');
+		}, () => {});
+	const artifactImage = $('<img>')
+		.attr('src', artifact.image);
+	const artifactDiv = $('<div>')
+		.addClass('artifact')
+		.append(artifactImage)
+		.append(modalsDiv)
+		.hover(() => {
+			modalsDiv.removeClass('hidden');
+		}, () => {
+			modalsDiv.addClass('hidden');
+		});
+	return artifactDiv;
+}
 /*******************************************************/
 /* updateArtifactDom：アーティファクトDOMを生成
 /*******************************************************/
 function updateArtifactDom(){
 	$('.artifact-area').html('');
 	myArtifact.forEach((artifact) => {
-		const modalName = $('<p>')
-			.append(artifact.name);
-		const modalDiv = $('<div>')
-			.addClass('artifact-modal')
-			.append(modalName)
-			.append(artifact.effect);
-		const modalsDiv = $('<div>')
-			.addClass('artifact-modals')
-			.addClass('hidden')
-			.append(modalDiv)
-			.hover(() => {
-				modalsDiv.addClass('hidden');
-			}, () => {});
-		const artifactImage = $('<img>')
-			.attr('src', artifact.image);
-		const artifactDiv = $('<div>')
-			.addClass('artifact')
-			.append(artifactImage)
-			.append(modalsDiv)
-			.hover(() => {
-				modalsDiv.removeClass('hidden');
-			}, () => {
-				modalsDiv.addClass('hidden');
-			});
+		const artifactDiv = createArtifactDom(artifact);
 		$('.artifact-area')
 			.append(artifactDiv)
 	});

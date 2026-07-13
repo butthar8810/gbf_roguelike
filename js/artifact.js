@@ -1,7 +1,7 @@
 /*****************************************************************************/
 /* アーティファクト情報
 /*****************************************************************************/
-const rtifactRarity = {common: 'レア', uncommon: 'スーパーレア', rare: 'SSレア', boss: 'ボス', shop: 'ショップ'};
+const rtifactRarity = {common: 'common', uncommon: 'uncommon', rare: 'rare', boss: 'boss', shop: 'shop'};
 
 
 const starterTest = {
@@ -277,7 +277,7 @@ const normalArtifact = {
 	thorn: {
 		name: '漆黒の棘翅', 
 		rarity: rtifactRarity.boss,
-		effect: 'ボスとエリートとの戦闘において、ターン開始時に、●を得る。', 
+		effect: 'ボスとエリートとの戦闘において、ターン開始時に、1エナジーを得る。', 
 		image: 'images/artifact/thorn.png', 
 		firstFunc: ''
 	},
@@ -308,7 +308,41 @@ function setupArtifact(){
 /* setupArtifact：ショップラインナップ決定関数
 /*******************************************************/
 function decideArtifactLineup(){
-	return [];
+	const selectArtifacts = [];
+	const lineupPrice = {
+		common:{minPrice: 149, maxPrice: 201},
+		uncommon:{minPrice: 191, maxPrice: 259},
+		rare:{minPrice: 234, maxPrice: 316},
+		shop:{minPrice: 170, maxPrice: 230},
+		boss:{minPrice: 170, maxPrice: 230},
+	};
+	let index = 0
+	// ラインナップ抽選
+	const filteringArtifact = Object.values(normalArtifact).filter((artifact) => 
+		artifact.rarity === rtifactRarity.common ||
+		artifact.rarity === rtifactRarity.uncommon ||
+		artifact.rarity === rtifactRarity.rare
+	);
+	const lineupArtifact = shuffleArray(filteringArtifact).splice(0, 2);
+	const shopArtifact = Object.values(normalArtifact).filter((artifact) => 
+		artifact.rarity === rtifactRarity.boss ||
+		artifact.rarity === rtifactRarity.shop
+	);
+	lineupArtifact.push(shuffleArray(shopArtifact).splice(0, 1)[0]);
+	//レア度別に値段を決める
+	lineupArtifact.forEach((artifact) => {
+		const price = lineupPrice[artifact.rarity];
+		let randomPrice = Math.floor(
+			Math.random() * (price.maxPrice - price.minPrice) + price.minPrice
+		);
+		selectArtifacts.push({
+			id: index,
+			artifact: artifact,
+			price: randomPrice,
+		});
+		index++;
+	});
+	return selectArtifacts;
 }
 /*****************************************************************************/
 /* アーティファクト効果
