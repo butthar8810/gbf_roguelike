@@ -208,6 +208,7 @@ const playerStatus = {
 	block: 0,
 	statuses: [],
 	playerCount: {
+		deleteServiceCount: 0,
 		HPDownCount: 0,
 		trashCountPerTurn: 0,
 		playAttackPerTurn: 0,

@@ -88,6 +88,8 @@ function startShopEvent(){
 	setLocalStorage(keyContinueFlag, continueFlag.shopArea);
 	const shopBtn = appendTalkingBtn('商品を見る');
 	shopBtn.click((e) => {
+		$('.black-back-area').addClass('active');
+		$('.shop-buy-area').addClass('active');
 		shopCardList();
 	});
 	const returnBtn = appendTalkingBtn('立ち去る');
@@ -100,15 +102,6 @@ function startShopEvent(){
 /* ショップUI表示
 /*******************************************************/
 function shopCardList(){
-	$('.black-back-area').addClass('active');
-	$('.shop-buy-area').addClass('active');
-	$('.shop-modal-body').html('');
-	//戻るボタン
-	$('.shop-cancel-btn').off();
-	$('.shop-cancel-btn').click(() => {
-		$('.black-back-area').removeClass('active');
-		$('.shop-buy-area').removeClass('active');
-	});
 	// ラインナップの選定
 	let selectCardsInfo = [];
 	const lastSelectCardsInfo = getLocalStorage(keyContinueShopLineup);
@@ -118,6 +111,14 @@ function shopCardList(){
 		selectCardsInfo = decideShopLineup();
 		setLocalStorage(keyContinueShopLineup, selectCardsInfo);
 	}
+	console.log(selectCardsInfo);
+	$('.shop-modal-body').html('');
+	//戻るボタン
+	$('.shop-cancel-btn').off();
+	$('.shop-cancel-btn').click(() => {
+		$('.black-back-area').removeClass('active');
+		$('.shop-buy-area').removeClass('active');
+	});
 	// 専用カードのラインナップ
 	selectCardsInfo.exclusive.forEach((selectInfo) => {
 		const selectCardDiv = createCardDom(selectInfo.card);
@@ -126,8 +127,13 @@ function shopCardList(){
 			// 手札クリック時の処理登録
 			.click(() => {
 				buyCard(selectInfo, selectCardsInfo.exclusive, selectCardWrapperDiv);
+				setLocalStorage(keyContinueShopLineup, selectCardsInfo);
+				shopCardList();
 			});
 		const priceDiv = createCardPrice(selectInfo.price, selectInfo.discount);
+		if(selectInfo.price > playerStatus.money){
+			priceDiv.addClass('shop-shortage');
+		}
 		const selectCardWrapperDiv = $('<div>')
 			.addClass('card-lineup')
 			.addClass('top-row')
@@ -143,8 +149,13 @@ function shopCardList(){
 			// 手札クリック時の処理登録
 			.click(() => {
 				buyCard(selectInfo, selectCardsInfo.common, selectCardWrapperDiv);
+				setLocalStorage(keyContinueShopLineup, selectCardsInfo);
+				shopCardList();
 			});
 		const priceDiv = createCardPrice(selectInfo.price, selectInfo.discount);
+		if(selectInfo.price > playerStatus.money){
+			priceDiv.addClass('shop-shortage');
+		}
 		const selectCardWrapperDiv = $('<div>')
 			.addClass('card-lineup')
 			.addClass('bottom-row')
@@ -165,8 +176,13 @@ function shopCardList(){
 			.addClass('shop-artifact')
 			.click(() => {
 				buyArtifact(selectInfo, selectCardsInfo.artifacts, selectArtifactsWrapperDiv);
+				setLocalStorage(keyContinueShopLineup, selectCardsInfo);
+				shopCardList();
 			});
 		const priceDiv = createCardPrice(selectInfo.price, false);
+		if(selectInfo.price > playerStatus.money){
+			priceDiv.addClass('shop-shortage');
+		}
 		const selectArtifactsWrapperDiv = $('<div>')
 			.append(artifactDiv)
 			.append(priceDiv);
@@ -177,56 +193,73 @@ function shopCardList(){
 		.addClass('delete-hukidashi')
 		.attr('src', `images/shop/Hukidashi.png`);
 	const HukidashiText = $('<p>')
-		.addClass('delete-hukidashi-text')
-		.html('カード削除サービス');
+		.addClass('delete-hukidashi-text');
 	const deleteImage = $('<img>')
 		.addClass('delete-image')
 		.attr('src', `images/shop/Delete.png`);
-	const deletePriceDiv = createCardPrice(75, false);
+	
 	const selectDeleteWrapperDiv = $('<div>')
 		.addClass('delete-position')
 		.append(HukidashiImage)
 		.append(HukidashiText)
-		.append(deleteImage)
-		.append(deletePriceDiv)
-		.click(() => {
-			$('.delete-area').addClass('active');
-			$('.delete-modal-body').html('');
-			myOriginalDeck.forEach((card) => {
-				const deleteCardDiv = createCardDom(card);
-				deleteCardDiv
-					.attr('id', `shop-card${card.id}`)
-					.addClass('shop-card')
-					.click(() => {
-						const index = findIndexTemporaryArea('id', card.id);
-						if (index === -1) {
-							if (tmpArea.length < 1){
-								pushTemporaryArea(card);
-								deleteCardDiv.addClass('select');
+		.append(deleteImage);
+	if(selectCardsInfo.delete.deleteFlag){
+		HukidashiText.html('カード削除サービス');
+		const deletePriceDiv = createCardPrice(selectCardsInfo.delete.price, false);
+		if(selectCardsInfo.delete.price > playerStatus.money){
+			deletePriceDiv.addClass('shop-shortage');
+		}
+		selectDeleteWrapperDiv
+			.append(deletePriceDiv)
+			.click(() => {
+				// 購入処理
+				if(selectCardsInfo.delete.price > playerStatus.money){
+					alert('お金が足りません');
+					return;
+				}
+				$('.delete-area').addClass('active');
+				$('.delete-modal-body').html('');
+				myOriginalDeck.forEach((card) => {
+					const deleteCardDiv = createCardDom(card);
+					deleteCardDiv
+						.attr('id', `shop-card${card.id}`)
+						.addClass('shop-card')
+						.click(() => {
+							const index = findIndexTemporaryArea('id', card.id);
+							if (index === -1) {
+								if (tmpArea.length < 1){
+									pushTemporaryArea(card);
+									deleteCardDiv.addClass('select');
+								} else {
+									const cancelCard = shiftTemporaryArea();
+									$(`#shop-card${cancelCard.id}`).removeClass("select");
+									pushTemporaryArea(card);
+									deleteCardDiv.addClass("select");
+								}
 							} else {
-								const cancelCard = shiftTemporaryArea();
-								$(`#shop-card${cancelCard.id}`).removeClass("select");
-								pushTemporaryArea(card);
-								deleteCardDiv.addClass("select");
+								spliceTemporaryArea(index);
+								deleteCardDiv.removeClass("select");
 							}
-						} else {
-							spliceTemporaryArea(index);
-							deleteCardDiv.removeClass("select");
-						}
-					});
-				$('.delete-modal-body').append(deleteCardDiv);
+						});
+					$('.delete-modal-body').append(deleteCardDiv);
+				});
 			});
-
-		});
+		$('.delete-cancel-btn').off();
 		$('.delete-cancel-btn')
 			.click(() => {
 				$('.delete-area').removeClass('active');
 				$('.delete-modal-body').html('');
 			});
+		$('.delete-btn').off();
 		$('.delete-btn')
 			.click(() => {
-				buyDeleteService();
+				buyDeleteService(selectCardsInfo.delete);
+				setLocalStorage(keyContinueShopLineup, selectCardsInfo);
+				shopCardList();
 			});
+	} else {
+		HukidashiText.html('売り切れ！');
+	}
 	$(`.shop-modal-body`).append(selectDeleteWrapperDiv);
 }
 /*******************************************************/
@@ -247,7 +280,6 @@ function buyCard(selectInfo, cardList, selectCardWrapperDiv){
 	addCardToOriginalDeck(buyInfo.card);
 	//購入済み
 	selectCardWrapperDiv.addClass('purchased');
-	setLocalStorage(keyContinueShopLineup, selectCardsInfo);
 	setLocalStorage(keyContinueOriginalDeck, myOriginalDeck);
 	setLocalStorage(keyContinuePlayerStatus, playerStatus);
 	return;
@@ -271,7 +303,6 @@ function buyArtifact(selectInfo, artifactList, selectArtifactWrapperDiv){
 	updateArtifactDom();
 	//購入済み
 	selectArtifactWrapperDiv.addClass('purchased');
-	setLocalStorage(keyContinueShopLineup, selectCardsInfo);
 	setLocalStorage(keyContinueArtifact, myArtifact);
 	setLocalStorage(keyContinuePlayerStatus, playerStatus);
 	return;
@@ -279,7 +310,7 @@ function buyArtifact(selectInfo, artifactList, selectArtifactWrapperDiv){
 /*******************************************************/
 /* カード削除サービス購入関数
 /*******************************************************/
-function buyDeleteService(){
+function buyDeleteService(deleteInfo){
 	if(tmpArea.length === 0){
 		return false;
 	}
@@ -295,6 +326,10 @@ function buyDeleteService(){
 			return false;
 		}
 	});
+	deleteInfo.deleteFlag = false;
+	playerStatus.playerCount.deleteServiceCount++;
+	setLocalStorage(keyContinueOriginalDeck, myOriginalDeck);
+	setLocalStorage(keyContinuePlayerStatus, playerStatus);
 	$('.delete-area').removeClass('active');
 	$('.delete-modal-body').html('');
 }

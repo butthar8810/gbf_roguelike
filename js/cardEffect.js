@@ -5408,7 +5408,6 @@ function decideShopLineup(){
 		const filteringCardList = selectCardList
 			.filter((card) => card.rarity === selectRarityInfo.rarity)
 			.filter((card) => card.type === lineupType[index]);
-		console.log(filteringCardList);
 		if(filteringCardList.length > 0){
 			const selectCard = shuffleArray(filteringCardList).shift();
 			if(!selectCards.find((status) => status.card.name === selectCard.name)){
@@ -5432,7 +5431,6 @@ function decideShopLineup(){
 			Math.random() * (info.maxPrice - info.minPrice) + info.minPrice
 		);
 		const copyCardList = deepCopyCardList(Object.values(commonCardList));
-		console.log(copyCardList);
 		const filteringCardList = copyCardList.filter((card) => card.rarity === info.rarity);
 		if(filteringCardList.length > 0){
 			const selectCard = shuffleArray(filteringCardList).shift();
@@ -5447,7 +5445,13 @@ function decideShopLineup(){
 	});
 	//アーティファクトのラインナップ
 	const selectArtifacts = decideArtifactLineup();
-	return {exclusive: selectCards, common: selectCommonCards, artifacts: selectArtifacts};
+	//カード削除サービスのラインナップ
+	const deletePrice = 75 + (25 * playerStatus.playerCount.deleteServiceCount);
+	const deleteService = {
+		deleteFlag: true,
+		price: deletePrice,
+	}
+	return {exclusive: selectCards, common: selectCommonCards, artifacts: selectArtifacts, delete: deleteService};
 }
 /*************************************************************************************/
 /* 各カード効果関数(アタック)
