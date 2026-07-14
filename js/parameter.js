@@ -143,13 +143,13 @@ const keyContinueCurrentMap = 'Babu.Continue.Current.Map';
 const keyContinueBattleCount = 'Babu.Continue.Battle.Count';
 const keyContinueOriginalDeck = 'Babu.Continue.Original.Deck';
 const keyContinueShopLineup = 'Babu.Continue.Shop.Lineup';
+const keyContinueTemporary = 'Babu.Continue.Temporary';
 // 戦闘用ストレージキー
 const keyContinueDeck = 'Babu.Continue.Deck';
 const keyContinueHand = 'Babu.Continue.Hand';
 const keyContinueTrash = 'Babu.Continue.Trash';
 const keyContinuePlayArea = 'Babu.Continue.Play.Area';
 const keyContinueDiscard = 'Babu.Continue.Discard';
-const keyContinueTemporary = 'Babu.Continue.Temporary';
 const keyContinueStack = 'Babu.Continue.Stack';
 const keyContinueTurn = 'Babu.Continue.Turn';
 const keyContinueEnemy = 'Babu.Continue.Enemy';
@@ -191,6 +191,7 @@ const phase = {
 /* グローバル変数
 /*****************************************************************************/
 let myArtifact = [];
+let tmpArea =[];
 // アウトゲーム
 let currentMap = {};
 let map = [];
@@ -217,7 +218,6 @@ let myHand = [];
 let myTrash = [];
 let playArea = [];
 let discard = [];
-let tmpArea =[];
 let stackCards = [];
 let holdCard =[];
 let currentTurn = 0;

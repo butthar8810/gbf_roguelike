@@ -249,20 +249,6 @@ function admissionStage(stageInfo){
 }
 
 /*******************************************************/
-/* addCardToOriginalDeck：カードをオリジナルデッキに入れる
-/*******************************************************/
-function addCardToOriginalDeck(card, count = 1){
-	
-	for(let i = 0; i < count; i++){
-		// 獲得したカードは指示が無い限りは捨て札置き場に表向きにして置く
-		pushOriginalDeck(card);
-		setLocalStorage(keyContinueOriginalDeck, myOriginalDeck);
-	}
-	return true;
-}
-
-
-/*******************************************************/
 /* appendTalkingBtn：hand-areaに会話ボタンを追加する
 /*******************************************************/
 function appendTalkingBtn(text){

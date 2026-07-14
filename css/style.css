@@ -9,7 +9,7 @@ body{
 	padding: 0;
 	margin: 0;
 	user-select: none;
-	font-family: "Skip Std B", "Skip ProN B", "Skip Pro B", sans-serif;
+	font-family: "Helvetica Neue", "Helvetica", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Arial", "Yu Gothic", "Meiryo", sans-serif;
 }
 
 .back{
@@ -520,10 +520,23 @@ header{
 }
 .shop-area .sierokarte-hukidashi{
 	width: 500px;
+	height: 115px;
 	position: absolute;
 	bottom: 300px;
 	left: 50%;
 	transform: translateX(-50%);
+}
+.hukidashi-text{
+	width: 500px;
+	height: 100px;
+	position: absolute;
+	bottom: 315px;
+	left: 50%;
+	transform: translateX(-50%);
+	font-size: 24px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 .shop-area .sierokarte-character{
 	width: 300px;
@@ -1424,6 +1437,7 @@ header{
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+	position: relative;
 }
 .shop-buy-area.active{
 	display:flex;
@@ -1514,9 +1528,80 @@ header{
 .delete-position{
 	grid-column: 5/6;
 	grid-row: 2/3;
+
+	position: relative;
 }
-.delete-position>img{
+.delete-position:active{
+	transform: scale(0.9);
+}
+.delete-image{
 	width: 100px;
+}
+.delete-hukidashi{
+	width: 100%;
+	margin-bottom: 20px;
+}
+.delete-hukidashi-text{
+	width: 100%;
+	position: absolute;
+	top: 55px;
+	left: 0;
+}
+.delete-area{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	margin: 40px 0px;
+	padding: 0 50px;
+	text-align: center;
+	background: rgba(0, 0, 0, 0.8);
+	visibility: hidden;
+	overflow: auto;
+	opacity: 0;
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	z-index: 9000;
+}
+.delete-area.active{
+	visibility: visible;
+	opacity: 1;
+}
+.delete-modal-body{
+	max-width: 1100px;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: flex-start;
+	align-items: center;
+}
+.delete-modal-body>div{
+	margin: 10px 16px;
+}
+.delete-title{
+	font-size: 28px;
+	color: white;
+	font-weight: 900;
+	text-stroke: 1px gray;
+	-webkit-text-stroke: 1px gray;
+}
+.delete-btn-area{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.delete-btn-area>div{
+	margin: 10px 20px;
+}
+.shop-card{
+
+}
+.shop-card.select{
+	background-color: rgba(254, 197, 105);
+	box-shadow: 1px 1px 5px red;
 }
 /*****************************************************************************/
 /* enhance-area: 黒背景の要素

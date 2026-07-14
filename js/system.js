@@ -127,49 +127,39 @@ function deepCopyEnemies(arrayEnemies){
 /* pushOriginalDeck：デッキキューの末尾にカードを追加する
 /*******************************************************/
 function pushOriginalDeck(card){
-	if ('id' in card) {
-		myOriginalDeck.push({
-			No: card.No,
-			key: card.key,
-			name: card.name,
-			class: card.class,
-			rarity: card.rarity,
-			type: card.type,
-			func: card.func,
-			image: card.image,
-			effect: card.effect,
-			amount: card.amount
-		});
-	} else {
-		myOriginalDeck.push(card);
-	}
+	// デッキから手札へカードを引く
+	myOriginalDeck.push({
+		id: myOriginalDeck.length+1,
+		No: card.No,
+		key: card.key,
+		name: card.name,
+		class: card.class,
+		rarity: card.rarity,
+		type: card.type,
+		func: card.func,
+		image: card.image,
+		effect: card.effect,
+		amount: card.amount
+	});
 }
-/*******************************************************/
-/* unshiftOriginalDeck：デッキキューの先頭にデータを追加する
-/*******************************************************/
-function unshiftOriginalDeck(card){
-	if ('id' in card) {
-		myOriginalDeck.unshift({
-			No: card.No,
-			key: card.key,
-			name: card.name,
-			class: card.class,
-			rarity: card.rarity,
-			type: card.type,
-			func: card.func,
-			image: card.image,
-			effect: card.effect,
-			amount: card.amount
-		});
-	} else {
-		myOriginalDeck.unshift(card);
-	}
-}
+
 /*******************************************************/
 /* shiftOriginalDeck：デッキキューの先頭からデータを取り出す
 /*******************************************************/
 function shiftOriginalDeck(){
 	return myOriginalDeck.shift();
+}
+/*******************************************************/
+/* spliceDeck：デッキキューのIndex番目のデータを取り出す
+/*******************************************************/
+function spliceOriginalDeck(index){
+	return myOriginalDeck.splice(index, 1)[0];
+}
+/*******************************************************/
+/* findIndexTrash：捨て札キューから検索する
+/*******************************************************/
+function findIndexOriginalDeck(id, key){
+	return myOriginalDeck.findIndex((card) => card[id] == key);
 }
 /*******************************************************/
 /* deleteAllOriginalDeck：デッキキューをすべて削除する

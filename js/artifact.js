@@ -354,7 +354,7 @@ function decideArtifactLineup(){
 		uncommon:{minPrice: 191, maxPrice: 259},
 		rare:{minPrice: 234, maxPrice: 316},
 		shop:{minPrice: 170, maxPrice: 230},
-		boss:{minPrice: 170, maxPrice: 230},
+		boss:{minPrice: 9999, maxPrice: 9999},
 	};
 	let index = 0
 	// ラインナップ抽選
@@ -365,7 +365,6 @@ function decideArtifactLineup(){
 	);
 	const lineupArtifact = shuffleArray(filteringArtifact).splice(0, 2);
 	const shopArtifact = Object.values(normalArtifact).filter((artifact) => 
-		artifact.rarity === rtifactRarity.boss ||
 		artifact.rarity === rtifactRarity.shop
 	);
 	lineupArtifact.push(shuffleArray(shopArtifact).splice(0, 1)[0]);

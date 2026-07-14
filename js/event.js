@@ -18,15 +18,6 @@ function startRestEvent(){
 	});
 }
 /*******************************************************/
-/* 休憩イベント終了
-/*******************************************************/
-function getReadyRestOK(){
-	const btn = appendTalkingBtn('塔へ上る');
-	btn.click((e) => {
-		climbTowerContinue();
-	});
-}
-/*******************************************************/
 /* 休憩イベント
 /*******************************************************/
 function selectRestAction(){
@@ -35,41 +26,36 @@ function selectRestAction(){
 		deleteTalkingBtn();
 		recoveryHP(playerStatus.maxHP * 0.3);
 		animateRestHeal();
-		getReadyRestOK();
+		const btn = appendTalkingBtn('塔へ上る');
+		btn.click((e) => {
+			climbTowerContinue();
+		});
 	});
 	const secondBtn = appendTalkingBtn('鍛冶（武器を強化する）');
 	secondBtn.click((e) => {
 		deleteTalkingBtn();
-		enhanceCardList();
+		$('.black-back-area').addClass('active');
+		$('.enhance-area').addClass('active');
+		$('.enhance-content').html('');
+		updateEnhanceTitleDom('強化する武器を選んでください');
+		// 強化前のカード一覧表示
+		myOriginalDeck.forEach((card) => {
+			if (!('key' in card)){
+				//強化済みのカードは除外
+				return;
+			}
+			const enhanceCardDiv = createCardDom(card);
+			enhanceCardDiv
+				.addClass('enhance-card')
+				.click(card ,() => {
+					console.log(card);
+					decideEnhanceCardDom(card);
+				});
+			$('.enhance-content').append(enhanceCardDiv);
+		});
 	});
 }
-/*******************************************************/
-/* 鍛冶イベント
-/*******************************************************/
-function enhanceCardList(){
-	$('.black-back-area').addClass('active');
-	$('.enhance-area').addClass('active');
-	$('.enhance-content').html('');
-	updateEnhanceTitleDom('強化する武器を選んでください');
-	// 強化前のカード一覧表示
-	myOriginalDeck.forEach((card) => {
-		if (!('key' in card)){
-			console.log('強化済み');
-			console.log(card);
-			return;
-		}
-		const enhanceCardDiv = createCardDom(card);
-		enhanceCardDiv
-			.addClass('enhance-card')
-			// 手札クリック時の処理登録
-			.click(card ,() => {
-				console.log(card);
-				decideEnhanceCardDom(card);
-			});
-		$('.enhance-content').append(enhanceCardDiv);
-	});
 
-}
 /*******************************************************/
 /* 鍛冶イベント（決定後）
 /*******************************************************/
@@ -187,13 +173,60 @@ function shopCardList(){
 		artifactWrapperDiv.append(selectArtifactsWrapperDiv);
 	});
 	// カード削除のラインナップ
+	const HukidashiImage = $('<img>')
+		.addClass('delete-hukidashi')
+		.attr('src', `images/shop/Hukidashi.png`);
+	const HukidashiText = $('<p>')
+		.addClass('delete-hukidashi-text')
+		.html('カード削除サービス');
 	const deleteImage = $('<img>')
+		.addClass('delete-image')
 		.attr('src', `images/shop/Delete.png`);
 	const deletePriceDiv = createCardPrice(75, false);
 	const selectDeleteWrapperDiv = $('<div>')
 		.addClass('delete-position')
+		.append(HukidashiImage)
+		.append(HukidashiText)
 		.append(deleteImage)
-		.append(deletePriceDiv);
+		.append(deletePriceDiv)
+		.click(() => {
+			$('.delete-area').addClass('active');
+			$('.delete-modal-body').html('');
+			myOriginalDeck.forEach((card) => {
+				const deleteCardDiv = createCardDom(card);
+				deleteCardDiv
+					.attr('id', `shop-card${card.id}`)
+					.addClass('shop-card')
+					.click(() => {
+						const index = findIndexTemporaryArea('id', card.id);
+						if (index === -1) {
+							if (tmpArea.length < 1){
+								pushTemporaryArea(card);
+								deleteCardDiv.addClass('select');
+							} else {
+								const cancelCard = shiftTemporaryArea();
+								$(`#shop-card${cancelCard.id}`).removeClass("select");
+								pushTemporaryArea(card);
+								deleteCardDiv.addClass("select");
+							}
+						} else {
+							spliceTemporaryArea(index);
+							deleteCardDiv.removeClass("select");
+						}
+					});
+				$('.delete-modal-body').append(deleteCardDiv);
+			});
+
+		});
+		$('.delete-cancel-btn')
+			.click(() => {
+				$('.delete-area').removeClass('active');
+				$('.delete-modal-body').html('');
+			});
+		$('.delete-btn')
+			.click(() => {
+				buyDeleteService();
+			});
 	$(`.shop-modal-body`).append(selectDeleteWrapperDiv);
 }
 /*******************************************************/
@@ -211,8 +244,7 @@ function buyCard(selectInfo, cardList, selectCardWrapperDiv){
 	playerStatus.money -= buyInfo.price;
 	updateMoneyDom();
 	// 購入カードのデッキ挿入
-	const OriginCard = deepCopyCard(buyInfo.card);
-	pushOriginalDeck(OriginCard);
+	addCardToOriginalDeck(buyInfo.card);
 	//購入済み
 	selectCardWrapperDiv.addClass('purchased');
 	setLocalStorage(keyContinueShopLineup, selectCardsInfo);
@@ -243,4 +275,26 @@ function buyArtifact(selectInfo, artifactList, selectArtifactWrapperDiv){
 	setLocalStorage(keyContinueArtifact, myArtifact);
 	setLocalStorage(keyContinuePlayerStatus, playerStatus);
 	return;
+}
+/*******************************************************/
+/* カード削除サービス購入関数
+/*******************************************************/
+function buyDeleteService(){
+	if(tmpArea.length === 0){
+		return false;
+	}
+	const deleteCards = deleteAllTemporaryArea();
+	setLocalStorage(keyContinueTemporary, tmpArea);
+	deleteCards.forEach((deleteCard) => {
+		const index = findIndexOriginalDeck('id', deleteCard.id);
+		if (index === -1) {
+			return false;
+		}
+		const card = spliceOriginalDeck(index);
+		if (card === undefined) {
+			return false;
+		}
+	});
+	$('.delete-area').removeClass('active');
+	$('.delete-modal-body').html('');
 }

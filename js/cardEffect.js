@@ -5237,7 +5237,18 @@ const testCardList = {
 		}
 	},
 }
-
+/*******************************************************/
+/* addCardToOriginalDeck：カードをオリジナルデッキに入れる
+/*******************************************************/
+function addCardToOriginalDeck(card, count = 1){
+	
+	for(let i = 0; i < count; i++){
+		const OriginCard = deepCopyCard(card);
+		pushOriginalDeck(OriginCard);
+		setLocalStorage(keyContinueOriginalDeck, myOriginalDeck);
+	}
+	return true;
+}
 /*******************************************************/
 /* setupDeck：初期デッキとなる10枚のカードを配る
 /*******************************************************/
