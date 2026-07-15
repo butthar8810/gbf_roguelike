@@ -92,7 +92,23 @@
 		</div>
 	</div>
 	<div class="list-back-area">
-		<div class="card-list"></div>
+		<div class="tab-wrap">
+			<!-- タブの切り替え用ラジオボタン -->
+			<input id="gran" type="radio" name="card-list-group" checked>
+			<label for="gran" class="tab-btn gran-card">グラン</label>
+			<input id="djeeta" type="radio" name="card-list-group">
+			<label for="djeeta" class="tab-btn djeeta-card">ジータ</label>
+			<input id="common" type="radio" name="card-list-group">
+			<label for="common" class="tab-btn common-card">無色</label>
+			<div class="tab-header gran-card">
+				<input class="upgrade-checkbox" type="checkbox" name="Upgrade" value="Upgrade">アップグレードを見る
+			</div>
+			<div class="panel-area">
+				<div id="panel1" class="panel gran-list"></div>
+				<div id="panel2" class="panel djeeta-list"></div>
+				<div id="panel3" class="panel common-list"></div>
+			</div>
+		</div>
 		<div class="btn-area">
 			<div class="image-btn close-list-btn">
 				<img src="images/btn3.png" alt="">

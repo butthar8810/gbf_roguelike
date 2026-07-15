@@ -116,11 +116,13 @@ function shopCardList(){
 	console.log(selectCardsInfo);
 	$('.shop-modal-body').html('');
 	//戻るボタン
-	$('.shop-cancel-btn').off();
-	$('.shop-cancel-btn').click(() => {
-		$('.black-back-area').removeClass('active');
-		$('.shop-buy-area').removeClass('active');
-	});
+	$('.shop-cancel-btn')
+		.off()
+		.click(() => {
+			$('.black-back-area').removeClass('active');
+			$('.shop-buy-area').removeClass('active');
+		});
+
 	// 専用カードのラインナップ
 	selectCardsInfo.exclusive.forEach((selectInfo) => {
 		const selectCardDiv = createCardDom(selectInfo.card);
@@ -143,6 +145,7 @@ function shopCardList(){
 			.append(priceDiv);
 		$(`.shop-modal-body`).append(selectCardWrapperDiv);
 	});
+
 	// 共通カードのラインナップ
 	selectCardsInfo.common.forEach((selectInfo) => {
 		const selectCardDiv = createCardDom(selectInfo.card);
@@ -165,6 +168,7 @@ function shopCardList(){
 			.append(priceDiv);
 		$(`.shop-modal-body`).append(selectCardWrapperDiv);
 	});
+
 	// アーティファクトのラインナップ
 	const artifactWrapperDiv = $('<div>')
 		.addClass('artifact-wrapper');
@@ -190,6 +194,7 @@ function shopCardList(){
 			.append(priceDiv);
 		artifactWrapperDiv.append(selectArtifactsWrapperDiv);
 	});
+
 	// カード削除のラインナップ
 	const HukidashiImage = $('<img>')
 		.addClass('delete-hukidashi')

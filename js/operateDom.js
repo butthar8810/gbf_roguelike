@@ -1,4 +1,88 @@
 /*******************************************************/
+/* createTopPageCardListDom：トップページのカードリストを表示
+/*******************************************************/
+function createTopPageCardListDom(){
+	$('#panel1').html('');
+	Object.values(granCardList).forEach((card) => {
+		const cardDiv = createCardDom(card);
+		cardDiv.addClass('enhance-card');
+		$('#panel1').append(cardDiv);
+	});
+	$('#panel2').html('');
+	Object.values(djeetaCardList).forEach((card) => {
+		const cardDiv = createCardDom(card);
+		cardDiv.addClass('enhance-card');
+		$('#panel2').append(cardDiv);
+	});
+	$('#panel3').html('');
+	Object.values(commonCardList).forEach((card) => {
+		const cardDiv = createCardDom(card);
+		cardDiv.addClass('enhance-card');
+		$('#panel3').append(cardDiv);
+	});
+}
+function createTopPageEnhancedCardListDom(){
+	$('#panel1').html('');
+	Object.values(granEnhancedCardList).forEach((card) => {
+		const cardDiv = createCardDom(card);
+		cardDiv.addClass('enhance-card');
+		$('#panel1').append(cardDiv);
+	});
+	$('#panel2').html('');
+	Object.values(djeetaEnhancedCardList).forEach((card) => {
+		const cardDiv = createCardDom(card);
+		cardDiv.addClass('enhance-card');
+		$('#panel2').append(cardDiv);
+	});
+	$('#panel3').html('');
+	Object.values(commonEnhancedCardList).forEach((card) => {
+		const cardDiv = createCardDom(card);
+		cardDiv.addClass('enhance-card');
+		$('#panel3').append(cardDiv);
+	});
+}
+
+/*******************************************************/
+/* createTopPageCardListDom：トップページのカードリストを表示
+/*******************************************************/
+function createTopPageProcessDom(){
+	$( 'input[name="card-list-group"]:radio' ).change(() => {
+		let selectedID = $('input[name="card-list-group"]:checked').attr('id');
+		switch(selectedID){
+			case 'gran':
+				$('.tab-header')
+					.addClass('gran-card')
+					.removeClass('djeeta-card')
+					.removeClass('common-card');
+				break;
+			case 'djeeta':
+				$('.tab-header')
+					.removeClass('gran-card')
+					.addClass('djeeta-card')
+					.removeClass('common-card');
+				break;
+			case 'common':
+				$('.tab-header')
+					.removeClass('gran-card')
+					.removeClass('djeeta-card')
+					.addClass('common-card');
+				break;
+			default:
+				break;
+		}
+	});
+	$('.upgrade-checkbox').change(() => {
+		const checked = $('.upgrade-checkbox').prop("checked");
+		if(checked){
+			createTopPageEnhancedCardListDom();
+		} else {
+			createTopPageCardListDom();
+		}
+	});
+
+}
+
+/*******************************************************/
 /* appendTalkingBtn：hand-areaの会話ボタンを削除する
 /*******************************************************/
 function deleteTalkingBtn(){

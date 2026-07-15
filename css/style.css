@@ -361,6 +361,82 @@ body{
 	font-size: 24px;
 }
 
+
+
+/*****************************************************************************/
+/* カードリスト 要素
+/*****************************************************************************/
+/* 全体のレイアウト */
+.tab-wrap {
+	max-width: 1100px;
+	text-align: left;
+}
+/* ラジオボタンを非表示にする */
+.tab-wrap input {
+	display: none;
+}
+
+/* ラベル（タブ）の基本スタイル */
+.tab-btn {
+	width: 200px;
+	display: inline-block;
+	text-align: center;
+	padding: 12px 20px;
+	cursor: pointer;
+	color: #fff;
+	font-weight: 900;
+	border-radius: 5px 5px 0 0;
+	opacity: 0.5; /* 未選択時は少し薄くする */
+	transition: opacity 0.3s ease;
+}
+
+/* タブのホバー時 */
+.tab-btn:hover {
+	opacity: 1;
+}
+/* 選択されたタブの強調 */
+#gran:checked ~ .gran-card,
+#djeeta:checked ~ .djeeta-card,
+#common:checked ~ .common-card {
+	opacity: 1;
+}
+
+.tab-header{
+	width: 100%;
+	max-width: 1100px;
+	height: 30px;
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	padding: 0 20px;
+}
+.upgrade-checkbox{
+	display: flex !important;
+	margin: 5px;
+}
+/* コンテンツエリアの基本スタイル */
+.panel-area {
+}
+
+/* コンテンツは初期状態で非表示 */
+.panel {
+	display: none;
+}
+/* 選択されたラジオボタンに対応するコンテンツを表示 */
+#gran:checked ~ .panel-area #panel1,
+#djeeta:checked ~ .panel-area #panel2,
+#common:checked ~ .panel-area #panel3 {
+	width: 100%;
+	max-width: 1100px;
+	height: 700px;
+	overflow-y: auto;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: flex-start;
+	align-items: start;
+}
+
+
 /*****************************************************************************/
 /* header 要素
 /*****************************************************************************/
