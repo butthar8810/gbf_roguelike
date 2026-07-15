@@ -5268,8 +5268,10 @@ function setupDeck(){
 			addCardToOriginalDeck(granCardList.Wide, 5);
 			addCardToOriginalDeck(granCardList.Defense, 4);
 			addCardToOriginalDeck(granCardList.PowerSwing, 1);
-			addCardToOriginalDeck(granEnhancedCardList.Hrunting, 1);
-			addCardToOriginalDeck(granEnhancedCardList.HangedMan, 1);
+			addCardToOriginalDeck(granCardList.HangedMan, 1);
+			addCardToOriginalDeck(granCardList.Adrenal, 1);
+			addCardToOriginalDeck(granCardList.Heavy, 1);
+			addCardToOriginalDeck(granCardList.Bell, 1);
 
 		} else if (selectChara == selectCharacter.djeeta.name){
 			addCardToOriginalDeck(djeetaCardList.Wide, 5);
@@ -5281,6 +5283,7 @@ function setupDeck(){
 			addCardToOriginalDeck(testCardList.testAttack, 2);
 		}
 	}
+	setupOriginalDeckBtnDom();
 }
 /*************************************************************************************/
 /* カード報酬抽選
@@ -6996,10 +6999,7 @@ function trashCard(){
 	if(tmpArea.length === 0){
 		return false;
 	}
-	$('.black-back-area').removeClass('active');
-	$('.hand-decide-area').removeClass('active');
-	$('.hand-area').removeClass('front');
-	$(`.hand-card`).removeClass('select');
+	closeHandDecideArea();
 	const trashCards = deleteAllTemporaryArea();
 	trashCards.forEach((trashCard) => {
 		setLocalStorage(keyContinueTemporary, tmpArea);
@@ -7052,10 +7052,7 @@ function discardCard(){
 	if(tmpArea.length === 0){
 		return false;
 	}
-	$('.black-back-area').removeClass('active');
-	$('.hand-decide-area').removeClass('active');
-	$('.hand-area').removeClass('front');
-	$(`.hand-card`).removeClass('select');
+	closeHandDecideArea();
 	const discardCards = deleteAllTemporaryArea();
 	discardCards.forEach((discardCard) => {
 		setLocalStorage(keyContinueTemporary, tmpArea);
@@ -7159,12 +7156,7 @@ function upGradeCard(){
 	if(tmpArea.length === 0){
 		return false;
 	}
-	
-	$('.black-back-area').removeClass('active');
-	$('.hand-decide-area').removeClass('active');
-	$('.hand-area').removeClass('front');
-	$(`.hand-card`).removeClass('select');
-	$(`.hand-enhance-area`).addClass('hidden');
+	closeHandDecideArea();
 	const upGradeCards = deleteAllTemporaryArea();
 	const animateCards = [];
 	setLocalStorage(keyContinueTemporary, tmpArea);
@@ -7177,7 +7169,8 @@ function upGradeCard(){
 		if (card === undefined) {
 			return false;
 		}
-		if('key' in card){
+		console.log(card);
+		if('key' in card && card.key !== undefined){
 			if(card.class === cardClass.gran){
 				pushHand(granEnhancedCardList[card.key]);
 			} else if(card.class === cardClass.djeeta){
@@ -7186,6 +7179,8 @@ function upGradeCard(){
 				pushHand(commonEnhancedCardList[card.key]);
 			}
 			animateCards.push(card);
+		}else{
+			pushHand(card);
 		}
 		setLocalStorage(keyContinueHand, myHand);
 	});
@@ -7226,10 +7221,7 @@ function reproductionToHandCard(count){
 	if(tmpArea.length === 0){
 		return false;
 	}
-	$('.black-back-area').removeClass('active');
-	$('.hand-decide-area').removeClass('active');
-	$('.hand-area').removeClass('front');
-	$(`.hand-card`).removeClass('select');
+	closeHandDecideArea();
 	const reproductionCard = shiftTemporaryArea();
 	const animateCards = [];
 	if (reproductionCard !== undefined) {
@@ -7269,10 +7261,7 @@ function reproductionToNextTurnCard(count){
 	if(tmpArea.length === 0){
 		return false;
 	}
-	$('.black-back-area').removeClass('active');
-	$('.hand-decide-area').removeClass('active');
-	$('.hand-area').removeClass('front');
-	$(`.hand-card`).removeClass('select');
+	closeHandDecideArea();
 	const mirrorCard = shiftTemporaryArea();
 	if (mirrorCard !== undefined) {
 		setLocalStorage(keyContinueTemporary, tmpArea);
@@ -7304,10 +7293,7 @@ function reproductionToNextTurnCard(count){
 function repairCard(){
 	console.log('repairCard');
 
-	$('.black-back-area').removeClass('active');
-	$('.hand-decide-area').removeClass('active');
-	$('.hand-area').removeClass('front');
-	$(`.hand-card`).removeClass('select');
+	closeHandDecideArea();
 	const mirrorCards = deleteAllTemporaryArea();
 	setLocalStorage(keyContinueTemporary, tmpArea);
 	mirrorCards.forEach((mirrorCard) => {

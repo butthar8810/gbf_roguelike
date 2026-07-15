@@ -423,6 +423,34 @@ header{
 	margin-right: 10px;
 }
 
+.infomation-area{
+	height: 100%;
+	display: flex;
+	align-items: center;
+}
+.deck-space{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+}
+.deck-space:active{
+	transform: scale(0.9);
+}
+.deck-space img{
+	width: 40px;
+	margin-right: 10px;
+}
+.original-deck-count{
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 20px;
+
+	color: black;
+	font-weight: 900;
+	-webkit-text-stroke: 1px white;
+}
 /*****************************************************************************/
 /* artifact-area: アーティファクト表示エリア要素
 /*****************************************************************************/
@@ -1300,7 +1328,6 @@ header{
 	text-shadow: 1px 1px 3px black;
 }
 
-
 /*****************************************************************************/
 /* black-back-area: 黒背景の要素
 /*****************************************************************************/
@@ -1325,64 +1352,6 @@ header{
 	opacity: 1;
 }
 
-.black-back-area .btn-area{
-	width: 100%;
-	max-width: 1100px;
-	display: flex;
-	justify-content: flex-end;
-}
-.close-list-btn{
-	font-size: 24px;
-	color: white;
-	width: 30px;
-	height: 30px;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-
-	cursor: pointer;
-	background-color: rgba(0, 0, 0, 0);
-	border: none;
-}
-.card-list-area{
-	width: 925px;
-	height: 80vh;
-	overflow-y: auto;
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: flex-start;
-	align-items: start;
-}
-/*****************************************************************************/
-/* return-decide-area: カード選択エリア
-/*****************************************************************************/
-.list-area{
-	width: 100%;
-	height: 100%;
-	display:none;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-}
-.list-area.active{
-	display:flex
-}
-.list-title{
-	font-size: 28px;
-	color: white;
-	font-weight: 900;
-	text-stroke: 1px gray;
-	-webkit-text-stroke: 1px gray;
-}
-.card-list{
-	width: 925px;
-	height: 600px;
-	overflow-y: auto;
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: flex-start;
-	align-items: start;
-}
 /*****************************************************************************/
 /* hand-decide-area: 手札を捨てるカード選択
 /*****************************************************************************/
@@ -1393,7 +1362,8 @@ header{
 	flex-direction: column;
 	justify-content: flex-start;
 	align-items: center;
-	margin-top: 30px;
+	margin-top: 50px;
+	padding-top: 50px;
 }
 .hand-decide-area.active{
 	display:flex
@@ -1419,6 +1389,7 @@ header{
 .return-decide-area{
 	width: 100%;
 	height: 100%;
+	margin-top: 50px;
 	display:none;
 	flex-direction: column;
 	justify-content: center;
@@ -1627,6 +1598,7 @@ header{
 	width: 100%;
 	height: 100%;
 	text-align: center;
+	padding-top: 50px;
 	display:none;
 	z-index: 3000;
 	flex-direction: column;
@@ -1642,13 +1614,13 @@ header{
 	font-weight: 900;
 	text-stroke: 1px gray;
 	-webkit-text-stroke: 1px gray;
-
 }
 
 /* enhance-content */
 .enhance-content{
-	width: 925px;
-	height: 80vh;
+	width: 100%;
+	max-width: 1100px;
+	height: 700px;
 	overflow-y: auto;
 	display: flex;
 	flex-wrap: wrap;
@@ -1685,6 +1657,7 @@ header{
 }
 .enhance-decide-card{
 	font-size: 20px;
+	line-height: 25px;
 	color: white;
 	width: 240px;
 	margin: 10px 10px;
@@ -1694,6 +1667,9 @@ header{
 	text-align: center;
 	box-shadow: 1px 1px 5px black;
 	position: relative;
+}
+.enhance-decide-card.is-small{
+	font-size: 16px;
 }
 .enhance-decide-card img{
 	width: 100%;
@@ -1712,7 +1688,8 @@ header{
 	align-items: center;
 }
 .enhance-decide-card .effect{
-	font-size: 18px;
+	font-size: 20px;
+	line-height: 22px;
 	width: 100%;
 	padding: 0 5px;
 }
@@ -1973,6 +1950,7 @@ header{
 
 .select-card{
 	font-size: 18px;
+	line-height: 25px;
 	width: 210px;
 	height: 280px;
 	border-radius: 10px;
@@ -1984,7 +1962,10 @@ header{
 .select-card p{
 	font-size: 16px;
 }
-
+.select-card .effect{
+	font-size: 18px;
+	line-height: 22px;
+}
 
 
 .select-skip{
@@ -2017,4 +1998,57 @@ header{
 	left: 50%;
 	transform: translate(-50%, -50%);
 	text-align: center;
+}
+
+/*****************************************************************************/
+/* list-back-area: カード表示エリア
+/*****************************************************************************/
+.list-back-area{
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+	background: rgba(0,0,0,0.8);
+	visibility: hidden;
+	opacity: 0;
+	z-index: 4000;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+.list-back-area.active{
+	visibility: visible;
+	opacity: 1;
+}
+
+.list-area{
+	width: 100%;
+	height: 100%;
+	display:none;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+.list-area.active{
+	display:flex
+}
+.list-title{
+	font-size: 28px;
+	color: white;
+	font-weight: 900;
+	text-stroke: 1px gray;
+	-webkit-text-stroke: 1px gray;
+}
+.card-list{
+	width: 100%;
+	max-width: 1100px;
+	height: 700px;
+	overflow-y: auto;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: flex-start;
+	align-items: start;
 }

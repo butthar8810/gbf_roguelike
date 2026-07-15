@@ -11,14 +11,42 @@ function deleteTalkingBtn(){
 function updateHPDom(){
 	$('.remainHp').html(playerStatus.remainHP);
 	$('.maxHp').html(playerStatus.maxHP);
-	return
+	return;
 }
 /*******************************************************/
 /* updateMoneyDom：所持コインをDOM更新する
 /*******************************************************/
 function updateMoneyDom(){
 	$('.remainMoney').html(playerStatus.money);
-	return
+	return;
+}
+/*******************************************************/
+/* setupOriginalDeckBtnDom：デッキアイコンをDOM更新する
+/*******************************************************/
+function setupOriginalDeckBtnDom(){
+	$('.original-deck-count')
+		.html(myOriginalDeck.length);
+	$('.deck-space')
+		.off()
+		.click(() => {
+			$('.list-back-area').addClass('active');
+			$('.list-area').addClass('active');
+			$('.card-list').html('');
+			myOriginalDeck.forEach((card) => {
+				const CardDiv = createCardDom(card);
+				CardDiv
+					.addClass('enhance-card');
+				$('.card-list').append(CardDiv);
+			});
+		});
+	$('.close-list-btn')
+		.off()
+		.click((e) => {
+			$('.list-back-area').removeClass('active');
+			$('.list-area').removeClass('active');
+		});
+
+	return;
 }
 /*******************************************************/
 /* バトルエリアの表示
@@ -823,6 +851,8 @@ function selectcardRewardDom(rewardCards){
 			.click(card ,() => {
 				addCardToOriginalDeck(card);
 				rewardCards.getFlag = false;
+				setupOriginalDeckBtnDom();
+				setLocalStorage(keyContinueOriginalDeck, myOriginalDeck);
 				setLocalStorage(keyContinueReward, rewards);
 				updateResultContentDom();
 				$('.card-select').addClass('hidden');
@@ -850,6 +880,24 @@ function selectcardRewardDom(rewardCards){
 	$('.card-select').removeClass('hidden');
 }
 /*******************************************************/
+/* openHandDecideArea：手札を選択する画面のDOM生成
+/*******************************************************/
+function openHandDecideArea(){
+	$('.black-back-area').addClass('active');
+	$('.hand-decide-area').addClass('active');
+	$('.hand-area').addClass('front');
+}
+/*******************************************************/
+/* closeHandDecideArea：手札を選択する画面のDOM終了
+/*******************************************************/
+function closeHandDecideArea(){
+	$('.black-back-area').removeClass('active');
+	$('.hand-decide-area').removeClass('active');
+	$('.hand-area').removeClass('front');
+	$(`.hand-card`).removeClass('select');
+	$(`.hand-enhance-area`).addClass('hidden');
+}
+/*******************************************************/
 /* updateTrashDecideTitleDom：カードを捨てるUIのDOM生成
 /*******************************************************/
 function updateHandDecideTitleDom(text){
@@ -866,6 +914,8 @@ function updateReturnDecideTitleDom(text){
 /* createDeckListDom：デッキ一覧のDOM生成
 /*******************************************************/
 function createDeckListDom(){
+	$('.list-back-area').addClass('active');
+	$('.list-area').addClass('active');
 	$('.card-list').html('');
 	const copyDeck = deepCopyCardList(myDeck);
 	copyDeck.sort((a, b) => {
@@ -882,6 +932,8 @@ function createDeckListDom(){
 /* createTrashListDom：捨て札一覧のDOM生成
 /*******************************************************/
 function createTrashListDom(){
+	$('.list-back-area').addClass('active');
+	$('.list-area').addClass('active');
 	$('.card-list').html('');
 	myTrash.forEach((card) => {
 		const trashCardDiv = createCardDom(card);
@@ -891,9 +943,11 @@ function createTrashListDom(){
 	});
 }
 /*******************************************************/
-/* createTrashListDom：廃棄札一覧のDOM生成
+/* createDiscardListDom：廃棄札一覧のDOM生成
 /*******************************************************/
 function createDiscardListDom(){
+	$('.list-back-area').addClass('active');
+	$('.list-area').addClass('active');
 	$('.card-list').html('');
 	discard.forEach((card) => {
 		const discardCardDiv = createCardDom(card);
@@ -906,7 +960,7 @@ function createDiscardListDom(){
 /* createRestoreListDom：捨て札一覧のDOM生成
 /*******************************************************/
 function createRestoreListDom(){
-	$('.card-list-area').html('');
+	$('.card-list').html('');
 	myTrash.forEach((card) => {
 		const restoreCardDiv = createCardDom(card);
 		restoreCardDiv
@@ -914,14 +968,14 @@ function createRestoreListDom(){
 			.click(() => {
 				clickTrashCardProcess(restoreCardDiv, card);
 			});
-		$('.card-list-area').append(restoreCardDiv);
+		$('.card-list').append(restoreCardDiv);
 	});
 }
 /*******************************************************/
 /* createReuseListDom：廃棄札一覧のDOM生成
 /*******************************************************/
 function createReuseListDom(){
-	$('.card-list-area').html('');
+	$('.card-list').html('');
 	discard.forEach((card) => {
 		const reuseCardDiv = createCardDom(card);
 		reuseCardDiv
@@ -929,7 +983,7 @@ function createReuseListDom(){
 			.click(() => {
 				clickDiscardCardProcess(reuseCardDiv, card);
 			});
-		$('.card-list-area').append(reuseCardDiv);
+		$('.card-list').append(reuseCardDiv);
 	});
 }
 /*******************************************************/

@@ -40,15 +40,15 @@ function selectRestAction(){
 		updateEnhanceTitleDom('強化する武器を選んでください');
 		// 強化前のカード一覧表示
 		myOriginalDeck.forEach((card) => {
-			if (!('key' in card)){
+			if (!('key' in card) || card.key === undefined){
 				//強化済みのカードは除外
+				console.log(card);
 				return;
 			}
 			const enhanceCardDiv = createCardDom(card);
 			enhanceCardDiv
 				.addClass('enhance-card')
 				.click(card ,() => {
-					console.log(card);
 					decideEnhanceCardDom(card);
 				});
 			$('.enhance-content').append(enhanceCardDiv);
@@ -62,7 +62,9 @@ function selectRestAction(){
 function exchangeEnhancedCard(card, enhancedCard){
 	const index = myOriginalDeck.findIndex(deckCard => deckCard.name === card.name);
 	const enhancedOriginCard = deepCopyCard(enhancedCard);
-	myOriginalDeck.splice(index, 1, enhancedOriginCard);
+	spliceOriginalDeck(index);
+	pushOriginalDeck(enhancedOriginCard);
+	setupOriginalDeckBtnDom();
 	setLocalStorage(keyContinueOriginalDeck, myOriginalDeck);
 	$('.before').addClass('hidden');
 	$('.arrow-icon').addClass('hidden');
@@ -280,6 +282,7 @@ function buyCard(selectInfo, cardList, selectCardWrapperDiv){
 	addCardToOriginalDeck(buyInfo.card);
 	//購入済み
 	selectCardWrapperDiv.addClass('purchased');
+	setupOriginalDeckBtnDom();
 	setLocalStorage(keyContinueOriginalDeck, myOriginalDeck);
 	setLocalStorage(keyContinuePlayerStatus, playerStatus);
 	return;

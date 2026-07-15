@@ -177,8 +177,6 @@ function setupBtn(){
 			console.log('デッキがありません。');
 			return;
 		}
-		$('.black-back-area').addClass('active');
-		$('.list-area').addClass('active');
 		createDeckListDom();
 	});
 	$('.trash-area').click((e) => {
@@ -186,8 +184,6 @@ function setupBtn(){
 			console.log('捨て札がありません。');
 			return;
 		}
-		$('.black-back-area').addClass('active');
-		$('.list-area').addClass('active');
 		createTrashListDom();
 	});
 	$('.discard-area').click((e) => {
@@ -195,13 +191,7 @@ function setupBtn(){
 			console.log('廃棄札がありません。');
 			return;
 		}
-		$('.black-back-area').addClass('active');
-		$('.list-area').addClass('active');
 		createDiscardListDom();
-	});
-	$('.close-list-btn').click((e) => {
-		$('.black-back-area').removeClass('active');
-		$('.list-area').removeClass('active');
 	});
 	$('.skip-btn').click((e) => {
 		endBattle();
@@ -321,9 +311,7 @@ function startPhase(ph = false){
 				playerAbnormalityPromise,
 				enemyAbnormalityPromise,
 			).done(() => {
-				$('.black-back-area').addClass('active');
-				$('.hand-decide-area').addClass('active');
-				$('.hand-area').addClass('front');
+				openHandDecideArea();
 			});
 			break;
 		case phase.twoTrash:
@@ -341,9 +329,7 @@ function startPhase(ph = false){
 				playerAbnormalityPromise,
 				enemyAbnormalityPromise,
 			).done(() => {
-				$('.black-back-area').addClass('active');
-				$('.hand-decide-area').addClass('active');
-				$('.hand-area').addClass('front');
+				openHandDecideArea();
 			});
 			break;
 		case phase.threeTrash:
@@ -361,9 +347,7 @@ function startPhase(ph = false){
 				playerAbnormalityPromise,
 				enemyAbnormalityPromise,
 			).done(() => {
-				$('.black-back-area').addClass('active');
-				$('.hand-decide-area').addClass('active');
-				$('.hand-area').addClass('front');
+				openHandDecideArea();
 			});
 			break;
 		case phase.discard:
@@ -381,9 +365,7 @@ function startPhase(ph = false){
 				playerAbnormalityPromise,
 				enemyAbnormalityPromise,
 			).done(() => {
-				$('.black-back-area').addClass('active');
-				$('.hand-decide-area').addClass('active');
-				$('.hand-area').addClass('front');
+				openHandDecideArea();
 			});
 			break;
 		case phase.unshiftDeck:
@@ -402,9 +384,7 @@ function startPhase(ph = false){
 				playerAbnormalityPromise,
 				enemyAbnormalityPromise,
 			).done(() => {
-				$('.black-back-area').addClass('active');
-				$('.hand-decide-area').addClass('active');
-				$('.hand-area').addClass('front');
+				openHandDecideArea();
 			});
 			break;
 		case phase.upGrade:
@@ -422,10 +402,8 @@ function startPhase(ph = false){
 				playerAbnormalityPromise,
 				enemyAbnormalityPromise,
 			).done(() => {
-				$('.black-back-area').addClass('active');
-				$('.hand-decide-area').addClass('active');
+				openHandDecideArea();
 				$('.hand-enhance-area').removeClass('hidden');
-				$('.hand-area').addClass('front');
 			});
 			break;
 		case phase.reproductionToHand:
@@ -446,9 +424,7 @@ function startPhase(ph = false){
 				playerGetBlockPromise,
 				enemyAbnormalityPromise,
 			).done(() => {
-				$('.black-back-area').addClass('active');
-				$('.hand-decide-area').addClass('active');
-				$('.hand-area').addClass('front');
+				openHandDecideArea();
 			});
 			break;
 		case phase.repair:
@@ -461,9 +437,7 @@ function startPhase(ph = false){
 			disabledMyHand(false);
 			updateHandDom();
 			updateHandDecideTitleDom('保留するカードを選んでください');
-			$('.black-back-area').addClass('active');
-			$('.hand-decide-area').addClass('active');
-			$('.hand-area').addClass('front');
+			openHandDecideArea();
 			break;
 		case phase.restore:
 			if (myTrash.length <= 0) {
@@ -1197,7 +1171,7 @@ function clickHandProcess(handCardDiv, hand){
 	switch(currentPhase) {
 		case phase.action:
 			const frozen = playerStatus.statuses
-				.find((status) => status.name === buffStatus.frozen.name);
+				.find((status) => status.name === debuffStatus.frozen.name);
 			if(frozen && hand.type === type.attack){
 				alert('デバフによりアタックが使えません');
 				break;
@@ -1296,7 +1270,7 @@ function clickHandProcess(handCardDiv, hand){
 			break;
 		case phase.upGrade:
 			if (index === -1) {
-				if('key' in hand){
+				if('key' in hand && hand.key !== undefined){
 					if (tmpArea.length < 1){
 						pushTemporaryArea(hand);
 						handCardDiv.addClass("select");
@@ -1397,7 +1371,6 @@ function clickTrashCardProcess(trashCardDiv, card){
 				spliceTemporaryArea(trashIndex);
 				trashCardDiv.removeClass("select");
 			}
-			console.log(tmpArea);
 			break;
 		default:
 			break;
@@ -1755,7 +1728,9 @@ function allEnemiesDefeated(){
 		// アーティファクト報酬
 		switch (currentLevel) {
 			case stageLevel.test:
+				break;
 			case stageLevel.special:
+				break;
 			case stageLevel.boss:
 				break;
 			default:

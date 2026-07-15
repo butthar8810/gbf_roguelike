@@ -55,41 +55,41 @@ function loadTopPage(){
 
 		// カード一覧の設定
 	$('.toppage-list-btn').click((e) => {
-		$('.black-back-area').addClass('active');
-		$('.card-list-area').html('');
+		$('.list-back-area').addClass('active');
+		$('.card-list').html('');
 		Object.values(granCardList).forEach((card) => {
 			const cardDiv = createCardDom(card);
 			cardDiv.addClass('enhance-card');
-			$('.card-list-area').append(cardDiv);
+			$('.card-list').append(cardDiv);
 		});
 		Object.values(granEnhancedCardList).forEach((card) => {
 			const cardDiv = createCardDom(card);
 			cardDiv.addClass('enhance-card');
-			$('.card-list-area').append(cardDiv);
+			$('.card-list').append(cardDiv);
 		});
 		Object.values(djeetaCardList).forEach((card) => {
 			const cardDiv = createCardDom(card);
 			cardDiv.addClass('enhance-card');
-			$('.card-list-area').append(cardDiv);
+			$('.card-list').append(cardDiv);
 		});
 		Object.values(djeetaEnhancedCardList).forEach((card) => {
 			const cardDiv = createCardDom(card);
 			cardDiv.addClass('enhance-card');
-			$('.card-list-area').append(cardDiv);
+			$('.card-list').append(cardDiv);
 		});
 		Object.values(commonCardList).forEach((card) => {
 			const cardDiv = createCardDom(card);
 			cardDiv.addClass('enhance-card');
-			$('.card-list-area').append(cardDiv);
+			$('.card-list').append(cardDiv);
 		});
 		Object.values(commonEnhancedCardList).forEach((card) => {
 			const cardDiv = createCardDom(card);
 			cardDiv.addClass('enhance-card');
-			$('.card-list-area').append(cardDiv);
+			$('.card-list').append(cardDiv);
 		});
 	});
 	$('.close-list-btn').click((e) => {
-		$('.black-back-area').removeClass('active');
+		$('.list-back-area').removeClass('active');
 	});
 
 		// Infoモーダルの設定
