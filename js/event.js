@@ -110,7 +110,22 @@ function shopCardList(){
 	if(lastSelectCardsInfo){
 		selectCardsInfo = lastSelectCardsInfo;
 	}else{
-		selectCardsInfo = decideShopLineup();
+		const selectCards = decideShopExclusiveCardLineup();
+		const selectCommonCards = decideShopCommonCardLineup();
+		//アーティファクトのラインナップ
+		const selectArtifacts = decideArtifactLineup();
+		//カード削除サービスのラインナップ
+		const deletePrice = 75 + (25 * playerStatus.playerCount.deleteServiceCount);
+		const deleteService = {
+			deleteFlag: true,
+			price: deletePrice,
+		}
+		selectCardsInfo = {
+			exclusive: selectCards, 
+			common: selectCommonCards, 
+			artifacts: selectArtifacts, 
+			delete: deleteService
+		}
 		setLocalStorage(keyContinueShopLineup, selectCardsInfo);
 	}
 	console.log(selectCardsInfo);
@@ -307,11 +322,11 @@ function buyArtifact(selectInfo, artifactList, selectArtifactWrapperDiv){
 	playerStatus.money -= buyInfo.price;
 	updateMoneyDom();
 	// 購入カードのデッキ挿入
-	myArtifact.push(selectInfo.artifact);
+	myArtifacts.push(selectInfo.artifact);
 	updateArtifactDom();
 	//購入済み
 	selectArtifactWrapperDiv.addClass('purchased');
-	setLocalStorage(keyContinueArtifact, myArtifact);
+	setLocalStorage(keyContinueArtifact, myArtifacts);
 	setLocalStorage(keyContinuePlayerStatus, playerStatus);
 	return;
 }
@@ -341,3 +356,6 @@ function buyDeleteService(deleteInfo){
 	$('.delete-area').removeClass('active');
 	$('.delete-modal-body').html('');
 }
+/*****************************************************************************************/
+/* ランダムイベント
+/*****************************************************************************************/

@@ -332,15 +332,15 @@ function setupArtifact(){
 
 	if(lastArtifact && Continued){
 		// 続きからの場合
-		myArtifact = lastArtifact;
+		myArtifacts = lastArtifact;
 	} else {
 		// プレイヤーに初期デッキとなる10枚のカードを配る
 		if (selectChara == selectCharacter.gran.name){
-			myArtifact.push(starterArtifact.recovery);
+			myArtifacts.push(starterArtifact.recovery);
 		} else if (selectChara == selectCharacter.djeeta.name){
-			myArtifact.push(starterArtifact.startDraw);
+			myArtifacts.push(starterArtifact.startDraw);
 		}
-		setLocalStorage(keyContinueArtifact, myArtifact);
+		setLocalStorage(keyContinueArtifact, myArtifacts);
 	}
 	updateArtifactDom();
 }
@@ -382,6 +382,49 @@ function decideArtifactLineup(){
 		index++;
 	});
 	return selectArtifacts;
+}
+
+/*******************************************************/
+/* decideArtifactReward：報酬用アーティファクト決定関数
+/*******************************************************/
+function decideArtifactReward(){
+	let selectRarity = {};
+	let selectArtifact = {};
+	const artifactReward = {
+		common:{weight:50, rarity: rtifactRarity.common},
+		uncommon:{weight:33, rarity: rtifactRarity.uncommon},
+		rare:{weight:17, rarity: rtifactRarity.rare},
+	};
+	const totalWeight = Object.values(artifactReward).reduce((sum, item) => sum + item.weight, 0);
+	let random = Math.floor(Math.random() * totalWeight);
+	for (const rarity of Object.values(artifactReward)) {
+		if (random < rarity.weight) {
+			selectRarity = rarity.rarity;
+			break;
+		}
+		random -= rarity.weight;
+	}
+	const filteringArtifact = Object.values(normalArtifact)
+		.filter((artifact) => artifact.rarity === selectRarity)
+		.filter((artifact) => {
+			return myArtifacts.find((myArtifact) => myArtifact.name !== artifact.name);
+		});
+	selectArtifact = shuffleArray(filteringArtifact).shift();
+
+	return {type: rewardType.artifact, getFlag: true, amount: selectArtifact};
+}
+/*******************************************************/
+/* decideBossArtifactReward：報酬用ボスアーティファクト決定関数
+/*******************************************************/
+function decideBossArtifactReward(){
+	let selectArtifacts = {};
+	const filteringArtifact = Object.values(normalArtifact)
+		.filter((artifact) => artifact.rarity === rtifactRarity.boss)
+		.filter((artifact) => {
+			return myArtifacts.find((myArtifact) => myArtifact.name !== artifact.name);
+		});
+	selectArtifacts = shuffleArray(filteringArtifact).splice(0, 3);
+	return {type: rewardType.boss, getFlag: true, amount: selectArtifacts};
 }
 /*****************************************************************************/
 /* アーティファクト効果

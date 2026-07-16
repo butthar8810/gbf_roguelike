@@ -238,7 +238,7 @@ function createArtifactDom(artifact){
 /*******************************************************/
 function updateArtifactDom(){
 	$('.artifact-area').html('');
-	myArtifact.forEach((artifact) => {
+	myArtifacts.forEach((artifact) => {
 		const artifactDiv = createArtifactDom(artifact);
 		$('.artifact-area')
 			.append(artifactDiv)
@@ -861,11 +861,17 @@ function updateResultContentDom(){
 	rewards.forEach((reward) => {
 		if(reward.getFlag){
 			switch(reward.type){
-				case 'money':
+				case rewardType.money:
 					moneyRewardDom(reward);
 					break;
-				case 'card':
+				case rewardType.card:
 					cardRewardDom(reward);
+					break;
+				case rewardType.artifact:
+					artifactRewardDom(reward);
+					break;
+				case rewardType.boss:
+					artifactRewardForBossDom(reward);
 					break;
 				default:
 					break;
@@ -953,8 +959,6 @@ function selectcardRewardDom(rewardCards){
 		.append(btnImage)
 		.append(skipParagraph)
 		.click((e) => {
-			rewardCards.getFlag = false;
-			setLocalStorage(keyContinueReward, rewards);
 			updateResultContentDom();
 			$('.card-select').addClass('hidden');
 			$('.result-modal-body').removeClass('hidden');
@@ -962,6 +966,87 @@ function selectcardRewardDom(rewardCards){
 	$(`.select-skip`).append(selectSkipBtnDiv);
 	$('.result-modal-body').addClass('hidden');
 	$('.card-select').removeClass('hidden');
+}
+/*****************************************************/
+/* アーティファクト報酬DOM生成
+/*****************************************************/
+function artifactRewardDom(rewardArtifact){
+	console.log(rewardArtifact);
+	// アーティファクト報酬
+	const rewardImage = $('<img>')
+		.attr('src', rewardArtifact.amount.image);
+	const rewardParagraph = $('<p>')
+		.html(rewardArtifact.amount.name);
+	const rewardDiv = $('<div>')
+		.addClass('reward')
+		.append(rewardImage)
+		.append(rewardParagraph)
+		.click(() => {
+			myArtifacts.push(rewardArtifact.amount);
+			rewardDiv.remove();
+			rewardArtifact.getFlag = false;
+			updateArtifactDom();
+			setLocalStorage(keyContinueArtifact, myArtifacts);
+			setLocalStorage(keyContinueReward, rewards);
+		});
+	$('.result-content').append(rewardDiv);
+}
+/*****************************************************/
+/* アーティファクト報酬DOM生成
+/*****************************************************/
+function artifactRewardForBossDom(rewardArtifacts){
+	// 武器報酬
+	const rewardImage = $('<img>')
+		.attr('src', 'images/information/card.png');
+	const rewardParagraph = $('<p>')
+		.html(`アーティファクトを入手`);
+	const rewardDiv = $('<div>')
+		.addClass('reward')
+		.append(rewardImage)
+		.append(rewardParagraph)
+		.click(() => {
+			selectArtifactRewardDom(rewardArtifacts);
+		});
+	$('.result-content').append(rewardDiv);
+}
+/*****************************************************/
+/* アーティファクト報酬選択関数
+/*****************************************************/
+function selectArtifactRewardDom(rewardArtifacts){
+	$(`.select-artifacts-area`).html('');
+	$(`.artifact-select-skip`).html('');
+	console.log(rewardArtifacts);
+	rewardArtifacts.amount.forEach((artifact) => {
+		const selectCardDiv = createArtifactDom(artifact);
+		selectCardDiv
+			.click(() => {
+				myArtifacts.push(artifact);
+				rewardArtifacts.getFlag = false;
+				updateArtifactDom();
+				setLocalStorage(keyContinueArtifact, myArtifacts);
+				setLocalStorage(keyContinueReward, rewards);
+				updateResultContentDom();
+				$('.artifact-select').addClass('hidden');
+				$('.result-modal-body').removeClass('hidden');
+			});
+		$(`.select-artifacts-area`).append(selectCardDiv);
+	});
+	const btnImage = $('<img>')
+		.attr('src', 'images/btn2.png');
+	const skipParagraph = $('<p>')
+		.html('スキップ');
+	const selectSkipBtnDiv = $('<div>')
+		.addClass('select-skip-btn')
+		.append(btnImage)
+		.append(skipParagraph)
+		.click((e) => {
+			updateResultContentDom();
+			$('.artifact-select').addClass('hidden');
+			$('.result-modal-body').removeClass('hidden');
+		});
+	$(`.artifact-select-skip`).append(selectSkipBtnDiv);
+	$('.result-modal-body').addClass('hidden');
+	$('.artifact-select').removeClass('hidden');
 }
 /*******************************************************/
 /* openHandDecideArea：手札を選択する画面のDOM生成

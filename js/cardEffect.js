@@ -5302,7 +5302,6 @@ function decideCardReward(){
 			common:{weight:50, rarity: rarity.common},
 			uncommon:{weight:40, rarity: rarity.uncommon},
 			rare:{weight:10, rarity: rarity.rare},
-
 		},
 		boss:{
 			common:{weight:0, rarity: rarity.common},
@@ -5316,7 +5315,6 @@ function decideCardReward(){
 	let level = {};
 	let selectRarity = {};
 	let selectCardList = [];
-	let selectCard = {};
 	switch(currentLevel){
 		case stageLevel.test:
 			level = cardReward.normal;
@@ -5343,8 +5341,8 @@ function decideCardReward(){
 		window.location.href = 'index.html';
 	}
 
-	let i = 0
-	while(i < 3){
+	let index = 0
+	while(index < 3){
 		// レアリティ抽選
 		let random = Math.floor(Math.random() * totalWeight);
 		for (const rarity of Object.values(level)) {
@@ -5354,36 +5352,31 @@ function decideCardReward(){
 			}
 			random -= rarity.weight;
 		}
-		selectCard = shuffleArray(
+		const selectCard = shuffleArray(
 			selectCardList.filter((card) => card.rarity === selectRarity.rarity)
 		).shift();
 		if(!selectCards.find((status) => status.name === selectCard.name)){
 			selectCards.push(selectCard);
-			i++;
+			index++;
 		}
 	}
-	return {type: 'card', getFlag: true, amount: selectCards};
+	return {type: rewardType.card, getFlag: true, amount: selectCards};
 }
 /*****************************************************/
 /* ショップラインナップ決定関数
 /*****************************************************/
-function decideShopLineup(){
+function decideShopExclusiveCardLineup(){
 	const selectChara = getLocalStorage(keySelectChara);
 	const selectCards = [];
-	const selectCommonCards = [];
 	let selectCardList = [];
 	const exclusiveInfo = {
-		common:{weight:50, info:{rarity: rarity.common, minPrice: 48, maxPrice: 53}},
+		common:{weight:40, info:{rarity: rarity.common, minPrice: 48, maxPrice: 53}},
 		uncommon:{weight:40, info:{rarity: rarity.uncommon, minPrice: 71, maxPrice: 79}},
-		rare:{weight:10, info:{rarity: rarity.rare, minPrice: 143, maxPrice: 158}},
+		rare:{weight:20, info:{rarity: rarity.rare, minPrice: 143, maxPrice: 158}},
 	}
-	const commonInfo = [
-		{rarity: rarity.uncommon, minPrice: 82, maxPrice: 90},
-		{rarity: rarity.rare, minPrice: 164, maxPrice: 182},
-	];
 	const lineupType = [type.attack, type.attack, type.skill, type.skill, type.power];
 	const totalWeight = Object.values(exclusiveInfo).reduce((sum, item) => sum + item.weight, 0);
-	let index = 0
+	let index = 0;
 	let selectRarityInfo = {};
 	//専用カードのラインナップ
 	if (selectChara == selectCharacter.gran.name){
@@ -5427,7 +5420,18 @@ function decideShopLineup(){
 	let randomDiscount = Math.floor(Math.random() * 5);
 	selectCards[randomDiscount].price = Math.floor(selectCards[randomDiscount].price/2);
 	selectCards[randomDiscount].discount = true;
-
+	return selectCards;
+}
+/*****************************************************/
+/* ショップラインナップ決定関数
+/*****************************************************/
+function decideShopCommonCardLineup(){
+	const selectCommonCards = [];
+	const commonInfo = [
+		{rarity: rarity.uncommon, minPrice: 82, maxPrice: 90},
+		{rarity: rarity.rare, minPrice: 164, maxPrice: 182},
+	];
+	let index = 0
 	//共通カードのラインナップ
 	commonInfo.forEach((info) => {
 		let randomPrice = Math.floor(
@@ -5446,15 +5450,8 @@ function decideShopLineup(){
 			index++;
 		}
 	});
-	//アーティファクトのラインナップ
-	const selectArtifacts = decideArtifactLineup();
-	//カード削除サービスのラインナップ
-	const deletePrice = 75 + (25 * playerStatus.playerCount.deleteServiceCount);
-	const deleteService = {
-		deleteFlag: true,
-		price: deletePrice,
-	}
-	return {exclusive: selectCards, common: selectCommonCards, artifacts: selectArtifacts, delete: deleteService};
+
+	return selectCommonCards;
 }
 /*************************************************************************************/
 /* 各カード効果関数(アタック)

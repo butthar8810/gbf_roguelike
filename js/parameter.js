@@ -2,6 +2,7 @@
 /* ステージ情報
 /*****************************************************************************/
 const stageLevel = {boss: 3, special: 2, normal:1, test: 0}
+const rewardType = {money: 'money', card: 'card', artifact: 'artifact', boss: 'bossArtifact'}
 const stages = {
 	boss: { name: 'ボス戦闘', weight: 0, image: 'images/map/boss.png' },
 	gift: { name: '宝箱', weight: 0, image: 'images/map/gift.jpg' },
@@ -190,7 +191,7 @@ const phase = {
 /*****************************************************************************/
 /* グローバル変数
 /*****************************************************************************/
-let myArtifact = [];
+let myArtifacts = [];
 let tmpArea =[];
 // アウトゲーム
 let currentMap = {};

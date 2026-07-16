@@ -782,15 +782,14 @@ function startTurnProcess(){
 /* startAbility：敵やAFの開始時効果処理を行う
 /*******************************************************/
 function startAbility(){
-	console.log(myArtifact);
+	console.log(myArtifacts);
 	// アーティファクトの効果を発動
-	myArtifact.forEach((artifact) => {
+	myArtifacts.forEach((artifact) => {
 		switch(artifact.name){
 			case starterArtifact.recovery.name:
 			case starterArtifact.startDraw.name:
 			case normalArtifact.agility.name:
 			case normalArtifact.strength.name:
-			case normalArtifact.normalRecovery.name:
 			case normalArtifact.block.name:
 				if (artifact.firstFunc !== '') {
 					const storedFunc = globalThis[artifact.firstFunc];
@@ -1725,18 +1724,25 @@ function allEnemiesDefeated(){
 		const selectCards = decideCardReward();
 		rewards.push(selectCards);
 
+
 		// アーティファクト報酬
+		let selectArtifact;
 		switch (currentLevel) {
-			case stageLevel.test:
+			case stageLevel.normal:
+				//アーティファクト報酬なし
 				break;
 			case stageLevel.special:
+				selectArtifact = decideArtifactReward();
+				rewards.push(selectArtifact);
 				break;
 			case stageLevel.boss:
+			case stageLevel.test:
+				selectArtifact = decideBossArtifactReward();
+				rewards.push(selectArtifact);
 				break;
 			default:
 				break;
 		}
-
 		setLocalStorage(keyContinueReward, rewards);
 	}
 	updateResultContentDom();
@@ -1766,6 +1772,6 @@ function decideMoneyReward(){
 		default:
 			break;
 	}
-	return {type: 'money', getFlag: true, amount: money};
+	return {type: rewardType.money, getFlag: true, amount: money};
 }
 

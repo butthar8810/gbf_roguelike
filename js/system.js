@@ -127,6 +127,10 @@ function deepCopyEnemies(arrayEnemies){
 /* pushOriginalDeck：デッキキューの末尾にカードを追加する
 /*******************************************************/
 function pushOriginalDeck(card){
+	myOriginalDeck = myOriginalDeck.map((user, index) => ({
+		...user,
+		id: index + 1
+	}));
 	// デッキから手札へカードを引く
 	myOriginalDeck.push({
 		id: myOriginalDeck.length+1,
