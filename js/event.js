@@ -7,9 +7,7 @@
 /*******************************************************/
 function startRestEvent(){
 	// レストエリアとトークエリアを開放
-	hiddenStageArea();
-	$('.rest-area').removeClass('hidden');
-	$('.talk-area').removeClass('hidden');
+	displayRestEventArea();
 	setLocalStorage(keyContinueFlag, continueFlag.restArea);
 	const btn = appendTalkingBtn('一息つく');
 	btn.click((e) => {
@@ -84,9 +82,7 @@ function exchangeEnhancedCard(card, enhancedCard){
 /*******************************************************/
 function startShopEvent(){
 	// ショップエリアとトークエリアを開放
-	hiddenStageArea();
-	$('.shop-area').removeClass('hidden');
-	$('.talk-area').removeClass('hidden');
+	displayShopEventArea();
 	setLocalStorage(keyContinueFlag, continueFlag.shopArea);
 	const shopBtn = appendTalkingBtn('商品を見る');
 	shopBtn.click((e) => {
@@ -357,5 +353,16 @@ function buyDeleteService(deleteInfo){
 	$('.delete-modal-body').html('');
 }
 /*****************************************************************************************/
-/* ランダムイベント
+/* 宝箱イベント
 /*****************************************************************************************/
+/*******************************************************/
+/* 宝箱イベント開始
+/*******************************************************/
+function startGiftEvent(){
+	// ショップエリアとトークエリアを開放
+	displayGiftEventArea();
+	setLocalStorage(keyContinueFlag, continueFlag.giftArea);
+	const mimicBtn = appendTalkingBtn('ミミックを倒す');
+	mimicBtn.click((e) => {
+	});
+}

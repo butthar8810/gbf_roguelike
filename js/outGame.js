@@ -7,7 +7,7 @@ function startGame(){
 	setupCharaStatus();
 	setupDeck();
 	setupArtifact();
-	setupOutGameInfomation();
+	setupOutGameInformation();
 	if (Continued === continueFlag.inGame) {
 		console.log('戦闘再開');
 		continueBattle();
@@ -17,6 +17,9 @@ function startGame(){
 	} else if (Continued === continueFlag.shopArea) {
 		console.log('ショップ再開');
 		startShopEvent();
+	} else if (Continued === continueFlag.giftArea) {
+		console.log('宝箱再開');
+		startGiftEvent();
 	} else if (Continued === continueFlag.outGame) {
 		console.log('再開');
 		climbTowerContinue();
@@ -72,7 +75,7 @@ function setupCharaStatus(){
 /*******************************************************/
 /* climbTowerStart：塔を上る（クライムスタート）
 /*******************************************************/
-function setupOutGameInfomation(){
+function setupOutGameInformation(){
 	const lastBattleCount = getLocalStorage(keyContinueBattleCount);
 	if(lastBattleCount !== null){battleCount = lastBattleCount}
 }
@@ -113,8 +116,8 @@ function climbTowerStart(){
 /*				mapDiv.html(`<img src='${stages.normal.image}'>`);
 				mapRows.push(stages.normal);
 */
-				mapDiv.html(`<img src='${stages.test.image}'>`);
-				mapRows.push(stages.test);
+				mapDiv.html(`<img src='${stages.gift.image}'>`);
+				mapRows.push(stages.gift);
 			} else {
 				let randomMap = mt.nextInt(0, totalWeight);
 				for (const stage of Object.values(stages)) {

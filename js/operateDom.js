@@ -1,3 +1,6 @@
+/***************************************************************************************/
+/* トップページDOM作成処理
+/***************************************************************************************/
 /*******************************************************/
 /* createTopPageCardListDom：トップページのカードリストを表示
 /*******************************************************/
@@ -81,82 +84,6 @@ function createTopPageProcessDom(){
 	});
 
 }
-
-/*******************************************************/
-/* appendTalkingBtn：hand-areaの会話ボタンを削除する
-/*******************************************************/
-function deleteTalkingBtn(){
-	$('.talk-area').html('')
-	return
-}
-/*******************************************************/
-/* updateMoneyDom：HPをDOM更新する
-/*******************************************************/
-function updateHPDom(){
-	$('.remainHp').html(playerStatus.remainHP);
-	$('.maxHp').html(playerStatus.maxHP);
-	return;
-}
-/*******************************************************/
-/* updateMoneyDom：所持コインをDOM更新する
-/*******************************************************/
-function updateMoneyDom(){
-	$('.remainMoney').html(playerStatus.money);
-	return;
-}
-/*******************************************************/
-/* setupOriginalDeckBtnDom：デッキアイコンをDOM更新する
-/*******************************************************/
-function setupOriginalDeckBtnDom(){
-	$('.original-deck-count')
-		.html(myOriginalDeck.length);
-	$('.deck-space')
-		.off()
-		.click(() => {
-			$('.list-back-area').addClass('active');
-			$('.list-area').addClass('active');
-			$('.card-list').html('');
-			myOriginalDeck.forEach((card) => {
-				const CardDiv = createCardDom(card);
-				CardDiv
-					.addClass('enhance-card');
-				$('.card-list').append(CardDiv);
-			});
-		});
-	$('.close-list-btn')
-		.off()
-		.click((e) => {
-			$('.list-back-area').removeClass('active');
-			$('.list-area').removeClass('active');
-		});
-
-	return;
-}
-/*******************************************************/
-/* バトルエリアの表示
-/*******************************************************/
-function displayBattleArea(){
-	$('.rest-area').addClass('hidden');
-	$('.shop-area').addClass('hidden');
-	$('.talk-area').addClass('hidden');
-
-	$('.battle-area').removeClass('hidden');
-	$('.info-area').removeClass('hidden');
-}
-function hiddenBattleArea(){
-	$('.result-modal').removeClass('active');
-	$('.battle-area').addClass('hidden');
-	$('.info-area').addClass('hidden');
-	$('.hand-area').html('');
-}
-/*******************************************************/
-/* ステージエリアの非表示
-/*******************************************************/
-function hiddenStageArea(){
-	$('.battle-area').addClass('hidden');
-	$('.shop-area').addClass('hidden');
-	$('.info-area').addClass('hidden');
-}
 /*******************************************************/
 /* createStartBtnDom：トップページのスタートボタンの表示
 /*******************************************************/
@@ -203,6 +130,25 @@ function createStartBtnDom(){
 		.append(creditSpan);
 	$('.start-btn-area').append(creditAnchor);
 }
+/***************************************************************************************/
+/* ステータスDOM作成処理
+/***************************************************************************************/
+/*******************************************************/
+/* updateMoneyDom：HPをDOM更新する
+/*******************************************************/
+function updateHPDom(){
+	$('.remainHp').html(playerStatus.remainHP);
+	$('.maxHp').html(playerStatus.maxHP);
+	return;
+}
+/*******************************************************/
+/* updateMoneyDom：所持コインをDOM更新する
+/*******************************************************/
+function updateMoneyDom(){
+	$('.remainMoney').html(playerStatus.money);
+	return;
+}
+
 /*******************************************************/
 /* updateArtifactDom：アーティファクトDOMを生成
 /*******************************************************/
@@ -234,7 +180,7 @@ function createArtifactDom(artifact){
 	return artifactDiv;
 }
 /*******************************************************/
-/* updateArtifactDom：アーティファクトDOMを生成
+/* updateArtifactDom：アーティファクトDOMを更新
 /*******************************************************/
 function updateArtifactDom(){
 	$('.artifact-area').html('');
@@ -243,6 +189,76 @@ function updateArtifactDom(){
 		$('.artifact-area')
 			.append(artifactDiv)
 	});
+}
+/*******************************************************/
+/* setupOriginalDeckBtnDom：デッキアイコンをDOM更新する
+/*******************************************************/
+function setupOriginalDeckBtnDom(){
+	$('.original-deck-count')
+		.html(myOriginalDeck.length);
+	$('.deck-space')
+		.off()
+		.click(() => {
+			$('.list-back-area').addClass('active');
+			$('.list-area').addClass('active');
+			$('.card-list').html('');
+			myOriginalDeck.forEach((card) => {
+				const CardDiv = createCardDom(card);
+				CardDiv
+					.addClass('enhance-card');
+				$('.card-list').append(CardDiv);
+			});
+		});
+	$('.close-list-btn')
+		.off()
+		.click((e) => {
+			$('.list-back-area').removeClass('active');
+			$('.list-area').removeClass('active');
+		});
+
+	return;
+}
+/***************************************************************************************/
+/* イベントDOM作成処理
+/***************************************************************************************/
+/*******************************************************/
+/* appendTalkingBtn：hand-areaの会話ボタンを削除する
+/*******************************************************/
+function deleteTalkingBtn(){
+	$('.talk-area').html('')
+	return
+}
+/*******************************************************/
+/* ステージエリアの非表示
+/*******************************************************/
+function hiddenStageArea(){
+	$('.battle-area').addClass('hidden');
+	$('.shop-area').addClass('hidden');
+	$('.info-area').addClass('hidden');
+}
+/*******************************************************/
+/* 休憩イベントエリアの表示
+/*******************************************************/
+function displayRestEventArea(){
+	hiddenStageArea();
+	$('.rest-area').removeClass('hidden');
+	$('.talk-area').removeClass('hidden');
+}
+/*******************************************************/
+/* ショップイベントエリアの表示
+/*******************************************************/
+function displayShopEventArea(){
+	hiddenStageArea();
+	$('.shop-area').removeClass('hidden');
+	$('.talk-area').removeClass('hidden');
+}
+/*******************************************************/
+/* ショップイベントエリアの表示
+/*******************************************************/
+function displayGiftEventArea(){
+	hiddenStageArea();
+	$('.battle-area').removeClass('hidden');
+	$('.talk-area').removeClass('hidden');
 }
 /*******************************************************/
 /* createCardPrice：値段DOMを生成
@@ -366,8 +382,55 @@ function createCardDom(card){
 	return cardDiv;
 }
 /***************************************************************************************/
+/* アーティファクトDOMを生成
+/***************************************************************************************/
+function createArtifactDom(artifact){
+	const modalName = $('<p>')
+		.append(artifact.name);
+	const modalDiv = $('<div>')
+		.addClass('artifact-modal')
+		.append(modalName)
+		.append(artifact.effect);
+	const modalsDiv = $('<div>')
+		.addClass('artifact-modals')
+		.addClass('hidden')
+		.append(modalDiv)
+		.hover(() => {
+			modalsDiv.addClass('hidden');
+		}, () => {});
+	const artifactImage = $('<img>')
+		.attr('src', artifact.image);
+	const artifactDiv = $('<div>')
+		.addClass('artifact')
+		.append(artifactImage)
+		.append(modalsDiv)
+		.hover(() => {
+			modalsDiv.removeClass('hidden');
+		}, () => {
+			modalsDiv.addClass('hidden');
+		});
+	return artifactDiv;
+}
+/***************************************************************************************/
 /* バトル用DOM要素の更新処理
 /***************************************************************************************/
+/*******************************************************/
+/* バトルエリアの表示
+/*******************************************************/
+function displayBattleArea(){
+	$('.rest-area').addClass('hidden');
+	$('.shop-area').addClass('hidden');
+	$('.talk-area').addClass('hidden');
+
+	$('.battle-area').removeClass('hidden');
+	$('.info-area').removeClass('hidden');
+}
+function hiddenBattleArea(){
+	$('.result-modal').removeClass('active');
+	$('.battle-area').addClass('hidden');
+	$('.info-area').addClass('hidden');
+	$('.hand-area').html('');
+}
 /*******************************************************/
 /* updateDeckDom：デッキ用DOMを生成
 /*******************************************************/
@@ -852,202 +915,7 @@ function fadeOutEnemyOmenDom(enemy){
 		}, omenFadeOutWaitTime, "linear");
 	
 }
-/*******************************************************/
-/* updateResultContentDom：報酬部分のDOM生成
-/*******************************************************/
-function updateResultContentDom(){
-	let rewardFlag = false;
-	$('.result-content').html('');
-	rewards.forEach((reward) => {
-		if(reward.getFlag){
-			switch(reward.type){
-				case rewardType.money:
-					moneyRewardDom(reward);
-					break;
-				case rewardType.card:
-					cardRewardDom(reward);
-					break;
-				case rewardType.artifact:
-					artifactRewardDom(reward);
-					break;
-				case rewardType.boss:
-					artifactRewardForBossDom(reward);
-					break;
-				default:
-					break;
-			}
-			rewardFlag = true;
-		}
-	});
-	if (rewardFlag) {
-		$('.skip-btn').children('p').html('スキップ');
-	} else {
-		$('.skip-btn').children('p').html('進む');
-	}
-}
-/*******************************************************/
-/* moneyRewardDom：コイン報酬DOM生成
-/*******************************************************/
-function moneyRewardDom(money){
-	// コイン報酬
-	const rewardImage = $('<img>')
-		.attr('src', 'images/information/money.png');
-	const rewardParagraph = $('<p>')
-		.html(`黄金の古紋 ${money.amount}枚`);
-	const rewardDiv = $('<div>')
-		.addClass('reward')
-		.append(rewardImage)
-		.append(rewardParagraph)
-		.click(() => {
-			playerStatus.money += money.amount;
-			rewardDiv.remove();
-			money.getFlag = false;
-			updateMoneyDom();
-			setLocalStorage(keyContinuePlayerStatus, playerStatus);
-			setLocalStorage(keyContinueReward, rewards);
-		});
-	$('.result-content').append(rewardDiv);
 
-}
-/*******************************************************/
-/* cardRewardDom：カード報酬DOM生成
-/*******************************************************/
-function cardRewardDom(rewardCards){
-	// 武器報酬
-	const rewardImage = $('<img>')
-		.attr('src', 'images/information/card.png');
-	const rewardParagraph = $('<p>')
-		.html(`武器を入手`);
-	const rewardDiv = $('<div>')
-		.addClass('reward')
-		.append(rewardImage)
-		.append(rewardParagraph)
-		.click(() => {
-			selectcardRewardDom(rewardCards);
-		});
-	$('.result-content').append(rewardDiv);
-}
-/*****************************************************/
-/* カード報酬選択関数
-/*****************************************************/
-function selectcardRewardDom(rewardCards){
-	$(`.select-cards-area`).html('');
-	$(`.select-skip`).html('');
-	console.log(rewardCards);
-	rewardCards.amount.forEach((card) => {
-		const selectCardDiv = createCardDom(card);
-		selectCardDiv
-			.addClass('select-card')
-			.click(card ,() => {
-				addCardToOriginalDeck(card);
-				rewardCards.getFlag = false;
-				setupOriginalDeckBtnDom();
-				setLocalStorage(keyContinueOriginalDeck, myOriginalDeck);
-				setLocalStorage(keyContinueReward, rewards);
-				updateResultContentDom();
-				$('.card-select').addClass('hidden');
-				$('.result-modal-body').removeClass('hidden');
-			});
-		$(`.select-cards-area`).append(selectCardDiv);
-	});
-	const btnImage = $('<img>')
-		.attr('src', 'images/btn2.png');
-	const skipParagraph = $('<p>')
-		.html('スキップ');
-	const selectSkipBtnDiv = $('<div>')
-		.addClass('select-skip-btn')
-		.append(btnImage)
-		.append(skipParagraph)
-		.click((e) => {
-			updateResultContentDom();
-			$('.card-select').addClass('hidden');
-			$('.result-modal-body').removeClass('hidden');
-		});
-	$(`.select-skip`).append(selectSkipBtnDiv);
-	$('.result-modal-body').addClass('hidden');
-	$('.card-select').removeClass('hidden');
-}
-/*****************************************************/
-/* アーティファクト報酬DOM生成
-/*****************************************************/
-function artifactRewardDom(rewardArtifact){
-	console.log(rewardArtifact);
-	// アーティファクト報酬
-	const rewardImage = $('<img>')
-		.attr('src', rewardArtifact.amount.image);
-	const rewardParagraph = $('<p>')
-		.html(rewardArtifact.amount.name);
-	const rewardDiv = $('<div>')
-		.addClass('reward')
-		.append(rewardImage)
-		.append(rewardParagraph)
-		.click(() => {
-			myArtifacts.push(rewardArtifact.amount);
-			rewardDiv.remove();
-			rewardArtifact.getFlag = false;
-			updateArtifactDom();
-			setLocalStorage(keyContinueArtifact, myArtifacts);
-			setLocalStorage(keyContinueReward, rewards);
-		});
-	$('.result-content').append(rewardDiv);
-}
-/*****************************************************/
-/* アーティファクト報酬DOM生成
-/*****************************************************/
-function artifactRewardForBossDom(rewardArtifacts){
-	// 武器報酬
-	const rewardImage = $('<img>')
-		.attr('src', 'images/information/card.png');
-	const rewardParagraph = $('<p>')
-		.html(`アーティファクトを入手`);
-	const rewardDiv = $('<div>')
-		.addClass('reward')
-		.append(rewardImage)
-		.append(rewardParagraph)
-		.click(() => {
-			selectArtifactRewardDom(rewardArtifacts);
-		});
-	$('.result-content').append(rewardDiv);
-}
-/*****************************************************/
-/* アーティファクト報酬選択関数
-/*****************************************************/
-function selectArtifactRewardDom(rewardArtifacts){
-	$(`.select-artifacts-area`).html('');
-	$(`.artifact-select-skip`).html('');
-	console.log(rewardArtifacts);
-	rewardArtifacts.amount.forEach((artifact) => {
-		const selectCardDiv = createArtifactDom(artifact);
-		selectCardDiv
-			.click(() => {
-				myArtifacts.push(artifact);
-				rewardArtifacts.getFlag = false;
-				updateArtifactDom();
-				setLocalStorage(keyContinueArtifact, myArtifacts);
-				setLocalStorage(keyContinueReward, rewards);
-				updateResultContentDom();
-				$('.artifact-select').addClass('hidden');
-				$('.result-modal-body').removeClass('hidden');
-			});
-		$(`.select-artifacts-area`).append(selectCardDiv);
-	});
-	const btnImage = $('<img>')
-		.attr('src', 'images/btn2.png');
-	const skipParagraph = $('<p>')
-		.html('スキップ');
-	const selectSkipBtnDiv = $('<div>')
-		.addClass('select-skip-btn')
-		.append(btnImage)
-		.append(skipParagraph)
-		.click((e) => {
-			updateResultContentDom();
-			$('.artifact-select').addClass('hidden');
-			$('.result-modal-body').removeClass('hidden');
-		});
-	$(`.artifact-select-skip`).append(selectSkipBtnDiv);
-	$('.result-modal-body').addClass('hidden');
-	$('.artifact-select').removeClass('hidden');
-}
 /*******************************************************/
 /* openHandDecideArea：手札を選択する画面のDOM生成
 /*******************************************************/
@@ -1264,6 +1132,203 @@ function selectEnhanceCardDom(card){
 			decideEnhanceCardDom(enhancedCard);
 		});
 	$('.hand-enhance-area').append(enhancedCardDiv);
+}
+/***************************************************************************************/
+/* 戦闘報酬DOM作成処理
+/***************************************************************************************/
+/*******************************************************/
+/* updateResultContentDom：報酬部分のDOM生成
+/*******************************************************/
+function updateResultContentDom(){
+	let rewardFlag = false;
+	$('.result-content').html('');
+	rewards.forEach((reward) => {
+		if(reward.getFlag){
+			switch(reward.type){
+				case rewardType.money:
+					moneyRewardDom(reward);
+					break;
+				case rewardType.card:
+					cardRewardDom(reward);
+					break;
+				case rewardType.artifact:
+					artifactRewardDom(reward);
+					break;
+				case rewardType.boss:
+					artifactRewardForBossDom(reward);
+					break;
+				default:
+					break;
+			}
+			rewardFlag = true;
+		}
+	});
+	if (rewardFlag) {
+		$('.skip-btn').children('p').html('スキップ');
+	} else {
+		$('.skip-btn').children('p').html('進む');
+	}
+}
+/*******************************************************/
+/* moneyRewardDom：コイン報酬DOM生成
+/*******************************************************/
+function moneyRewardDom(money){
+	// コイン報酬
+	const rewardImage = $('<img>')
+		.attr('src', 'images/information/money.png');
+	const rewardParagraph = $('<p>')
+		.html(`黄金の古紋 ${money.amount}枚`);
+	const rewardDiv = $('<div>')
+		.addClass('reward')
+		.append(rewardImage)
+		.append(rewardParagraph)
+		.click(() => {
+			playerStatus.money += money.amount;
+			rewardDiv.remove();
+			money.getFlag = false;
+			updateMoneyDom();
+			setLocalStorage(keyContinuePlayerStatus, playerStatus);
+			setLocalStorage(keyContinueReward, rewards);
+		});
+	$('.result-content').append(rewardDiv);
 
-
+}
+/*******************************************************/
+/* cardRewardDom：カード報酬DOM生成
+/*******************************************************/
+function cardRewardDom(rewardCards){
+	// 武器報酬
+	const rewardImage = $('<img>')
+		.attr('src', 'images/information/card.png');
+	const rewardParagraph = $('<p>')
+		.html(`武器を入手`);
+	const rewardDiv = $('<div>')
+		.addClass('reward')
+		.append(rewardImage)
+		.append(rewardParagraph)
+		.click(() => {
+			selectcardRewardDom(rewardCards);
+		});
+	$('.result-content').append(rewardDiv);
+}
+/*****************************************************/
+/* カード報酬選択関数
+/*****************************************************/
+function selectcardRewardDom(rewardCards){
+	$(`.select-cards-area`).html('');
+	$(`.select-skip`).html('');
+	console.log(rewardCards);
+	rewardCards.amount.forEach((card) => {
+		const selectCardDiv = createCardDom(card);
+		selectCardDiv
+			.addClass('select-card')
+			.click(card ,() => {
+				addCardToOriginalDeck(card);
+				rewardCards.getFlag = false;
+				setupOriginalDeckBtnDom();
+				setLocalStorage(keyContinueOriginalDeck, myOriginalDeck);
+				setLocalStorage(keyContinueReward, rewards);
+				updateResultContentDom();
+				$('.card-select').addClass('hidden');
+				$('.result-modal-body').removeClass('hidden');
+			});
+		$(`.select-cards-area`).append(selectCardDiv);
+	});
+	const btnImage = $('<img>')
+		.attr('src', 'images/btn2.png');
+	const skipParagraph = $('<p>')
+		.html('スキップ');
+	const selectSkipBtnDiv = $('<div>')
+		.addClass('select-skip-btn')
+		.append(btnImage)
+		.append(skipParagraph)
+		.click((e) => {
+			updateResultContentDom();
+			$('.card-select').addClass('hidden');
+			$('.result-modal-body').removeClass('hidden');
+		});
+	$(`.select-skip`).append(selectSkipBtnDiv);
+	$('.result-modal-body').addClass('hidden');
+	$('.card-select').removeClass('hidden');
+}
+/*****************************************************/
+/* アーティファクト報酬DOM生成
+/*****************************************************/
+function artifactRewardDom(rewardArtifact){
+	console.log(rewardArtifact);
+	// アーティファクト報酬
+	const rewardImage = $('<img>')
+		.attr('src', rewardArtifact.amount.image);
+	const rewardParagraph = $('<p>')
+		.html(rewardArtifact.amount.name);
+	const rewardDiv = $('<div>')
+		.addClass('reward')
+		.append(rewardImage)
+		.append(rewardParagraph)
+		.click(() => {
+			myArtifacts.push(rewardArtifact.amount);
+			rewardDiv.remove();
+			rewardArtifact.getFlag = false;
+			updateArtifactDom();
+			setLocalStorage(keyContinueArtifact, myArtifacts);
+			setLocalStorage(keyContinueReward, rewards);
+		});
+	$('.result-content').append(rewardDiv);
+}
+/*****************************************************/
+/* アーティファクト報酬DOM生成
+/*****************************************************/
+function artifactRewardForBossDom(rewardArtifacts){
+	// 武器報酬
+	const rewardImage = $('<img>')
+		.attr('src', 'images/information/card.png');
+	const rewardParagraph = $('<p>')
+		.html(`アーティファクトを入手`);
+	const rewardDiv = $('<div>')
+		.addClass('reward')
+		.append(rewardImage)
+		.append(rewardParagraph)
+		.click(() => {
+			selectArtifactRewardDom(rewardArtifacts);
+		});
+	$('.result-content').append(rewardDiv);
+}
+/*****************************************************/
+/* アーティファクト報酬選択関数
+/*****************************************************/
+function selectArtifactRewardDom(rewardArtifacts){
+	$(`.select-artifacts-area`).html('');
+	$(`.artifact-select-skip`).html('');
+	console.log(rewardArtifacts);
+	rewardArtifacts.amount.forEach((artifact) => {
+		const selectCardDiv = createArtifactDom(artifact);
+		selectCardDiv
+			.click(() => {
+				myArtifacts.push(artifact);
+				rewardArtifacts.getFlag = false;
+				updateArtifactDom();
+				setLocalStorage(keyContinueArtifact, myArtifacts);
+				setLocalStorage(keyContinueReward, rewards);
+				updateResultContentDom();
+				$('.artifact-select').addClass('hidden');
+				$('.result-modal-body').removeClass('hidden');
+			});
+		$(`.select-artifacts-area`).append(selectCardDiv);
+	});
+	const btnImage = $('<img>')
+		.attr('src', 'images/btn2.png');
+	const skipParagraph = $('<p>')
+		.html('スキップ');
+	const selectSkipBtnDiv = $('<div>')
+		.addClass('artifact-select-skip-btn')
+		.append(btnImage)
+		.append(skipParagraph)
+		.click((e) => {
+			updateResultContentDom();
+			$('.artifact-select').addClass('hidden');
+			$('.result-modal-body').removeClass('hidden');
+		});
+	$(`.artifact-select-skip`).append(selectSkipBtnDiv);
+	$('.result-modal-body').addClass('hidden');
+	$('.artifact-select').removeClass('hidden');
 }

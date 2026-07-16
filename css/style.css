@@ -1840,7 +1840,9 @@ header{
 	align-items: center;
 }
 .stage.choices{
-	box-shadow: -5px -5px 15px 5px rgb(112, 253, 24), 5px 5px 15px 7px rgb(112, 253, 24) !important;
+	border-width: 3px;
+	border-style: dashed;
+	border-color: rgb(253, 24, 24);
 }
 .stage img{
 	width: 100%;
@@ -2088,6 +2090,10 @@ header{
 .artifact-select{
 	width: 900px;
 	height: 600px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 }
 .artifact-select-title{
 	width: 100%;
@@ -2105,11 +2111,15 @@ header{
 }
 
 .select-artifacts-area{
-	width: 100%;
-	height: calc(100% - 90px - 90px);
+	width: 400px;
+	height: 180px;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+	padding: 0 50px;
+	
+	background-color: #807878;
+	border: 3px solid #432d23;
 
 }
 

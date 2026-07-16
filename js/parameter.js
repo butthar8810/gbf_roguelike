@@ -168,6 +168,7 @@ const continueFlag = {
 	inGame: 'バトル中',
 	restArea: '休憩エリア',
 	shopArea: 'ショップエリア',
+	giftArea: '宝箱エリア',
 };
 
 const phase = {

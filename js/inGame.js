@@ -32,6 +32,8 @@ function startBattle(){
 /* endBattle：戦闘の終了処理を開始する
 /*******************************************************/
 function endBattle(){
+	
+	initialize();
 	removeLocalStorage(keyContinueDeck);
 	removeLocalStorage(keyContinueHand);
 	removeLocalStorage(keyContinueTrash);
@@ -40,26 +42,50 @@ function endBattle(){
 	removeLocalStorage(keyContinueTemporary);
 	removeLocalStorage(keyContinueStack);
 	removeLocalStorage(keyContinueTurn);
+	//currentEnemies削除
 	removeLocalStorage(keyContinueEnemy);
+	currentEnemies = [];
+	//currentLevel削除
 	removeLocalStorage(keyContinueLevel);
+	currentLevel = -1;
+	//rewards削除
 	removeLocalStorage(keyContinueReward);
+	rewards = [];
+	//holdCard削除
 	removeLocalStorage(keyContinueHold);
+	holdCard = [];
+	//currentPhase初期化
 	removeLocalStorage(keyContinuePhase);
-	initialize();
+	currentPhase = phase.action;
+	
+
 	hiddenBattleArea();
 
-	playerStatus.block = 0;
-	playerStatus.statuses = [];
-	
 	map = getLocalStorage(keyContinueMap);
 	climbTowerContinue();
 }
-
+/*******************************************************/
+/* initializeQueue：キューの初期化
+/*******************************************************/
+function initialize(){
+	deleteAllDeck();
+	deleteAllHand();
+	deleteAllTrash();
+	deleteAllPlayArea();
+	deleteAllDiscard();
+	deleteAllTemporaryArea();
+	deleteAllStackCards();
+	currentTurn = 1;
+	allDefeatedFlag = false;
+	playerStatus.remainEnergy = playerStatus.maxEnergy;
+	playerStatus.block = 0;
+	playerStatus.statuses = [];
+}
 /*******************************************************/
 /* continueBattle：戦闘を再開する
 /*******************************************************/
 function continueBattle(){
-	continueCount();
+	continueInfo();
 	// デッキの準備
 	readyDeck();
 	setupHandCard();
@@ -84,9 +110,9 @@ function continueBattle(){
 }
 
 /*******************************************************/
-/* continueCount: 各種保存された情報を獲得する
+/* continueInfo: 各種保存された情報を獲得する
 /*******************************************************/
-function continueCount(){
+function continueInfo(){
 	const lastTrash = getLocalStorage(keyContinueTrash);
 	const lastPlayArea = getLocalStorage(keyContinuePlayArea);
 	const lastDiscard = getLocalStorage(keyContinueDiscard);
@@ -99,7 +125,7 @@ function continueCount(){
 	const lastPhase = getLocalStorage(keyContinuePhase);
 	if (lastTrash) {myTrash = lastTrash;}
 	if (lastPlayArea) {playArea = lastPlayArea;}
-	if (lastDiscard ) {discard = lastDiscard;}
+	if (lastDiscard) {discard = lastDiscard;}
 	if (lastTemporary) {tmpArea = lastTemporary;}
 	if (lastStack) {stackCards = lastStack;}
 	if (lastHold) {holdCard = lastHold;}
@@ -122,19 +148,7 @@ function continueCount(){
 	}
 
 }
-/*******************************************************/
-/* initializeQueue：キューの初期化
-/*******************************************************/
-function initialize(){
-	deleteAllDeck();
-	deleteAllHand();
-	deleteAllTrash();
-	deleteAllDiscard();
-	deleteAllTemporaryArea();
-	deleteAllStackCards();
-	currentTurn = 1;
-	playerStatus.remainEnergy = playerStatus.maxEnergy;
-}
+
 /*******************************************************/
 /* readyDeck：初期デッキとなるカードを配る
 /*******************************************************/
