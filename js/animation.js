@@ -502,3 +502,53 @@ function animateRestHeal(){
 		.animate({ opacity: '1' }, 600, "easeInQuart")
 		.animate({ opacity: '0' }, 600, "easeInQuart");
 }
+/*******************************************************/
+/* 宝箱イベント/ミミック討伐演出のDOM表示
+/*******************************************************/
+function animateKnockDownMimic(){
+	let treasurePromise;
+	//プレイヤーアタックモーション
+	animatePlayerAttack();
+	//エネミーノックアウト
+	const mimicPromise = $('.enemy-area').children('img')
+		.animate({ left: '5px' }, 15, "linear")
+		.animate({ left: '-5px' }, 30, "linear")
+		.animate({ left: '5px' }, 30, "linear")
+		.animate({ left: '-5px' }, 30, "linear")
+		.animate({ left: '5px' }, 30, "linear")
+		.animate({ left: '-5px' }, 30, "linear")
+		.animate({ left: '5px' }, 30, "linear")
+		.animate({ left: '-5px' }, 30, "linear")
+		.animate({ left: '5px' }, 30, "linear")
+		.animate({ left: '-5px' }, 30, "linear")
+		.animate({ left: '5px' }, 30, "linear")
+		.animate({ left: '-5px' }, 30, "linear")
+		.animate({ left: '5px' }, 30, "linear")
+		.animate({ left: '-5px' }, 30, "linear")
+		.animate({ left: '5px' }, 30, "linear")
+		.animate({ left: '-5px' }, 30, "linear")
+		.animate({ left: '5px' }, 30, "linear")
+		.animate({ left: '-5px' }, 30, "linear")
+		.animate({ left: '5px' }, 30, "linear")
+		.animate({ left: '-5px' }, 30, "linear")
+		.animate({ left: '5px' }, 30, "linear")
+		.animate({ left: '-5px' }, 30, "linear")
+		.animate({ left: '5px' }, 30, "linear")
+		.animate({ left: '-5px' }, 30, "linear")
+		.animate({ left: '5px' }, 30, "linear")
+		.animate({ left: '-5px' }, 30, "linear");
+	$('.enemy-area').animate({ 
+		opacity: 0
+	}, defeatedWaitTime);
+	return mimicPromise;
+}
+function openTreasure(){
+	const treasure = $('<img>')
+		.addClass('treasure-open-box')
+		.attr('src', 'images/events/treasure_2.png');
+	$(`.enemies-area`).append(treasure);
+	const treasurePromise = $('.treasure-box').animate({ 
+		opacity: 0
+	}, defeatedWaitTime);
+	return treasurePromise;
+}

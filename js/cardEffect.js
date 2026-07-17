@@ -5370,9 +5370,9 @@ function decideShopExclusiveCardLineup(){
 	const selectCards = [];
 	let selectCardList = [];
 	const exclusiveInfo = {
-		common:{weight:40, info:{rarity: rarity.common, minPrice: 48, maxPrice: 53}},
-		uncommon:{weight:40, info:{rarity: rarity.uncommon, minPrice: 71, maxPrice: 79}},
-		rare:{weight:20, info:{rarity: rarity.rare, minPrice: 143, maxPrice: 158}},
+		common:{weight:54, info:{rarity: rarity.common, minPrice: 48, maxPrice: 53}},
+		uncommon:{weight:37, info:{rarity: rarity.uncommon, minPrice: 71, maxPrice: 79}},
+		rare:{weight:9, info:{rarity: rarity.rare, minPrice: 143, maxPrice: 158}},
 	}
 	const lineupType = [type.attack, type.attack, type.skill, type.skill, type.power];
 	const totalWeight = Object.values(exclusiveInfo).reduce((sum, item) => sum + item.weight, 0);

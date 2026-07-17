@@ -253,13 +253,42 @@ function displayShopEventArea(){
 	$('.talk-area').removeClass('hidden');
 }
 /*******************************************************/
-/* ショップイベントエリアの表示
+/* 宝箱イベントエリアの表示
 /*******************************************************/
 function displayGiftEventArea(){
+	const selectChara = getLocalStorage(keySelectChara);
 	hiddenStageArea();
 	$('.battle-area').removeClass('hidden');
 	$('.talk-area').removeClass('hidden');
+	//プレイヤー立ち絵
+	$(`.player-area`).html('');
+	const playerImage = $('<img>')
+		.addClass('player-picture');
+	if (selectChara == selectCharacter.gran.name){
+		playerImage.attr('src', 'images/gifs/gran_idle.gif');
+	} else if (selectChara == selectCharacter.djeeta.name){
+		playerImage.attr('src', 'images/gifs/djeeta_idle.gif');
+	} else {
+		alert('別キャラが選択されています。');
+		window.location.href = 'index.html';
+	}
+	const playerAreaInnerDiv = $('<div>')
+		.addClass('player-area-inner')
+		.append(playerImage);
+	$(`.player-area`)
+		.append(playerAreaInnerDiv);
+	
+	//ミミックの立ち絵
+	$(`.enemies-area`).html('');
+	const enemyImage = $('<img>')
+			.attr('src', 'images/enemy/small/mimic.png');
+	const enemyAreaDiv = $('<div>')
+		.addClass('enemy-area')
+		.addClass('small')
+		.append(enemyImage);
+	$(`.enemies-area`).append(enemyAreaDiv);
 }
+
 /*******************************************************/
 /* createCardPrice：値段DOMを生成
 /*******************************************************/
@@ -434,6 +463,25 @@ function hiddenBattleArea(){
 /*******************************************************/
 /* updateDeckDom：デッキ用DOMを生成
 /*******************************************************/
+function changeBattleArea(select){
+	const back = $('battle-area').children('img');
+	switch(select){
+		case battleArea.stage1:
+			back.attr('src', battleArea.stage1);
+			break;
+		case battleArea.stage2:
+			back.attr('src', battleArea.stage2);
+			break;
+		case battleArea.stage3:
+			back.attr('src', battleArea.stage3);
+			break;
+		default:
+			break;
+	}
+}
+/*******************************************************/
+/* updateDeckDom：デッキ用DOMを生成
+/*******************************************************/
 function updateDeckDom(){
 	const deckImage = $(`.deck-area`).children('img');
 	if(myDeck.length <= 0){
@@ -592,8 +640,6 @@ function updatePlayerAreaDom(argPlayerStatus){
 		});
 	$(`.player-area`)
 		.append(playerAreaInnerDiv);
-	// マウスオーバー時の処理を追加
-	playerAreaInnerDiv
 }
 /*******************************************************/
 /* updatePlayerStatusDom：プレイヤーのステータス部を生成

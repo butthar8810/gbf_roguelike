@@ -26,6 +26,7 @@ function selectRestAction(){
 		animateRestHeal();
 		const btn = appendTalkingBtn('塔へ上る');
 		btn.click((e) => {
+			setLocalStorage(keyContinuePlayerStatus, playerStatus);
 			climbTowerContinue();
 		});
 	});
@@ -63,10 +64,10 @@ function exchangeEnhancedCard(card, enhancedCard){
 	spliceOriginalDeck(index);
 	pushOriginalDeck(enhancedOriginCard);
 	setupOriginalDeckBtnDom();
-	setLocalStorage(keyContinueOriginalDeck, myOriginalDeck);
 	$('.before').addClass('hidden');
 	$('.arrow-icon').addClass('hidden');
 	setTimeout(() => {
+		setLocalStorage(keyContinueOriginalDeck, myOriginalDeck);
 		$('.black-back-area').removeClass('active');
 		$('.enhance-area').removeClass('active');
 		$('.enhance-content').html('');
@@ -209,12 +210,12 @@ function shopCardList(){
 	// カード削除のラインナップ
 	const HukidashiImage = $('<img>')
 		.addClass('delete-hukidashi')
-		.attr('src', `images/shop/Hukidashi.png`);
+		.attr('src', `images/events/Hukidashi.png`);
 	const HukidashiText = $('<p>')
 		.addClass('delete-hukidashi-text');
 	const deleteImage = $('<img>')
 		.addClass('delete-image')
-		.attr('src', `images/shop/Delete.png`);
+		.attr('src', `images/events/Delete.png`);
 	
 	const selectDeleteWrapperDiv = $('<div>')
 		.addClass('delete-position')
@@ -364,5 +365,81 @@ function startGiftEvent(){
 	setLocalStorage(keyContinueFlag, continueFlag.giftArea);
 	const mimicBtn = appendTalkingBtn('ミミックを倒す');
 	mimicBtn.click((e) => {
+		deleteTalkingBtn();
+		knockDownMimicEvent();
+	});
+}
+/*******************************************************/
+/* 宝箱イベント
+/*******************************************************/
+function knockDownMimicEvent(){
+	const treasureInfo = {
+		Red:{
+			weight:50, 
+			image: 'images/events/treasure_red.png',
+			info:{
+				common:{weight:75, rarity:artifactRarity.common},
+				uncommon:{weight:25, rarity:artifactRarity.uncommon},
+				rare:{weight:0, rarity:artifactRarity.rare},
+			}
+		},
+		Blue:{
+			weight:33, 
+			image: 'images/events/treasure_blue.png',
+			info:{
+				common:{weight:35, rarity:artifactRarity.common},
+				uncommon:{weight:50, rarity:artifactRarity.uncommon},
+				rare:{weight:15, rarity:artifactRarity.rare},
+			}
+		},
+		Gold:{
+			weight:17, 
+			image: 'images/events/treasure_gold.png',
+			info:{
+				common:{weight:0, rarity:artifactRarity.common},
+				uncommon:{weight:75, rarity:artifactRarity.uncommon},
+				rare:{weight:25, rarity:artifactRarity.rare},
+			}
+		},
+	}
+	let selectInfo = {};
+	let selectRarityInfo = {};
+	const totalWeight = Object.values(treasureInfo).reduce((sum, item) => sum + item.weight, 0);
+	let random = Math.floor(Math.random() * totalWeight);
+	for (const treasureBox of Object.values(treasureInfo)) {
+		if (random < treasureBox.weight) {
+			selectInfo = treasureBox;
+			break;
+		}
+		random -= treasureBox.weight;
+	}
+	console.log(selectInfo);
+	const mimicPromise = animateKnockDownMimic();
+	$.when(mimicPromise).done(() => {
+		$(`.enemies-area`).html('');
+		const treasure = $('<img>')
+			.addClass('treasure-box')
+			.attr('src', selectInfo.image);
+		$(`.enemies-area`).append(treasure);
+		const treasurePromise = treasure.animate({ 
+			opacity: 1
+		}, 1000);
+		$.when(treasurePromise).done(() => {
+			const mimicBtn = appendTalkingBtn('宝箱を拾う');
+			mimicBtn.click((e) => {
+				deleteTalkingBtn();
+				getItemEvent();
+			});
+		});
+	});
+}
+/*******************************************************/
+/* 宝箱獲得イベント
+/*******************************************************/
+function getItemEvent(){
+	// 宝箱オープン
+	const treasurePromise = openTreasure();
+	$.when(treasurePromise).done(() => {
+		
 	});
 }

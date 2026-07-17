@@ -13,6 +13,11 @@ const stages = {
 	normal: { name: '通常戦闘', weight: 53, image: 'images/map/normal.png' },
 	test: { name: 'TEST戦闘', weight: 0, image: 'images/map/test.png' },
 };
+const battleArea = {
+	stage1: 'images/stage1.jpg',
+	stage2: 'images/stage2.jpg',
+	stage3: 'images/stage3.jpg',
+}
 
 
 /*****************************************************************************/
