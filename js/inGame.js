@@ -1657,7 +1657,7 @@ function checkEnemyDefeated(Enemies, playerInfo, animationFlag = true){
 				const pollen = enemy.currentStatus.status
 					.find((status) => status.name === buffStatus.pollen.name);
 				if (pollen){
-					enemyStatusDebuf(enemy, playerInfo, animationFlag, debuffStatus.defenseDown, pollen.amount);
+					enemyActionStatusDebuf(enemy, playerInfo, animationFlag, debuffStatus.defenseDown, pollen.amount);
 				}
 				animateDefeated(enemy);
 				enemy.currentStatus.status.splice(0);

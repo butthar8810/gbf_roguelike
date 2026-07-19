@@ -102,7 +102,7 @@ function startShopEvent(){
 /*******************************************************/
 function shopCardList(){
 	// ラインナップの選定
-	let selectCardsInfo = [];
+	let selectCardsInfo = {};
 	const lastSelectCardsInfo = getLocalStorage(keyContinueShopLineup);
 	if(lastSelectCardsInfo){
 		selectCardsInfo = lastSelectCardsInfo;
@@ -313,8 +313,8 @@ function buyArtifact(selectInfo, artifactList, selectArtifactWrapperDiv){
 		alert('お金が足りません');
 		return;
 	}
-	const index = cardList.findIndex(info => info.id === selectInfo.id);
-	const buyInfo = cardList.splice(index, 1)[0];
+	const index = artifactList.findIndex(info => info.id === selectInfo.id);
+	const buyInfo = artifactList.splice(index, 1)[0];
 	// 支払い
 	playerStatus.money -= buyInfo.price;
 	updateMoneyDom();
@@ -373,53 +373,113 @@ function startGiftEvent(){
 /* 宝箱イベント
 /*******************************************************/
 function knockDownMimicEvent(){
-	const treasureInfo = {
+	const treasuresInfo = {
 		Red:{
 			weight:50, 
 			image: 'images/events/treasure_red.png',
-			info:{
+			artifactInfo:{
 				common:{weight:75, rarity:artifactRarity.common},
 				uncommon:{weight:25, rarity:artifactRarity.uncommon},
 				rare:{weight:0, rarity:artifactRarity.rare},
+			},
+			moneyInfo: {
+				weight: 50,
+				minMoney: 23,
+				maxMoney: 27,
 			}
 		},
 		Blue:{
 			weight:33, 
 			image: 'images/events/treasure_blue.png',
-			info:{
+			artifactInfo:{
 				common:{weight:35, rarity:artifactRarity.common},
 				uncommon:{weight:50, rarity:artifactRarity.uncommon},
 				rare:{weight:15, rarity:artifactRarity.rare},
+			},
+			moneyInfo: {
+				weight: 35,
+				minMoney: 45,
+				maxMoney: 55,
 			}
 		},
 		Gold:{
 			weight:17, 
 			image: 'images/events/treasure_gold.png',
-			info:{
+			artifactInfo:{
 				common:{weight:0, rarity:artifactRarity.common},
 				uncommon:{weight:75, rarity:artifactRarity.uncommon},
 				rare:{weight:25, rarity:artifactRarity.rare},
+			},
+			moneyInfo: {
+				weight: 50,
+				minMoney: 68,
+				maxMoney: 82,
 			}
 		},
 	}
-	let selectInfo = {};
-	let selectRarityInfo = {};
-	const totalWeight = Object.values(treasureInfo).reduce((sum, item) => sum + item.weight, 0);
-	let random = Math.floor(Math.random() * totalWeight);
-	for (const treasureBox of Object.values(treasureInfo)) {
-		if (random < treasureBox.weight) {
-			selectInfo = treasureBox;
-			break;
+	let treasureBox = {};
+	const lastTreasureInfo = getLocalStorage(keyContinueTreasure);
+	const lastReward = getLocalStorage(keyContinueReward);
+	if(lastTreasureInfo && lastReward){
+		treasureBox = lastTreasureInfo;
+		rewards = lastReward;
+	} else {
+		let selectInfo = {};
+		let selectRarity;
+		let selectRarityInfo = {};
+		let moneyGetFlag = false;
+		// 宝箱の種類抽選
+		const totalWeight = Object.values(treasuresInfo).reduce((sum, item) => sum + item.weight, 0);
+		let treasureRandom = Math.floor(Math.random() * totalWeight);
+		for (const treasureBox of Object.values(treasuresInfo)) {
+			if (treasureRandom < treasureBox.weight) {
+				selectInfo = treasureBox;
+				break;
+			}
+			treasureRandom -= treasureBox.weight;
 		}
-		random -= treasureBox.weight;
+		treasureBox = selectInfo.image;
+		// アーティファクトのレアリティ抽選
+		const totalRarityWeight = Object.values(selectInfo.artifactInfo).reduce((sum, item) => sum + item.weight, 0);
+		let rarityRandom = Math.floor(Math.random() * totalRarityWeight);
+		for (const rarity of Object.values(selectInfo.artifactInfo)) {
+			if (rarityRandom < rarity.weight) {
+				selectRarity = rarity.rarity;
+				break;
+			}
+			rarityRandom -= rarity.weight;
+		}
+		// アーティファクトの抽選
+		const filteringArtifact = Object.values(normalArtifact)
+			.filter((artifact) => artifact.rarity === selectRarity)
+			.filter((artifact) => {
+				return !myArtifacts.find((myArtifact) => myArtifact.name === artifact.name);;
+			});
+		console.log(filteringArtifact);
+		const treasureArtifact = shuffleArray(filteringArtifact).shift();
+		// ゴールドの封入抽選
+		let moneyAmount = 0;
+		let moneyRandom = Math.floor(Math.random() * 100);
+		if (moneyRandom < selectInfo.moneyInfo.weight) {
+			moneyAmount = Math.floor(
+				Math.random() * (selectInfo.moneyInfo.maxMoney - selectInfo.moneyInfo.minMoney) + selectInfo.moneyInfo.minMoney
+			);
+			moneyGetFlag = true;
+		}
+		rewards = [
+			{type: rewardType.artifact, getFlag: true, amount: treasureArtifact},
+			{type: rewardType.money, getFlag: moneyGetFlag, amount: moneyAmount},
+		];
+		setLocalStorage(keyContinueTreasure, treasureBox);
+		setLocalStorage(keyContinueReward, rewards);
 	}
-	console.log(selectInfo);
+	console.log(rewards);
 	const mimicPromise = animateKnockDownMimic();
 	$.when(mimicPromise).done(() => {
 		$(`.enemies-area`).html('');
 		const treasure = $('<img>')
 			.addClass('treasure-box')
-			.attr('src', selectInfo.image);
+			.attr('src', treasureBox);
 		$(`.enemies-area`).append(treasure);
 		const treasurePromise = treasure.animate({ 
 			opacity: 1
@@ -440,6 +500,15 @@ function getItemEvent(){
 	// 宝箱オープン
 	const treasurePromise = openTreasure();
 	$.when(treasurePromise).done(() => {
-		
+		updateResultContentDom();
+		$('.result-modal').addClass('active');
+
+	});
+	$('.skip-btn').click((e) => {
+		rewards = [];
+		removeLocalStorage(keyContinueTreasure);
+		removeLocalStorage(keyContinueReward);
+		hiddenBattleArea();
+		climbTowerContinue();
 	});
 }

@@ -1233,6 +1233,7 @@ function moneyRewardDom(money){
 			rewardDiv.remove();
 			money.getFlag = false;
 			updateMoneyDom();
+			updateResultContentDom();
 			setLocalStorage(keyContinuePlayerStatus, playerStatus);
 			setLocalStorage(keyContinueReward, rewards);
 		});
@@ -1316,6 +1317,7 @@ function artifactRewardDom(rewardArtifact){
 			rewardDiv.remove();
 			rewardArtifact.getFlag = false;
 			updateArtifactDom();
+			updateResultContentDom();
 			setLocalStorage(keyContinueArtifact, myArtifacts);
 			setLocalStorage(keyContinueReward, rewards);
 		});

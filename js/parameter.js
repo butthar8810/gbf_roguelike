@@ -5,7 +5,7 @@ const stageLevel = {boss: 3, special: 2, normal:1, test: 0}
 const rewardType = {money: 'money', card: 'card', artifact: 'artifact', boss: 'bossArtifact'}
 const stages = {
 	boss: { name: 'ボス戦闘', weight: 0, image: 'images/map/boss.png' },
-	gift: { name: '宝箱', weight: 0, image: 'images/map/gift.jpg' },
+	gift: { name: '宝箱', weight: 0, image: 'images/map/gift.png' },
 	shop: { name: 'ショップ', weight: 5, image: 'images/map/shop.png' },
 	rest: { name: '休憩', weight: 12, image: 'images/map/rest.png' },
 	event: { name: 'イベント', weight: 22, image: 'images/map/event.png' },
@@ -149,6 +149,7 @@ const keyContinueCurrentMap = 'Babu.Continue.Current.Map';
 const keyContinueBattleCount = 'Babu.Continue.Battle.Count';
 const keyContinueOriginalDeck = 'Babu.Continue.Original.Deck';
 const keyContinueShopLineup = 'Babu.Continue.Shop.Lineup';
+const keyContinueTreasure = 'Babu.Continue.Treasure';
 const keyContinueTemporary = 'Babu.Continue.Temporary';
 // 戦闘用ストレージキー
 const keyContinueDeck = 'Babu.Continue.Deck';

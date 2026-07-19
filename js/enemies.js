@@ -208,7 +208,7 @@ const enemyList = {
 		size: 'small',
 		minHP: 22, 
 		maxHP: 28, 
-		image: 'images/enemy/Sleepyhead.png', 
+		image: 'images/enemy/small/Sleepyhead.png', 
 		actionAlgorithm: 'actionSleepyhead', 
 		actionFirst: 'buffPollen',
 		currentStatus:{
@@ -370,7 +370,7 @@ const eliteEnemiesPool = [
 	{weight: 1000, enemiesFunc(){
 		return [enemyList.despair, enemyList.grief, enemyList.despair];
 	}},
-	{weight: 1000, enemiesFunc(){return [enemyList.QueenBee];}},
+	{weight: 1000, enemiesFunc(){return [enemyList.Ikelos];}},
 ];
 
 const enemyActionType = {

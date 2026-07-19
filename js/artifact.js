@@ -358,15 +358,21 @@ function decideArtifactLineup(){
 	};
 	let index = 0
 	// ラインナップ抽選
-	const filteringArtifact = Object.values(normalArtifact).filter((artifact) => 
+	let filteringArtifact = Object.values(normalArtifact).filter((artifact) => 
 		artifact.rarity === artifactRarity.common ||
 		artifact.rarity === artifactRarity.uncommon ||
 		artifact.rarity === artifactRarity.rare
-	);
+	)
+	filteringArtifact = filteringArtifact.filter((artifact) => {
+		return !myArtifacts.find((myArtifact) => myArtifact.name === artifact.name);
+	});
+	console.log(filteringArtifact);
 	const lineupArtifact = shuffleArray(filteringArtifact).splice(0, 2);
 	const shopArtifact = Object.values(normalArtifact).filter((artifact) => 
 		artifact.rarity === artifactRarity.shop
-	);
+	).filter((artifact) => {
+		return !myArtifacts.find((myArtifact) => myArtifact.name === artifact.name);
+	});
 	lineupArtifact.push(shuffleArray(shopArtifact).splice(0, 1)[0]);
 	//レア度別に値段を決める
 	lineupArtifact.forEach((artifact) => {
@@ -407,8 +413,9 @@ function decideArtifactReward(){
 	const filteringArtifact = Object.values(normalArtifact)
 		.filter((artifact) => artifact.rarity === selectRarity)
 		.filter((artifact) => {
-			return myArtifacts.find((myArtifact) => myArtifact.name !== artifact.name);
+			return !myArtifacts.find((myArtifact) => myArtifact.name === artifact.name);
 		});
+	console.log(filteringArtifact);
 	selectArtifact = shuffleArray(filteringArtifact).shift();
 
 	return {type: rewardType.artifact, getFlag: true, amount: selectArtifact};
@@ -421,8 +428,9 @@ function decideBossArtifactReward(){
 	const filteringArtifact = Object.values(normalArtifact)
 		.filter((artifact) => artifact.rarity === artifactRarity.boss)
 		.filter((artifact) => {
-			return myArtifacts.find((myArtifact) => myArtifact.name !== artifact.name);
+			return !myArtifacts.find((myArtifact) => myArtifact.name === artifact.name);
 		});
+	console.log(filteringArtifact);
 	selectArtifacts = shuffleArray(filteringArtifact).splice(0, 3);
 	return {type: rewardType.boss, getFlag: true, amount: selectArtifacts};
 }

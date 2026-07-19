@@ -1110,10 +1110,8 @@ header{
 	transform: translateX(-50%);
 	opacity: 0;
 }
-.treasure-box,
-.treasure-open-box{
-	width: 120px;
-	height: 100px;
+.treasure-box{
+	width: 80px;
 	opacity: 0;
 	position: absolute;
 	bottom: 0;
