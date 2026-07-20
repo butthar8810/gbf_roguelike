@@ -319,7 +319,7 @@ function buyArtifact(selectInfo, artifactList, selectArtifactWrapperDiv){
 	playerStatus.money -= buyInfo.price;
 	updateMoneyDom();
 	// 購入カードのデッキ挿入
-	myArtifacts.push(selectInfo.artifact);
+	getArtifact(selectInfo.artifact);
 	updateArtifactDom();
 	//購入済み
 	selectArtifactWrapperDiv.addClass('purchased');
@@ -467,8 +467,8 @@ function knockDownMimicEvent(){
 			moneyGetFlag = true;
 		}
 		rewards = [
-			{type: rewardType.artifact, getFlag: true, amount: treasureArtifact},
 			{type: rewardType.money, getFlag: moneyGetFlag, amount: moneyAmount},
+			{type: rewardType.artifact, getFlag: true, amount: treasureArtifact},
 		];
 		setLocalStorage(keyContinueTreasure, treasureBox);
 		setLocalStorage(keyContinueReward, rewards);
@@ -502,7 +502,6 @@ function getItemEvent(){
 	$.when(treasurePromise).done(() => {
 		updateResultContentDom();
 		$('.result-modal').addClass('active');
-
 	});
 	$('.skip-btn').click((e) => {
 		rewards = [];
@@ -512,3 +511,6 @@ function getItemEvent(){
 		climbTowerContinue();
 	});
 }
+/*****************************************************************************************/
+/* ランダムイベント
+/*****************************************************************************************/

@@ -5268,18 +5268,14 @@ function setupDeck(){
 			addCardToOriginalDeck(granCardList.Wide, 5);
 			addCardToOriginalDeck(granCardList.Defense, 4);
 			addCardToOriginalDeck(granCardList.PowerSwing, 1);
-			addCardToOriginalDeck(granCardList.HangedMan, 1);
-			addCardToOriginalDeck(granCardList.Adrenal, 1);
-			addCardToOriginalDeck(granCardList.Heavy, 1);
-			addCardToOriginalDeck(granCardList.Bell, 1);
 
 		} else if (selectChara == selectCharacter.djeeta.name){
 			addCardToOriginalDeck(djeetaCardList.Wide, 5);
 			addCardToOriginalDeck(djeetaCardList.Defense, 5);
 			addCardToOriginalDeck(djeetaCardList.Assassin, 1);
 			addCardToOriginalDeck(djeetaCardList.Pulverizer, 1);
-			addCardToOriginalDeck(djeetaCardList.Blaze, 2);
-			addCardToOriginalDeck(djeetaCardList.Spada, 2);
+			addCardToOriginalDeck(djeetaCardList.Removal, 2);
+			addCardToOriginalDeck(djeetaCardList.Doobie, 2);
 			addCardToOriginalDeck(testCardList.testAttack, 2);
 		}
 	}
@@ -6092,8 +6088,8 @@ function effectAttackAndSeizure(amount){
 		actionAttack(amount.attack);
 	}
 	if(currentTarget.currentStatus.remainHP <= 0 && 'maxHp' in amount){
-		playerStatus.remainHP += amount.maxHp;
 		playerStatus.maxHP += amount.maxHp;
+		recoveryHP(amount.maxHp);
 	}
 	endAction();
 	return true;

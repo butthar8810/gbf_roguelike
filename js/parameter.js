@@ -51,6 +51,7 @@ const buffStatus = {
 	Bonus: {name: 'パラゾニウム', amount: '', effect: 'カードを1枚プレイするたび、敵全体に{X}ダメージを与える。', image: 'images/status/status_6993.png'},
 	lamentation: {name: '調停の翼', amount: '', effect: 'カードを1枚プレイするたび、{X}ブロックを得る。', image: 'images/status/status_1534_6.png'},
 	lich: {name: '不死王の刃', amount: '', effect: '「アタック」でダメージを与えるたび、毒{X}を与える。', image: 'images/status/status_3126.png'},
+	mount: {name: '弱体無効', amount: '', effect: 'デバフを{X}回無効化。', image: 'images/status/status_1003.png'},
 	// ターン制
 	defenseUp: {name: '防御力アップ', amount: '', effect: 'アタックで受けるダメージが50%減少。{X}ターン有効。',image: 'images/status/status_1019.png'},
 	Ereshkigal: {name: 'エレシュキガル', amount: '', effect: 'ターン開始時、ダブルアタックを得る。{X}ターン有効。', image: 'images/status/status_1413_8.png'},
@@ -68,7 +69,6 @@ const buffStatus = {
 	reproduction: {name: '複製', amount: '', effect: '次のターン開始時、選択したカードを{X}枚手札に加える。1ターン有効', image: 'images/status/status_6393.png'},
 
 	//実装待ち
-	mount: {name: '弱体無効', amount: '', effect: 'デバフを{X}回無効化。', image: 'images/status/status_1003.png'},
 	afterImage: {name: '残像', amount: '', effect: 'カードを1枚プレイするたび、{X}ブロックを得る。', image: 'images/status/status_1566.png'},
 	invincible: {name: '無敵', amount: '', effect: 'このターン中に減らせるHPは、残り{X}。', image: 'images/status/status_62.png'},
 

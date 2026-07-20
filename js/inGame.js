@@ -5,6 +5,7 @@
 /* startBattle：戦闘を開始する
 /*******************************************************/
 function startBattle(){
+	setLocalStorage(keyContinueFlag, continueFlag.inGame);
 	// 各キューの初期化
 	initialize();
 	// デッキの準備
@@ -21,7 +22,6 @@ function startBattle(){
 	// 初めの敵予兆を決定する
 	decideNextAction();
 	displayBattleArea();
-	setLocalStorage(keyContinueFlag, continueFlag.inGame);
 	setLocalStorage(keyContinueTrash, myTrash);
 	setLocalStorage(keyContinueTurn, currentTurn);
 	setLocalStorage(keyContinueEnemy, currentEnemies);
@@ -796,24 +796,15 @@ function startTurnProcess(){
 /* startAbility：敵やAFの開始時効果処理を行う
 /*******************************************************/
 function startAbility(){
-	console.log(myArtifacts);
 	// アーティファクトの効果を発動
 	myArtifacts.forEach((artifact) => {
-		switch(artifact.name){
-			case starterArtifact.recovery.name:
-			case starterArtifact.startDraw.name:
-			case normalArtifact.agility.name:
-			case normalArtifact.strength.name:
-			case normalArtifact.block.name:
-				if (artifact.firstFunc !== '') {
-					const storedFunc = globalThis[artifact.firstFunc];
-					if( typeof storedFunc === 'function'){
-						ret = storedFunc();
-					} 
-				}
-				break;
-			default:
-				break;
+		if('firstFunc' in artifact){
+			if (artifact.firstFunc !== '') {
+				const storedFunc = globalThis[artifact.firstFunc];
+				if( typeof storedFunc === 'function'){
+					ret = storedFunc(artifact.amount);
+				} 
+			}
 		}
 	});
 	//エネミーの開始時効果発動
@@ -988,7 +979,7 @@ function giftDrawFromDeck(){
 		const giftCard = spliceDeck(giftCardIndex[i]);
 		pushHand(giftCard);
 	}
-	
+	console.log(`天賦：${giftCardIndex.length}枚`);
 	return giftCardIndex.length;
 }
 /*******************************************************/

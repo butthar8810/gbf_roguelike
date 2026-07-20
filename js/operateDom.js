@@ -304,6 +304,20 @@ function createCardPrice(price, discount){
 	}
 	return priceDiv;
 }
+
+function insertCardsToOriginalDeckDom(cards){
+	$('.insert-card-area').addClass('active');
+	cards.forEach((card) => {
+		const cardDiv = createCardDom(card);
+		cardDiv
+			.addClass('display-card');
+		$('.insert-card-display').append(cardDiv);
+		setTimeout(() => {
+			animateInsertCardsToOriginalDeck(cardDiv);
+		}, 1000);
+		
+	});
+}
 /***************************************************************************************/
 /* カードDOM作成処理
 /***************************************************************************************/
@@ -1313,7 +1327,7 @@ function artifactRewardDom(rewardArtifact){
 		.append(rewardImage)
 		.append(rewardParagraph)
 		.click(() => {
-			myArtifacts.push(rewardArtifact.amount);
+			getArtifact(rewardArtifact.amount);
 			rewardDiv.remove();
 			rewardArtifact.getFlag = false;
 			updateArtifactDom();
@@ -1324,7 +1338,7 @@ function artifactRewardDom(rewardArtifact){
 	$('.result-content').append(rewardDiv);
 }
 /*****************************************************/
-/* アーティファクト報酬DOM生成
+/* アーティファクト報酬DOM生成(ボス用)
 /*****************************************************/
 function artifactRewardForBossDom(rewardArtifacts){
 	// 武器報酬
@@ -1342,7 +1356,7 @@ function artifactRewardForBossDom(rewardArtifacts){
 	$('.result-content').append(rewardDiv);
 }
 /*****************************************************/
-/* アーティファクト報酬選択関数
+/* アーティファクト報酬選択関数(ボス用)
 /*****************************************************/
 function selectArtifactRewardDom(rewardArtifacts){
 	$(`.select-artifacts-area`).html('');
@@ -1352,7 +1366,7 @@ function selectArtifactRewardDom(rewardArtifacts){
 		const selectCardDiv = createArtifactDom(artifact);
 		selectCardDiv
 			.click(() => {
-				myArtifacts.push(artifact);
+				getArtifact(artifact);
 				rewardArtifacts.getFlag = false;
 				updateArtifactDom();
 				setLocalStorage(keyContinueArtifact, myArtifacts);
