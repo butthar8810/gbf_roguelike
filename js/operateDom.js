@@ -304,7 +304,9 @@ function createCardPrice(price, discount){
 	}
 	return priceDiv;
 }
-
+/*******************************************************/
+/* insertCardsToOriginalDeckDom：デッキ挿入DOM生成
+/*******************************************************/
 function insertCardsToOriginalDeckDom(cards){
 	$('.insert-card-area').addClass('active');
 	cards.forEach((card) => {
@@ -315,7 +317,6 @@ function insertCardsToOriginalDeckDom(cards){
 		setTimeout(() => {
 			animateInsertCardsToOriginalDeck(cardDiv);
 		}, 1000);
-		
 	});
 }
 /***************************************************************************************/
@@ -1188,7 +1189,6 @@ function selectEnhanceCardDom(card){
 		.addClass('after')
 		// 手札クリック時の処理登録
 		.click(enhancedCard ,() => {
-			console.log(enhancedCard);
 			decideEnhanceCardDom(enhancedCard);
 		});
 	$('.hand-enhance-area').append(enhancedCardDiv);

@@ -7,6 +7,7 @@ const coordinateTrashForHandArea = {top: '50px', left: '970px', width: '80px', s
 const coordinateShowForShowArea = {top: '0px', left: '500px', width: '150px', size: '12px'};
 const coordinateTrashForShowArea = {top: '290px', left: '1040px', width: '80px', size: '8px'};
 const coordinateHandForShowArea = {top: '240px', left: '500px', width: '150px', size: '12px'};
+const coordinateOriginDeckForInsertArea = {top: '-100px', left: '1000px', width: '100px', size: '8px'};
 
 const playerAttackWaitTime = 1500;
 const playerDamageWaitTime = 1000;
@@ -20,8 +21,20 @@ const enemyAttackReturnWaitTime = 500;
 /* カード移動処理関連(アウトゲーム)
 /*************************************************************************************/
 function animateInsertCardsToOriginalDeck(cardDiv){
-	cardDiv
-		.css('position', 'absolute');
+	cardDiv.css('position', 'absolute');
+	cardDiv.children('p').css('fontSize', '8px');
+	cardDiv.children('.effect').css('fontSize', '8px');
+	const cardPromise = cardDiv.animate({
+		left: coordinateOriginDeckForInsertArea.left, 
+		top: coordinateOriginDeckForInsertArea.top,
+		width: coordinateOriginDeckForInsertArea.width,
+		fontSize: coordinateOriginDeckForInsertArea.size
+	}, trashWaitTime);
+	$.when(cardPromise).done(() => {
+		cardDiv.remove();
+		$('.insert-card-area').removeClass('active');
+	});
+	
 }
 /*************************************************************************************/
 /* カード移動処理関連(インゲーム)

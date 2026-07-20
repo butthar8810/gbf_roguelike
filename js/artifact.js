@@ -19,18 +19,18 @@ const starterTest = {
 
 const starterArtifact = {
 	recovery: {
-		name: '剣闘士の証', 
+		name: '剣の銀片', 
 		effect: '戦闘終了時、HP6回復。', 
-		image: 'images/artifact/Gladiator.png', 
+		image: 'images/artifact/SilverSword.png', 
 		endFunc: 'effectRecovery',
 		amount: {
 			recovery: 6,
 		}
 	},
 	startDraw: {
-		name: '魔剣士の証', 
+		name: '杖の銀片', 
 		effect: '戦闘開始時、カード2枚を追加で引く。', 
-		image: 'images/artifact/Swordsman.png', 
+		image: 'images/artifact/SilverCane.png', 
 		firstFunc: 'effectDraw',
 		amount: {
 			draw: 2,
@@ -72,23 +72,29 @@ const normalArtifact = {
 			count: 2,
 		}
 	},
+	firstAttack: {
+		name: '剣闘士の証', 
+		rarity: artifactRarity.common,
+		effect: '戦闘中最初のアタックは追加で8ダメージを与える。', 
+		image: 'images/artifact/ProofOfGladiator.png', 
+	},
 	noBlock: {
 		name: '守護騎士の証', 
 		rarity: artifactRarity.common,
 		effect: 'ブロック無しでターン終了した時、6ブロックを得る',
-		image: 'images/artifact/Defender.png', 
+		image: 'images/artifact/ProofOfDefender.png', 
 	},
 	shopRecovery: {
 		name: '聖職者の証', 
 		rarity: artifactRarity.common,
 		effect: 'ショップに来店するたび、HPを15回復。', 
-		image: 'images/artifact/Clergyman.png'
+		image: 'images/artifact/ProofOfClergyman.png'
 	},
 	allWeak: {
 		name: '魔導士の証', 
 		rarity: artifactRarity.common,
 		effect: '戦闘開始時、敵全体に恐怖1を与える。',
-		image: 'images/artifact/Mage.png', 
+		image: 'images/artifact/ProofOfMage.png', 
 		firstFunc: 'effectALLDebuff',
 		amount: {
 			debuff: 1,
@@ -99,17 +105,26 @@ const normalArtifact = {
 		name: '盗賊の証', 
 		rarity: artifactRarity.common,
 		effect: '戦闘開始時、1エナジーを得る。', 
-		image: 'images/artifact/Bandit.png', 
+		image: 'images/artifact/ProofOfBandit.png', 
 		firstFunc: 'effectGetEnergy',
 		amount: {
 			energy: 1,
+		}
+	},
+	firstDraw: {
+		name: '魔剣士の証', 
+		effect: '戦闘開始時、カード2枚を追加で引く。', 
+		image: 'images/artifact/ProofOfSwordsman.png', 
+		firstFunc: 'effectDraw',
+		amount: {
+			draw: 2,
 		}
 	},
 	firstStrength: {
 		name: '格闘士の証', 
 		rarity: artifactRarity.common,
 		effect: '戦闘開始時、攻撃力アップ1獲得。', 
-		image: 'images/artifact/Combat.png', 
+		image: 'images/artifact/ProofOfCombat.png', 
 		firstFunc: 'effectBuff',
 		amount: {
 			buffType: 'attackUp',
@@ -120,7 +135,7 @@ const normalArtifact = {
 		name: '射手の証', 
 		rarity: artifactRarity.common,
 		effect: '戦闘開始時、回避率アップ1を得る。', 
-		image: 'images/artifact/Archer.png', 
+		image: 'images/artifact/ProofOfArcher.png', 
 		firstFunc: 'effectBuff',
 		amount: {
 			buffType: 'dexterity',
@@ -131,7 +146,7 @@ const normalArtifact = {
 		name: '吟遊詩人の証', 
 		rarity: artifactRarity.common,
 		effect: '戦闘開始時、HP2回復。', 
-		image: 'images/artifact/Bard.png', 
+		image: 'images/artifact/ProofOfBard.png', 
 		firstFunc: 'effectRecovery',
 		amount: {
 			recovery: 2,
@@ -141,75 +156,117 @@ const normalArtifact = {
 		name: '槍騎兵の証',
 		rarity: artifactRarity.common,
 		effect: '3ターンごとに、1エナジーを得る。', 
-		image: 'images/artifact/Lancer.png', 
+		image: 'images/artifact/ProofOfLancer.png', 
 	},
 	twice: {
 		name: '双剣士の証', 
 		rarity: artifactRarity.common,
 		effect: 'アタックの使用10回ごとにダメージが2倍になる。', 
-		image: 'images/artifact/TwinSwordsman.png', 
+		image: 'images/artifact/ProofOfTwinSwordsman.png', 
 		firstFunc: '',
 		amount: {
 			draw: 2,
 		}
 	},
-	everyplayEnergy: {
+	tenAttackEnergy: {
 		name: '森人の証', 
 		rarity: artifactRarity.common,
 		effect: 'アタックを10枚プレイするたび、1エナジーを得る。', 
-		image: 'images/artifact/Dweller.png', 
+		image: 'images/artifact/ProofOfDweller.png', 
 	},
 	Counter: {
 		name: '重竜騎兵の証', 
 		rarity: artifactRarity.common,
 		effect: 'ダメージを受けるたび、敵に3の反撃ダメージを与える。', 
-		image: 'images/artifact/Dragoon.png', 
+		image: 'images/artifact/ProofOfDragoon.png', 
 		firstFunc: '',
 		amount: {
 			draw: 2,
 		}
 	},
-	firstAttack: {
+	noAttackEnergy: {
 		name: '僧兵の証', 
 		rarity: artifactRarity.common,
 		effect: 'このターン、「アタック」を1枚もプレイしなかった場合、次のターン開始時、1エナジーを得る。', 
-		image: 'images/artifact/Monk.png', 
+		image: 'images/artifact/ProofOfMonk.png', 
 	},
 	damageBuff: {
 		name: '義弓の証', 
 		rarity: artifactRarity.common,
 		effect: '自分がアタックで与える、ブロックされなかった4以下のダメージを5ダメージに増加する。', 
-		image: 'images/artifact/RobinHood.png', 
+		image: 'images/artifact/ProofOfRobinHood.png', 
 	},
-	firstAttack: {
+	eliteHpDown: {
 		name: '契約者の証', 
 		rarity: artifactRarity.common,
-		effect: '戦闘中最初のアタックは追加で8ダメージを与える。', 
-		image: 'images/artifact/ContractHolder.png', 
+		effect: 'エリート部屋にいる敵のHPが25%低下する。', 
+		image: 'images/artifact/ProofOfContractHolder.png', 
 	},
-	firstAttack: {
+	takenDraw: {
 		name: '尊命の証', 
 		rarity: artifactRarity.common,
 		effect: '戦闘中初めてHPを失うと、カードを3枚引く。', 
-		image: 'images/artifact/Order.png', 
+		image: 'images/artifact/ProofOfOrder.png', 
 	},
 	firstBlock: {
 		name: '盾騎士の証', 
 		rarity: artifactRarity.common,
 		effect: '戦闘開始時に10ブロックを得る。', 
-		image: 'images/artifact/Shielder.png', 
+		image: 'images/artifact/ProofOfShielder.png', 
 		firstFunc: 'effectDefense',
 		amount: {
 			block: 10,
 		}
 	},
-	codex: {
+	restDraw: {
 		name: 'コーデックス', 
 		rarity: artifactRarity.common,
 		effect: '休憩時にカードを1枚獲得する。', 
 		image: 'images/artifact/Codex.png',
-
 	},
+	restRecovery: {
+		name: 'キャンプセット', 
+		rarity: artifactRarity.common,
+		effect: '休憩時に追加で15HPが回復する。', 
+		image: 'images/artifact/Camp.png',
+	},
+	restEnergy: {
+		name: 'ハンサムゴリラTA', 
+		rarity: artifactRarity.common,
+		effect: '休憩場所を通過した次の戦闘において、2エナジーを得た状態でスタートする。', 
+		image: 'images/artifact/Hansamu.png',
+	},
+	curseMount: {
+		name: '八寒の呪符', 
+		rarity: artifactRarity.common,
+		effect: '次に受ける「呪い」を2回まで無効にする。', 
+		image: 'images/artifact/CurseAmulet.png',
+	},
+	shopService: {
+		name: '金露果', 
+		rarity: artifactRarity.common,
+		effect: '商人のカード削除サービスの費用が50ゴールドに固定される。', 
+		image: 'images/artifact/Apple.png',
+	},
+	randomRoom: {
+		name: '封印櫃', 
+		rarity: artifactRarity.common,
+		effect: 'ランダム部屋4部屋毎に財宝部屋が出現する。', 
+		image: 'images/artifact/Sealed.png',
+	},
+	potionRecovery: {
+		name: '紺碧の怪水', 
+		rarity: artifactRarity.common,
+		effect: 'ポーションを使用するたび、HP5回復。', 
+		image: 'images/artifact/Water.png',
+	},
+	insertDeckMoney: {
+		name: '聖性の経典', 
+		rarity: artifactRarity.common,
+		effect: 'デッキにカードを追加するたび、9ゴールドを得る。', 
+		image: 'images/artifact/Sutra.png',
+	},
+
 	/*********************************アンコモン*************************************/
 	hitPoint10: {
 		name: '覇業の指輪', 
@@ -221,43 +278,87 @@ const normalArtifact = {
 			maxHP: 10,
 		}
 	},
-	threeAttackPower: {
-		name: 'オミナス・ホーン', 
+	attackUpgrade: {
+		name: '極到の暁', 
 		rarity: artifactRarity.uncommon,
-		effect: '1ターンに3枚の「アタック」をプレイするたび、攻撃力アップ1を得る。', 
-		image: 'images/artifact/Horn.png',
+		effect: '「アタック」を獲得するたび、それをアップグレードする。', 
+		image: 'images/artifact/Dawn.png', 
 	},
-	threeAttackDexterity: {
-		name: 'オミナス・フィアン', 
+	skillUpgrade: {
+		name: '極到の雫', 
 		rarity: artifactRarity.uncommon,
-		effect: '1ターンに3枚の「アタック」をプレイするたび、回避率アップ1を得る。', 
-		image: 'images/artifact/Fian.png', 
+		effect: '「スキル」を獲得するたび、それをアップグレードする。', 
+		image: 'images/artifact/Drop.png', 
+	},
+	powerUpgrade: {
+		name: '極到の星', 
+		rarity: artifactRarity.uncommon,
+		effect: '「パワー」を獲得するたび、それを「アップグレード」する。', 
+		image: 'images/artifact/Star.png', 
+	},
+	potionDrop: {
+		name: '錬金術師の証', 
+		rarity: artifactRarity.uncommon,
+		effect: '戦闘終了後に必ずポーションをドロップする。', 
+		image: 'images/artifact/ProofOfAlchemist.png', 
+	},
+	everyAllDamage: {
+		name: '侍の証', 
+		rarity: artifactRarity.uncommon,
+		effect: 'ターン開始時、敵全体に3ダメージを与える。', 
+		image: 'images/artifact/ProofOfSamurai.png', 
 		firstFunc: '',
 		amount: {
-			draw: 2,
+			attack: 3,
 		}
 	},
-	threeSkill: {
-		name: 'オミナス・アミュレット', 
+	threeSkillAllD: {
+		name: '忍の証', 
 		rarity: artifactRarity.uncommon,
 		effect: '1ターンの間に「スキル」を3枚プレイするたび、敵全体に5ダメージを与える。', 
-		image: 'images/artifact/Amulet.png', 
+		image: 'images/artifact/ProofOfNinja.png', 
 		firstFunc: '',
 		amount: {
-			draw: 2,
+			attack: 5,
 		}
+	},
+	threeAttackPower: {
+		name: '剣聖の証', 
+		rarity: artifactRarity.uncommon,
+		effect: '1ターンに3枚の「アタック」をプレイするたび、攻撃力アップ1を得る。', 
+		image: 'images/artifact/ProofOfSwordSaint.png',
+	},
+	threeAttackDexterity: {
+		name: '撃手の証', 
+		rarity: artifactRarity.uncommon,
+		effect: '1ターンに3枚の「アタック」をプレイするたび、回避率アップ1を得る。', 
+		image: 'images/artifact/ProofOfShooter.png', 
+	},
+	secondTurnBlock: {
+		name: '賢者の証', 
+		rarity: artifactRarity.uncommon,
+		effect: '2ターン目開始時、14ブロックを得る。', 
+		image: 'images/artifact/ProofOfSage.png',
+	},
+	bossRecovery: {
+		name: '暗殺者の証', 
+		rarity: artifactRarity.uncommon,
+		effect: 'ボスとの戦闘開始時、HP25回復。', 
+		image: 'images/artifact/ProofOfAssassin.png',
 	},
 	threeAttackBlock: {
-		name: 'オミナス・ホイッスル', 
+		name: '楽師の証', 
 		rarity: artifactRarity.uncommon,
 		effect: '「アタック」を3枚プレイするたび、4のブロックを得る。', 
-		image: 'images/artifact/Whistle.png', 
-		firstFunc: '',
-		amount: {
-			draw: 2,
-		}
+		image: 'images/artifact/ProofOfMusician.png',
 	},
-	emblem: {
+	shuffleEnergy: {
+		name: '踊手の証', 
+		rarity: artifactRarity.uncommon,
+		effect: 'デッキを3回シャッフルするたび、2エナジーを得る。', 
+		image: 'images/artifact/ProofOfDancer.png',
+	},
+	knockEnergyAndDraw: {
 		name: '英勇のエンブレム', 
 		rarity: artifactRarity.uncommon,
 		effect: '敵を倒すと、1エナジーを得て、カードを1枚引く。', 
@@ -267,11 +368,101 @@ const normalArtifact = {
 			draw: 2,
 		}
 	},
-	tenCard: {
+	tenPlayDraw: {
 		name: '幻麗の紋章', 
 		rarity: artifactRarity.uncommon,
 		effect: 'カードを10枚プレイするたび、カードを1枚引く。', 
 		image: 'images/artifact/Arms.png', 
+		firstFunc: '',
+		amount: {
+			draw: 2,
+		}
+	},
+	test: {
+		name: '', 
+		rarity: artifactRarity.uncommon,
+		effect: 'デッキのカード5枚ごとに、HP3回復。(休憩場所入室時に発動)', 
+		image: 'images/artifact/', 
+		firstFunc: '',
+		amount: {
+			draw: 2,
+		}
+	},
+	test: {
+		name: '', 
+		rarity: artifactRarity.uncommon,
+		effect: '呪いを獲得するたび、最大HPが増加:6.', 
+		image: 'images/artifact/', 
+		firstFunc: '',
+		amount: {
+			draw: 2,
+		}
+	},
+	test: {
+		name: '', 
+		rarity: artifactRarity.uncommon,
+		effect: '使用不可の呪いがプレイできるようになる。呪いをプレイすると、HP1を失い、廃棄する。', 
+		image: 'images/artifact/', 
+		firstFunc: '',
+		amount: {
+			draw: 2,
+		}
+	},
+	test: {
+		name: '', 
+		rarity: artifactRarity.uncommon,
+		effect: '次に開封する2つ目の宝箱まで、2つのレリックが入っている。(ボスの宝箱を除く)', 
+		image: 'images/artifact/', 
+		firstFunc: '',
+		amount: {
+			draw: 2,
+		}
+	},
+	test: {
+		name: '', 
+		rarity: artifactRarity.uncommon,
+		effect: '「パワー」をプレイ時、このターンの間手札のランダムなカード1枚のコストが0になる。', 
+		image: 'images/artifact/', 
+		firstFunc: '',
+		amount: {
+			draw: 2,
+		}
+	},
+	test: {
+		name: '', 
+		rarity: artifactRarity.uncommon,
+		effect: 'カード報酬をスキップするたびに最大HPが+2', 
+		image: 'images/artifact/', 
+		firstFunc: '',
+		amount: {
+			draw: 2,
+		}
+	},
+	test: {
+		name: '', 
+		rarity: artifactRarity.uncommon,
+		effect: '報酬のカード選択画面で、3枚ではなく4枚のカードから選択できるようになる。', 
+		image: 'images/artifact/', 
+		firstFunc: '',
+		amount: {
+			draw: 2,
+		}
+	},
+	test: {
+		name: '', 
+		rarity: artifactRarity.uncommon,
+		effect: '商人が販売するカード、レリック、ポーションは売り切れにならず、価格は20％割引される。', 
+		image: 'images/artifact/', 
+		firstFunc: '',
+		amount: {
+			draw: 2,
+		}
+	},
+	test: {
+		name: '', 
+		rarity: artifactRarity.uncommon,
+		effect: '戦闘終了時のHPが50％以下の場合、HP12回復', 
+		image: 'images/artifact/', 
 		firstFunc: '',
 		amount: {
 			draw: 2,
@@ -288,41 +479,199 @@ const normalArtifact = {
 			maxHP: 14,
 		}
 	},
-	thelma: {
+	invalidWeak: {
+		name: '豪傑の証', 
+		rarity: artifactRarity.rare,
+		effect: '恐怖にならない。', 
+		image: 'images/artifact/ProofOfMightyman.png', 
+	},
+	mitigation: {
+		name: '聖騎士の証', 
+		rarity: artifactRarity.rare,
+		effect: 'ブロックできなかった5以下のダメージを1に軽減する。', 
+		image: 'images/artifact/ProofOfPaladin.png', 
+	},
+	Reraise: {
+		name: '波動の証', 
+		rarity: artifactRarity.rare,
+		effect: '戦闘不能になりそうになると最大HPの50%を回復する(一度きり)', 
+		image: 'images/artifact/ProofOfWaves.png', 
+	},
+	thirdTurnBlock: {
+		name: '使役者の証', 
+		rarity: artifactRarity.rare,
+		effect: '3ターン目開始時、18ブロックを得る。', 
+		image: 'images/artifact/ProofOfSummoner.png', 
+		firstFunc: '',
+		amount: {
+			block: 18,
+		}
+	},
+	redraw: {
+		name: '大立者の証', 
+		rarity: artifactRarity.rare,
+		effect: '戦闘開始時、好きなカードを捨てて同じ枚数のカードを引く。', 
+		image: 'images/artifact/ProofOfKing.png', 
+		firstFunc: '',
+		amount: {
+			draw: 2,
+		}
+	},
+	noCardDraw: {
+		name: '陰陽の証', 
+		rarity: artifactRarity.rare,
+		effect: '手札にカードが1枚もない時に、カードを1枚引く。', 
+		image: 'images/artifact/ProofOfCosmicForces.png', 
+	},
+	invalidFrail: {
+		name: '古豪の証', 
+		rarity: artifactRarity.rare,
+		effect: '脆弱化にならない。', 
+		image: 'images/artifact/ProofOfPowerhouse.png', 
+	},
+	everyDamageCut: {
+		name: '復讐者の証', 
+		rarity: artifactRarity.rare,
+		effect: '6ターン毎に、ダメージカット1を得る。', 
+		image: 'images/artifact/ProofOfAvenger.png', 
+		firstFunc: '',
+		amount: {
+			buff: 1,
+			buffType: 'damageCut',
+		}
+	},
+	everyPowerRecovery: {
+		name: '奏者の証', 
+		rarity: artifactRarity.rare,
+		effect: '「パワー」をプレイするたび、HP2回復。', 
+		image: 'images/artifact/ProofOfPlayer.png', 
+		firstFunc: '',
+		amount: {
+			draw: 2,
+		}
+	},
+	AccumulationEnergy: {
 		name: 'テルマ', 
 		rarity: artifactRarity.rare,
 		effect: '使用しなかったエナジーが蓄積されていく。', 
 		image: 'images/artifact/Thelma.png', 
-		firstFunc: '',
-		amount: {
-			draw: 2,
-		}
 	},
-	omega: {
+	firstArmor: {
 		name: 'オメガの器', 
 		rarity: artifactRarity.rare,
-		effect: '脆弱化にならない。', 
+		effect: '戦闘開始時、プレートアーマー4を得る。', 
 		image: 'images/artifact/Omega.png', 
-		firstFunc: '',
-		amount: {
-			draw: 2,
-		}
 	},
 	gavsky: {
 		name: 'ガフスキー', 
 		rarity: artifactRarity.rare,
-		effect: '恐怖にならない。', 
+		effect: 'ターン開始時、すべてのブロックを失うのではなく、15ブロックを失う。(残ったブロックは保持される)', 
 		image: 'images/artifact/Gavsky.png', 
-		firstFunc: '',
-		amount: {
-			draw: 2,
-		}
 	},
 	starFragment: {
 		name: '星の欠片', 
 		rarity: artifactRarity.rare,
 		effect: '7ターン目の終了時、すべての敵に52ダメージを与える。', 
 		image: 'images/artifact/StarFragment.png', 
+		amount: {
+			attack: 52,
+		}
+	},
+	test: {
+		name: '', 
+		rarity: artifactRarity.rare,
+		effect: '休憩場所で筋力1を獲得。(最大3回)', 
+		image: 'images/artifact/', 
+		firstFunc: '',
+		amount: {
+			draw: 2,
+		}
+	},
+	test: {
+		name: '', 
+		rarity: artifactRarity.rare,
+		effect: 'HP喪失時、その値を1軽減する。', 
+		image: 'images/artifact/', 
+		firstFunc: '',
+		amount: {
+			draw: 2,
+		}
+	},
+	test: {
+		name: '', 
+		rarity: artifactRarity.rare,
+		effect: '戦闘開始時、デッキの呪い1枚につき、筋力1を得る。', 
+		image: 'images/artifact/', 
+		firstFunc: '',
+		amount: {
+			draw: 2,
+		}
+	},
+	test: {
+		name: '', 
+		rarity: artifactRarity.rare,
+		effect: '300ゴールド獲得。', 
+		image: 'images/artifact/', 
+		firstFunc: '',
+		amount: {
+			draw: 2,
+		}
+	},
+	test: {
+		name: '', 
+		rarity: artifactRarity.rare,
+		effect: 'カードを廃棄するたび、手札にランダムなカードを加える。', 
+		image: 'images/artifact/', 
+		firstFunc: '',
+		amount: {
+			draw: 2,
+		}
+	},
+	test: {
+		name: '', 
+		rarity: artifactRarity.rare,
+		effect: '休憩場所でカードの削除ができるようになる。', 
+		image: 'images/artifact/', 
+		firstFunc: '',
+		amount: {
+			draw: 2,
+		}
+	},
+	test: {
+		name: '', 
+		rarity: artifactRarity.rare,
+		effect: 'あなたが1ターンにプレイしたカードの枚数が3枚以下だったとき、次のターン開始時、カードを追加で3枚引く。', 
+		image: 'images/artifact/', 
+		firstFunc: '',
+		amount: {
+			draw: 2,
+		}
+	},
+	test: {
+		name: '', 
+		rarity: artifactRarity.rare,
+		effect: '通常の敵が追加でカードをドロップするようになる。', 
+		image: 'images/artifact/', 
+		firstFunc: '',
+		amount: {
+			draw: 2,
+		}
+	},
+	test: {
+		name: '', 
+		rarity: artifactRarity.rare,
+		effect: '次の部屋を選択する時、あなたは3回まで道を無視して飛ぶことが出来る。', 
+		image: 'images/artifact/', 
+		firstFunc: '',
+		amount: {
+			draw: 2,
+		}
+	},
+	test: {
+		name: '', 
+		rarity: artifactRarity.rare,
+		effect: '戦闘中、最初のHPの損失を無効化する。', 
+		image: 'images/artifact/', 
 		firstFunc: '',
 		amount: {
 			draw: 2,
@@ -440,31 +789,23 @@ const normalArtifact = {
 			draw: 2,
 		}
 	},
-	Dawn: {
-		name: '極到の暁', 
+	eliteAttackUp: {
+		name: '', 
 		rarity: artifactRarity.shop,
-		effect: 'エリートとの戦闘開始時、筋力2を得る。', 
-		image: 'images/artifact/Dawn.png', 
-		firstFunc: '',
-		amount: {
-			draw: 2,
-		}
+		effect: 'エリートとの戦闘開始時、攻撃力アップ2を得る。', 
+		image: 'images/artifact/', 
 	},
-	Drop: {
-		name: '極到の雫', 
+	shuffleBlock: {
+		name: '', 
 		rarity: artifactRarity.shop,
 		effect: 'デッキをシャッフルするたび、6ブロックを得る。', 
-		image: 'images/artifact/Drop.png', 
-		firstFunc: '',
-		amount: {
-			draw: 2,
-		}
+		image: 'images/artifact/', 
 	},
-	Star: {
-		name: '極到の星', 
+	mount: {
+		name: '', 
 		rarity: artifactRarity.shop,
 		effect: '戦闘開始時、弱体無効1を得る。', 
-		image: 'images/artifact/Star.png', 
+		image: 'images/artifact/', 
 		firstFunc: 'effectBuff',
 		amount: {
 			buffType: 'mount',
@@ -476,10 +817,6 @@ const normalArtifact = {
 		rarity: artifactRarity.shop,
 		effect: '山札を見た時、カードの並び順通りに表示される。', 
 		image: 'images/artifact/Eye.png', 
-		firstFunc: '',
-		amount: {
-			draw: 2,
-		}
 	},
 };
 /*******************************************************/
@@ -499,7 +836,6 @@ function setupArtifact(){
 			getArtifact(starterArtifact.recovery);
 		} else if (selectChara == selectCharacter.djeeta.name){
 			getArtifact(starterArtifact.startDraw);
-			getArtifact(normalArtifact.attackUpGrade);
 		}
 		setLocalStorage(keyContinueArtifact, myArtifacts);
 	}

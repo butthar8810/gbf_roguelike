@@ -2247,7 +2247,6 @@ header{
 	text-align: center;
 	visibility: hidden;
 	opacity: 0;
-	z-index: 5000;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -2264,12 +2263,14 @@ header{
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	position: relative;
 }
 .display-card{
 	font-size: 20px;
 	width: 250px;
 	border-radius: 5px;
 	margin: 0 5px;
+	z-index: 9999;
 }
 .display-card.is-small{
 	font-size: 16px;

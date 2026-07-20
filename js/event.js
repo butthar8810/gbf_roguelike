@@ -71,6 +71,10 @@ function exchangeEnhancedCard(card, enhancedCard){
 		$('.black-back-area').removeClass('active');
 		$('.enhance-area').removeClass('active');
 		$('.enhance-content').html('');
+		$('.enhance-content').removeClass('hidden');
+		$('.enhance-decide-content').addClass('hidden');
+		$('.arrow-icon').removeClass('hidden');
+		$('.before').removeClass('hidden');
 		climbTowerContinue();
 	}, 1000);
 }
