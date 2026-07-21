@@ -188,6 +188,7 @@ const normalArtifact = {
 		dedicated: artifactdedicated.common,
 		effect: '3ターンごとに、1エナジーを得る。', 
 		image: 'images/artifact/ProofOfLancer.png',
+		firstFunc: 'effectGetEnergyEveryTurn',
 		turnFunc: 'effectGetEnergyEveryTurn',
 		amount: {
 			Count: 0,
@@ -201,9 +202,10 @@ const normalArtifact = {
 		dedicated: artifactdedicated.common,
 		effect: 'アタックの使用10回ごとにダメージが2倍になる。', 
 		image: 'images/artifact/ProofOfTwinSwordsman.png', 
-		firstFunc: '',
+		attackFunc: '',
 		amount: {
-			draw: 2,
+			Count: 0,
+			everyAttack: 10,
 		}
 	},
 	tenAttackEnergy: {
@@ -212,6 +214,12 @@ const normalArtifact = {
 		dedicated: artifactdedicated.common,
 		effect: 'アタックを10枚プレイするたび、1エナジーを得る。', 
 		image: 'images/artifact/ProofOfDweller.png', 
+		attackFunc: 'effectGetEnergyEveryAttack',
+		amount: {
+			Count: 0,
+			everyAttack: 10,
+			energy: 1,
+		}
 	},
 	Counter: {
 		name: '重竜騎兵の証', 
@@ -1241,8 +1249,8 @@ function setupArtifact(){
 			getArtifact(normalArtifact.recovery);
 		} else if (selectChara == selectCharacter.djeeta.name){
 			getArtifact(normalArtifact.startDraw);
-			getArtifact(normalArtifact.everyTrunEnergy);
-			getArtifact(normalArtifact.noBlock);
+			getArtifact(normalArtifact.twice);
+			getArtifact(normalArtifact.tenAttackEnergy);
 		}
 		setLocalStorage(keyContinueArtifact, myArtifacts);
 	}
@@ -1428,13 +1436,28 @@ function effectDefenseForNoBlock(amount){
 /*******************************************************/
 function effectGetEnergyEveryTurn(amount){
 	console.log('effectGetEnergyEveryTurn');
-	console.log(amount);
 	if('energy' in amount && 'Count' in amount && 'everyTurn' in amount){
 		amount.Count++;
 		if(amount.Count >= amount.everyTurn){
-			playerStatus.energy += amount.energy;
+			playerStatus.remainEnergy += amount.energy;
 			amount.Count = 0;
 		}
 	}
+	console.log(amount);
+	return true;
+}
+/*******************************************************/
+/* アタックを〇枚プレイするたび、〇エナジーを得る。
+/*******************************************************/
+function effectGetEnergyEveryAttack(amount){
+	console.log('effectGetEnergyEveryTurn');
+	if('energy' in amount && 'Count' in amount && 'everyAttack' in amount){
+		amount.Count++;
+		if(amount.Count >= amount.everyAttack){
+			playerStatus.remainEnergy += amount.energy;
+			amount.Count = 0;
+		}
+	}
+	console.log(amount);
 	return true;
 }

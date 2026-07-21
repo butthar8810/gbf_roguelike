@@ -1110,10 +1110,23 @@ function playHandCard(index){
 	});
 	if(card.type === type.attack){
 		playerStatus.playerCount.playAttackPerTurn++;
+		
+		// アーティファクトの効果を発動
+		myArtifacts.forEach((artifact) => {
+			if('attackFunc' in artifact){
+				if (artifact.attackFunc !== '') {
+					const storedFunc = globalThis[artifact.attackFunc];
+					if( typeof storedFunc === 'function'){
+						ret = storedFunc(artifact.amount);
+					} 
+				}
+			}
+		});
 	}
 	setLocalStorage(keyContinueHand, myHand);
 	setLocalStorage(keyContinueStack, stackCards);
 	setLocalStorage(keyContinuePlayerStatus, playerStatus);
+	setLocalStorage(keyContinueArtifact, myArtifacts);
 
 	endAction();
 }
@@ -1590,6 +1603,7 @@ async function startEnemiesTurn(){
 	startTurnStatuses(playerStatus, currentEnemies, false);
 	// 次の予測を決定する
 	decideNextAction();
+	setLocalStorage(keyContinueArtifact, myArtifacts);
 	setLocalStorage(keyContinuePhase, currentPhase);
 	setLocalStorage(keyContinueDeck, myDeck);
 	setLocalStorage(keyContinueHand, myHand);
