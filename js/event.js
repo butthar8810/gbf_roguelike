@@ -88,6 +88,17 @@ function exchangeEnhancedCard(card, enhancedCard){
 function startShopEvent(){
 	// ショップエリアとトークエリアを開放
 	displayShopEventArea();
+	// アーティファクトの効果を発動
+	myArtifacts.forEach((artifact) => {
+		if('shopFunc' in artifact){
+			if (artifact.shopFunc !== '') {
+				const storedFunc = globalThis[artifact.shopFunc];
+				if( typeof storedFunc === 'function'){
+					ret = storedFunc(artifact.amount);
+				} 
+			}
+		}
+	});
 	setLocalStorage(keyContinueFlag, continueFlag.shopArea);
 	const shopBtn = appendTalkingBtn('商品を見る');
 	shopBtn.click((e) => {
@@ -97,6 +108,7 @@ function startShopEvent(){
 	});
 	const returnBtn = appendTalkingBtn('立ち去る');
 	returnBtn.click((e) => {
+		setLocalStorage(keyContinuePlayerStatus, playerStatus);
 		removeLocalStorage(keyContinueShopLineup);
 		climbTowerContinue();
 	});

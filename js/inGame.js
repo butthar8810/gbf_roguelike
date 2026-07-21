@@ -32,7 +32,17 @@ function startBattle(){
 /* endBattle：戦闘の終了処理を開始する
 /*******************************************************/
 function endBattle(){
-	
+	// アーティファクトの効果を発動
+	myArtifacts.forEach((artifact) => {
+		if('endFunc' in artifact){
+			if (artifact.endFunc !== '') {
+				const storedFunc = globalThis[artifact.endFunc];
+				if( typeof storedFunc === 'function'){
+					ret = storedFunc(artifact.amount);
+				} 
+			}
+		}
+	});
 	initialize();
 	removeLocalStorage(keyContinueDeck);
 	removeLocalStorage(keyContinueHand);
@@ -751,6 +761,19 @@ function startTurnStatuses(playerInfo, enemiesInfo, animateFlag){
 			pushHand(card);
 		});	
 	}
+	if(!animateFlag){
+		// アーティファクトの効果を発動
+		myArtifacts.forEach((artifact) => {
+			if('turnFunc' in artifact){
+				if (artifact.turnFunc !== '') {
+					const storedFunc = globalThis[artifact.turnFunc];
+					if( typeof storedFunc === 'function'){
+						ret = storedFunc(artifact.amount);
+					} 
+				}
+			}
+		});
+	}
 	// 捨て札の枚数をリセットする
 	playerInfo.playerCount.trashCountPerTurn = 0;
 	playerInfo.playerCount.playAttackPerTurn = 0;
@@ -844,6 +867,17 @@ function endTurn(){
 		hiddenHandDom();
 		updateDiscardDom();
 		updateTrashDom();
+	});
+	// アーティファクトの効果を発動
+	myArtifacts.forEach((artifact) => {
+		if('turnEndFunc' in artifact){
+			if (artifact.turnEndFunc !== '') {
+				const storedFunc = globalThis[artifact.turnEndFunc];
+				if( typeof storedFunc === 'function'){
+					ret = storedFunc(artifact.amount);
+				} 
+			}
+		}
 	});
 	// 「再生」の効果発動
 	const regeneration = playerStatus.statuses

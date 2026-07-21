@@ -71,6 +71,7 @@ const buffStatus = {
 	//実装待ち
 	afterImage: {name: '残像', amount: '', effect: 'カードを1枚プレイするたび、{X}ブロックを得る。', image: 'images/status/status_1566.png'},
 	invincible: {name: '無敵', amount: '', effect: 'このターン中に減らせるHPは、残り{X}。', image: 'images/status/status_62.png'},
+	firstAttackUp: {name: '気力', amount: '', effect: '次にプレイするアタックが{X}の追加ダメージを与える。', image: 'images/status/status_62.png'},
 
 	// エネミー専用
 	rage: {name: '激怒', amount: '', effect: 'ターン終了時、攻撃力アップ{X}を得る。', image: 'images/status/status_9999_2.png'},

@@ -5218,7 +5218,8 @@ const abnormalCardList = {
 		}
 	},
 };
-
+const curseCardList = {
+}
 const testCardList = {
 	testAttack: {
 		No:999999,
@@ -6849,6 +6850,22 @@ function calcBlock(blockCount){
 /*******************************************************/
 function actionBlock(blockCount, animateFlag = true){
 	playerStatus.block += calcBlock(blockCount);
+	//「バハムートシールド」の効果
+	const bahamut = playerStatus.statuses
+		.find((status) => status.name === buffStatus.bahamut.name);
+	if (bahamut){
+		actionRandomAttack(bahamut.amount);
+	}
+	// アニメーション
+	if(animateFlag){
+		animatePlayerBlocked();
+	}
+}
+/*******************************************************/
+/* ブロック関数(バフ無効)
+/*******************************************************/
+function actionBlockNoBuff(blockCount, animateFlag = true){
+	playerStatus.block += blockCount;
 	//「バハムートシールド」の効果
 	const bahamut = playerStatus.statuses
 		.find((status) => status.name === buffStatus.bahamut.name);
