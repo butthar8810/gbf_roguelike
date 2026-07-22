@@ -789,7 +789,7 @@ function startTurnProcess(){
 	const hrunting = playerStatus.statuses
 		.find((status) => status.name === buffStatus.hrunting.name);
 	if (hrunting){
-		damageHP(1);
+		damageHP(1, playerStatus);
 		drawCardFromDeck(hrunting.amount);
 	}
 	// 「ヘイスト」で追加2枚
@@ -899,7 +899,7 @@ function endTurn(){
 	const madness = playerStatus.statuses
 		.find((status) => status.name === buffStatus.madness.name);
 	if (madness){
-		damageHP(1);
+		damageHP(1, playerStatus);
 		actionAllAttackSimple(madness.amount, false);
 	}
 	//「鈍化」の効果発動
@@ -1792,12 +1792,14 @@ function allEnemiesDefeated(){
 	if (lastReward) {
 		rewards = lastReward;
 	} else {
+		// 初期化
+		rewards = [];
 		// コイン報酬
 		const decidedMoneyReward = decideMoneyReward();
 		rewards.push(decidedMoneyReward);
 
 		// 武器報酬
-		const selectCards = decideCardReward();
+		const selectCards = decideCardReward(currentLevel);
 		rewards.push(selectCards);
 
 

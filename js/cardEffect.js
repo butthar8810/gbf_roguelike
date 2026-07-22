@@ -5246,7 +5246,6 @@ function addCardToOriginalDeck(card, count = 1){
 	for(let i = 0; i < count; i++){
 		const OriginCard = deepCopyCard(card);
 		pushOriginalDeck(OriginCard);
-		setLocalStorage(keyContinueOriginalDeck, myOriginalDeck);
 	}
 	return true;
 }
@@ -5258,10 +5257,11 @@ function setupDeck(){
 	const selectChara = getLocalStorage(keySelectChara);
 	const lastDeck = getLocalStorage(keyContinueDeck);
 	const lastOriginalDeck = getLocalStorage(keyContinueOriginalDeck);
-
-	if(lastDeck !== null && Continued){
-		// 続きからの場合
+	if(lastDeck !== null && Continued === continueFlag.inGame){
 		myDeck = lastDeck;
+	}
+	if(lastOriginalDeck && Continued){
+		// 続きからの場合
 		myOriginalDeck = lastOriginalDeck;
 	} else {
 		// プレイヤーに初期デッキとなる10枚のカードを配る
@@ -5279,6 +5279,7 @@ function setupDeck(){
 			addCardToOriginalDeck(djeetaCardList.Doobie, 2);
 			addCardToOriginalDeck(testCardList.testAttack, 2);
 		}
+		setLocalStorage(keyContinueOriginalDeck, myOriginalDeck);
 	}
 	setupOriginalDeckBtnDom();
 }
@@ -5288,7 +5289,7 @@ function setupDeck(){
 /*****************************************************/
 /* カード報酬決定関数
 /*****************************************************/
-function decideCardReward(){
+function decideCardReward(lotteryLevel){
 	const cardReward = {
 		normal:{
 			common:{weight:60, rarity: rarity.common},
@@ -5312,7 +5313,7 @@ function decideCardReward(){
 	let level = {};
 	let selectRarity = {};
 	let selectCardList = [];
-	switch(currentLevel){
+	switch(lotteryLevel){
 		case stageLevel.test:
 			level = cardReward.normal;
 			break;

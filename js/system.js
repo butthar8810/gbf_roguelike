@@ -14,19 +14,22 @@ function recoveryHP(recovery){
 /*******************************************************/
 /* damageHP：HPが減少する
 /*******************************************************/
-function damageHP(damage, playerInfo, animationFlag = true){
+function damageHP(damage, playerInfo, animationFlag = false){
 	console.log(`Damage: ${damage}`);
-	playerInfo.playerCount.HPDownCount++;
-	myArtifacts.forEach((artifact) => {
-		if('lossHPFunc' in artifact){
-			if (artifact.lossHPFunc !== '') {
-				const storedFunc = globalThis[artifact.lossHPFunc];
-				if( typeof storedFunc === 'function'){
-					ret = storedFunc(artifact.amount);
-				} 
+	if(!animationFlag){
+		playerInfo.playerCount.HPDownCount++;
+		console.log(`HPDownCount: ${playerInfo.playerCount.HPDownCount}`);
+		myArtifacts.forEach((artifact) => {
+			if('lossHPFunc' in artifact){
+				if (artifact.lossHPFunc !== '') {
+					const storedFunc = globalThis[artifact.lossHPFunc];
+					if( typeof storedFunc === 'function'){
+						ret = storedFunc(artifact.amount);
+					} 
+				}
 			}
-		}
-	});
+		});
+	}
 	setLocalStorage(keyContinuePlayerStatus, playerStatus);
 	if (playerInfo.remainHP > damage){
 		playerInfo.remainHP -= damage;

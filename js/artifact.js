@@ -262,7 +262,7 @@ const normalArtifact = {
 		dedicated: artifactdedicated.common,
 		effect: '戦闘中初めてHPを失うと、カードを3枚引く。', 
 		image: 'images/artifact/ProofOfOrder.png', 
-		lossHPFunc: '',
+		lossHPFunc: 'effectDrawLossHP',
 		amount: {
 			draw: 3,
 		}
@@ -284,6 +284,7 @@ const normalArtifact = {
 		dedicated: artifactdedicated.common,
 		effect: '休憩時にカードを1枚獲得する。', 
 		image: 'images/artifact/Codex.png',
+		restFunc: 'effectChooseCards',
 	},
 	restRecovery: {
 		name: 'キャンプセット', 
@@ -291,6 +292,10 @@ const normalArtifact = {
 		dedicated: artifactdedicated.common,
 		effect: '休憩時に追加で15HPが回復する。', 
 		image: 'images/artifact/Camp.png',
+		restFunc: 'effectRecovery',
+		amount: {
+			recovery: 15,
+		}
 	},
 	restEnergy: {
 		name: 'ハンサムゴリラTA', 
@@ -1483,8 +1488,6 @@ function effectAttaclTwiceEveryAttack(amount){
 	console.log(amount);
 	return true;
 }
-
-
 /*******************************************************/
 /* このターン、「アタック」を1枚もプレイしなかった場合、次のターン開始時、1エナジーを得る。
 /*******************************************************/
@@ -1493,4 +1496,33 @@ function effectGetEnergyNoAttack(amount){
 	if('energy' in amount && playerStatus.playerCount.playAttackPerTurn === 0){
 		playerStatus.remainEnergy += amount.energy;
 	}
+}
+/*******************************************************/
+/* 戦闘中初めてHPを失うと、カードを3枚引く。
+/*******************************************************/
+function effectDrawLossHP(amount){
+	console.log('effectDrawLossHP');
+	if('draw' in amount && playerStatus.playerCount.HPDownCount === 1){
+		const cards = drawCardFromDeck(amount.draw);
+		cards.forEach((card) => {
+			animateDrawDeck(card);
+		});
+	}
+}
+/*******************************************************/
+/* カードを1枚獲得する。
+/*******************************************************/
+function effectChooseCards(amount){
+	console.log('effectChooseCards');
+	const lastReward = getLocalStorage(keyContinueReward);
+	rewards = [];
+	if (lastReward) {
+		rewards = lastReward;
+	} else {
+		const selectCards = decideCardReward(stageLevel.normal);
+		rewards.push(selectCards);
+		setLocalStorage(keyContinueReward, rewards);
+	}
+	selectCardRewardForArtifactDom(rewards[0]);
+	$('.result-modal').addClass('active');
 }

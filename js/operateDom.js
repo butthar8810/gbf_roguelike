@@ -1244,14 +1244,14 @@ function cardRewardDom(rewardCards){
 		.append(rewardImage)
 		.append(rewardParagraph)
 		.click(() => {
-			selectcardRewardDom(rewardCards);
+			selectCardRewardDom(rewardCards);
 		});
 	$('.result-content').append(rewardDiv);
 }
 /*****************************************************/
 /* カード報酬選択関数
 /*****************************************************/
-function selectcardRewardDom(rewardCards){
+function selectCardRewardDom(rewardCards){
 	$(`.select-cards-area`).html('');
 	$(`.select-skip`).html('');
 	console.log(rewardCards);
@@ -1283,6 +1283,42 @@ function selectcardRewardDom(rewardCards){
 			updateResultContentDom();
 			$('.card-select').addClass('hidden');
 			$('.result-modal-body').removeClass('hidden');
+		});
+	$(`.select-skip`).append(selectSkipBtnDiv);
+	$('.result-modal-body').addClass('hidden');
+	$('.card-select').removeClass('hidden');
+}
+/*****************************************************/
+/* カード報酬選択関数(コーデックス用)
+/*****************************************************/
+function selectCardRewardForArtifactDom(rewardCards){
+	$(`.select-cards-area`).html('');
+	$(`.select-skip`).html('');
+	console.log(rewardCards);
+	rewardCards.amount.forEach((card) => {
+		const selectCardDiv = createCardDom(card);
+		selectCardDiv
+			.addClass('select-card')
+			.click(card ,() => {
+				addCardToOriginalDeck(card);
+				rewardCards.getFlag = false;
+				setupOriginalDeckBtnDom();
+				$('.card-select').addClass('hidden');
+				$('.result-modal').removeClass('active');
+			});
+		$(`.select-cards-area`).append(selectCardDiv);
+	});
+	const btnImage = $('<img>')
+		.attr('src', 'images/btn2.png');
+	const skipParagraph = $('<p>')
+		.html('スキップ');
+	const selectSkipBtnDiv = $('<div>')
+		.addClass('select-skip-btn')
+		.append(btnImage)
+		.append(skipParagraph)
+		.click((e) => {
+			$('.card-select').addClass('hidden');
+			$('.result-modal').removeClass('active');
 		});
 	$(`.select-skip`).append(selectSkipBtnDiv);
 	$('.result-modal-body').addClass('hidden');

@@ -19,15 +19,31 @@ function startRestEvent(){
 /* 休憩イベント
 /*******************************************************/
 function selectRestAction(){
-	const firstBtn = appendTalkingBtn('休憩する（HP30%回復）');
+	recoveryCount = Math.floor(playerStatus.maxHP * 0.3);
+	const firstBtn = appendTalkingBtn(`休憩する（HP30%[${recoveryCount}]回復）`);
 	firstBtn.click((e) => {
 		deleteTalkingBtn();
-		recoveryHP(playerStatus.maxHP * 0.3);
+		recoveryHP(recoveryCount);
 		animateRestHeal();
+		updateHPDom();
 		const btn = appendTalkingBtn('塔へ上る');
 		btn.click((e) => {
 			setLocalStorage(keyContinuePlayerStatus, playerStatus);
+			console.log(myOriginalDeck);
+			setLocalStorage(keyContinueOriginalDeck, myOriginalDeck);
+			removeLocalStorage(keyContinueReward);
 			climbTowerContinue();
+		});
+		// アーティファクトの効果を発動
+		myArtifacts.forEach((artifact) => {
+			if('restFunc' in artifact){
+				if (artifact.restFunc !== '') {
+					const storedFunc = globalThis[artifact.restFunc];
+					if( typeof storedFunc === 'function'){
+						ret = storedFunc(artifact.amount);
+					} 
+				}
+			}
 		});
 	});
 	const secondBtn = appendTalkingBtn('鍛冶（武器を強化する）');

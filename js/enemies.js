@@ -1425,7 +1425,7 @@ function enemyActionAttack(enemyInfo, playerInfo, animationFlag, attackCount){
 		}
 	}
 	if(totalAttack > 0){
-		damageHP(totalAttack, playerInfo);
+		damageHP(totalAttack, playerInfo, animationFlag);
 	}
 	// 「反射」の効果
 	const reflection = playerInfo.statuses
