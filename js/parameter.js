@@ -239,6 +239,7 @@ let currentPhase = phase.action;
 //各種フラグ
 let enemyAttackWaitFlag = false;
 let allDefeatedFlag = false;
+let attackTwiceFlag = false;
 // promiseオブジェクト
 let cardDrawPromise = Promise.resolve();
 let cardTrashPromise = Promise.resolve();

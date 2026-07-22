@@ -122,7 +122,7 @@ const granCardList = {
 		class: cardClass.gran,
 		rarity: rarity.common,
 		type: type.attack,
-		func: 'effectALLAttackAndDebuff',
+		func: 'effectAllAttackAndDebuff',
 		image:'images/card/gran_Pain.jpg',
 		effect: '敵全体に{A}のダメージと防御力ダウン{D}を与える。',
 		amount: {
@@ -1403,7 +1403,7 @@ const granEnhancedCardList = {
 		class: cardClass.gran,
 		rarity: rarity.common,
 		type: type.attack,
-		func: 'effectALLAttackAndDebuff',
+		func: 'effectAllAttackAndDebuff',
 		image:'images/card/gran_Pain.jpg',
 		effect: '敵全体に<span class="upgrade">{A}</span>のダメージと防御力ダウン{D}を与える。',
 		amount: {
@@ -5509,7 +5509,7 @@ function effectTimesRandomAttack(amount){
 	console.log('effectFourthAttack');
 	if('attack' in amount && 'count' in amount){
 		for(let i = 0; i < amount.count; i++){
-			actionRandomAttack(amount.attack);
+			actionRandomAttack(amount.attack, true);
 		}
 	}
 	endAction();
@@ -5568,9 +5568,9 @@ function effectAttackAndDoubleDebuff(amount){
 	endAction();
 	return true;
 }
-function effectALLAttackAndDebuff(amount){
+function effectAllAttackAndDebuff(amount){
 	// 敵全体に{A}のダメージと防御力ダウン{D}を与える。
-	console.log('effectALLAttackAndDebuff');
+	console.log('effectAllAttackAndDebuff');
 	if('attack' in amount){
 		actionAllAttack(amount.attack);
 	}
@@ -5878,7 +5878,7 @@ function effectGetEnergy(amount){
 	console.log('effectGetEnergy');
 	if('energy' in amount){
 		playerStatus.remainEnergy += amount.energy;
-		updateEnergyDom();
+		
 	}
 	endAction();
 	return true;
@@ -5891,7 +5891,7 @@ function effectGetEnergyAndSelfHarm(amount){
 	}
 	if('energy' in amount){
 		playerStatus.remainEnergy += amount.energy;
-		updateEnergyDom();
+		
 	}
 	endAction();
 	return true;
@@ -5986,7 +5986,6 @@ function effectAttackAndConditionsDefenseDown(amount){
 	) {
 		if('energy' in amount){
 			playerStatus.remainEnergy += amount.energy;
-			updateEnergyDom();
 		}
 		if('draw' in amount){
 			const cards = drawCardFromDeck(amount.draw);
@@ -6099,7 +6098,7 @@ function effectAttackAndBloodsucking(amount){
 	// 敵全体に{A}のダメージを与える。防御されなかったダメージ分を回復する。廃棄。
 	console.log('effectAttackAndBloodsucking');
 	if('attack' in amount){
-		actionAllAttackAndAbsorb(amount.attack);
+		actionAllAttackAndAbsorb(amount.attack, true);
 	}
 	endAction();
 	return true;
@@ -6122,7 +6121,6 @@ function effectGetEnergyAndDraw(amount){
 	console.log('effectGetEnergyAndDrawAndSelfHarm');
 	if('energy' in amount){
 		playerStatus.remainEnergy += amount.energy;
-		updateEnergyDom();
 	}
 	if('draw' in amount){
 		const cards = drawCardFromDeck(amount.draw);
@@ -6142,7 +6140,6 @@ function effectGetEnergyAndDrawAndSelfHarm(amount){
 	}
 	if('energy' in amount){
 		playerStatus.remainEnergy += amount.energy;
-		updateEnergyDom();
 	}
 	if('draw' in amount){
 		const cards = drawCardFromDeck(amount.draw);
@@ -6287,7 +6284,6 @@ function effectAttackAndConditionsWeak(amount){
 	) {
 		if('energy' in amount){
 			playerStatus.remainEnergy += amount.energy;
-			updateEnergyDom();
 		}
 		if('draw' in amount){
 			const cards = drawCardFromDeck(amount.draw);
@@ -6396,7 +6392,6 @@ function effectThreeTrashAndGetEnergy(amount){
 	console.log('effectDefenseAndTrash');
 	if('energy' in amount){
 		playerStatus.remainEnergy += amount.energy;
-		updateEnergyDom();
 	}
 	actionThreeTrashCard();
 	return true;
@@ -6406,7 +6401,6 @@ function effectTwoTrashAndGetEnergy(amount){
 	console.log('effectDefenseAndTrash');
 	if('energy' in amount){
 		playerStatus.remainEnergy += amount.energy;
-		updateEnergyDom();
 	}
 	actionTwoTrashCard();
 	return true;
@@ -6447,7 +6441,6 @@ function effectGetEnergyAndDrawXTimes(amount){
 	console.log('effectAllAttackXTimes');
 	if('variable' in amount){
 		playerStatus.remainEnergy += amount.variable;
-		updateEnergyDom();
 
 		const cards = drawCardFromDeck(amount.variable);
 		cards.forEach((card) => {
@@ -6462,7 +6455,6 @@ function effectGetEnergyAndDrawXPlusOneTimes(amount){
 	console.log('effectAllAttackXTimes');
 	if('variable' in amount){
 		playerStatus.remainEnergy += amount.variable + 1;
-		updateEnergyDom();
 
 		const cards = drawCardFromDeck(amount.variable + 1);
 		cards.forEach((card) => {
@@ -6628,6 +6620,10 @@ function calcDamage(attackCount, targetEnemy, AttackUpMag = 1){
 	const doubleDamage = playerStatus.statuses
 		.find((status) => status.name === buffStatus.doubleDamage.name);
 	if (doubleDamage){magnification += 1.0;}
+	if (attackTwiceFlag){
+		magnification += 1.0;
+		attackTwiceFlag = false;
+	}
 	if (Object.keys(targetEnemy).length !== 0) {
 		// 防御力ダウン（被ダメ50%上昇）
 		const defenseUp = targetEnemy.currentStatus.status
@@ -6689,7 +6685,7 @@ function calcKnifeDamage(attackCount, targetEnemy){
 /*******************************************************/
 /* 与ダメージ計算関数
 /*******************************************************/
-function calcAttackDamageToTarget(totalAttack, target){
+function calcAttackDamageToTarget(totalAttack, target, attackCardFlag){
 	const enemyBlock = target.currentStatus.block;
 	if(enemyBlock > 0){
 		if(enemyBlock >= totalAttack){
@@ -6699,6 +6695,11 @@ function calcAttackDamageToTarget(totalAttack, target){
 			totalAttack -= enemyBlock;
 			target.currentStatus.block = 0;
 		}
+	}
+	const damageBuff = myArtifacts
+		.find((Artifact) => Artifact.name === normalArtifact.damageBuff.name);
+	if(damageBuff && attackCardFlag && totalAttack < 5 && totalAttack > 0){
+		totalAttack = 5;
 	}
 	target.currentStatus.remainHP -= totalAttack;
 	//実ダメージを与えた場合
@@ -6737,7 +6738,7 @@ function calcAttackDamageToTarget(totalAttack, target){
 function actionAttack(attackCount, magnification = 1){
 	let totalAttack = calcDamage(attackCount, currentTarget, magnification);
 	// ブロック計算
-	calcAttackDamageToTarget(totalAttack, currentTarget);
+	calcAttackDamageToTarget(totalAttack, currentTarget, true);
 	// アニメーション
 	animatePlayerAttack();
 }
@@ -6747,18 +6748,27 @@ function actionAttack(attackCount, magnification = 1){
 function actionKnifeAttack(attackCount){
 	let totalAttack = calcKnifeDamage(attackCount, currentTarget);
 	// ブロック計算
-	calcAttackDamageToTarget(totalAttack, currentTarget);
+	calcAttackDamageToTarget(totalAttack, currentTarget, true);
 	// アニメーション
 	animatePlayerAttack();
 }
-
+/*******************************************************/
+/* 与ダメージ関数(バフ・デバフダメージ用専用)
+/*******************************************************/
+function actionAttackSimple(attackCount, attackCardFlag = true){
+	let totalAttack = attackCount;
+	// ブロック計算
+	calcAttackDamageToTarget(totalAttack, currentTarget, attackCardFlag);
+	// アニメーション
+	animatePlayerAttack();
+}
 /*******************************************************/
 /* 与ダメージ&吸収関数
 /*******************************************************/
 function actionAttackAndAbsorb(attackCount){
 	let totalAttack = calcDamage(attackCount, currentTarget);
 	// ブロック計算
-	const actualDamage = calcAttackDamageToTarget(totalAttack, currentTarget);
+	const actualDamage = calcAttackDamageToTarget(totalAttack, currentTarget, true);
 	recoveryHP(actualDamage);
 	// アニメーション
 	animatePlayerAttack();
@@ -6766,10 +6776,10 @@ function actionAttackAndAbsorb(attackCount){
 /*******************************************************/
 /* 与ダメージ関数（全体ダメージ）
 /*******************************************************/
-function actionAllAttack(attackCount){
+function actionAllAttack(attackCount, attackCardFlag = true){
 	currentEnemies.forEach((enemy) => {
 		let totalAttack = calcDamage(attackCount, enemy);
-		const actualDamage = calcAttackDamageToTarget(totalAttack, enemy);
+		const actualDamage = calcAttackDamageToTarget(totalAttack, enemy, attackCardFlag);
 	});
 	// アニメーション
 	animatePlayerAttack();
@@ -6777,10 +6787,10 @@ function actionAllAttack(attackCount){
 /*******************************************************/
 /* 与ダメージ&吸収関数（全体ダメージ）
 /*******************************************************/
-function actionAllAttackAndAbsorb(attackCount){
+function actionAllAttackAndAbsorb(attackCount, attackCardFlag = true){
 	currentEnemies.forEach((enemy) => {
 		let totalAttack = calcDamage(attackCount, enemy);
-		const actualDamage = calcAttackDamageToTarget(totalAttack, enemy);
+		const actualDamage = calcAttackDamageToTarget(totalAttack, enemy, attackCardFlag);
 		recoveryHP(actualDamage);
 	});
 	// アニメーション
@@ -6789,22 +6799,34 @@ function actionAllAttackAndAbsorb(attackCount){
 /*******************************************************/
 /* 与ダメージ関数（ランダムダメージ）
 /*******************************************************/
-function actionRandomAttack(attackCount){
+function actionRandomAttack(attackCount, attackCardFlag = true){
 	let random = Math.floor(Math.random() * currentEnemies.length);
 	console.log(`Random Hit: ${random}`);
 	const enemy = currentEnemies[random];
 	let totalAttack = calcDamage(attackCount, enemy);
-	calcAttackDamageToTarget(totalAttack, currentTarget);
+	calcAttackDamageToTarget(totalAttack, enemy, attackCardFlag);
+	// アニメーション
+	animatePlayerAttack();
+}
+/*******************************************************/
+/* 与ダメージ関数(バフ・デバフ影響なし)（ランダムダメージ）
+/*******************************************************/
+function actionRandomAttackSimple(attackCount, attackCardFlag = true){
+	let random = Math.floor(Math.random() * currentEnemies.length);
+	console.log(`Random Hit: ${random}`);
+	const enemy = currentEnemies[random];
+	let totalAttack = attackCount;
+	calcAttackDamageToTarget(totalAttack, enemy, attackCardFlag);
 	// アニメーション
 	animatePlayerAttack();
 }
 /*******************************************************/
 /* 与ダメージ関数(バフ・デバフ影響なし)（全体ダメージ）
 /*******************************************************/
-function actionAllAttackSimple(attackCount){
+function actionAllAttackSimple(attackCount, attackCardFlag = true){
 	currentEnemies.forEach((enemy) => {
 		let totalAttack = attackCount;
-		calcAttackDamageToTarget(totalAttack, currentTarget);
+		calcAttackDamageToTarget(totalAttack, currentTarget, attackCardFlag);
 	});
 	// アニメーション
 	animatePlayerAttack();
@@ -6850,11 +6872,11 @@ function calcBlock(blockCount){
 /*******************************************************/
 function actionBlock(blockCount, animateFlag = true){
 	playerStatus.block += calcBlock(blockCount);
-	//「バハムートシールド」の効果
+	//「創世の翼」の効果
 	const bahamut = playerStatus.statuses
 		.find((status) => status.name === buffStatus.bahamut.name);
 	if (bahamut){
-		actionRandomAttack(bahamut.amount);
+		actionRandomAttackSimple(bahamut.amount, false);
 	}
 	// アニメーション
 	if(animateFlag){
@@ -6864,13 +6886,13 @@ function actionBlock(blockCount, animateFlag = true){
 /*******************************************************/
 /* ブロック関数(バフ無効)
 /*******************************************************/
-function actionBlockNoBuff(blockCount, animateFlag = true){
+function actionBlockSimple(blockCount, animateFlag = true){
 	playerStatus.block += blockCount;
-	//「バハムートシールド」の効果
+	//「創世の翼」の効果
 	const bahamut = playerStatus.statuses
 		.find((status) => status.name === buffStatus.bahamut.name);
 	if (bahamut){
-		actionRandomAttack(bahamut.amount);
+		actionRandomAttackSimple(bahamut.amount, false);
 	}
 	// アニメーション
 	if(animateFlag){
@@ -6920,10 +6942,10 @@ function actionStatusBufForAnimate(playerInfo, buf, amountCount, animateFlag = t
 	console.log(playerInfo.statuses);
 }
 /*******************************************************/
-/* バフを与える関数（アニメーションなし）
+/* 自傷
 /*******************************************************/
 function actionLoseHP(loseHP){
-	damageHP(loseHP);
+	damageHP(loseHP, playerStatus);
 	//「血の代償」の効果発動
 	const compensation = playerStatus.statuses
 		.find((status) => status.name === buffStatus.compensation.name);

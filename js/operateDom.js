@@ -1,3 +1,145 @@
+
+/***************************************************************************************/
+/* カードDOM作成処理
+/***************************************************************************************/
+function createCardDom(card){
+	let effect = card.effect;
+	if('attack' in card.amount){
+		switch(card.name){
+			case granCardList.Dig.name:
+			case granEnhancedCardList.Dig.name:
+				attackDamage = calcDamage(card.amount.attack, currentTarget, card.amount.magnification);
+				break;
+			case commonCardList.Knife.name:
+			case commonEnhancedCardList.Knife.name:
+				attackDamage = calcKnifeDamage(card.amount.attack, currentTarget);
+				break;
+			default:
+				attackDamage = calcDamage(card.amount.attack, currentTarget);
+				break;
+		}
+		if (card.amount.attack > attackDamage) {
+			effect = effect.replace(/{A}/g, `<span class='down'>${attackDamage}</span>`);
+		} else if (card.amount.attack < attackDamage){
+			effect = effect.replace(/{A}/g, `<span class='up'>${attackDamage}</span>`);
+		} else {
+			effect = effect.replace(/{A}/g, `${attackDamage}`);
+		}
+	}
+	if('block' in card.amount){
+		blockCount = calcBlock(card.amount.block);
+		if (card.amount.block > blockCount) {
+			effect = effect.replace(/{B}/g, `<span class='down'>${blockCount}</span>`);
+		} else if (card.amount.block < blockCount){
+			effect = effect.replace(/{B}/g, `<span class='up'>${blockCount}</span>`);
+		} else {
+			effect = effect.replace(/{B}/g, `${blockCount}`);
+		}
+	}
+	if('count' in card.amount){
+		effect = effect.replace(/{C}/g, `${card.amount.count}`);
+	}
+	if('debuff' in card.amount){
+		effect = effect.replace(/{D}/g, `${card.amount.debuff}`);
+	}
+	if('debuff1' in card.amount){
+		effect = effect.replace(/{D1}/g, `${card.amount.debuff1}`);
+	}
+	if('debuff1' in card.amount){
+		effect = effect.replace(/{D2}/g, `${card.amount.debuff2}`);
+	}
+	if('draw' in card.amount){
+		effect = effect.replace(/{Dr}/g, `${card.amount.draw}`);
+	}
+	if('energy' in card.amount){
+		effect = effect.replace(/{E}/g, `${card.amount.energy}`);
+	}
+	if('buff' in card.amount){
+		effect = effect.replace(/{F}/g, `${card.amount.buff}`);
+	}
+	if('harm' in card.amount){
+		effect = effect.replace(/{HP}/g, `${card.amount.harm}`);
+	}
+	const textParagraph = $('<p>')
+		.addClass('effect')
+		.html(effect);
+	const typeParagraph = $('<p>')
+		.addClass('type')
+		.html(card.type);
+		
+	const costDiv = $('<div>');
+	if('costChange' in card.amount){
+		const changeFunc = globalThis[card.amount.costChange];
+		if( typeof changeFunc === 'function'){
+			ret = changeFunc(card.amount);
+		}
+	}
+	if('tmpCost' in card.amount && card.amount.cost !== 'X'){
+		costDiv
+			.addClass('costDown')
+			.html(card.amount.tmpCost);
+	}else{
+		costDiv.html(card.amount.cost);
+	}
+	const cardImage = $('<img>')
+		.attr('src', card.image);
+	const cardDiv = $('<div>');
+	if(card.name.length > 10){
+		cardDiv.addClass('is-small');
+	}
+	cardDiv
+		.addClass('card-style')
+		.html(`${card.name}`)
+		.append(cardImage)
+		.append(typeParagraph)
+		.append(textParagraph)
+		.append(costDiv);
+	if (card.class == cardClass.gran) {
+		cardDiv.addClass('gran-card');
+	} else if (card.class == cardClass.djeeta) {
+		cardDiv.addClass('djeeta-card');
+	} else if (card.class == cardClass.common) {
+		cardDiv.addClass('common-card');
+	} else if (card.class == cardClass.abnormal) {
+		cardDiv.addClass('abnormal-card');
+	}
+	return cardDiv;
+}
+/***************************************************************************************/
+/* アーティファクトDOMを生成
+/***************************************************************************************/
+function createArtifactDom(artifact){
+	const modalName = $('<p>')
+		.append(artifact.name);
+	const modalDiv = $('<div>')
+		.addClass('artifact-modal')
+		.append(modalName)
+		.append(artifact.effect);
+	const modalsDiv = $('<div>')
+		.addClass('artifact-modals')
+		.addClass('hidden')
+		.append(modalDiv)
+		.hover(() => {
+			modalsDiv.addClass('hidden');
+		}, () => {});
+	const artifactImage = $('<img>')
+		.attr('src', artifact.image);
+	const artifactDiv = $('<div>')
+		.addClass('artifact')
+		.append(artifactImage)
+		.append(modalsDiv)
+		.hover(() => {
+			modalsDiv.removeClass('hidden');
+		}, () => {
+			modalsDiv.addClass('hidden');
+		});
+	if('amount' in artifact && 'Count' in artifact.amount){
+		const countParagraph = $('<p>')
+			.html(artifact.amount.Count);
+		artifactDiv.append(countParagraph);
+	}
+	return artifactDiv;
+}
 /***************************************************************************************/
 /* トップページDOM作成処理
 /***************************************************************************************/
@@ -150,36 +292,6 @@ function updateMoneyDom(){
 }
 
 /*******************************************************/
-/* updateArtifactDom：アーティファクトDOMを生成
-/*******************************************************/
-function createArtifactDom(artifact){
-	const modalName = $('<p>')
-		.append(artifact.name);
-	const modalDiv = $('<div>')
-		.addClass('artifact-modal')
-		.append(modalName)
-		.append(artifact.effect);
-	const modalsDiv = $('<div>')
-		.addClass('artifact-modals')
-		.addClass('hidden')
-		.append(modalDiv)
-		.hover(() => {
-			modalsDiv.addClass('hidden');
-		}, () => {});
-	const artifactImage = $('<img>')
-		.attr('src', artifact.image);
-	const artifactDiv = $('<div>')
-		.addClass('artifact')
-		.append(artifactImage)
-		.append(modalsDiv)
-		.hover(() => {
-			modalsDiv.removeClass('hidden');
-		}, () => {
-			modalsDiv.addClass('hidden');
-		});
-	return artifactDiv;
-}
-/*******************************************************/
 /* updateArtifactDom：アーティファクトDOMを更新
 /*******************************************************/
 function updateArtifactDom(){
@@ -318,142 +430,6 @@ function insertCardsToOriginalDeckDom(cards){
 			animateInsertCardsToOriginalDeck(cardDiv);
 		}, 1000);
 	});
-}
-/***************************************************************************************/
-/* カードDOM作成処理
-/***************************************************************************************/
-function createCardDom(card){
-	let effect = card.effect;
-	if('attack' in card.amount){
-		switch(card.name){
-			case granCardList.Dig.name:
-			case granEnhancedCardList.Dig.name:
-				attackDamage = calcDamage(card.amount.attack, currentTarget, card.amount.magnification);
-				break;
-			case commonCardList.Knife.name:
-			case commonEnhancedCardList.Knife.name:
-				attackDamage = calcKnifeDamage(card.amount.attack, currentTarget);
-				break;
-			default:
-				attackDamage = calcDamage(card.amount.attack, currentTarget);
-				break;
-		}
-		if (card.amount.attack > attackDamage) {
-			effect = effect.replace(/{A}/g, `<span class='down'>${attackDamage}</span>`);
-		} else if (card.amount.attack < attackDamage){
-			effect = effect.replace(/{A}/g, `<span class='up'>${attackDamage}</span>`);
-		} else {
-			effect = effect.replace(/{A}/g, `${attackDamage}`);
-		}
-	}
-	if('block' in card.amount){
-		blockCount = calcBlock(card.amount.block);
-		if (card.amount.block > blockCount) {
-			effect = effect.replace(/{B}/g, `<span class='down'>${blockCount}</span>`);
-		} else if (card.amount.block < blockCount){
-			effect = effect.replace(/{B}/g, `<span class='up'>${blockCount}</span>`);
-		} else {
-			effect = effect.replace(/{B}/g, `${blockCount}`);
-		}
-	}
-	if('count' in card.amount){
-		effect = effect.replace(/{C}/g, `${card.amount.count}`);
-	}
-	if('debuff' in card.amount){
-		effect = effect.replace(/{D}/g, `${card.amount.debuff}`);
-	}
-	if('debuff1' in card.amount){
-		effect = effect.replace(/{D1}/g, `${card.amount.debuff1}`);
-	}
-	if('debuff1' in card.amount){
-		effect = effect.replace(/{D2}/g, `${card.amount.debuff2}`);
-	}
-	if('draw' in card.amount){
-		effect = effect.replace(/{Dr}/g, `${card.amount.draw}`);
-	}
-	if('energy' in card.amount){
-		effect = effect.replace(/{E}/g, `${card.amount.energy}`);
-	}
-	if('buff' in card.amount){
-		effect = effect.replace(/{F}/g, `${card.amount.buff}`);
-	}
-	if('harm' in card.amount){
-		effect = effect.replace(/{HP}/g, `${card.amount.harm}`);
-	}
-	const textParagraph = $('<p>')
-		.addClass('effect')
-		.html(effect);
-	const typeParagraph = $('<p>')
-		.addClass('type')
-		.html(card.type);
-		
-	const costDiv = $('<div>');
-	if('costChange' in card.amount){
-		const changeFunc = globalThis[card.amount.costChange];
-		if( typeof changeFunc === 'function'){
-			ret = changeFunc(card.amount);
-		}
-	}
-	if('tmpCost' in card.amount && card.amount.cost !== 'X'){
-		costDiv
-			.addClass('costDown')
-			.html(card.amount.tmpCost);
-	}else{
-		costDiv.html(card.amount.cost);
-	}
-	const cardImage = $('<img>')
-		.attr('src', card.image);
-	const cardDiv = $('<div>');
-	if(card.name.length > 10){
-		cardDiv.addClass('is-small');
-	}
-	cardDiv
-		.addClass('card-style')
-		.html(`${card.name}`)
-		.append(cardImage)
-		.append(typeParagraph)
-		.append(textParagraph)
-		.append(costDiv);
-	if (card.class == cardClass.gran) {
-		cardDiv.addClass('gran-card');
-	} else if (card.class == cardClass.djeeta) {
-		cardDiv.addClass('djeeta-card');
-	} else if (card.class == cardClass.common) {
-		cardDiv.addClass('common-card');
-	} else if (card.class == cardClass.abnormal) {
-		cardDiv.addClass('abnormal-card');
-	}
-	return cardDiv;
-}
-/***************************************************************************************/
-/* アーティファクトDOMを生成
-/***************************************************************************************/
-function createArtifactDom(artifact){
-	const modalName = $('<p>')
-		.append(artifact.name);
-	const modalDiv = $('<div>')
-		.addClass('artifact-modal')
-		.append(modalName)
-		.append(artifact.effect);
-	const modalsDiv = $('<div>')
-		.addClass('artifact-modals')
-		.addClass('hidden')
-		.append(modalDiv)
-		.hover(() => {
-			modalsDiv.addClass('hidden');
-		}, () => {});
-	const artifactImage = $('<img>')
-		.attr('src', artifact.image);
-	const artifactDiv = $('<div>')
-		.addClass('artifact')
-		.append(artifactImage)
-		.append(modalsDiv)
-		.hover(() => {
-			modalsDiv.removeClass('hidden');
-		}, () => {
-			modalsDiv.addClass('hidden');
-		});
-	return artifactDiv;
 }
 /***************************************************************************************/
 /* バトル用DOM要素の更新処理

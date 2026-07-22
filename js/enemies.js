@@ -1431,7 +1431,7 @@ function enemyActionAttack(enemyInfo, playerInfo, animationFlag, attackCount){
 	const reflection = playerInfo.statuses
 		.find((status) => status.name === buffStatus.reflection.name);
 	if(reflection){
-		const playerReflection = reflection.amount;
+		let playerReflection = reflection.amount;
 		const enemyBlock = enemyInfo.currentStatus.block;
 		if(enemyBlock > 0){
 			if(enemyBlock >= playerReflection){
@@ -1448,7 +1448,25 @@ function enemyActionAttack(enemyInfo, playerInfo, animationFlag, attackCount){
 	const counter = playerInfo.statuses
 		.find((status) => status.name === buffStatus.counter.name);
 	if(counter){
-		const playerCounter = counter.amount;
+		let playerCounter = counter.amount;
+		const enemyBlock = enemyInfo.currentStatus.block;
+		if(enemyBlock > 0){
+			if(enemyBlock >= playerCounter){
+				enemyInfo.currentStatus.block -= playerCounter;
+				playerCounter = 0;
+			} else if (enemyBlock < playerCounter){
+				playerCounter -= enemyBlock;
+				enemyInfo.currentStatus.block = 0;
+			}
+		}
+		enemyInfo.currentStatus.remainHP -= playerCounter;
+	}
+	
+	// アーティファクトの効果
+	const Counter = myArtifacts
+		.find((artifact) => artifact.name === normalArtifact.Counter.name);
+	if(Counter){
+		let playerCounter = Counter.amount.damage;
 		const enemyBlock = enemyInfo.currentStatus.block;
 		if(enemyBlock > 0){
 			if(enemyBlock >= playerCounter){

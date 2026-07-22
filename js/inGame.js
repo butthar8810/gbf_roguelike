@@ -517,6 +517,7 @@ async function startTurn(){
 	updateTrashDom();
 	updateDiscardDom();
 	updateEnergyDom();
+	updateArtifactDom();
 	$.when(
 		enemyGetBlockPromise,
 		enemyAbnormalityPromise
@@ -899,8 +900,7 @@ function endTurn(){
 		.find((status) => status.name === buffStatus.madness.name);
 	if (madness){
 		damageHP(1);
-		actionAllAttackSimple(madness.amount);
-		updateEnemyStatusDom(currentEnemies);
+		actionAllAttackSimple(madness.amount, false);
 	}
 	//「鈍化」の効果発動
 	const slowing = playerStatus.statuses
@@ -975,7 +975,7 @@ function drawCardFromDeck(count = 1){
 				const barrage = playerStatus.statuses
 					.find((status) => status.name === buffStatus.barrage.name);
 				if(barrage){
-					actionAllAttackSimple(barrage.amount);
+					actionAllAttackSimple(barrage.amount, false);
 				}
 				// 「逆境」の効果
 				const adversity = playerStatus.statuses
@@ -1178,6 +1178,8 @@ function endAction(){
 	// ステータス部分だけ更新する
 	updatePlayerStatusDom(playerStatus);
 	updateEnemyStatusDom(currentEnemies);
+	//アーティファクトのカウント更新
+	updateArtifactDom();
 	// 攻撃アニメーションの完了を待ち、DOM更新する
 	$.when(
 		playerAttackPromise,
@@ -1202,6 +1204,7 @@ function endAction(){
 		updateTrashDom();
 		updateDiscardDom();
 	});
+	updateEnergyDom();
 	
 	if (allDefeatedFlag){
 		console.log('全滅');
@@ -1543,7 +1546,12 @@ function setupEnemy(){
 						enemyGroupWeight -= enemy.weight;
 					}
 				}
-				
+				currentEnemies.forEach((enemy, i) => {
+					const randomHP = mt.nextInt(enemy.minHP, enemy.maxHP+1);
+					enemy.currentStatus.maxHP = randomHP;
+					enemy.currentStatus.remainHP = randomHP;
+					enemy.currentStatus.divId = `enemy${i}`;
+				});
 				break;
 			case stageLevel.special:
 				const totalWeight = eliteEnemiesPool.reduce((sum, item) => sum + item.weight, 0);
@@ -1556,20 +1564,35 @@ function setupEnemy(){
 					}
 					enemyGroupWeight -= enemy.weight;
 				}
+				currentEnemies.forEach((enemy, i) => {
+					const randomHP = mt.nextInt(enemy.minHP, enemy.maxHP+1);
+					const eliteHpDown = myArtifacts
+						.find((artifact) => artifact.name === normalArtifact.eliteHpDown.name);
+					if(eliteHpDown){
+						const nerfHP = Math.floor(randomHP * 0.75);
+						enemy.currentStatus.maxHP = nerfHP;
+						enemy.currentStatus.remainHP = nerfHP;
+					}else{
+						enemy.currentStatus.maxHP = randomHP;
+						enemy.currentStatus.remainHP = randomHP;
+					}
+
+					enemy.currentStatus.divId = `enemy${i}`;
+				});
 				break;
 			case stageLevel.boss:
 				break;
 			default:
 				const enemiesOrganization = testEnemies[0].enemiesFunc();
 				currentEnemies = deepCopyEnemies(enemiesOrganization);
+				currentEnemies.forEach((enemy, i) => {
+					const randomHP = mt.nextInt(enemy.minHP, enemy.maxHP+1);
+					enemy.currentStatus.maxHP = randomHP;
+					enemy.currentStatus.remainHP = randomHP;
+					enemy.currentStatus.divId = `enemy${i}`;
+				});
 				break;
 		}
-		currentEnemies.forEach((enemy, i) => {
-			const randomHP = mt.nextInt(enemy.minHP, enemy.maxHP+1);
-			enemy.currentStatus.maxHP = randomHP;
-			enemy.currentStatus.remainHP = randomHP;
-			enemy.currentStatus.divId = `enemy${i}`;
-		});
 		console.log(`currentLevel: ${currentLevel}`);
 		setLocalStorage(keyContinueLevel, currentLevel);
 		setLocalStorage(keyContinueEnemy, currentEnemies);

@@ -202,7 +202,7 @@ const normalArtifact = {
 		dedicated: artifactdedicated.common,
 		effect: 'アタックの使用10回ごとにダメージが2倍になる。', 
 		image: 'images/artifact/ProofOfTwinSwordsman.png', 
-		attackFunc: '',
+		attackFunc: 'effectAttaclTwiceEveryAttack',
 		amount: {
 			Count: 0,
 			everyAttack: 10,
@@ -227,9 +227,8 @@ const normalArtifact = {
 		dedicated: artifactdedicated.common,
 		effect: 'ダメージを受けるたび、敵に3の反撃ダメージを与える。', 
 		image: 'images/artifact/ProofOfDragoon.png', 
-		firstFunc: '',
 		amount: {
-			draw: 2,
+			damage: 3,
 		}
 	},
 	noAttackEnergy: {
@@ -238,6 +237,10 @@ const normalArtifact = {
 		dedicated: artifactdedicated.common,
 		effect: 'このターン、「アタック」を1枚もプレイしなかった場合、次のターン開始時、1エナジーを得る。', 
 		image: 'images/artifact/ProofOfMonk.png', 
+		turnFunc:'effectGetEnergyNoAttack',
+		amount: {
+			energy: 1,
+		}
 	},
 	damageBuff: {
 		name: '義弓の証', 
@@ -259,6 +262,10 @@ const normalArtifact = {
 		dedicated: artifactdedicated.common,
 		effect: '戦闘中初めてHPを失うと、カードを3枚引く。', 
 		image: 'images/artifact/ProofOfOrder.png', 
+		lossHPFunc: '',
+		amount: {
+			draw: 3,
+		}
 	},
 	firstBlock: {
 		name: '盾騎士の証', 
@@ -1249,8 +1256,8 @@ function setupArtifact(){
 			getArtifact(normalArtifact.recovery);
 		} else if (selectChara == selectCharacter.djeeta.name){
 			getArtifact(normalArtifact.startDraw);
-			getArtifact(normalArtifact.twice);
-			getArtifact(normalArtifact.tenAttackEnergy);
+			getArtifact(normalArtifact.takenDraw);
+			getArtifact(normalArtifact.restDraw);
 		}
 		setLocalStorage(keyContinueArtifact, myArtifacts);
 	}
@@ -1426,7 +1433,7 @@ function effectRandomUpgrade(amount){
 function effectDefenseForNoBlock(amount){
 	console.log('effectDefenseForNoBlock');
 	if('block' in amount && playerStatus.block === 0){
-		actionBlockNoBuff(amount.block);
+		actionBlockSimple(amount.block);
 	}
 	return true;
 }
@@ -1460,4 +1467,30 @@ function effectGetEnergyEveryAttack(amount){
 	}
 	console.log(amount);
 	return true;
+}
+/*******************************************************/
+/* アタックを〇枚プレイするたび、〇エナジーを得る。
+/*******************************************************/
+function effectAttaclTwiceEveryAttack(amount){
+	console.log('effectAttaclTwiceEveryAttack');
+	if('Count' in amount && 'everyAttack' in amount){
+		amount.Count++;
+		if(amount.Count >= amount.everyAttack){
+			attackTwiceFlag = true;
+			amount.Count = 0;
+		}
+	}
+	console.log(amount);
+	return true;
+}
+
+
+/*******************************************************/
+/* このターン、「アタック」を1枚もプレイしなかった場合、次のターン開始時、1エナジーを得る。
+/*******************************************************/
+function effectGetEnergyNoAttack(amount){
+	console.log('effectGetEnergyNoAttack');
+	if('energy' in amount && playerStatus.playerCount.playAttackPerTurn === 0){
+		playerStatus.remainEnergy += amount.energy;
+	}
 }
