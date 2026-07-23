@@ -49,7 +49,7 @@ const normalArtifact = {
 		rarity: artifactRarity.common,
 		dedicated: artifactdedicated.common,
 		effect: '最大HPが増加:7', 
-		image: 'images/artifact/Crown.png', 
+		image: 'images/artifact/CoronationRing.png', 
 		getFunc: 'effectGetMaxHP',
 		amount: {
 			maxHP: 7,
@@ -327,13 +327,13 @@ const normalArtifact = {
 		}
 	},
 	AdditionalPoison: {
-		name: '', 
+		name: 'アルナスルの矢じり', 
 		rarity: artifactRarity.common,
 		dedicated: artifactdedicated.djeeta,
 		effect: '敵に毒を与えるたび、追加で毒1を与える。ジータ専用', 
-		image: 'images/artifact/',
+		image: 'images/artifact/Arrowhead.png',
 	},
-
+	// 実装予定
 	curseMount: {
 		name: '八寒の護符', 
 		rarity: artifactRarity.common,
@@ -356,11 +356,11 @@ const normalArtifact = {
 		image: 'images/artifact/Water.png',
 	},
 	halfAttackUp: {
-		name: '', 
+		name: '終炎の滅弾', 
 		rarity: artifactRarity.common,
 		dedicated: artifactdedicated.gran,
 		effect: 'HPが50％以下になると、筋力3を得る。グラン専用', 
-		image: 'images/artifact/',
+		image: 'images/artifact/Extinction.png',
 	},
 
 	/*********************************アンコモン*************************************/
@@ -369,7 +369,7 @@ const normalArtifact = {
 		rarity: artifactRarity.uncommon,
 		dedicated: artifactdedicated.common,
 		effect: '最大HPが増加:10', 
-		image: 'images/artifact/Conquest.png', 
+		image: 'images/artifact/LineageRing.png', 
 		getFunc: 'effectGetMaxHP',
 		amount: {
 			maxHP: 10,
@@ -468,138 +468,120 @@ const normalArtifact = {
 		image: 'images/artifact/ProofOfDancer.png',
 	},
 	knockEnergyAndDraw: {
-		name: '英勇のエンブレム', 
+		name: 'オミナス・アミュレット', 
 		rarity: artifactRarity.uncommon,
 		dedicated: artifactdedicated.common,
 		effect: '敵を倒すと、1エナジーを得て、カードを1枚引く。', 
-		image: 'images/artifact/Emblem.png', 
+		image: 'images/artifact/OminousAmulet.png', 
 		firstFunc: '',
 		amount: {
-			draw: 2,
+			draw: 1,
+			energy: 1,
 		}
 	},
 	tenPlayDraw: {
-		name: '幻麗の紋章', 
+		name: 'オミナス・フィアン', 
 		rarity: artifactRarity.uncommon,
 		dedicated: artifactdedicated.common,
 		effect: 'カードを10枚プレイするたび、カードを1枚引く。', 
-		image: 'images/artifact/Arms.png', 
+		image: 'images/artifact/OminousFian.png', 
 		firstFunc: '',
 		amount: {
-			draw: 2,
+			draw: 1,
 		}
-	},
-	everyDeckRecovery: {
-		name: '', 
-		rarity: artifactRarity.uncommon,
-		dedicated: artifactdedicated.common,
-		effect: 'デッキのカード5枚ごとに、HP3回復。(休憩場所入室時に発動)', 
-		image: 'images/artifact/', 
-		firstFunc: '',
-		amount: {
-			draw: 2,
-		}
-	},
-	getcurseHP: {
-		name: '', 
-		rarity: artifactRarity.uncommon,
-		dedicated: artifactdedicated.common,
-		effect: '呪いを獲得するたび、最大HPが増加:6.', 
-		image: 'images/artifact/', 
-		firstFunc: '',
-		amount: {
-			draw: 2,
-		}
-	},
-	playCurse: {
-		name: '', 
-		rarity: artifactRarity.uncommon,
-		dedicated: artifactdedicated.common,
-		effect: '使用不可の呪いがプレイできるようになる。呪いをプレイすると、HP1を失い、廃棄する。', 
-		image: 'images/artifact/', 
-		firstFunc: '',
-		amount: {
-			draw: 2,
-		}
-	},
-	bonusRelic: {
-		name: '', 
-		rarity: artifactRarity.uncommon,
-		dedicated: artifactdedicated.common,
-		effect: '次に開封する2つ目の宝箱まで、2つのレリックが入っている。(ボスの宝箱を除く)', 
-		image: 'images/artifact/', 
-		firstFunc: '',
-		amount: {
-			draw: 2,
-		}
-	},
-	everyPowerCostDown: {
-		name: '', 
-		rarity: artifactRarity.uncommon,
-		dedicated: artifactdedicated.common,
-		effect: '「パワー」をプレイ時、このターンの間手札のランダムなカード1枚のコストが0になる。', 
-		image: 'images/artifact/', 
-	},
-	skipBonus: {
-		name: '', 
-		rarity: artifactRarity.uncommon,
-		dedicated: artifactdedicated.common,
-		effect: 'カード報酬をスキップするたびに最大HPが+2', 
-		image: 'images/artifact/',
-	},
-	fourChoice: {
-		name: '', 
-		rarity: artifactRarity.uncommon,
-		dedicated: artifactdedicated.common,
-		effect: '報酬のカード選択画面で、3枚ではなく4枚のカードから選択できるようになる。', 
-		image: 'images/artifact/', 
-	},
-	newArrival: {
-		name: '', 
-		rarity: artifactRarity.uncommon,
-		dedicated: artifactdedicated.common,
-		effect: '商人が販売するカード、レリック、ポーションは売り切れにならず、価格は20％割引される。', 
-		image: 'images/artifact/', 
 	},
 	dyingRecovery: {
-		name: '', 
+		name: 'オミナス・ゴブレット', 
 		rarity: artifactRarity.uncommon,
 		dedicated: artifactdedicated.common,
 		effect: '戦闘終了時のHPが50％以下の場合、HP12回復', 
-		image: 'images/artifact/', 
-		firstFunc: '',
+		image: 'images/artifact/OminousGoblet.png',
+	},
+	skipBonus: {
+		name: 'オミナス・ホーン', 
+		rarity: artifactRarity.uncommon,
+		dedicated: artifactdedicated.common,
+		effect: 'カード報酬をスキップするたびに最大HPが+2', 
+		image: 'images/artifact/OminousHorn.png',
+	},
+	everyDeckRecovery: {
+		name: 'オミナス・ペンダント', 
+		rarity: artifactRarity.uncommon,
+		dedicated: artifactdedicated.common,
+		effect: 'デッキのカード5枚ごとに、HP3回復。(休憩場所入室時に発動)', 
+		image: 'images/artifact/OminousPendant.png', 
+		restFunc: '',
 		amount: {
-			draw: 2,
+			recovery: 3,
 		}
 	},
+	getcurseHP: {
+		name: 'オミナス・リング', 
+		rarity: artifactRarity.uncommon,
+		dedicated: artifactdedicated.common,
+		effect: '呪いを獲得するたび、最大HPが増加:6.', 
+		image: 'images/artifact/OminousRing.png', 
+	},
+	everyPowerCostDown: {
+		name: 'オミナス・ストーン', 
+		rarity: artifactRarity.uncommon,
+		dedicated: artifactdedicated.common,
+		effect: '「パワー」をプレイ時、このターンの間手札のランダムなカード1枚のコストが0になる。', 
+		image: 'images/artifact/OminousStone.png', 
+	},
+	playCurse: {
+		name: 'オミナス・ホイッスル', 
+		rarity: artifactRarity.uncommon,
+		dedicated: artifactdedicated.common,
+		effect: '使用不可の呪いがプレイできるようになる。呪いをプレイすると、HP1を失い、廃棄する。', 
+		image: 'images/artifact/OminousWhistle.png', 
+	},
+	bonusRelic: {
+		name: '虚ろなる鍵', 
+		rarity: artifactRarity.uncommon,
+		dedicated: artifactdedicated.common,
+		effect: '次に開封する2つ目の宝箱まで、2つのレリックが入っている。(ボスの宝箱を除く)', 
+		image: 'images/artifact/Key.png', 
+	},
+	fourChoice: {
+		name: 'ラジエルの書', 
+		rarity: artifactRarity.uncommon,
+		dedicated: artifactdedicated.common,
+		effect: '報酬のカード選択画面で、3枚ではなく4枚のカードから選択できるようになる。', 
+		image: 'images/artifact/Raziel.png', 
+	},
+	newArrival: {
+		name: 'プレミアムエビフライ', 
+		rarity: artifactRarity.uncommon,
+		dedicated: artifactdedicated.common,
+		effect: '商人が販売するカード、レリック、ポーションは売り切れにならず、価格は20％割引される。', 
+		image: 'images/artifact/Shrimp.png', 
+	},
 	powerfulDefenseDown: {
-		name: '', 
+		name: '拍動の心臓', 
 		rarity: artifactRarity.uncommon,
 		dedicated: artifactdedicated.gran,
 		effect: '防御ダウンを持つ敵へのダメージが50％ではなく、75％増加する。グラン専用', 
-		image: 'images/artifact/', 
-		firstFunc: '',
-		amount: {
-			draw: 2,
-		}
+		image: 'images/artifact/Heart.png',
 	},
 	HPDownBlock: {
-		name: '', 
+		name: '光輝の神鏡', 
 		rarity: artifactRarity.uncommon,
 		dedicated: artifactdedicated.gran,
 		effect: 'HPが失われるたび、次のターン開始時に、3ブロックを得る。グラン専用', 
-		image: 'images/artifact/', 
+		image: 'images/artifact/Mirror.png', 
 		firstFunc: '',
 		amount: {
-			draw: 2,
+			flag: false,
+			block: 3,
 		}
 	},
-	threeKnifes: {
-		name: '', 
+	threeknives: {
+		name: '漆黒の棘翅', 
 		rarity: artifactRarity.uncommon,
 		dedicated: artifactdedicated.djeeta,
 		effect: '戦闘開始時に3枚のナイフを手札に加える。ジータ専用', 
-		image: 'images/artifact/', 
+		image: 'images/artifact/Thorn.png', 
 		firstFunc: 'effectAddCommonCard',
 		amount: {
 			commonCard: 'Knife',
@@ -607,11 +589,11 @@ const normalArtifact = {
 		}
 	},
 	powerfulWeak: {
-		name: '', 
+		name: '信仰の神代木', 
 		rarity: artifactRarity.uncommon,
 		dedicated: artifactdedicated.djeeta,
-		effect: '脱力を持つ敵からのダメージが25％ではなく、40％減になる。ジータ専用', 
-		image: 'images/artifact/', 
+		effect: '恐怖を持つ敵からのダメージが25％ではなく、40％減になる。ジータ専用', 
+		image: 'images/artifact/SacredTree.png', 
 	},
 	/*********************************レア*************************************/
 	hitPoint14: {
@@ -619,7 +601,7 @@ const normalArtifact = {
 		rarity: artifactRarity.rare,
 		dedicated: artifactdedicated.common,
 		effect: '最大HPが増加:14', 
-		image: 'images/artifact/Extremely.png', 
+		image: 'images/artifact/IntricacyRing.png', 
 		getFunc: 'effectGetMaxHP',
 		amount: {
 			maxHP: 14,
@@ -652,7 +634,7 @@ const normalArtifact = {
 		dedicated: artifactdedicated.common,
 		effect: '3ターン目開始時、18ブロックを得る。', 
 		image: 'images/artifact/ProofOfSummoner.png', 
-		firstFunc: '',
+		turnFunc: '',
 		amount: {
 			block: 18,
 		}
@@ -662,11 +644,7 @@ const normalArtifact = {
 		rarity: artifactRarity.rare,
 		dedicated: artifactdedicated.common,
 		effect: '戦闘開始時、好きなカードを捨てて同じ枚数のカードを引く。', 
-		image: 'images/artifact/ProofOfKing.png', 
-		firstFunc: '',
-		amount: {
-			draw: 2,
-		}
+		image: 'images/artifact/ProofOfKing.png',
 	},
 	noCardDraw: {
 		name: '陰陽の証', 
@@ -737,51 +715,84 @@ const normalArtifact = {
 		}
 	},
 	restAttackUp: {
-		name: '', 
+		name: '幻麗の犀牙', 
 		rarity: artifactRarity.rare,
 		dedicated: artifactdedicated.common,
 		effect: '休憩場所で筋力1を獲得。(最大3回)', 
-		image: 'images/artifact/', 
+		image: 'images/artifact/FantosmikFenftooth.png', 
 		firstFunc: '',
 		amount: {
 			draw: 2,
 		}
 	},
-	HPMitigation: {
-		name: '', 
+	AdditionalRemuneration: {
+		name: '幻麗の小槌', 
 		rarity: artifactRarity.rare,
 		dedicated: artifactdedicated.common,
-		effect: 'HP喪失時、その値を1軽減する。', 
-		image: 'images/artifact/', 
+		effect: '通常の敵が追加でカードをドロップするようになる。', 
+		image: 'images/artifact/FantosmikMaylet.png', 
+		firstFunc: '',
+		amount: {
+			draw: 2,
+		}
+	},
+	firstDisable: {
+		name: '幻麗の玉石', 
+		rarity: artifactRarity.rare,
+		dedicated: artifactdedicated.common,
+		effect: '戦闘中、最初のHPの損失を無効化する。', 
+		image: 'images/artifact/FantosmikGemme.png', 
+		firstFunc: '',
+		amount: {
+			draw: 2,
+		}
+	},
+	restRemove: {
+		name: '幻麗の明鉱', 
+		rarity: artifactRarity.rare,
+		dedicated: artifactdedicated.common,
+		effect: '休憩場所でカードの削除ができるようになる。', 
+		image: 'images/artifact/FantosmikLanterne.png', 
 		firstFunc: '',
 		amount: {
 			draw: 2,
 		}
 	},
 	cursePower: {
-		name: '', 
+		name: '幻麗の紋章', 
 		rarity: artifactRarity.rare,
 		dedicated: artifactdedicated.common,
 		effect: '戦闘開始時、デッキの呪い1枚につき、筋力1を得る。', 
-		image: 'images/artifact/', 
+		image: 'images/artifact/FantosmikCreste.png', 
+		firstFunc: '',
+		amount: {
+			draw: 2,
+		}
+	},
+	HPMitigation: {
+		name: '金華面具', 
+		rarity: artifactRarity.rare,
+		dedicated: artifactdedicated.common,
+		effect: 'HP喪失時、その値を1軽減する。', 
+		image: 'images/artifact/JinyaoMianju.png', 
 		firstFunc: '',
 		amount: {
 			draw: 2,
 		}
 	},
 	goldCoin: {
-		name: '', 
+		name: '金華名鏡', 
 		rarity: artifactRarity.rare,
 		dedicated: artifactdedicated.common,
 		effect: '300金貨獲得。', 
-		image: 'images/artifact/', 
+		image: 'images/artifact/JinyaoMingjing.png', 
 		firstFunc: '',
 		amount: {
 			draw: 2,
 		}
 	},
 	discardDraw: {
-		name: '', 
+		name: '金華革帯', 
 		rarity: artifactRarity.rare,
 		dedicated: artifactdedicated.common,
 		effect: 'カードを廃棄するたび、手札にランダムなカードを加える。', 
@@ -791,74 +802,41 @@ const normalArtifact = {
 			draw: 2,
 		}
 	},
-	restRemove: {
-		name: '', 
-		rarity: artifactRarity.rare,
-		dedicated: artifactdedicated.common,
-		effect: '休憩場所でカードの削除ができるようになる。', 
-		image: 'images/artifact/', 
-		firstFunc: '',
-		amount: {
-			draw: 2,
-		}
-	},
 	fewPlayDraw: {
-		name: '', 
+		name: '金華旗幟', 
 		rarity: artifactRarity.rare,
 		dedicated: artifactdedicated.common,
 		effect: 'あなたが1ターンにプレイしたカードの枚数が3枚以下だったとき、次のターン開始時、カードを追加で3枚引く。', 
-		image: 'images/artifact/', 
-		firstFunc: '',
-		amount: {
-			draw: 2,
-		}
-	},
-	AdditionalRemuneration: {
-		name: '', 
-		rarity: artifactRarity.rare,
-		dedicated: artifactdedicated.common,
-		effect: '通常の敵が追加でカードをドロップするようになる。', 
-		image: 'images/artifact/', 
+		image: 'images/artifact/JinyaoQizhi.png', 
 		firstFunc: '',
 		amount: {
 			draw: 2,
 		}
 	},
 	flying: {
-		name: '', 
+		name: '金華羽飾', 
 		rarity: artifactRarity.rare,
 		dedicated: artifactdedicated.common,
 		effect: '次の部屋を選択する時、あなたは3回まで道を無視して飛ぶことが出来る。', 
-		image: 'images/artifact/', 
-		firstFunc: '',
-		amount: {
-			draw: 2,
-		}
-	},
-	firstDisable: {
-		name: '', 
-		rarity: artifactRarity.rare,
-		dedicated: artifactdedicated.common,
-		effect: '戦闘中、最初のHPの損失を無効化する。', 
-		image: 'images/artifact/', 
+		image: 'images/artifact/JinyaoYushi.png', 
 		firstFunc: '',
 		amount: {
 			draw: 2,
 		}
 	},
 	everyDiscardAllAttack: {
-		name: '', 
+		name: '金華銅鑼', 
 		rarity: artifactRarity.rare,
 		dedicated: artifactdedicated.gran,
 		effect: 'カードを廃棄するたび、敵全体に3ダメージを与える。グラン専用', 
-		image: 'images/artifact/', 
+		image: 'images/artifact/JinyaoTongluo.png', 
 		firstFunc: '',
 		amount: {
 			draw: 2,
 		}
 	},
 	defenseDownAndWeak: {
-		name: '', 
+		name: '金華覆装', 
 		rarity: artifactRarity.rare,
 		dedicated: artifactdedicated.gran,
 		effect: '敵に防御ダウンを与えると恐怖1も与える。グラン専用', 
@@ -869,36 +847,36 @@ const normalArtifact = {
 		}
 	},
 	powerfulRecovery: {
-		name: '', 
+		name: '冷氷の葉', 
 		rarity: artifactRarity.rare,
 		dedicated: artifactdedicated.gran,
 		effect: '戦闘中の回復を50％増加。グラン専用', 
-		image: 'images/artifact/', 
+		image: 'images/artifact/FrozenFoliole.png', 
 		firstFunc: '',
 		amount: {
 			draw: 2,
 		}
 	},
 	everyTrashRandomAttack: {
-		name: '', 
+		name: '降引の像', 
 		rarity: artifactRarity.rare,
 		dedicated: artifactdedicated.djeeta,
 		effect: 'ターン中にカードを1枚捨てるたび、ランダムな敵に3ダメージを与える。ジータ専用', 
-		image: 'images/artifact/', 
+		image: 'images/artifact/GoddessFigurine.png', 
 	},
 	everyTrashBlock: {
-		name: '', 
+		name: '降呼の楔', 
 		rarity: artifactRarity.rare,
 		dedicated: artifactdedicated.djeeta,
-		effect: 'ターン中にカードを捨てるたびに3ブロックを得る。ジータ専用', 
-		image: 'images/artifact/', 
+		effect: 'ターン中にカードを1枚捨てるたび、3ブロックを得る。ジータ専用', 
+		image: 'images/artifact/HailingCusp.png', 
 	},
 	poisonInfection: {
-		name: '', 
+		name: 'ローズクリスタル', 
 		rarity: artifactRarity.rare,
 		dedicated: artifactdedicated.djeeta,
 		effect: '倒した敵に蓄積していた毒をランダムな敵に付与する。ジータ専用', 
-		image: 'images/artifact/', 
+		image: 'images/artifact/Rose.png', 
 	},
 	/*********************************BOSS*************************************/
 	energyNoGold: {
@@ -990,22 +968,22 @@ const normalArtifact = {
 		}
 	},
 	energyNoBlacksmithing: {
-		name: '', 
+		name: 'プロミネンストーチ', 
 		rarity: artifactRarity.boss,
 		dedicated: artifactdedicated.common,
 		effect: 'ターン開始時、1エナジーを得る。休憩場所で鍛冶ができなくなる。', 
-		image: 'images/artifact/', 
+		image: 'images/artifact/Prominence.png', 
 		turnFunc: '',
 		amount: {
 			energy: 1,
 		}
 	},
 	energyBoss: {
-		name: '漆黒の棘翅', 
+		name: '', 
 		rarity: artifactRarity.boss,
 		dedicated: artifactdedicated.common,
 		effect: 'ボスとエリートとの戦闘において、ターン開始時に、1エナジーを得る。', 
-		image: 'images/artifact/Thorn.png', 
+		image: 'images/artifact/', 
 		turnFunc: '',
 		amount: {
 			energy: 1,
@@ -1023,11 +1001,11 @@ const normalArtifact = {
 		}
 	},
 	twoRemove: {
-		name: '虚ろなる鍵', 
+		name: '', 
 		rarity: artifactRarity.boss,
 		dedicated: artifactdedicated.common,
 		effect: '獲得時、2枚のカードをデッキから削除する。', 
-		image: 'images/artifact/Key.png', 
+		image: 'images/artifact/', 
 		firstFunc: '',
 		amount: {
 			draw: 2,
@@ -1117,7 +1095,14 @@ const normalArtifact = {
 		effect: '毎ターン、最初にカードを捨てたとき、1エナジーを得る。ジータ専用', 
 		image: 'images/artifact/', 
 	},
-	/*********************************BOSS*************************************/
+	/*********************************Shop*************************************/
+	hitPoint7AndRecovery: {
+		name: '殊越の指輪', 
+		rarity: artifactRarity.shop,
+		dedicated: artifactdedicated.common,
+		effect: '最大HPが増加:7HPが全回復。', 
+		image: 'images/artifact/SublimityRing.png', 
+	},
 	card: {
 		name: 'よろずや会員カード', 
 		rarity: artifactRarity.shop,
@@ -1130,30 +1115,72 @@ const normalArtifact = {
 		}
 	},
 	eliteAttackUp: {
-		name: '', 
+		name: '英勇のエンブレム', 
 		rarity: artifactRarity.shop,
 		dedicated: artifactdedicated.common,
 		effect: 'エリートとの戦闘開始時、攻撃力アップ2を得る。', 
-		image: 'images/artifact/', 
+		image: 'images/artifact/EmblemOfHumanity.png', 
+	},
+	XPlus: {
+		name: '天聖のエンブレム', 
+		rarity: artifactRarity.shop,
+		dedicated: artifactdedicated.common,
+		effect: '消費エナジーがXのカードをプレイしたとき、その効果はX+2', 
+		image: 'images/artifact/EmblemOfDivinity.png', 
+	},
+	Reproduction: {
+		name: '魔獄のエンブレム', 
+		rarity: artifactRarity.shop,
+		dedicated: artifactdedicated.common,
+		effect: '獲得時、あなたのデッキのカード1枚を複製する。', 
+		image: 'images/artifact/EmblemOfDevilry.png', 
 	},
 	shuffleBlock: {
-		name: '', 
+		name: '銀鎧甲のゴージット', 
 		rarity: artifactRarity.shop,
 		dedicated: artifactdedicated.common,
 		effect: 'デッキをシャッフルするたび、6ブロックを得る。', 
-		image: 'images/artifact/', 
+		image: 'images/artifact/SilverGorget.png', 
+	},
+	prism: {
+		name: '秩序の天秤', 
+		rarity: artifactRarity.shop,
+		dedicated: artifactdedicated.common,
+		effect: '戦闘後の報酬に、無色と他の色のカードが提示されるようになる。', 
+		image: 'images/artifact/ScaleOfOrder.png', 
+	},
+	insertDeck: {
+		name: '古代ゴーレムの魔力炉', 
+		rarity: artifactRarity.shop,
+		dedicated: artifactdedicated.common,
+		effect: 'カードを5枚選んでデッキに追加する。', 
+		image: 'images/artifact/MysticalGolemKiln.png', 
+	},
+	playAbnormal: {
+		name: '翆玉の耳飾り', 
+		rarity: artifactRarity.shop,
+		dedicated: artifactdedicated.common,
+		effect: '使用不可の「状態異常」がプレイできるようになる。「状態異常」はプレイすると廃棄する。', 
+		image: 'images/artifact/JadePiercing.png', 
 	},
 	mount: {
-		name: '', 
+		name: 'シュヴァリエの矜持', 
 		rarity: artifactRarity.shop,
 		dedicated: artifactdedicated.common,
 		effect: '戦闘開始時、弱体無効1を得る。', 
-		image: 'images/artifact/', 
+		image: 'images/artifact/PrideOfLuminiera.png', 
 		firstFunc: 'effectBuff',
 		amount: {
 			buffType: 'mount',
 			buff: 1,
 		}
+	},
+	clear: {
+		name: 'ユグドラシルの碧葉', 
+		rarity: artifactRarity.shop,
+		dedicated: artifactdedicated.common,
+		effect: '同じターン内で「パワー」「アタック」「スキル」を1枚ずつプレイした時、自分にかかっているすべてのデバフを取り除く。', 
+		image: 'images/artifact/LeafOfYggdrasil.png', 
 	},
 	eye: {
 		name: '嵐竜の琥珀眼', 
@@ -1162,25 +1189,17 @@ const normalArtifact = {
 		effect: '山札を見た時、カードの並び順通りに表示される。', 
 		image: 'images/artifact/Eye.png', 
 	},
-	clear: {
-		name: '', 
+	probabilityTrash: {
+		name: '古代布', 
 		rarity: artifactRarity.shop,
-		dedicated: artifactdedicated.common,
-		effect: '同じターン内で「パワー」「アタック」「スキル」を1枚ずつプレイした時、自分にかかっているすべてのデバフを取り除く。', 
-		image: 'images/artifact/', 
+		effect: 'カードを廃棄した時、50％の確率で廃棄ではなく捨て札にする。', 
+		image: 'images/artifact/Cloth.png', 
 	},
-	XPlus: {
+	randomCommonCard: {
 		name: '', 
 		rarity: artifactRarity.shop,
 		dedicated: artifactdedicated.common,
-		effect: '消費エナジーがXのカードをプレイしたとき、その効果はX+2', 
-		image: 'images/artifact/', 
-	},
-	Reproduction: {
-		name: '', 
-		rarity: artifactRarity.shop,
-		dedicated: artifactdedicated.common,
-		effect: '獲得時、あなたのデッキのカード1枚を複製する。', 
+		effect: '戦闘開始時、3枚のランダムな無色のカードから1枚選び、手札に加える。', 
 		image: 'images/artifact/', 
 	},
 	breakBlockWeak: {
@@ -1190,27 +1209,6 @@ const normalArtifact = {
 		effect: '敵のブロックを破るたび、弱体化2を与える。', 
 		image: 'images/artifact/', 
 	},
-	prism: {
-		name: '', 
-		rarity: artifactRarity.shop,
-		dedicated: artifactdedicated.common,
-		effect: '戦闘後の報酬に、無色と他の色のカードが提示されるようになる。', 
-		image: 'images/artifact/', 
-	},
-	hitPoint7AndRecovery: {
-		name: '', 
-		rarity: artifactRarity.shop,
-		dedicated: artifactdedicated.common,
-		effect: '最大HPが増加:7HPが全回復。', 
-		image: 'images/artifact/', 
-	},
-	playAbnormal: {
-		name: '', 
-		rarity: artifactRarity.shop,
-		dedicated: artifactdedicated.common,
-		effect: '使用不可の「状態異常」がプレイできるようになる。「状態異常」はプレイすると廃棄する。', 
-		image: 'images/artifact/', 
-	},
 	fivePotion: {
 		name: '', 
 		rarity: artifactRarity.shop,
@@ -1218,39 +1216,19 @@ const normalArtifact = {
 		effect: '獲得時にポーションx5を調合する。', 
 		image: 'images/artifact/', 
 	},
-	insertDeck: {
-		name: '', 
-		rarity: artifactRarity.shop,
-		dedicated: artifactdedicated.common,
-		effect: 'カードを5枚選んでデッキに追加する。', 
-		image: 'images/artifact/', 
-	},
-	probabilityTrash: {
-		name: '', 
-		rarity: artifactRarity.shop,
-		effect: 'カードを廃棄した時、50％の確率で廃棄ではなく捨て札にする。', 
-		image: 'images/artifact/', 
-	},
-	randomCommonCard: {
-		name: '', 
-		rarity: artifactRarity.shop,
-		dedicated: artifactdedicated.common,
-		effect: '戦闘開始時、3枚のランダムな無色のカードから1枚選び、手札に加える。', 
-		image: 'images/artifact/', 
-	},
 	AllAttackUp: {
-		name: '', 
+		name: '鉄巨人の刃金', 
 		rarity: artifactRarity.shop,
 		dedicated: artifactdedicated.gran,
 		effect: 'ターン開始時、自分は筋力2を得て、すべての敵は筋力1を得る。グラン専用', 
-		image: 'images/artifact/', 
+		image: 'images/artifact/SteelOfTheIronGiant.png', 
 	},
 	firstPoison: {
-		name: '', 
+		name: '粘っこい茸', 
 		rarity: artifactRarity.shop,
 		dedicated: artifactdedicated.djeeta,
 		effect: '戦闘開始時、すべての敵に毒4を与える。ジータ専用', 
-		image: 'images/artifact/', 
+		image: 'images/artifact/SlimyShroom.png', 
 		firstFunc: 'effectALLDebuff',
 		amount: {
 			debuff: 4,
