@@ -5242,11 +5242,18 @@ const testCardList = {
 /* addCardToOriginalDeck：カードをオリジナルデッキに入れる
 /*******************************************************/
 function addCardToOriginalDeck(card, count = 1){
-	
+
 	for(let i = 0; i < count; i++){
 		const OriginCard = deepCopyCard(card);
 		pushOriginalDeck(OriginCard);
+		// アーティファクトの効果
+		const insertDeckMoney = myArtifacts.find((artifact) => 
+			artifact.name === normalArtifact.insertDeckMoney.name);
+		if(insertDeckMoney){
+			playerStatus.money += insertDeckMoney.amount.money;
+		}
 	}
+	updateMoneyDom();
 	return true;
 }
 /*******************************************************/
@@ -5275,8 +5282,8 @@ function setupDeck(){
 			addCardToOriginalDeck(djeetaCardList.Defense, 5);
 			addCardToOriginalDeck(djeetaCardList.Assassin, 1);
 			addCardToOriginalDeck(djeetaCardList.Pulverizer, 1);
-			addCardToOriginalDeck(djeetaCardList.Removal, 2);
-			addCardToOriginalDeck(djeetaCardList.Doobie, 2);
+			addCardToOriginalDeck(djeetaCardList.Grudge, 2);
+			addCardToOriginalDeck(djeetaCardList.Cell, 2);
 			addCardToOriginalDeck(testCardList.testAttack, 2);
 		}
 		setLocalStorage(keyContinueOriginalDeck, myOriginalDeck);
@@ -6697,8 +6704,8 @@ function calcAttackDamageToTarget(totalAttack, target, attackCardFlag){
 			target.currentStatus.block = 0;
 		}
 	}
-	const damageBuff = myArtifacts
-		.find((Artifact) => Artifact.name === normalArtifact.damageBuff.name);
+	const damageBuff = myArtifacts.find((Artifact) => 
+		Artifact.name === normalArtifact.damageBuff.name);
 	if(damageBuff && attackCardFlag && totalAttack < 5 && totalAttack > 0){
 		totalAttack = 5;
 	}
@@ -6957,11 +6964,9 @@ function actionLoseHP(loseHP){
 /*******************************************************/
 /* 状態異常を与える関数
 /*******************************************************/
-function actionStatusDebuf(debuf, amountCount){
-	return actionStatusDebufToTarget(debuf, amountCount, currentTarget, true);
-}
 function actionStatusDebufToTarget(debuf, amountCount, target, animateFlag = true){
 	console.log(`${debuf.name}: ${amountCount}`);
+	let totalAmount = amountCount;
 	// 弱体無効がついていれば、無効になる
 	const mount = target.currentStatus.status
 		.find((status) => status.name === buffStatus.mount.name);
@@ -6972,6 +6977,16 @@ function actionStatusDebufToTarget(debuf, amountCount, target, animateFlag = tru
 		});
 		return;
 	}
+	// 毒の場合の追加効果
+	if(debuf.name === debuffStatus.poison.name){
+		const AdditionalPoison = myArtifacts.find((artifact) => 
+			artifact.name === normalArtifact.AdditionalPoison.name);
+		if(AdditionalPoison){
+			// 毒の付与数を1増やす
+			totalAmount++;
+		}
+	}
+
 
 	// すでに同じデバフがかかってないか確認
 	// 同じデバフは累積する
@@ -6980,12 +6995,12 @@ function actionStatusDebufToTarget(debuf, amountCount, target, animateFlag = tru
 	// 同じバフは累積する
 	for (const status of target.currentStatus.status) {
 		if (status.name == debuf.name) {
-			status.amount += amountCount;
+			status.amount += totalAmount;
 			sameDebufFlag = true;
 		}
 	}
 	const receivedDebuf = {...debuf};
-	receivedDebuf.amount = amountCount;
+	receivedDebuf.amount = totalAmount;
 	if (!sameDebufFlag) {
 		target.currentStatus.status.push(receivedDebuf);
 	}
@@ -6993,6 +7008,12 @@ function actionStatusDebufToTarget(debuf, amountCount, target, animateFlag = tru
 	if(animateFlag){
 		animateEnemyAbnormality(target, receivedDebuf);
 	}
+}
+/*******************************************************/
+/* 状態異常を与える関数(単体デバフ)
+/*******************************************************/
+function actionStatusDebuf(debuf, amountCount){
+	return actionStatusDebufToTarget(debuf, amountCount, currentTarget, true);
 }
 /*******************************************************/
 /* 状態異常を与える関数(全体デバフ)

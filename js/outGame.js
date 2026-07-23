@@ -108,6 +108,10 @@ function climbTowerStart(){
 				// 最終ステージはボス部屋
 				mapDiv.html(`<img src='${stages.boss.image}'>`);
 				mapRows.push(stages.boss);
+			} else if (row === fixedStageRest){
+				// ボス前は休憩ステージ
+				mapDiv.html(`<img src='${stages.rest.image}'>`);
+				mapRows.push(stages.rest);
 			} else if (row === fixedStageGift){
 				// 中間は宝箱ステージ
 				mapDiv.html(`<img src='${stages.gift.image}'>`);
@@ -116,8 +120,8 @@ function climbTowerStart(){
 /*				mapDiv.html(`<img src='${stages.normal.image}'>`);
 				mapRows.push(stages.normal);
 */
-				mapDiv.html(`<img src='${stages.rest.image}'>`);
-				mapRows.push(stages.rest);
+				mapDiv.html(`<img src='${stages.shop.image}'>`);
+				mapRows.push(stages.shop);
 			} else {
 				let randomMap = mt.nextInt(0, totalWeight);
 				for (const stage of Object.values(stages)) {

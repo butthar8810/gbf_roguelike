@@ -1566,8 +1566,8 @@ function setupEnemy(){
 				}
 				currentEnemies.forEach((enemy, i) => {
 					const randomHP = mt.nextInt(enemy.minHP, enemy.maxHP+1);
-					const eliteHpDown = myArtifacts
-						.find((artifact) => artifact.name === normalArtifact.eliteHpDown.name);
+					const eliteHpDown = myArtifacts.find((artifact) => 
+						artifact.name === normalArtifact.eliteHpDown.name);
 					if(eliteHpDown){
 						const nerfHP = Math.floor(randomHP * 0.75);
 						enemy.currentStatus.maxHP = nerfHP;

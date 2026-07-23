@@ -124,6 +124,7 @@ const selectCharacter = {
 /* グローバル定数
 /*****************************************************************************/
 const fixedStageBoss = 0;
+const fixedStageRest = 1;
 const fixedStageGift = 7;
 const fixedStageNormal = 15;
 const initialHandNum = 5;

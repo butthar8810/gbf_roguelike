@@ -9,6 +9,12 @@ function startRestEvent(){
 	// レストエリアとトークエリアを開放
 	displayRestEventArea();
 	setLocalStorage(keyContinueFlag, continueFlag.restArea);
+	//「ハンサムゴリラTA」のフラグ回収
+	const restEnergy = myArtifacts.find((artifact) => 
+		artifact.name === normalArtifact.restEnergy.name);
+	if(restEnergy){
+		restEnergy.amount.flag = true;
+	}
 	const btn = appendTalkingBtn('一息つく');
 	btn.click((e) => {
 		deleteTalkingBtn();
@@ -144,7 +150,14 @@ function shopCardList(){
 		//アーティファクトのラインナップ
 		const selectArtifacts = decideArtifactLineup();
 		//カード削除サービスのラインナップ
-		const deletePrice = 75 + (25 * playerStatus.playerCount.deleteServiceCount);
+		const shopService = myArtifacts.find((artifact) => 
+			artifact.name === normalArtifact.shopService.name);
+		let deletePrice = 0;
+		if(shopService){
+			deletePrice = 50;
+		} else {
+			deletePrice = 75 + (25 * playerStatus.playerCount.deleteServiceCount);
+		}
 		const deleteService = {
 			deleteFlag: true,
 			price: deletePrice,

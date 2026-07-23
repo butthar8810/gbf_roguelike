@@ -303,13 +303,11 @@ const normalArtifact = {
 		dedicated: artifactdedicated.common,
 		effect: '休憩場所を通過した次の戦闘において、2エナジーを得た状態でスタートする。', 
 		image: 'images/artifact/Hansamu.png',
-	},
-	curseMount: {
-		name: '八寒の呪符', 
-		rarity: artifactRarity.common,
-		dedicated: artifactdedicated.common,
-		effect: '次に受ける「呪い」を2回まで無効にする。', 
-		image: 'images/artifact/CurseAmulet.png',
+		firstFunc: 'effectGetEnergyFlag',
+		amount: {
+			flag: false,
+			energy: 2,
+		}
 	},
 	shopService: {
 		name: '金露果', 
@@ -317,6 +315,31 @@ const normalArtifact = {
 		dedicated: artifactdedicated.common,
 		effect: '商人のカード削除サービスの費用が50ゴールドに固定される。', 
 		image: 'images/artifact/Apple.png',
+	},
+	insertDeckMoney: {
+		name: '聖性の経典', 
+		rarity: artifactRarity.common,
+		dedicated: artifactdedicated.common,
+		effect: 'デッキにカードを追加するたび、9ゴールドを得る。', 
+		image: 'images/artifact/Sutra.png',
+		amount: {
+			money: 9,
+		}
+	},
+	AdditionalPoison: {
+		name: '', 
+		rarity: artifactRarity.common,
+		dedicated: artifactdedicated.djeeta,
+		effect: '敵に毒を与えるたび、追加で毒1を与える。ジータ専用', 
+		image: 'images/artifact/',
+	},
+
+	curseMount: {
+		name: '八寒の護符', 
+		rarity: artifactRarity.common,
+		dedicated: artifactdedicated.common,
+		effect: '次に受ける「呪い」を2回まで無効にする。', 
+		image: 'images/artifact/CurseAmulet.png',
 	},
 	randomRoom: {
 		name: '封印櫃', 
@@ -332,26 +355,12 @@ const normalArtifact = {
 		effect: 'ポーションを使用するたび、HP5回復。', 
 		image: 'images/artifact/Water.png',
 	},
-	insertDeckMoney: {
-		name: '聖性の経典', 
-		rarity: artifactRarity.common,
-		dedicated: artifactdedicated.common,
-		effect: 'デッキにカードを追加するたび、9ゴールドを得る。', 
-		image: 'images/artifact/Sutra.png',
-	},
 	halfAttackUp: {
 		name: '', 
 		rarity: artifactRarity.common,
 		dedicated: artifactdedicated.gran,
 		effect: 'HPが50％以下になると、筋力3を得る。グラン専用', 
-		image: 'images/artifact/Sutra.png',
-	},
-	AdditionalPoison: {
-		name: '', 
-		rarity: artifactRarity.common,
-		dedicated: artifactdedicated.djeeta,
-		effect: '敵に毒を与えるたび、追加で毒1を与える。ジータ専用', 
-		image: 'images/artifact/Sutra.png',
+		image: 'images/artifact/',
 	},
 
 	/*********************************アンコモン*************************************/
@@ -1242,6 +1251,11 @@ const normalArtifact = {
 		dedicated: artifactdedicated.djeeta,
 		effect: '戦闘開始時、すべての敵に毒4を与える。ジータ専用', 
 		image: 'images/artifact/', 
+		firstFunc: 'effectALLDebuff',
+		amount: {
+			debuff: 4,
+			debuffType: 'poison',
+		}
 	},
 };
 /*******************************************************/
@@ -1261,8 +1275,8 @@ function setupArtifact(){
 			getArtifact(normalArtifact.recovery);
 		} else if (selectChara == selectCharacter.djeeta.name){
 			getArtifact(normalArtifact.startDraw);
-			getArtifact(normalArtifact.takenDraw);
-			getArtifact(normalArtifact.restDraw);
+			getArtifact(normalArtifact.hitPoint10);
+			getArtifact(normalArtifact.AdditionalPoison);
 		}
 		setLocalStorage(keyContinueArtifact, myArtifacts);
 	}
@@ -1288,6 +1302,7 @@ function getArtifact(artifact){
 /* setupArtifact：ショップラインナップ決定関数
 /*******************************************************/
 function decideArtifactLineup(){
+	const selectChara = getLocalStorage(keySelectChara);
 	const selectArtifacts = [];
 	const lineupPrice = {
 		common:{minPrice: 149, maxPrice: 201},
@@ -1298,6 +1313,7 @@ function decideArtifactLineup(){
 	};
 	let index = 0
 	// ラインナップ抽選
+	// 通常アーティファクトのフィルタリング
 	let filteringArtifact = Object.values(normalArtifact).filter((artifact) => 
 		artifact.rarity === artifactRarity.common ||
 		artifact.rarity === artifactRarity.uncommon ||
@@ -1306,13 +1322,38 @@ function decideArtifactLineup(){
 	filteringArtifact = filteringArtifact.filter((artifact) => {
 		return !myArtifacts.find((myArtifact) => myArtifact.name === artifact.name);
 	});
+	//キャラ別専用カードのフィルタリング
+	if (selectChara == selectCharacter.gran.name){
+		filteringArtifact = filteringArtifact.filter((artifact) => 
+			artifact.dedicated === artifactdedicated.common || 
+			artifact.dedicated === artifactdedicated.gran
+		);
+	} else if (selectChara == selectCharacter.djeeta.name){
+		filteringArtifact = filteringArtifact.filter((artifact) => 
+			artifact.dedicated === artifactdedicated.common || 
+			artifact.dedicated === artifactdedicated.djeeta
+		);
+	}
 	console.log(filteringArtifact);
 	const lineupArtifact = shuffleArray(filteringArtifact).splice(0, 2);
-	const shopArtifact = Object.values(normalArtifact).filter((artifact) => 
+	// ショップアーティファクトのフィルタリング
+	let shopArtifact = Object.values(normalArtifact).filter((artifact) => 
 		artifact.rarity === artifactRarity.shop
 	).filter((artifact) => {
 		return !myArtifacts.find((myArtifact) => myArtifact.name === artifact.name);
 	});
+	//キャラ別専用カードのフィルタリング
+	if (selectChara == selectCharacter.gran.name){
+		shopArtifact = shopArtifact.filter((artifact) => 
+			artifact.dedicated === artifactdedicated.common || 
+			artifact.dedicated === artifactdedicated.gran
+		);
+	} else if (selectChara == selectCharacter.djeeta.name){
+		shopArtifact = shopArtifact.filter((artifact) => 
+			artifact.dedicated === artifactdedicated.common || 
+			artifact.dedicated === artifactdedicated.djeeta
+		);
+	}
 	lineupArtifact.push(shuffleArray(shopArtifact).splice(0, 1)[0]);
 	//レア度別に値段を決める
 	lineupArtifact.forEach((artifact) => {
@@ -1334,6 +1375,7 @@ function decideArtifactLineup(){
 /* decideArtifactReward：報酬用アーティファクト決定関数
 /*******************************************************/
 function decideArtifactReward(){
+	const selectChara = getLocalStorage(keySelectChara);
 	let selectRarity = {};
 	let selectArtifact = {};
 	const artifactReward = {
@@ -1350,11 +1392,22 @@ function decideArtifactReward(){
 		}
 		random -= rarity.weight;
 	}
-	const filteringArtifact = Object.values(normalArtifact)
+	let filteringArtifact = Object.values(normalArtifact)
 		.filter((artifact) => artifact.rarity === selectRarity)
 		.filter((artifact) => {
 			return !myArtifacts.find((myArtifact) => myArtifact.name === artifact.name);
 		});
+	if (selectChara == selectCharacter.gran.name){
+		filteringArtifact = filteringArtifact.filter((artifact) => 
+			artifact.dedicated === artifactdedicated.common || 
+			artifact.dedicated === artifactdedicated.gran
+		);
+	} else if (selectChara == selectCharacter.djeeta.name){
+		filteringArtifact = filteringArtifact.filter((artifact) => 
+			artifact.dedicated === artifactdedicated.common || 
+			artifact.dedicated === artifactdedicated.djeeta
+		);
+	}
 	console.log(filteringArtifact);
 	selectArtifact = shuffleArray(filteringArtifact).shift();
 
@@ -1364,12 +1417,24 @@ function decideArtifactReward(){
 /* decideBossArtifactReward：報酬用ボスアーティファクト決定関数
 /*******************************************************/
 function decideBossArtifactReward(){
+	const selectChara = getLocalStorage(keySelectChara);
 	let selectArtifacts = {};
-	const filteringArtifact = Object.values(normalArtifact)
+	let filteringArtifact = Object.values(normalArtifact)
 		.filter((artifact) => artifact.rarity === artifactRarity.boss)
 		.filter((artifact) => {
 			return !myArtifacts.find((myArtifact) => myArtifact.name === artifact.name);
 		});
+	if (selectChara == selectCharacter.gran.name){
+		filteringArtifact = filteringArtifact.filter((artifact) => 
+			artifact.dedicated === artifactdedicated.common || 
+			artifact.dedicated === artifactdedicated.gran
+		);
+	} else if (selectChara == selectCharacter.djeeta.name){
+		filteringArtifact = filteringArtifact.filter((artifact) => 
+			artifact.dedicated === artifactdedicated.common || 
+			artifact.dedicated === artifactdedicated.djeeta
+		);
+	}
 	console.log(filteringArtifact);
 	selectArtifacts = shuffleArray(filteringArtifact).splice(0, 3);
 	return {type: rewardType.boss, getFlag: true, amount: selectArtifacts};
@@ -1391,17 +1456,20 @@ function effectRecovery(amount){
 /* 最大HPが増加:〇〇
 /*******************************************************/
 function effectGetMaxHP(amount){
+	console.log('effectGetMaxHP');
 	if('maxHP' in amount){
 		playerStatus.maxHP += amount.maxHP;
 		recoveryHP(amount.maxHP);
 		setLocalStorage(keyContinuePlayerStatus, playerStatus);
 	}
+	updateHPDom();
 	return true;
 }
 /*******************************************************/
 /* 獲得時に、ランダムな2枚の「〇〇」をアップグレードする。
 /*******************************************************/
 function effectRandomUpgrade(amount){
+	console.log('effectRandomUpgrade');
 	let enhancedCard = [];
 	if('type' in amount && 'count' in amount ){
 		const filteringDeck = myOriginalDeck.filter((card) => {
@@ -1470,7 +1538,6 @@ function effectGetEnergyEveryAttack(amount){
 			amount.Count = 0;
 		}
 	}
-	console.log(amount);
 	return true;
 }
 /*******************************************************/
@@ -1525,4 +1592,15 @@ function effectChooseCards(amount){
 	}
 	selectCardRewardForArtifactDom(rewards[0]);
 	$('.result-modal').addClass('active');
+}
+/*******************************************************/
+/* 休憩場所を通過した次の戦闘において、2エナジーを得た状態でスタートする。
+/*******************************************************/
+function effectGetEnergyFlag(amount){
+	console.log('effectGetEnergyEveryTurn');
+	if('energy' in amount && 'flag' in amount && amount.flag){
+		playerStatus.remainEnergy += amount.energy;
+		amount.flag = false;
+	}
+	return true;
 }

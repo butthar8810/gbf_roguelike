@@ -1463,8 +1463,8 @@ function enemyActionAttack(enemyInfo, playerInfo, animationFlag, attackCount){
 	}
 	
 	// アーティファクトの効果
-	const Counter = myArtifacts
-		.find((artifact) => artifact.name === normalArtifact.Counter.name);
+	const Counter = myArtifacts.find((artifact) => 
+		artifact.name === normalArtifact.Counter.name);
 	if(Counter){
 		let playerCounter = Counter.amount.damage;
 		const enemyBlock = enemyInfo.currentStatus.block;
