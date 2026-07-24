@@ -156,7 +156,7 @@ function shopCardList(){
 		if(shopService){
 			deletePrice = 50;
 		} else {
-			deletePrice = 75 + (25 * playerStatus.playerCount.deleteServiceCount);
+			deletePrice = 75 + (25 * playerStatus.Count.deleteServiceCount);
 		}
 		const deleteService = {
 			deleteFlag: true,
@@ -392,7 +392,7 @@ function buyDeleteService(deleteInfo){
 		}
 	});
 	deleteInfo.deleteFlag = false;
-	playerStatus.playerCount.deleteServiceCount++;
+	playerStatus.Count.deleteServiceCount++;
 	setLocalStorage(keyContinueOriginalDeck, myOriginalDeck);
 	setLocalStorage(keyContinuePlayerStatus, playerStatus);
 	$('.delete-area').removeClass('active');

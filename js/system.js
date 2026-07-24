@@ -17,8 +17,8 @@ function recoveryHP(recovery){
 function damageHP(damage, playerInfo, animationFlag = false){
 	console.log(`Damage: ${damage}`);
 	if(!animationFlag){
-		playerInfo.playerCount.HPDownCount++;
-		console.log(`HPDownCount: ${playerInfo.playerCount.HPDownCount}`);
+		playerInfo.Count.HPDownCount++;
+		console.log(`HPDownCount: ${playerInfo.Count.HPDownCount}`);
 		myArtifacts.forEach((artifact) => {
 			if('lossHPFunc' in artifact){
 				if (artifact.lossHPFunc !== '') {
@@ -96,7 +96,7 @@ function deepCopyPlayerStatus(player){
 		cloneStatus.image = status.image;
 		cloneOjt.statuses.push(cloneStatus);
 	});
-	cloneOjt.playerCount = { ...player.playerCount };
+	cloneOjt.Count = { ...player.Count };
 
 	return cloneOjt;
 }

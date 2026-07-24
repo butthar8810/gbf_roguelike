@@ -5242,16 +5242,39 @@ const testCardList = {
 /* addCardToOriginalDeck：カードをオリジナルデッキに入れる
 /*******************************************************/
 function addCardToOriginalDeck(card, count = 1){
+	let getCard = card;
 
 	for(let i = 0; i < count; i++){
-		const OriginCard = deepCopyCard(card);
-		pushOriginalDeck(OriginCard);
 		// アーティファクトの効果
+		//デッキにカードを追加するたび、9ゴールドを得る。
 		const insertDeckMoney = myArtifacts.find((artifact) => 
 			artifact.name === normalArtifact.insertDeckMoney.name);
 		if(insertDeckMoney){
 			playerStatus.money += insertDeckMoney.amount.money;
 		}
+		//カードを獲得するたび、それをアップグレードする。
+		const attackUpgrade = myArtifacts.find((artifact) => 
+			artifact.name === normalArtifact.attackUpgrade.name);
+		const skillUpgrade = myArtifacts.find((artifact) => 
+			artifact.name === normalArtifact.skillUpgrade.name);
+		const powerUpgrade = myArtifacts.find((artifact) => 
+			artifact.name === normalArtifact.powerUpgrade.name);
+		if( (attackUpgrade && getCard.type === type.attack) || 
+			(skillUpgrade && getCard.type === type.skill) ||
+			(powerUpgrade && getCard.type === type.power) )
+		{
+			if('key' in getCard && getCard.key !== undefined ){
+				if(getCard.class === cardClass.gran){
+					getCard = granEnhancedCardList[card.key];
+				} else if(getCard.class === cardClass.djeeta){
+					getCard = djeetaEnhancedCardList[card.key];
+				} else if(getCard.class === cardClass.common){
+					getCard = commonEnhancedCardList[card.key];
+				}
+			}
+		}
+		const OriginCard = deepCopyCard(getCard);
+		pushOriginalDeck(OriginCard);
 	}
 	updateMoneyDom();
 	return true;
@@ -6250,7 +6273,7 @@ function effectAttackAndGetEnergy(amount){
 	if('attack' in amount){
 		actionAttack(amount.attack);
 	}
-	if (playerStatus.playerCount.trashCountPerTurn > 0) {
+	if (playerStatus.Count.trashCountPerTurn > 0) {
 		playerStatus.remainEnergy += 2;
 	}
 	return true;
@@ -6271,8 +6294,8 @@ function effectTimesAttackEveryAttack(amount){
 	// このターン使用した「アタック」の枚数ｘ{A}ダメージを与える。
 	console.log('effectTimesAttackEveryAttack');
 	if('attack' in amount){
-		console.log(`${playerStatus.playerCount.playAttackPerTurn}回 - 1回`);
-		for(let i = 0; i < playerStatus.playerCount.playAttackPerTurn - 1; i++){
+		console.log(`${playerStatus.Count.playAttackPerTurn}回 - 1回`);
+		for(let i = 0; i < playerStatus.Count.playAttackPerTurn - 1; i++){
 			actionAttack(amount.attack);
 		}
 	}
@@ -6589,18 +6612,18 @@ function conditionsNoDeck(){
 /* コスト変動条件用関数
 /*****************************************************/
 function changeCostDownEveryDamage(amount){
-	if (amount.originCost > playerStatus.playerCount.HPDownCount) {
-		amount.cost = amount.originCost - playerStatus.playerCount.HPDownCount;
+	if (amount.originCost > playerStatus.Count.HPDownCount) {
+		amount.cost = amount.originCost - playerStatus.Count.HPDownCount;
 	} else {
 		amount.cost = 0;
 	}
 }
 function changeCostUpEveryDamage(amount){
-	amount.cost = amount.originCost + playerStatus.playerCount.HPDownCount;
+	amount.cost = amount.originCost + playerStatus.Count.HPDownCount;
 }
 function changeCostDownEveryTrash(amount){
-	if (amount.originCost > playerStatus.playerCount.trashCountPerTurn) {
-		amount.cost = amount.originCost - playerStatus.playerCount.trashCountPerTurn;
+	if (amount.originCost > playerStatus.Count.trashCountPerTurn) {
+		amount.cost = amount.originCost - playerStatus.Count.trashCountPerTurn;
 	} else {
 		amount.cost = 0;
 	}
@@ -7119,7 +7142,7 @@ function discardCard(){
 			return false;
 		}
 		discardCardProcess(card);
-		playerStatus.playerCount.discardCount++;
+		playerStatus.Count.discardCount++;
 		setLocalStorage(keyContinuePlayerStatus, playerStatus);
 		setLocalStorage(keyContinueHand, myHand);
 		setLocalStorage(keyContinueTrash, discard);

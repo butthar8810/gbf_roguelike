@@ -152,9 +152,9 @@ function continueInfo(){
 		playerStatus.maxEnergy = lastPlayerStatus.maxEnergy;
 		playerStatus.block = lastPlayerStatus.block;
 		playerStatus.statuses = lastPlayerStatus.statuses;
-		playerStatus.playerCount.HPDownCount = lastPlayerStatus.playerCount.HPDownCount;
-		playerStatus.playerCount.trashCountPerTurn = lastPlayerStatus.playerCount.trashCountPerTurn;
-		playerStatus.playerCount.playAttackPerTurn = lastPlayerStatus.playerCount.playAttackPerTurn;
+		playerStatus.Count.HPDownCount = lastPlayerStatus.Count.HPDownCount;
+		playerStatus.Count.trashCountPerTurn = lastPlayerStatus.Count.trashCountPerTurn;
+		playerStatus.Count.playAttackPerTurn = lastPlayerStatus.Count.playAttackPerTurn;
 	}
 
 }
@@ -776,8 +776,9 @@ function startTurnStatuses(playerInfo, enemiesInfo, animateFlag){
 		});
 	}
 	// 捨て札の枚数をリセットする
-	playerInfo.playerCount.trashCountPerTurn = 0;
-	playerInfo.playerCount.playAttackPerTurn = 0;
+	playerInfo.Count.trashCountPerTurn = 0;
+	playerInfo.Count.playAttackPerTurn = 0;
+	playerInfo.Count.playSkillPerTurn = 0;
 }
 /*******************************************************/
 /* startTurnProcess：ターン開始時の処理を行う
@@ -1026,6 +1027,17 @@ function reconfigureDeck(){
 	});
 	//デッキをシャッフル
 	myDeck = shuffleArray(myDeck);
+	// アーティファクトの効果を発動
+	myArtifacts.forEach((artifact) => {
+		if('shuffleFunc' in artifact){
+			if (artifact.shuffleFunc !== '') {
+				const storedFunc = globalThis[artifact.shuffleFunc];
+				if( typeof storedFunc === 'function'){
+					ret = storedFunc(artifact.amount);
+				} 
+			}
+		}
+	});
 	setLocalStorage(keyContinueDeck, myDeck);
 	setLocalStorage(keyContinueTrash, myTrash);
 }
@@ -1108,14 +1120,41 @@ function playHandCard(index){
 	playerStatus.statuses = playerStatus.statuses.filter((status) => {
 		return status.amount > 0;
 	});
+
+	// アーティファクトの効果を発動
+	myArtifacts.forEach((artifact) => {
+		if('playFunc' in artifact){
+			if (artifact.playFunc !== '') {
+				const storedFunc = globalThis[artifact.playFunc];
+				if( typeof storedFunc === 'function'){
+					ret = storedFunc(artifact.amount);
+				} 
+			}
+		}
+	});
 	if(card.type === type.attack){
-		playerStatus.playerCount.playAttackPerTurn++;
+		playerStatus.Count.playAttackPerTurn++;
 		
 		// アーティファクトの効果を発動
 		myArtifacts.forEach((artifact) => {
 			if('attackFunc' in artifact){
 				if (artifact.attackFunc !== '') {
 					const storedFunc = globalThis[artifact.attackFunc];
+					if( typeof storedFunc === 'function'){
+						ret = storedFunc(artifact.amount);
+					} 
+				}
+			}
+		});
+	}
+	if(card.type === type.skill){
+		playerStatus.Count.playSkillPerTurn++;
+		
+		// アーティファクトの効果を発動
+		myArtifacts.forEach((artifact) => {
+			if('skillFunc' in artifact){
+				if (artifact.skillFunc !== '') {
+					const storedFunc = globalThis[artifact.skillFunc];
 					if( typeof storedFunc === 'function'){
 						ret = storedFunc(artifact.amount);
 					} 
@@ -1471,7 +1510,7 @@ function trashCardProcess(trashCard){
 			amount: trashCard.amount,
 		});
 	}
-	playerStatus.playerCount.trashCountPerTurn++;
+	playerStatus.Count.trashCountPerTurn++;
 	pushTrash(trashCard);
 }
 /*******************************************************/

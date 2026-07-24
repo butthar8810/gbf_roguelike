@@ -188,11 +188,11 @@ const normalArtifact = {
 		dedicated: artifactdedicated.common,
 		effect: '3ターンごとに、1エナジーを得る。', 
 		image: 'images/artifact/ProofOfLancer.png',
-		firstFunc: 'effectGetEnergyEveryTurn',
-		turnFunc: 'effectGetEnergyEveryTurn',
+		firstFunc: 'effectGetEnergyEvery',
+		turnFunc: 'effectGetEnergyEvery',
 		amount: {
 			Count: 0,
-			everyTurn: 3,
+			every: 3,
 			energy: 1,
 		}
 	},
@@ -202,10 +202,10 @@ const normalArtifact = {
 		dedicated: artifactdedicated.common,
 		effect: 'アタックの使用10回ごとにダメージが2倍になる。', 
 		image: 'images/artifact/ProofOfTwinSwordsman.png', 
-		attackFunc: 'effectAttaclTwiceEveryAttack',
+		attackFunc: 'effectAttaclTwiceEvery',
 		amount: {
 			Count: 0,
-			everyAttack: 10,
+			every: 10,
 		}
 	},
 	tenAttackEnergy: {
@@ -214,10 +214,10 @@ const normalArtifact = {
 		dedicated: artifactdedicated.common,
 		effect: 'アタックを10枚プレイするたび、1エナジーを得る。', 
 		image: 'images/artifact/ProofOfDweller.png', 
-		attackFunc: 'effectGetEnergyEveryAttack',
+		attackFunc: 'effectGetEnergyEvery',
 		amount: {
 			Count: 0,
-			everyAttack: 10,
+			every: 10,
 			energy: 1,
 		}
 	},
@@ -396,6 +396,7 @@ const normalArtifact = {
 		effect: '「パワー」を獲得するたび、それを「アップグレード」する。', 
 		image: 'images/artifact/Star.png', 
 	},
+	// 未実装
 	potionDrop: {
 		name: '錬金術師の証', 
 		rarity: artifactRarity.uncommon,
@@ -409,7 +410,7 @@ const normalArtifact = {
 		dedicated: artifactdedicated.common,
 		effect: 'ターン開始時、敵全体に3ダメージを与える。', 
 		image: 'images/artifact/ProofOfSamurai.png', 
-		firstFunc: '',
+		turnFunc: 'effectAllAttack',
 		amount: {
 			attack: 3,
 		}
@@ -420,7 +421,7 @@ const normalArtifact = {
 		dedicated: artifactdedicated.common,
 		effect: '1ターンの間に「スキル」を3枚プレイするたび、敵全体に5ダメージを与える。', 
 		image: 'images/artifact/ProofOfNinja.png', 
-		firstFunc: '',
+		skillFunc: 'effectAttackEveryskill',
 		amount: {
 			attack: 5,
 		}
@@ -431,6 +432,11 @@ const normalArtifact = {
 		dedicated: artifactdedicated.common,
 		effect: '1ターンに3枚の「アタック」をプレイするたび、攻撃力アップ1を得る。', 
 		image: 'images/artifact/ProofOfSwordSaint.png',
+		attackFunc: 'effectBuffEveryAttack',
+		amount: {
+			buff: 1,
+			buffType: 'attackUp',
+		}
 	},
 	threeAttackDexterity: {
 		name: '撃手の証', 
@@ -438,6 +444,11 @@ const normalArtifact = {
 		dedicated: artifactdedicated.common,
 		effect: '1ターンに3枚の「アタック」をプレイするたび、回避率アップ1を得る。', 
 		image: 'images/artifact/ProofOfShooter.png', 
+		attackFunc: 'effectBuffEveryAttack',
+		amount: {
+			buff: 1,
+			buffType: 'dexterity',
+		}
 	},
 	secondTurnBlock: {
 		name: '賢者の証', 
@@ -445,6 +456,11 @@ const normalArtifact = {
 		dedicated: artifactdedicated.common,
 		effect: '2ターン目開始時、14ブロックを得る。', 
 		image: 'images/artifact/ProofOfSage.png',
+		turnFunc: 'effectDefenseTurn',
+		amount: {
+			turn: 2,
+			block: 14,
+		}
 	},
 	bossRecovery: {
 		name: '暗殺者の証', 
@@ -452,13 +468,22 @@ const normalArtifact = {
 		dedicated: artifactdedicated.common,
 		effect: 'ボスとの戦闘開始時、HP25回復。', 
 		image: 'images/artifact/ProofOfAssassin.png',
+		firstFunc: 'effectRecoveryBoss',
+		amount: {
+			recovery: 25,
+		}
+		
 	},
 	threeAttackBlock: {
 		name: '楽師の証', 
 		rarity: artifactRarity.uncommon,
 		dedicated: artifactdedicated.common,
-		effect: '「アタック」を3枚プレイするたび、4のブロックを得る。', 
+		effect: '1ターンに3枚の「アタック」をプレイするたび、4のブロックを得る。', 
 		image: 'images/artifact/ProofOfMusician.png',
+		attackFunc: 'effectDefenseEveryAttack',
+		amount: {
+			block: 4,
+		}
 	},
 	shuffleEnergy: {
 		name: '踊手の証', 
@@ -466,6 +491,12 @@ const normalArtifact = {
 		dedicated: artifactdedicated.common,
 		effect: 'デッキを3回シャッフルするたび、2エナジーを得る。', 
 		image: 'images/artifact/ProofOfDancer.png',
+		shuffleFunc: 'effectGetEnergyEvery',
+		amount: {
+			Count: 0,
+			every: 3,
+			energy: 2,
+		}
 	},
 	knockEnergyAndDraw: {
 		name: 'オミナス・アミュレット', 
@@ -485,8 +516,10 @@ const normalArtifact = {
 		dedicated: artifactdedicated.common,
 		effect: 'カードを10枚プレイするたび、カードを1枚引く。', 
 		image: 'images/artifact/OminousFian.png', 
-		firstFunc: '',
+		playFunc: 'effectDrawEvery',
 		amount: {
+			Count: 0,
+			every: 10,
 			draw: 1,
 		}
 	},
@@ -634,8 +667,9 @@ const normalArtifact = {
 		dedicated: artifactdedicated.common,
 		effect: '3ターン目開始時、18ブロックを得る。', 
 		image: 'images/artifact/ProofOfSummoner.png', 
-		turnFunc: '',
+		turnFunc: 'effectDefenseTurn',
 		amount: {
+			turn: 3,
 			block: 18,
 		}
 	},
@@ -1253,8 +1287,9 @@ function setupArtifact(){
 			getArtifact(normalArtifact.recovery);
 		} else if (selectChara == selectCharacter.djeeta.name){
 			getArtifact(normalArtifact.startDraw);
-			getArtifact(normalArtifact.hitPoint10);
-			getArtifact(normalArtifact.AdditionalPoison);
+			getArtifact(normalArtifact.threeSkillAllD);
+			getArtifact(normalArtifact.threeAttackPower);
+			getArtifact(normalArtifact.secondTurnBlock);
 		}
 		setLocalStorage(keyContinueArtifact, myArtifacts);
 	}
@@ -1429,7 +1464,25 @@ function effectRecovery(amount){
 	}
 	return true;
 }
-
+/*******************************************************/
+/* ボスとの戦闘開始時、HP〇回復。
+/*******************************************************/
+function effectRecoveryBoss(amount){
+	if('recovery' in amount && currentLevel === stageLevel.boss){
+		recoveryHP(amount.recovery);
+	}
+	return true;
+}
+/*******************************************************/
+/* 〇ターン目開始時、〇ブロックを得る。
+/*******************************************************/
+function effectDefenseTurn(amount){
+	console.log('effectDefenseTurn');
+	if('block' in amount && 'turn' in amount && currentTurn === amount.turn){
+		actionBlock(amount.block);
+	}
+	return true;
+}
 /*******************************************************/
 /* 最大HPが増加:〇〇
 /*******************************************************/
@@ -1442,6 +1495,147 @@ function effectGetMaxHP(amount){
 	}
 	updateHPDom();
 	return true;
+}
+
+/*******************************************************/
+/* ブロック無しでターン終了した時、〇ブロックを得る
+/*******************************************************/
+function effectDefenseForNoBlock(amount){
+	console.log('effectDefenseForNoBlock');
+	if('block' in amount && playerStatus.block === 0){
+		actionBlockSimple(amount.block);
+	}
+	return true;
+}
+
+/*******************************************************/
+/* 〇ターンごとに、〇エナジーを得る。
+/*******************************************************/
+function effectGetEnergyEvery(amount){
+	console.log('effectGetEnergyEvery');
+	if('energy' in amount && 'Count' in amount && 'every' in amount){
+		amount.Count++;
+		if(amount.Count >= amount.every){
+			playerStatus.remainEnergy += amount.energy;
+			amount.Count = 0;
+		}
+	}
+	console.log(amount);
+	return true;
+}
+/*******************************************************/
+/* カードを10枚プレイするたび、カードを1枚引く。
+/*******************************************************/
+function effectDrawEvery(amount){
+	console.log('effectGetEnergyEvery');
+	if('draw' in amount && 'Count' in amount && 'every' in amount){
+		amount.Count++;
+		if(amount.Count >= amount.every){
+			const cards = drawCardFromDeck(amount.draw);
+			cards.forEach((card) => {
+				animateDrawDeck(card);
+			});
+			amount.Count = 0;
+		}
+	}
+	console.log(amount);
+	return true;
+}
+/*******************************************************/
+/* アタックを〇枚プレイするたび、2倍のダメージ。
+/*******************************************************/
+function effectAttaclTwiceEvery(amount){
+	console.log('effectAttaclTwiceEveryAttack');
+	if('Count' in amount && 'everyAttack' in amount){
+		amount.Count++;
+		if(amount.Count >= amount.every){
+			attackTwiceFlag = true;
+			amount.Count = 0;
+		}
+	}
+	console.log(amount);
+	return true;
+}
+/*******************************************************/
+/* 1ターンに3枚の「アタック」をプレイするたび、〇のブロックを得る。
+/*******************************************************/
+function effectDefenseEveryAttack(amount){
+	console.log('effectDefenseEveryAttack');
+	if('block' in amount &&
+		playerStatus.Count.playAttackPerTurn%3 === 0){
+		actionBlock(amount.block);
+	}
+	return true;
+}
+/*******************************************************/
+/* 1ターンに3枚の「アタック」をプレイするたび、攻撃力アップ1を得る。
+/*******************************************************/
+function effectBuffEveryAttack(amount){
+	console.log('effectAttackEveryskill');
+	if('buff' in amount && 'buffType' in amount &&
+		playerStatus.Count.playAttackPerTurn%3 === 0){
+		actionStatusBuf(buffStatus[amount.buffType], amount.buff);
+	}
+}
+/*******************************************************/
+/* 1ターンの間に「スキル」を3枚プレイするたび、敵全体に5ダメージを与える。
+/*******************************************************/
+function effectAttackEveryskill(amount){
+	console.log('effectAttackEveryskill');
+	if('attack' in amount && 
+		playerStatus.Count.playSkillPerTurn%3 === 0){
+		actionAttack(amount.attack);
+	}
+}
+/*******************************************************/
+/* このターン、「アタック」を1枚もプレイしなかった場合、次のターン開始時、1エナジーを得る。
+/*******************************************************/
+function effectGetEnergyNoAttack(amount){
+	console.log('effectGetEnergyNoAttack');
+	if('energy' in amount && playerStatus.Count.playAttackPerTurn === 0){
+		playerStatus.remainEnergy += amount.energy;
+	}
+}
+/*******************************************************/
+/* 戦闘中初めてHPを失うと、カードを3枚引く。
+/*******************************************************/
+function effectDrawLossHP(amount){
+	console.log('effectDrawLossHP');
+	if('draw' in amount && playerStatus.Count.HPDownCount === 1){
+		const cards = drawCardFromDeck(amount.draw);
+		cards.forEach((card) => {
+			animateDrawDeck(card);
+		});
+	}
+}
+
+/*******************************************************/
+/* 休憩場所を通過した次の戦闘において、2エナジーを得た状態でスタートする。
+/*******************************************************/
+function effectGetEnergyFlag(amount){
+	console.log('effectGetEnergyFlag');
+	if('energy' in amount && 'flag' in amount && amount.flag){
+		playerStatus.remainEnergy += amount.energy;
+		amount.flag = false;
+	}
+	return true;
+}
+/*******************************************************/
+/* カードを1枚獲得する。
+/*******************************************************/
+function effectChooseCards(amount){
+	console.log('effectChooseCards');
+	const lastReward = getLocalStorage(keyContinueReward);
+	rewards = [];
+	if (lastReward) {
+		rewards = lastReward;
+	} else {
+		const selectCards = decideCardReward(stageLevel.normal);
+		rewards.push(selectCards);
+		setLocalStorage(keyContinueReward, rewards);
+	}
+	selectCardRewardForArtifactDom(rewards[0]);
+	$('.result-modal').addClass('active');
 }
 /*******************************************************/
 /* 獲得時に、ランダムな2枚の「〇〇」をアップグレードする。
@@ -1474,111 +1668,6 @@ function effectRandomUpgrade(amount){
 			pushOriginalDeck(card);
 		});
 		setupOriginalDeckBtnDom();
-	}
-	return true;
-}
-
-/*******************************************************/
-/* ブロック無しでターン終了した時、〇ブロックを得る
-/*******************************************************/
-function effectDefenseForNoBlock(amount){
-	console.log('effectDefenseForNoBlock');
-	if('block' in amount && playerStatus.block === 0){
-		actionBlockSimple(amount.block);
-	}
-	return true;
-}
-
-/*******************************************************/
-/* 〇ターンごとに、〇エナジーを得る。
-/*******************************************************/
-function effectGetEnergyEveryTurn(amount){
-	console.log('effectGetEnergyEveryTurn');
-	if('energy' in amount && 'Count' in amount && 'everyTurn' in amount){
-		amount.Count++;
-		if(amount.Count >= amount.everyTurn){
-			playerStatus.remainEnergy += amount.energy;
-			amount.Count = 0;
-		}
-	}
-	console.log(amount);
-	return true;
-}
-/*******************************************************/
-/* アタックを〇枚プレイするたび、〇エナジーを得る。
-/*******************************************************/
-function effectGetEnergyEveryAttack(amount){
-	console.log('effectGetEnergyEveryTurn');
-	if('energy' in amount && 'Count' in amount && 'everyAttack' in amount){
-		amount.Count++;
-		if(amount.Count >= amount.everyAttack){
-			playerStatus.remainEnergy += amount.energy;
-			amount.Count = 0;
-		}
-	}
-	return true;
-}
-/*******************************************************/
-/* アタックを〇枚プレイするたび、〇エナジーを得る。
-/*******************************************************/
-function effectAttaclTwiceEveryAttack(amount){
-	console.log('effectAttaclTwiceEveryAttack');
-	if('Count' in amount && 'everyAttack' in amount){
-		amount.Count++;
-		if(amount.Count >= amount.everyAttack){
-			attackTwiceFlag = true;
-			amount.Count = 0;
-		}
-	}
-	console.log(amount);
-	return true;
-}
-/*******************************************************/
-/* このターン、「アタック」を1枚もプレイしなかった場合、次のターン開始時、1エナジーを得る。
-/*******************************************************/
-function effectGetEnergyNoAttack(amount){
-	console.log('effectGetEnergyNoAttack');
-	if('energy' in amount && playerStatus.playerCount.playAttackPerTurn === 0){
-		playerStatus.remainEnergy += amount.energy;
-	}
-}
-/*******************************************************/
-/* 戦闘中初めてHPを失うと、カードを3枚引く。
-/*******************************************************/
-function effectDrawLossHP(amount){
-	console.log('effectDrawLossHP');
-	if('draw' in amount && playerStatus.playerCount.HPDownCount === 1){
-		const cards = drawCardFromDeck(amount.draw);
-		cards.forEach((card) => {
-			animateDrawDeck(card);
-		});
-	}
-}
-/*******************************************************/
-/* カードを1枚獲得する。
-/*******************************************************/
-function effectChooseCards(amount){
-	console.log('effectChooseCards');
-	const lastReward = getLocalStorage(keyContinueReward);
-	rewards = [];
-	if (lastReward) {
-		rewards = lastReward;
-	} else {
-		const selectCards = decideCardReward(stageLevel.normal);
-		rewards.push(selectCards);
-		setLocalStorage(keyContinueReward, rewards);
-	}
-	selectCardRewardForArtifactDom(rewards[0]);
-	$('.result-modal').addClass('active');
-}
-/*******************************************************/
-/* 休憩場所を通過した次の戦闘において、2エナジーを得た状態でスタートする。
-/*******************************************************/
-function effectGetEnergyFlag(amount){
-	console.log('effectGetEnergyEveryTurn');
-	if('energy' in amount && 'flag' in amount && amount.flag){
-		playerStatus.remainEnergy += amount.energy;
-		amount.flag = false;
 	}
 	return true;
 }

@@ -217,11 +217,12 @@ const playerStatus = {
 	maxEnergy: 3,
 	block: 0,
 	statuses: [],
-	playerCount: {
+	Count: {
 		deleteServiceCount: 0,
 		HPDownCount: 0,
 		trashCountPerTurn: 0,
 		playAttackPerTurn: 0,
+		playSkillPerTurn: 0,
 	}
 };
 let myDeck = [];
