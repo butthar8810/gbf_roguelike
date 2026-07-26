@@ -5071,6 +5071,8 @@ const djeetaEnhancedCardList = {
 		}
 	},
 };
+
+
 const commonCardList = {
 	Knife: {
 		No:511001,
@@ -5089,39 +5091,652 @@ const commonCardList = {
 			discard: true,
 		}
 	},
+	CaveBat: {
+		No:511002,
+		key: 'CaveBat',
+		name: 'ケイブ・バット',
+		class: cardClass.common,
+		rarity: rarity.common,
+		type: type.attack,
+		func: '',
+		image:'images/card/common_CaveBat.jpg',
+		effect: `{A}ダメージを与える。HPを2回復する。`,
+		amount: {
+			cost: 1,
+			attack: 7,
+			originAttack: 4,
+			discard: true,
+		}
+	},
+	//******************************スキル******************************//
+	//J.A.X.
+	Doping: {
+		No:512001,
+		key: 'Doping',
+		name: 'ドーピング',
+		class: cardClass.common,
+		rarity: rarity.common,
+		type: type.skill,
+		func: 'effectBuffAndSelfHarm',
+		image:'images/card/common_Doping.jpg',
+		effect: `HPを{HP}失う。筋力{F}を得る。`,
+		amount: {
+			cost: 1,
+			buff: 2,
+			buffType: 'attackUp',
+			harm: 3,
+			discard: true,
+		}
+	},
+	//幻姿
+	Ghost: {
+		No:512001,
+		key: 'Ghost',
+		name: 'スピリット',
+		class: cardClass.common,
+		rarity: rarity.common,
+		type: type.skill,
+		func: '',
+		image:'images/card/common_Ghost.jpg',
+		effect: `{A}ダメージを与える。HPを2回復する。`,
+		amount: {
+			cost: 1,
+			discard: true,
+		}
+	},
+	/********************************************* アンコモン *********************************************/
+	//******************************アタック******************************//
 	//スイフトストライク
-	Strike: {
+	Zangetsu: {
 		No:521001,
-		key: 'Strike',
-		name: 'スイフトストライク',
+		key: 'Zangetsu',
+		name: '残月',
 		class: cardClass.common,
 		rarity: rarity.uncommon,
 		type: type.attack,
 		func: 'effectAttack',
-		image:'images/card/common_Knife.jpg',
+		image:'images/card/common_Zangetsu.jpg',
 		effect: `{A}ダメージを与える。`,
 		amount: {
 			cost: 0,
 			attack: 7,
+			discard: false,
+		}
+	},
+	//マインドブラスト
+	Cubism: {
+		No:521002,
+		key: 'Cubism',
+		name: 'キュービズム',
+		class: cardClass.common,
+		rarity: rarity.uncommon,
+		type: type.attack,
+		func: '',
+		image:'images/card/common_Cubism.jpg',
+		effect: `天賦。山札にあるカードの枚数に等しいダメージを与える。`,
+		amount: {
+			gift: true,
+			cost: 2,
+			discard: false,
+		}
+	},
+	//剣の一閃
+	Meteoric: {
+		No:521003,
+		key: 'Meteoric',
+		name: 'コンドリュール',
+		class: cardClass.common,
+		rarity: rarity.uncommon,
+		type: type.attack,
+		func: 'effectAttackAndDraw',
+		image:'images/card/common_Meteoric.jpg',
+		effect: `{A}ダメージを与える。カードを{Dr}枚引く。`,
+		amount: {
+			cost: 0,
+			attack: 3,
+			draw: 1,
+			discard: false,
+		}
+	},
+	//劇的な入場
+	Star: {
+		No:521004,
+		key: 'Star',
+		name: 'ザ・スター',
+		class: cardClass.common,
+		rarity: rarity.uncommon,
+		type: type.attack,
+		func: 'effectAllAttack',
+		image:'images/card/common_Star.jpg',
+		effect: `天賦。敵全体に{A}ダメージを与える。廃棄。`,
+		amount: {
+			gift: true,
+			cost: 0,
+			attack: 8,
 			discard: true,
 		}
 	},
+	//******************************スキル******************************//
+	//つまずき
+	Celeste: {
+		No:522001,
+		key: 'Celeste',
+		name: 'セレスト',
+		class: cardClass.common,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: 'effectDebuff',
+		image:'images/card/common_Celeste.jpg',
+		effect: `防御力ダウン2を与える。`,
+		amount: {
+			cost: 0,
+			debuff: 2,
+			debuffType: 'defenseDown',
+			discard: false,
+		}
+	},
+	//よろず屋
+	WhiteRabbit: {
+		No:522002,
+		key: 'WhiteRabbit',
+		name: 'ホワイトラビット',
+		class: cardClass.common,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: '',
+		image:'images/card/common_WhiteRabbit.jpg',
+		effect: `ランダムな無色のカードを1枚手札に加える。廃棄。`,
+		amount: {
+			cost: 0,
+			discard: true,
+		}
+	},
+	//万能薬
+	Ointment: {
+		No:522003,
+		key: 'Ointment',
+		name: 'チスイの軟膏',
+		class: cardClass.common,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: 'effectBuff',
+		image:'images/card/common_Ointment.jpg',
+		effect: `弱体無効1を得る。廃棄。`,
+		amount: {
+			cost: 0,
+			buff: 1,
+			buffType: 'mount',
+			discard: true,
+		}
+	},
+	//用心
+	Luminiera: {
+		No:522004,
+		key: 'Luminiera',
+		name: 'シュヴァリエ',
+		class: cardClass.common,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: '',
+		image:'images/card/common_Luminiera.jpg',
+		effect: `手札のカード1枚を山札の底に置く。プレイするまでそのコストは0。`,
+		amount: {
+			cost: 0,
+			discard: false,
+		}
+	},
+	//包帯
+	Bandage: {
+		No:522005,
+		key: 'Bandage',
+		name: '治療具',
+		class: cardClass.common,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: 'effectRecovery',
+		image:'images/card/common_Bandage.jpg',
+		effect: `HPを{R}回復する。廃棄。`,
+		amount: {
+			cost: 0,
+			recovery: 4,
+			discard: true,
+		}
+	},
+	//啓発
+	Dragonblood: {
+		No:522006,
+		key: 'Dragonblood',
+		name: '龍血の小瓶',
+		class: cardClass.common,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: '',
+		image:'images/card/common_Dragonblood.jpg',
+		effect: `このターン、あなたのすべての手札のコストは1になる。`,
+		amount: {
+			cost: 0,
+			discard: false,
+		}
+	},
+	//技巧
+	Tower: {
+		No:522007,
+		key: 'Tower',
+		name: 'ザ・タワー',
+		class: cardClass.common,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: 'effectDefenseAndDraw',
+		image:'images/card/common_Tower.jpg',
+		effect: `{B}ブロックを得る。カードを{Dr}枚引く。`,
+		amount: {
+			cost: 0,
+			block: 2,
+			draw: 1,
+			discard: false,
+		}
+	},
+	//深呼吸
+	Truefeather: {
+		No:522008,
+		key: 'Truefeather',
+		name: '陵光真羽',
+		class: cardClass.common,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: '',
+		image:'images/card/common_Truefeather.jpg',
+		effect: `捨て札のカードを山札に戻す。カードを1枚引く`,
+		amount: {
+			cost: 0,
+			discard: false,
+		}
+	},
+	//焦燥
+	Tiamat: {
+		No:522009,
+		key: 'Tiamat',
+		name: 'ティアマト',
+		class: cardClass.common,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: '',
+		image:'images/card/common_Tiamat.jpg',
+		effect: `手札にアタックカードが1枚も無い場合、カードを2枚引く。`,
+		amount: {
+			conditions: '', // 発動条件
+			cost: 0,
+			draw: 2,
+			discard: false,
+		}
+	},
+	//狂気
+	Fireplime: {
+		No:522010,
+		key: 'Fireplime',
+		name: '火焔羽の化石',
+		class: cardClass.common,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: '',
+		image:'images/card/common_Fireplime.jpg',
+		effect: `戦闘終了まで、手札のランダムなカード1枚のコストを0にする。廃棄。`,
+		amount: {
+			cost: 1,
+			discard: true,
+		}
+	},
+	//目くらまし
+	Moon: {
+		No:522011,
+		key: 'Moon',
+		name: 'ザ・ムーン',
+		class: cardClass.common,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: '',
+		image:'images/card/common_Moon.jpg',
+		effect: `恐怖2を与える。`,
+		amount: {
+			cost: 0,
+			debuff: 3,
+			debuffType: 'weak',
+			discard: false,
+		}
+	},
+	//発見
+	Temperance: {
+		No:522012,
+		key: 'Temperance',
+		name: 'ザ・テンペランス',
+		class: cardClass.common,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: '',
+		image:'images/card/common_Temperance.jpg',
+		effect: `3枚のランダムなカードから1枚選び、手札に加える。このターン、そのコストは0。廃棄。`,
+		amount: {
+			cost: 1,
+			discard: true,
+		}
+	},
+	//直感
+	Sylphid: {
+		No:522013,
+		key: 'Sylphid',
+		name: 'シルフィードベル',
+		class: cardClass.common,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: 'effectDefense',
+		image:'images/card/common_Sylphid.jpg',
+		effect: `{B}ブロックを得る。`,
+		amount: {
+			cost: 0,
+			block: 6,
+			discard: false,
+		}
+	},
+	//祓い清め
+	BlackRabbit: {
+		No:522014,
+		key: 'BlackRabbit',
+		name: 'ブラックラビット',
+		class: cardClass.common,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: '',
+		image:'images/card/common_BlackRabbit.jpg',
+		effect: `手札から3枚まで選び、廃棄する。廃棄。`,
+		amount: {
+			cost: 0,
+			discard: true,
+		}
+	},
+	//闇の足枷
+	Death: {
+		No:522015,
+		key: 'Death',
+		name: 'ザ・デス',
+		class: cardClass.common,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: '',
+		image:'images/card/common_Death.jpg',
+		effect: `ターン終了時まで、敵が攻撃力ダウン9を与える。廃棄。`,
+		amount: {
+			cost: 0,
+			debuff1: 6,
+			debuffType1: 'attackDown',
+			debuff2: 6,
+			debuffType2: 'invalidAttackDown',
+			discard: true,
+		}
+	},
+	//非常ボタン
+	Judgement: {
+		No:522016,
+		key: 'Judgement',
+		name: 'ザ・ジャッジメント',
+		class: cardClass.common,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: '',
+		image:'images/card/common_Judgement.jpg',
+		effect: `30ブロックを得る。次の2ターンの間、カードからブロックを得ることができない。廃棄。`,
+		amount: {
+			cost: 0,
+			block: 30,
+			discard: true,
+		}
+	},
+	/********************************************* レア *********************************************/
 	//強欲の手
-	Greed: {
+	Charm: {
 		No:531001,
-		key: 'Greed',
-		name: '強欲の手',
+		key: 'Charm',
+		name: 'くるりん祈願の金箱お守り',
 		class: cardClass.common,
 		rarity: rarity.rare,
 		type: type.attack,
-		func: 'effectAttack',
-		image:'images/card/common_Knife.jpg',
-		effect: `{A}ダメージを与える。廃棄。`,
+		func: '',
+		image:'images/card/common_Charm.jpg',
+		effect: `{A}ダメージを与える。この攻撃でミニオン以外の敵を倒すと、20ゴールドを得る。`,
 		amount: {
 			cost: 2,
 			attack: 20,
 			money: 20,
 			discard: true,
+		}
+	},
+	//******************************スキル******************************//
+	//シークレットウェポン
+	Bright: {
+		No:532001,
+		key: 'Bright',
+		name: '白き魂',
+		class: cardClass.common,
+		rarity: rarity.rare,
+		type: type.skill,
+		func: '',
+		image:'images/card/common_BrightSpirits.jpg',
+		effect: `山札から「アタック」を1枚選び、手札に加える。廃棄。`,
+		amount: {
+			cost: 0,
+			discard: true,
+		}
+	},
+	//シークレットテクニック
+	Murky: {
+		No:532002,
+		key: 'Murky',
+		name: '黒き魂',
+		class: cardClass.common,
+		rarity: rarity.rare,
+		type: type.skill,
+		func: '',
+		image:'images/card/common_MurkySpirits.jpg',
+		effect: `山札から「スキル」を1枚選び、手札に加える。廃棄。`,
+		amount: {
+			cost: 0,
+			discard: true,
+		}
+	},
+	//羽化
+	Longxin: {
+		No:532004,
+		key: 'Longxin',
+		name: '無主の龍心',
+		class: cardClass.common,
+		rarity: rarity.rare,
+		type: type.skill,
+		func: '',
+		image:'images/card/common_MasterlessLongxin.jpg',
+		effect: `ランダムな「アタック」を3枚山札に加える。この戦闘中それらのコストは0。廃棄`,
+		amount: {
+			cost: 2,
+			discard: true,
+		}
+	},
+	//サナギ
+	Yupei: {
+		No:532003,
+		key: 'Yupei',
+		name: '無主の玲瓏佩',
+		class: cardClass.common,
+		rarity: rarity.rare,
+		type: type.skill,
+		func: '',
+		image:'images/card/common_MasterlessYupei.jpg',
+		effect: `ランダムな「スキル」を3枚山札に加える。この戦闘中それらのコストは0。廃棄`,
+		amount: {
+			cost: 2,
+			discard: true,
+		}
+	},
+	//予測
+	Bangle: {
+		No:532005,
+		key: 'Bangle',
+		name: '預言者の腕輪',
+		class: cardClass.common,
+		rarity: rarity.rare,
+		type: type.skill,
+		func: '',
+		image:'images/card/common_Bangle.jpg',
+		effect: `カードを2枚引く。手札のカード1枚を山札の1番上に置く。廃棄。`,
+		amount: {
+			cost: 0,
+			discard: true,
+		}
+	},
+	//変異
+	ImmaculateSoul: {
+		No:532006,
+		key: 'ImmaculateSoul',
+		name: '純然たる魂魄',
+		class: cardClass.common,
+		rarity: rarity.rare,
+		type: type.skill,
+		func: '',
+		image:'images/card/common_ImmaculateSoul.jpg',
+		effect: `ランダムな無色のカードをX枚手札に加える。このターンそれらのカードのコストは0。廃棄。`,
+		amount: {
+			cost: 0,
+			discard: true,
+		}
+	},
+	//戦略家
+	NibelungGlas: {
+		No:532007,
+		key: 'NibelungGlas',
+		name: 'ニーベルングラス',
+		class: cardClass.common,
+		rarity: rarity.rare,
+		type: type.skill,
+		func: '',
+		image:'images/card/common_NibelungGlas.jpg',
+		effect: `カードを3枚引く。廃棄。`,
+		amount: {
+			cost: 0,
+			discard: true,
+		}
+	},
+	//暴力
+	BahamutClaw: {
+		No:532008,
+		key: 'BahamutClaw',
+		name: 'バハムートの鉤爪',
+		class: cardClass.common,
+		rarity: rarity.rare,
+		type: type.skill,
+		func: '',
+		image:'images/card/common_BahamutClaw.jpg',
+		effect: `山札から3枚のランダムなアタックを手札に加える。廃棄。`,
+		amount: {
+			cost: 0,
+			discard: true,
+		}
+	},
+	//爆弾
+	PumpkinBomb: {
+		No:532009,
+		key: 'PumpkinBomb',
+		name: '爆弾カボチャ',
+		class: cardClass.common,
+		rarity: rarity.rare,
+		type: type.skill,
+		func: '',
+		image:'images/card/common_PumpkinBomb.jpg',
+		effect: `3ターン後、すべての敵に40ダメージを与える。`,
+		amount: {
+			cost: 0,
+			discard: true,
+		}
+	},
+	//神格化
+	Mantle: {
+		No:532010,
+		key: 'Mantle',
+		name: '雄偉者たちの羽織物',
+		class: cardClass.common,
+		rarity: rarity.rare,
+		type: type.skill,
+		func: '',
+		image:'images/card/common_Mantle.jpg',
+		effect: `戦闘終了まですべてのカードをアップグレードする。廃棄。`,
+		amount: {
+			cost: 0,
+			discard: true,
+		}
+	},
+	//******************************パワー******************************//
+	//加虐性
+	Extinction: {
+		No:533001,
+		key: 'Extinction',
+		name: '滅尽の残気',
+		class: cardClass.common,
+		rarity: rarity.rare,
+		type: type.power,
+		func: 'effectBuff',
+		image:'images/card/common_ExtinctionVestige.jpg',
+		effect: `敵1体にデバフを与えるたび、その敵に5ダメージを与える。`,
+		amount: {
+			cost: 0,
+			buff: 5,
+			buffType: 'extinction',
+		}
+	},
+	//威風堂々
+	CosmicSword: {
+		No:533002,
+		key: 'CosmicSword',
+		name: 'ソード・オブ・コスモス',
+		class: cardClass.common,
+		rarity: rarity.rare,
+		type: type.power,
+		func: 'effectBuff',
+		image:'images/card/common_CosmicSword.jpg',
+		effect: `1回のターンで5枚のカードをプレイするたび、すべての敵に10ダメージを与える。`,
+		amount: {
+			cost: 0,
+			buff: 10,
+			buffType: 'cosmic',
+		}
+	},
+	//磁性
+	Reflection: {
+		No:533003,
+		key: 'Reflection',
+		name: 'リフレクトオブザムーン',
+		class: cardClass.common,
+		rarity: rarity.rare,
+		type: type.power,
+		func: 'effectBuff',
+		image:'images/card/common_Reflection.jpg',
+		effect: `ターン開始時に、ランダムな無色のカードを1枚手札に加える。`,
+		amount: {
+			cost: 2,
+			buff: 1,
+			buffType: 'moon',
+		}
+	},
+	//騒乱
+	Deathcannon: {
+		No:533004,
+		key: 'Deathcannon',
+		name: '禁栄の絶砲',
+		class: cardClass.common,
+		rarity: rarity.rare,
+		type: type.power,
+		func: 'effectBuff',
+		image:'images/card/common_Deathcannon.jpg',
+		effect: `ターン開始時、山札の一番上のカードをプレイする。`,
+		amount: {
+			cost: 2,
+			buff: 1,
+			buffType: 'deathcannon',
 		}
 	},
 };
@@ -5724,6 +6339,18 @@ function effectTimesBuff(amount){
 	endAction();
 	return true;
 }
+function effectBuffAndSelfHarm(amount){
+	// HPを{HP}失う。筋力{F}を得る。
+	console.log('effectBuffAndSelfHarm');
+	if('harm' in amount){
+		actionLoseHP(amount.harm);
+	}
+	if('buff' in amount && 'buffType' in amount ){
+		actionStatusBuf(buffStatus[amount.buffType], amount.buff);
+	}
+	endAction();
+	return true;
+}
 function effectDefenseAndBuff(amount){
 	// {B}ブロックを得る。
 	console.log('effectDefenseAndBuff');
@@ -5986,6 +6613,14 @@ function effectDefenseAndAddCommonCard(amount){
 			commonCard.push(commonCardList[amount.commonCard]);
 		}
 		animatePlayerAddHand(commonCard);
+	}
+	endAction();
+	return true;
+}
+function effectRecovery(amount){
+	console.log('effectRecovery');
+	if('recovery' in amount){
+		recoveryHP(amount.recovery);
 	}
 	endAction();
 	return true;

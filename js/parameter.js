@@ -72,6 +72,10 @@ const buffStatus = {
 	afterImage: {name: '残像', amount: '', effect: 'カードを1枚プレイするたび、{X}ブロックを得る。', image: 'images/status/status_1566.png'},
 	invincible: {name: '無敵', amount: '', effect: 'このターン中に減らせるHPは、残り{X}。', image: 'images/status/status_62.png'},
 	firstAttackUp: {name: '気力', amount: '', effect: '次にプレイするアタックが{X}の追加ダメージを与える。', image: 'images/status/status_62.png'},
+	extinction: {name: '滅尽', amount: '', effect: '敵にデバフを与えると、{X}ダメージを与える。', image: 'images/status/status_6826_1.png'},
+	cosmic: {name: '均衡の秩序', amount: '', effect: 'このターンにカードを5枚プレイするたび、敵全体に{X}ダメージを与える。', image: 'images/status/status_3295.png'},
+	deathcannon: {name: '砲撃', amount: '', effect: 'ターン開始時、山札の上から{X}枚のカードをプレイする。', image: 'images/status/status_6622.png'},
+	moon: {name: '月の雫', amount: '', effect: 'ターン開始時、{X}枚のランダムな無色のカードを手札に加える。', image: 'images/status/status_6427.png'},
 
 	// エネミー専用
 	rage: {name: '激怒', amount: '', effect: 'ターン終了時、攻撃力アップ{X}を得る。', image: 'images/status/status_9999_2.png'},
