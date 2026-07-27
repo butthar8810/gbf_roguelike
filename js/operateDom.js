@@ -189,7 +189,59 @@ function createTopPageEnhancedCardListDom(){
 		$('#panel3').append(cardDiv);
 	});
 }
+/*******************************************************/
+/* createTopPageArtifactListDom：トップページのアーティファクトリストを表示
+/*******************************************************/
+function createTopPageArtifactListDom(){
+	console.log('createTopPageArtifactListDom');
+	Object.values(normalArtifact)
+	.filter((artifact) => artifact.rarity === artifactRarity.starter)
+	.forEach((artifact) => {
+		const artifactDiv = createArtifactDom(artifact);
+		artifactDiv.addClass('display-list');
+		$('.starter-list').append(artifactDiv);
+	});
 
+	Object.values(normalArtifact)
+	.filter((artifact) => artifact.rarity === artifactRarity.common)
+	.forEach((artifact) => {
+		const artifactDiv = createArtifactDom(artifact);
+		artifactDiv.addClass('display-list');
+		$('.common-list').append(artifactDiv);
+	});
+
+	Object.values(normalArtifact)
+	.filter((artifact) => artifact.rarity === artifactRarity.uncommon)
+	.forEach((artifact) => {
+		const artifactDiv = createArtifactDom(artifact);
+		artifactDiv.addClass('display-list');
+		$('.uncommon-list').append(artifactDiv);
+	});
+	
+	Object.values(normalArtifact)
+	.filter((artifact) => artifact.rarity === artifactRarity.rare)
+	.forEach((artifact) => {
+		const artifactDiv = createArtifactDom(artifact);
+		artifactDiv.addClass('display-list');
+		$('.rare-list').append(artifactDiv);
+	});
+	
+	Object.values(normalArtifact)
+	.filter((artifact) => artifact.rarity === artifactRarity.boss)
+	.forEach((artifact) => {
+		const artifactDiv = createArtifactDom(artifact);
+		artifactDiv.addClass('display-list');
+		$('.boss-list').append(artifactDiv);
+	});
+
+	Object.values(normalArtifact)
+	.filter((artifact) => artifact.rarity === artifactRarity.shop)
+	.forEach((artifact) => {
+		const artifactDiv = createArtifactDom(artifact);
+		artifactDiv.addClass('display-list');
+		$('.shop-list').append(artifactDiv);
+	});
+}
 /*******************************************************/
 /* createTopPageCardListDom：トップページのカードリストを表示
 /*******************************************************/
@@ -258,9 +310,9 @@ function createStartBtnDom(){
 	const listBtn1Image = $('<img>')
 		.attr('src', 'images/btn1.png');
 	const listSpan = $('<span>')
-		.html('カード一覧');
+		.html('コレクション');
 	const listAnchor = $('<a>')
-		.addClass('toppage-list-btn')
+		.addClass('toppage-menu-btn')
 		.append(listBtn1Image)
 		.append(listSpan);
 	$('.start-btn-area').append(listAnchor);

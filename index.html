@@ -31,6 +31,7 @@
 	<script src="js/system.js"></script>
 	<script src="js/operateDom.js"></script>
 	<script src="js/cardEffect.js"></script>
+	<script src="js/artifact.js"></script>
 	<script src="js/toppage.js"></script>
 	
 
@@ -43,7 +44,8 @@
 		<div class="game-logo">
 			<img src="images/logo.png" alt="">
 		</div>
-		<div class="start-btn-area"></div>
+		<div class="start-btn-area">
+		</div>
 	</div>
 	<div class="select-modal">
 		<div class="select-modal-body">
@@ -91,8 +93,31 @@
 			</p>
 		</div>
 	</div>
+	<div class="menu-list-area">
+		<div class="menu-modal-body">
+			<div class="menu-modal-title">MENU</div>
+			<div class="menu-modal-content">
+				<a class="menu-card-list-btn">
+					<img src="images/btn1.png">
+					<span>カード一覧</span>
+				</a>
+				<a class="menu-artifact-list-btn">
+					<img src="images/btn1.png">
+					<span>アーティファクト</span>
+				</a>
+				<a class="menu-potion-list-btn">
+					<img src="images/btn1.png">
+					<span>ポーション</span>
+				</a>
+				<a class="menu-close-btn">
+					<img src="images/btn1.png">
+					<span>閉じる</span>
+				</a>
+			</div>
+		</div>
+	</div>
 	<div class="list-back-area">
-		<div class="tab-wrap">
+		<div class="cards-list">
 			<!-- タブの切り替え用ラジオボタン -->
 			<input id="gran" type="radio" name="card-list-group" checked>
 			<label for="gran" class="tab-btn gran-card">グラン</label>
@@ -101,12 +126,39 @@
 			<input id="common" type="radio" name="card-list-group">
 			<label for="common" class="tab-btn common-card">無色</label>
 			<div class="tab-header gran-card">
-				<input class="upgrade-checkbox" type="checkbox" name="Upgrade" value="Upgrade">アップグレードを見る
+				<input id="upgrade" class="upgrade-checkbox" type="checkbox" name="Upgrade" value="Upgrade">
+				<label for="upgrade">アップグレードを見る</label>
 			</div>
 			<div class="panel-area">
 				<div id="panel1" class="panel gran-list"></div>
 				<div id="panel2" class="panel djeeta-list"></div>
 				<div id="panel3" class="panel common-list"></div>
+			</div>
+		</div>
+		<div class="artifacts-list">
+			<div class="artifacts-contents">
+				<div class="title">スターター：</div>
+				<div class="content starter-list"></div>
+			</div>
+			<div class="artifacts-contents">
+				<div class="title">コモン：</div>
+				<div class="content common-list"></div>
+			</div>
+			<div class="artifacts-contents">
+				<div class="title">アンコモン：</div>
+				<div class="content uncommon-list"></div>
+			</div>
+			<div class="artifacts-contents">
+				<div class="title">レア：</div>
+				<div class="content rare-list"></div>
+			</div>
+			<div class="artifacts-contents">
+				<div class="title">ボス：</div>
+				<div class="content boss-list"></div>
+			</div>
+			<div class="artifacts-contents">
+				<div class="title">ショップ：</div>
+				<div class="content shop-list"></div>
 			</div>
 		</div>
 		<div class="btn-area">

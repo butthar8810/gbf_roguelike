@@ -361,18 +361,95 @@ body{
 	font-size: 24px;
 }
 
+/*****************************************************************************/
+/* メニュー画面
+/*****************************************************************************/
+.menu-list-area{
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+	visibility: hidden;
+	transition: all .3s;
+	box-sizing: border-box;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 
+	background: rgba(0,0,0,0.8);
+}
 
+/*モーダル本体に「active」クラス付与した時のスタイル*/
+.menu-list-area.active{
+	visibility: visible;
+}
+.menu-modal-body{
+	position: relative;
+	width: 380px;
+	height: 420px;
+	background-color: #eee9d8;
+	border: 3px solid #432d23;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+.menu-modal-title{
+	width: 100%;
+	height: 50px;
+	font-size: 24px;
+	font-weight: 900;
+	color: white;
+	-webkit-text-stroke: 2px rgb(80, 80, 80);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.menu-modal-content{
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.menu-modal-body a{
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-decoration: none;
+	width: 280px;
+	height: 50px;
+	margin: 20px 10px;
+}
+.menu-modal-body a:active{
+	transform: scale(0.95) translate(0,2px);
+}
+.menu-modal-body a img{
+	width: 100%;
+}
+.menu-modal-body a span{
+	position: absolute;
+	color: white;
+	font-size: 24px;
+	font-weight: 900;
+	text-shadow: 1px 1px 3px #895d34, -1px -1px 3px #895d34;
+}
 /*****************************************************************************/
 /* カードリスト 要素
 /*****************************************************************************/
 /* 全体のレイアウト */
-.tab-wrap {
+.cards-list {
 	max-width: 1100px;
 	text-align: left;
+	display:none;
+}
+.cards-list.active{
+	display: inline-block;
 }
 /* ラジオボタンを非表示にする */
-.tab-wrap input {
+.cards-list input {
 	display: none;
 }
 
@@ -436,7 +513,48 @@ body{
 	align-items: start;
 }
 
+/*****************************************************************************/
+/* アーティファクトリスト 要素
+/*****************************************************************************/
 
+.artifacts-list{
+	width: 100%;
+	max-width: 1100px;
+	height: 700px;
+	display:none;
+	flex-direction: column;
+	align-items: center;
+	overflow-y: auto;
+}
+.artifacts-list.active{
+	display:flex;
+}
+.artifacts-contents{
+	width: 900px;
+	display:flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: start;
+}
+.artifacts-contents>.title{
+	width: 100%;
+	display:flex;
+	justify-content: flex-start;
+	align-items: start;
+
+	font-size: 24px;
+	font-weight: 900;
+	color: #eec751;
+	-webkit-text-stroke: 1px rgb(36, 36, 36);
+
+}
+.artifacts-contents>.content{
+	width: 100%;
+	display:flex;
+	flex-wrap: wrap;
+	justify-content: flex-start;
+	align-items: start;
+}
 /*****************************************************************************/
 /* header 要素
 /*****************************************************************************/
@@ -499,7 +617,7 @@ header{
 	margin-right: 10px;
 }
 
-.infomation-area{
+.information-area{
 	height: 100%;
 	display: flex;
 	align-items: center;
@@ -578,6 +696,10 @@ header{
 .artifact-modal>p{
 	font-weight: 900;
 	color: #efc851;
+}
+.display-list{
+	width: 80px;
+	height: 80px;
 }
 /*****************************************************************************/
 /* stage-area: ステージエリア要素

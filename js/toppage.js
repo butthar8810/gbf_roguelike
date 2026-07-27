@@ -54,9 +54,17 @@ function loadTopPage(){
 		window.location.href = 'roguelike.html';
 	});
 
-		// カード一覧の設定
-	$('.toppage-list-btn').click((e) => {
+	// メニューモーダル表示
+	$('.toppage-menu-btn').click((e) => {
+		$('.menu-list-area').addClass('active');
+	});
+	$('.menu-close-btn').click((e) => {
+		$('.menu-list-area').removeClass('active');
+	});
+	// カード一覧の設定
+	$('.menu-card-list-btn').click((e) => {
 		$('.list-back-area').addClass('active');
+		$('.cards-list').addClass('active');
 		const checked = $('.upgrade-checkbox').prop("checked");
 		if(checked){
 			createTopPageEnhancedCardListDom();
@@ -64,8 +72,15 @@ function loadTopPage(){
 			createTopPageCardListDom();
 		}
 	});
+	$('.menu-artifact-list-btn').click((e) => {
+		$('.list-back-area').addClass('active');
+		$('.artifacts-list').addClass('active');
+		createTopPageArtifactListDom();
+	});
 	$('.close-list-btn').click((e) => {
 		$('.list-back-area').removeClass('active');
+		$('.cards-list').removeClass('active');
+		$('.artifacts-list').removeClass('active');
 	});
 
 		// Infoモーダルの設定
