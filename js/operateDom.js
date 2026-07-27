@@ -60,6 +60,9 @@ function createCardDom(card){
 	if('harm' in card.amount){
 		effect = effect.replace(/{HP}/g, `${card.amount.harm}`);
 	}
+	if('recovery' in card.amount){
+		effect = effect.replace(/{R}/g, `${card.amount.recovery}`);
+	}
 	const textParagraph = $('<p>')
 		.addClass('effect')
 		.html(effect);

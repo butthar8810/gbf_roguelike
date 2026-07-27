@@ -5098,13 +5098,13 @@ const commonCardList = {
 		class: cardClass.common,
 		rarity: rarity.common,
 		type: type.attack,
-		func: '',
+		func: 'effectAttackAndRecovery',
 		image:'images/card/common_CaveBat.jpg',
-		effect: `{A}ダメージを与える。HPを2回復する。`,
+		effect: `{A}ダメージを与える。HPを{R}回復する。`,
 		amount: {
 			cost: 1,
 			attack: 7,
-			originAttack: 4,
+			recovery: 2,
 			discard: true,
 		}
 	},
@@ -5136,12 +5136,15 @@ const commonCardList = {
 		class: cardClass.common,
 		rarity: rarity.common,
 		type: type.skill,
-		func: '',
+		func: 'effectBuff',
 		image:'images/card/common_Ghost.jpg',
-		effect: `{A}ダメージを与える。HPを2回復する。`,
+		effect: `ダメージカット{F}を得る。廃棄。エセリアル。`,
 		amount: {
 			cost: 1,
+			buff: 1,
+			buffType: 'damageCut',
 			discard: true,
+			ethereal: true,
 		}
 	},
 	/********************************************* アンコモン *********************************************/
@@ -5171,7 +5174,7 @@ const commonCardList = {
 		class: cardClass.common,
 		rarity: rarity.uncommon,
 		type: type.attack,
-		func: '',
+		func: 'effectAttackByDeckNum',
 		image:'images/card/common_Cubism.jpg',
 		effect: `天賦。山札にあるカードの枚数に等しいダメージを与える。`,
 		amount: {
@@ -5243,7 +5246,7 @@ const commonCardList = {
 		class: cardClass.common,
 		rarity: rarity.uncommon,
 		type: type.skill,
-		func: '',
+		func: 'effectGetCommonCardRandom',
 		image:'images/card/common_WhiteRabbit.jpg',
 		effect: `ランダムな無色のカードを1枚手札に加える。廃棄。`,
 		amount: {
@@ -5277,7 +5280,7 @@ const commonCardList = {
 		class: cardClass.common,
 		rarity: rarity.uncommon,
 		type: type.skill,
-		func: '',
+		func: 'effectPutCardDeckBottom',
 		image:'images/card/common_Luminiera.jpg',
 		effect: `手札のカード1枚を山札の底に置く。プレイするまでそのコストは0。`,
 		amount: {
@@ -5310,7 +5313,7 @@ const commonCardList = {
 		class: cardClass.common,
 		rarity: rarity.uncommon,
 		type: type.skill,
-		func: '',
+		func: 'effectCostDown',
 		image:'images/card/common_Dragonblood.jpg',
 		effect: `このターン、あなたのすべての手札のコストは1になる。`,
 		amount: {
@@ -5344,11 +5347,12 @@ const commonCardList = {
 		class: cardClass.common,
 		rarity: rarity.uncommon,
 		type: type.skill,
-		func: '',
+		func: 'effectReconfigureDeckAndDraw',
 		image:'images/card/common_Truefeather.jpg',
-		effect: `捨て札のカードを山札に戻す。カードを1枚引く`,
+		effect: `捨て札のカードを山札に戻す。カードを1枚引く。`,
 		amount: {
 			cost: 0,
+			draw: 1, 
 			discard: false,
 		}
 	},
@@ -5360,11 +5364,11 @@ const commonCardList = {
 		class: cardClass.common,
 		rarity: rarity.uncommon,
 		type: type.skill,
-		func: '',
+		func: 'effectDraw',
 		image:'images/card/common_Tiamat.jpg',
 		effect: `手札にアタックカードが1枚も無い場合、カードを2枚引く。`,
 		amount: {
-			conditions: '', // 発動条件
+			conditions: 'conditionsNoAttack', // 発動条件
 			cost: 0,
 			draw: 2,
 			discard: false,
@@ -5378,7 +5382,7 @@ const commonCardList = {
 		class: cardClass.common,
 		rarity: rarity.uncommon,
 		type: type.skill,
-		func: '',
+		func: 'effectRandomCardCostDown',
 		image:'images/card/common_Fireplime.jpg',
 		effect: `戦闘終了まで、手札のランダムなカード1枚のコストを0にする。廃棄。`,
 		amount: {
@@ -5394,7 +5398,7 @@ const commonCardList = {
 		class: cardClass.common,
 		rarity: rarity.uncommon,
 		type: type.skill,
-		func: '',
+		func: 'effectDebuff',
 		image:'images/card/common_Moon.jpg',
 		effect: `恐怖2を与える。`,
 		amount: {
@@ -5402,22 +5406,6 @@ const commonCardList = {
 			debuff: 3,
 			debuffType: 'weak',
 			discard: false,
-		}
-	},
-	//発見
-	Temperance: {
-		No:522012,
-		key: 'Temperance',
-		name: 'ザ・テンペランス',
-		class: cardClass.common,
-		rarity: rarity.uncommon,
-		type: type.skill,
-		func: '',
-		image:'images/card/common_Temperance.jpg',
-		effect: `3枚のランダムなカードから1枚選び、手札に加える。このターン、そのコストは0。廃棄。`,
-		amount: {
-			cost: 1,
-			discard: true,
 		}
 	},
 	//直感
@@ -5445,7 +5433,7 @@ const commonCardList = {
 		class: cardClass.common,
 		rarity: rarity.uncommon,
 		type: type.skill,
-		func: '',
+		func: 'effectThreeDiscardCard',
 		image:'images/card/common_BlackRabbit.jpg',
 		effect: `手札から3枚まで選び、廃棄する。廃棄。`,
 		amount: {
@@ -5487,6 +5475,23 @@ const commonCardList = {
 		amount: {
 			cost: 0,
 			block: 30,
+			discard: true,
+		}
+	},
+	// 未実装
+	//発見
+	Temperance: {
+		No:522012,
+		key: 'Temperance',
+		name: 'ザ・テンペランス',
+		class: cardClass.common,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: '',
+		image:'images/card/common_Temperance.jpg',
+		effect: `3枚のランダムなカードから1枚選び、手札に加える。このターン、そのコストは0。廃棄。`,
+		amount: {
+			cost: 1,
 			discard: true,
 		}
 	},
@@ -5918,10 +5923,9 @@ function setupDeck(){
 		} else if (selectChara == selectCharacter.djeeta.name){
 			addCardToOriginalDeck(djeetaCardList.Wide, 5);
 			addCardToOriginalDeck(djeetaCardList.Defense, 5);
-			addCardToOriginalDeck(djeetaCardList.Assassin, 1);
-			addCardToOriginalDeck(djeetaCardList.Pulverizer, 1);
-			addCardToOriginalDeck(djeetaCardList.Grudge, 2);
-			addCardToOriginalDeck(djeetaCardList.Cell, 2);
+			addCardToOriginalDeck(djeetaCardList.Bailout, 1);
+			addCardToOriginalDeck(commonCardList.Fireplime, 2);
+			addCardToOriginalDeck(commonCardList.BlackRabbit, 2);
 			addCardToOriginalDeck(testCardList.testAttack, 2);
 		}
 		setLocalStorage(keyContinueOriginalDeck, myOriginalDeck);
@@ -6573,7 +6577,7 @@ function effectDrawAndDebuff(amount){
 	endAction();
 	return true;
 }
-async function effectDrawAndDiscard(amount){
+function effectDrawAndDiscard(amount){
 	// カードを2枚引く。カードを1枚廃棄する。
 	console.log('effectDrawAndDebuff');
 	if('draw' in amount){
@@ -6583,7 +6587,6 @@ async function effectDrawAndDiscard(amount){
 		});
 	}
 	actionDiscardCard();
-	endAction();
 	return true;
 }
 function effectAddCommonCard(amount){
@@ -6760,6 +6763,7 @@ function effectAttackAndSeizure(amount){
 	endAction();
 	return true;
 }
+
 function effectAttackAndBloodsucking(amount){
 	// 敵全体に{A}のダメージを与える。防御されなかったダメージ分を回復する。廃棄。
 	console.log('effectAttackAndBloodsucking');
@@ -7230,6 +7234,88 @@ function effectKnifeAttack(amount){
 	endAction();
 	return true;
 }
+function effectAttackAndRecovery(amount){
+	// {A}ダメージを与える。HPを{R}回復する。
+	console.log('effectAttackAndRecovery');
+	if('attack' in amount){
+		actionAttack(amount.attack);
+	}
+	if('recovery' in amount){
+		recoveryHP(amount.recovery);
+	}
+	endAction();
+	return true;
+}
+function effectAttackByDeckNum(amount){
+	// 山札にあるカードの枚数に等しいダメージを与える。
+	console.log('effectAttack');
+	if('attack' in amount){
+		actionAttack(myDeck.length);
+	}
+	endAction();
+	return true;
+}
+function effectGetCommonCardRandom(){
+	const commonCards = shuffleArray(
+		Object.values(commonCardList).filter((card) => 
+			card.rarity === rarity.uncommon ||
+			card.rarity === rarity.rare
+		)
+	);
+	const randomCard = commonCards.shift();
+	
+	pushHand(randomCard);
+	animatePlayerAddHand([randomCard]);
+	endAction();
+	return true;
+}
+function effectPutCardDeckBottom(amount){
+	// 手札のカード1枚を山札の1番上に置く。プレイされるまでそのコストは0
+	actionPushDeckAndCostDown();
+	endAction();
+	return true;
+}
+function effectCostDown(amount){
+	// このターン、あなたのすべての手札のコストは1になる。
+	console.log('effectDrawAndDebuff');
+	myHand.forEach((hand) => {
+		if(hand.amount.cost !== 'X' || hand.amount.cost > 0){
+			hand.amount.tmpCost = 1;
+		}
+	});
+
+	endAction();
+	return true;
+}
+function effectReconfigureDeckAndDraw(amount){
+	// 捨て札のカードを山札に戻す。カードを1枚引く
+	console.log('effectReconfigureDeckAndDraw');
+	reconfigureDeck();
+	if('draw' in amount){
+		const cards = drawCardFromDeck(amount.draw);
+		cards.forEach((card) => {
+			animateDrawDeck(card);
+		});
+	}
+	endAction();
+	return true;
+}
+function effectRandomCardCostDown(amount){
+	// 戦闘終了まで、手札のランダムなカード1枚のコストを0にする。廃棄。
+	console.log('effectRandomCardCostDown');
+
+	actionRandomCardCostDown();
+
+	endAction();
+	return true;
+}
+function effectThreeDiscardCard(amount){
+	console.log('effectThreeDiscardCard');
+	// 手札から3枚まで選び、廃棄する。廃棄。
+	actionThreeDiscardCard();
+
+	return true;
+}
 /*****************************************************/
 /* 発動条件用関数
 /*****************************************************/
@@ -7242,6 +7328,13 @@ function conditionsStraight(){
 }
 function conditionsNoDeck(){
 	return myDeck.length === 0 ? true : false;
+}
+function conditionsNoAttack(){
+	const Attack = myHand.filter((card) => {
+		return card.type === type.attack;
+	});
+	console.log(`myHand Attack: ${Attack.length}`);
+	return Attack.length === 0 ? true : false;
 }
 /*****************************************************/
 /* コスト変動条件用関数
@@ -7729,8 +7822,8 @@ function trashCard(){
 		setLocalStorage(keyContinueTrash, myTrash);
 		animateHandToTrash(card);
 	});
+	updateHandDom();
 	$.when(cardTrashPromise).done(() => {
-		updateHandDom();
 		updateTrashDom();
 	});
 	startPhase(phase.action);
@@ -7748,8 +7841,8 @@ function actionTrashRandomCard(){
 	trashCardProcess(card);
 	setLocalStorage(keyContinuePlayerStatus, playerStatus);
 	animateHandToTrash(card);
+	updateHandDom();
 	$.when(cardTrashPromise).done(() => {
-		updateHandDom();
 		updateTrashDom();
 	});
 }
@@ -7758,6 +7851,12 @@ function actionTrashRandomCard(){
 /*******************************************************/
 function actionDiscardCard(){
 	startPhase(phase.discard);
+}
+function actionThreeDiscardCard(){
+	startPhase(phase.threeDiscard);
+}
+function actionFiveDiscardCard(){
+	startPhase(phase.fiveDiscard);
 }
 function discardCard(){
 	console.log('trashCard');
@@ -7784,8 +7883,8 @@ function discardCard(){
 		animateHandToDiscard(card);
 	});
 
+	updateHandDom();
 	$.when(cardTrashPromise).done(() => {
-		updateHandDom();
 		updateDiscardDom();
 	});
 	startPhase(phase.action);
@@ -7803,8 +7902,8 @@ function actionDiscardRandomCard(){
 	discardCardProcess(card);
 	setLocalStorage(keyContinuePlayerStatus, playerStatus);
 	animateHandToDiscard(card);
+	updateHandDom();
 	$.when(cardDiscardPromise).done(() => {
-		updateHandDom();
 		updateDiscardDom();
 	});
 }
@@ -7835,6 +7934,9 @@ function unshiftDeckCard(costZeroFlag = false){
 		if (card === undefined) {
 			return false;
 		}
+		if ('tmpCost' in card.amount){
+			delete card.amount.tmpCost
+		}
 		if(costZeroFlag){
 			card.amount.tmpCost = 0;
 		}
@@ -7843,14 +7945,56 @@ function unshiftDeckCard(costZeroFlag = false){
 		setLocalStorage(keyContinueTrash, myHand);
 		animateHandToDeck(card);
 	});
+	updateHandDom();
 	$.when(cardRemovePromise).done(() => {
-		updateHandDom();
 		updateDeckDom();
 	});
 	startPhase(phase.action);
 	endAction();
 }
 
+/*******************************************************/
+/* 手札をデッキの一番下に置く関数
+/*******************************************************/
+function actionPushDeckAndCostDown(){
+	startPhase(phase.pushDeckAndZero);
+}
+function pushDeckCard(costZeroFlag = false){
+	console.log('pushDeckCard');
+	if(tmpArea.length === 0){
+		return false;
+	}
+	$('.black-back-area').removeClass('active');
+	$('.return-decide-area').removeClass('active');
+	const removeCards = deleteAllTemporaryArea();
+	removeCards.forEach((removeCard) => {
+		setLocalStorage(keyContinueTemporary, tmpArea);
+		const index = findIndexHand('id', removeCard.id);
+		if (index === -1) {
+			return false;
+		}
+		const card = spliceHand(index);
+		if (card === undefined) {
+			return false;
+		}
+		if ('tmpCost' in card.amount){
+			delete card.amount.tmpCost
+		}
+		if(costZeroFlag){
+			card.amount.tmpCost = 0;
+		}
+		pushDeck(card);
+		setLocalStorage(keyContinueDeck, myDeck);
+		setLocalStorage(keyContinueTrash, myHand);
+		animateHandToDeck(card);
+	});
+	updateHandDom();
+	$.when(cardRemovePromise).done(() => {
+		updateDeckDom();
+	});
+	startPhase(phase.action);
+	endAction();
+}
 /*******************************************************/
 /* 手札をアップグレードする関数
 /*******************************************************/
@@ -8121,5 +8265,19 @@ function reuseCard(){
 	}
 	endAction();
 }
+/*******************************************************/
+/* 戦闘終了まで、手札のランダムなカード1枚のコストを0にする。
+/*******************************************************/
+function actionRandomCardCostDown(){
+	let randomIndex = Math.floor(Math.random() * myHand.length);
+	const card = myHand[randomIndex];
+	if (card === undefined) {
+		return false;
+	}
 
-
+	card.amount.changedCost = 0;
+	updateHandDom();
+}
+/*******************************************************/
+/* 3枚のランダムなカードから1枚選び、手札に加える。このターン、そのコストは0。廃棄。
+/*******************************************************/

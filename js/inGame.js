@@ -246,6 +246,8 @@ function setupBtn(){
 				trashCard();
 				break;
 			case phase.discard:
+			case phase.threeDiscard:
+			case phase.fiveDiscard:
 				discardCard();
 				break;
 			case phase.unshiftDeck:
@@ -253,6 +255,9 @@ function setupBtn(){
 				break;
 			case phase.unshiftDeckAndZero:
 				unshiftDeckCard(true);
+				break;
+			case phase.pushDeckAndZero:
+				pushDeckCard(true);
 				break;
 			case phase.upGrade:
 				upGradeCard();
@@ -301,10 +306,10 @@ function changePhase(ph){
 /* startPhase: 各フェイズを開始する
 /*******************************************************/
 function startPhase(ph = false){
-	console.log(currentPhase);
 	if(ph){
 		changePhase(ph);
 	}
+	console.log(currentPhase);
 	switch(currentPhase){
 		case phase.action:
 			disabledEndBtn(false);
@@ -329,7 +334,7 @@ function startPhase(ph = false){
 			disabledEndBtn(true);
 			disabledMyHand(false);
 			updateHandDom();
-			updateHandDecideTitleDom('捨てるカードを選んでください');
+			updateHandDecideTitleDom('捨てるカードを選んでください:１枚');
 			$.when(
 				cardDrawPromise,
 				playerAbnormalityPromise,
@@ -383,7 +388,43 @@ function startPhase(ph = false){
 			disabledEndBtn(true);
 			disabledMyHand(false);
 			updateHandDom();
-			updateHandDecideTitleDom('廃棄するカードを選んでください');
+			updateHandDecideTitleDom('廃棄するカードを選んでください:１枚');
+			$.when(
+				cardDrawPromise,
+				playerAbnormalityPromise,
+				enemyAbnormalityPromise,
+			).done(() => {
+				openHandDecideArea();
+			});
+			break;
+		case phase.threeDiscard:
+			if (myHand.length <= 0) {
+				console.log('手札がありません。');
+				startPhase(phase.action);
+				break;
+			}
+			disabledEndBtn(true);
+			disabledMyHand(false);
+			updateHandDom();
+			updateHandDecideTitleDom('廃棄するカードを選んでください:３枚まで');
+			$.when(
+				cardDrawPromise,
+				playerAbnormalityPromise,
+				enemyAbnormalityPromise,
+			).done(() => {
+				openHandDecideArea();
+			});
+			break;
+		case phase.fiveDiscard:
+			if (myHand.length <= 0) {
+				console.log('手札がありません。');
+				startPhase(phase.action);
+				break;
+			}
+			disabledEndBtn(true);
+			disabledMyHand(false);
+			updateHandDom();
+			updateHandDecideTitleDom('廃棄するカードを選んでください:５枚まで');
 			$.when(
 				cardDrawPromise,
 				playerAbnormalityPromise,
@@ -394,6 +435,7 @@ function startPhase(ph = false){
 			break;
 		case phase.unshiftDeck:
 		case phase.unshiftDeckAndZero:
+		case phase.pushDeckAndZero:
 			if (myHand.length <= 0) {
 				console.log('手札がありません。');
 				startPhase(phase.action);
@@ -852,6 +894,10 @@ function endTurn(){
 	disabledMyHand(true);
 	// 手札を捨て札エリアに格納
 	deleteAllHand().forEach((card) => {
+		//一時的なコストは削除
+		if ('tmpCost' in card.amount){
+			delete card.amount.tmpCost
+		}
 		if('ethereal' in card.amount && card.amount.ethereal){
 			// エセリアルは廃棄
 			discardCardProcess(card);
@@ -1240,6 +1286,7 @@ function endAction(){
 		cardAddHandPromise
 	).done(() => {
 		updateHandDom();
+		updateDeckDom();
 		updateTrashDom();
 		updateDiscardDom();
 	});
@@ -1287,6 +1334,12 @@ function clickHandProcess(handCardDiv, hand){
 				const index = findIndexHand('id', hand.id);
 				playHandCard(index);
 				setLocalStorage(keyContinuePlayerStatus, playerStatus);
+			} else if ('changedCost' in hand.amount && playerStatus.remainEnergy >= hand.amount.changedCost) {
+				const index = findIndexHand('id', hand.id);
+				playerStatus.remainEnergy -= hand.amount.changedCost;
+				updateEnergyDom();
+				playHandCard(index);
+				setLocalStorage(keyContinuePlayerStatus, playerStatus);
 			} else if ('tmpCost' in hand.amount && playerStatus.remainEnergy >= hand.amount.tmpCost) {
 				const index = findIndexHand('id', hand.id);
 				playerStatus.remainEnergy -= hand.amount.tmpCost;
@@ -1294,7 +1347,7 @@ function clickHandProcess(handCardDiv, hand){
 				delete hand.amount.tmpCost;
 				playHandCard(index);
 				setLocalStorage(keyContinuePlayerStatus, playerStatus);
-			}  else if (playerStatus.remainEnergy >= hand.amount.cost) {
+			} else if (playerStatus.remainEnergy >= hand.amount.cost) {
 				const index = findIndexHand('id', hand.id);
 				playerStatus.remainEnergy -= hand.amount.cost;
 				updateEnergyDom();
@@ -1313,6 +1366,7 @@ function clickHandProcess(handCardDiv, hand){
 		case phase.discard:
 		case phase.unshiftDeck:
 		case phase.unshiftDeckAndZero:
+		case phase.pushDeckAndZero:
 		case phase.reproductionToNextTurn:
 			if (index === -1) {
 				if (tmpArea.length < 1){
@@ -1346,8 +1400,25 @@ function clickHandProcess(handCardDiv, hand){
 			}
 			break;
 		case phase.threeTrash:
+		case phase.threeDiscard:
 			if (index === -1) {
 				if (tmpArea.length < 3){
+					pushTemporaryArea(hand);
+					handCardDiv.addClass("select");
+				} else {
+					const cancelCard = shiftTemporaryArea();
+					$(`#hand-card${cancelCard.id}`).removeClass("select");
+					pushTemporaryArea(hand);
+					handCardDiv.addClass("select");
+				}
+			} else {
+				spliceTemporaryArea(index);
+				handCardDiv.removeClass("select");
+			}
+			break;
+		case phase.fiveDiscard:
+			if (index === -1) {
+				if (tmpArea.length < 5){
 					pushTemporaryArea(hand);
 					handCardDiv.addClass("select");
 				} else {
@@ -1510,6 +1581,9 @@ function trashCardProcess(trashCard){
 			amount: trashCard.amount,
 		});
 	}
+	if ('tmpCost' in trashCard.amount){
+		delete trashCard.amount.tmpCost
+	}
 	playerStatus.Count.trashCountPerTurn++;
 	pushTrash(trashCard);
 }
@@ -1539,6 +1613,9 @@ function discardCardProcess(discardCard){
 			func: discardCard.discardFunc,
 			amount: discardCard.amount,
 		});
+	}
+	if ('tmpCost' in discardCard.amount){
+		delete discardCard.amount.tmpCost
 	}
 	pushDiscard(discardCard);
 }
@@ -1661,8 +1738,8 @@ async function startEnemiesTurn(){
 			}
 		}
 	}
-	startTurnProcess();
 	startTurnStatuses(playerStatus, currentEnemies, false);
+	startTurnProcess();
 	// 次の予測を決定する
 	decideNextAction();
 	setLocalStorage(keyContinueArtifact, myArtifacts);

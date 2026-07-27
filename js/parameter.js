@@ -189,11 +189,15 @@ const phase = {
 	trash: 'トラッシュフェイズ', // 手札を捨て札に
 	twoTrash: '2トラッシュフェイズ', // 手札を捨て札に
 	threeTrash: '3トラッシュフェイズ', // 手札を捨て札に
+	discard: '廃棄フェイズ',// 手札を廃棄
+	threeDiscard: '3枚廃棄フェイズ',// 手札を廃棄
+	fiveDiscard: '5枚廃棄フェイズ',// 手札を廃棄
 	restore: 'レストアフェイズ', // 捨て札をデッキに
 	reuseToHand: 'リユースフェイズ', // 廃棄札を手札に
 	upGrade: 'アップグレードフェイズ', // 手札をアップグレード
 	unshiftDeck: 'アンシフトデッキフェイズ', // 手札をデッキに
 	unshiftDeckAndZero: 'アンシフトデッキアンドゼロフェイズ', // 手札をデッキに
+	pushDeckAndZero: 'プッシュデッキアンドゼロフェイズ', // 手札をデッキに
 	reproductionToHand: '複製フェイズ', // 複製を手札に
 	twoReproductionToHand: '2枚複製フェイズ', // 複製を手札に
 	reproductionToNextTurn: 'ミラーフェイズ', // 複製をミラーエリアに
