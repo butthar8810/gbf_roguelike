@@ -286,7 +286,7 @@ const granCardList = {
 		class: cardClass.gran,
 		rarity: rarity.common,
 		type: type.skill,
-		func: 'effectBuffAndDebuff',
+		func: 'effectBuffAndSelfDebuff',
 		image:'images/card/gran_Stimulant.jpg',
 		effect: '攻撃力アップ{F}を得る。ターン終了時に攻撃力アップ{D}を失う。',
 		amount: {
@@ -1285,7 +1285,7 @@ const granCardList = {
 		class: cardClass.gran,
 		rarity: rarity.rare,
 		type: type.power,
-		func: 'effectBuffAndDebuff',
+		func: 'effectBuffAndSelfDebuff',
 		image:'images/card/gran_Lancet.jpg',
 		effect: '防御力ダウン{D}を得る。ターン開始時、{F}エナジーを得る。',
 		amount: {
@@ -1550,7 +1550,7 @@ const granEnhancedCardList = {
 		class: cardClass.gran,
 		rarity: rarity.common,
 		type: type.skill,
-		func: 'effectBuffAndDebuff',
+		func: 'effectBuffAndSelfDebuff',
 		image:'images/card/gran_Stimulant.jpg',
 		effect: '攻撃力アップ<span class="upgrade">{F}</span>を得る。ターン終了時に攻撃力アップ<span class="upgrade">4</span>を失う。',
 		amount: {
@@ -2459,7 +2459,7 @@ const granEnhancedCardList = {
 		class: cardClass.gran,
 		rarity: rarity.rare,
 		type: type.power,
-		func: 'effectBuffAndDebuff',
+		func: 'effectBuffAndSelfDebuff',
 		image:'images/card/gran_Lancet.jpg',
 		effect: '防御力ダウン<span class="upgrade">{D}</span>を得る。ターン開始時、{F}エナジーを得る。',
 		amount: {
@@ -3762,7 +3762,7 @@ const djeetaCardList = {
 		class: cardClass.djeeta,
 		rarity: rarity.rare,
 		type: type.power,
-		func: 'effectBuffAndDebuff',
+		func: 'effectBuffAndSelfDebuff',
 		image:'images/card/djeeta_NewWarld.jpg',
 		effect: `ダメージカット{F}を得る。ターン終了時ごとに回避率ダウン{D}を得る。`,
 		amount: {
@@ -5026,7 +5026,7 @@ const djeetaEnhancedCardList = {
 		class: cardClass.djeeta,
 		rarity: rarity.rare,
 		type: type.power,
-		func: 'effectBuffAndDebuff',
+		func: 'effectBuffAndSelfDebuff',
 		image:'images/card/djeeta_NewWarld.jpg',
 		effect: `ダメージカット<span class="upgrade">{F}</span>を得る。ターン終了時ごとに回避率ダウン{D}を得る。`,
 		amount: {
@@ -5318,6 +5318,7 @@ const commonCardList = {
 		effect: `このターン、あなたのすべての手札のコストは1になる。`,
 		amount: {
 			cost: 0,
+			changeCost: 1,
 			discard: false,
 		}
 	},
@@ -5449,14 +5450,14 @@ const commonCardList = {
 		class: cardClass.common,
 		rarity: rarity.uncommon,
 		type: type.skill,
-		func: '',
+		func: 'effectDoubleDebuff',
 		image:'images/card/common_Death.jpg',
 		effect: `ターン終了時まで、敵が攻撃力ダウン9を与える。廃棄。`,
 		amount: {
 			cost: 0,
-			debuff1: 6,
+			debuff1: 9,
 			debuffType1: 'attackDown',
-			debuff2: 6,
+			debuff2: 9,
 			debuffType2: 'invalidAttackDown',
 			discard: true,
 		}
@@ -5469,12 +5470,14 @@ const commonCardList = {
 		class: cardClass.common,
 		rarity: rarity.uncommon,
 		type: type.skill,
-		func: '',
+		func: 'effectDefenseAndSelfDebuff',
 		image:'images/card/common_Judgement.jpg',
 		effect: `30ブロックを得る。次の2ターンの間、カードからブロックを得ることができない。廃棄。`,
 		amount: {
 			cost: 0,
 			block: 30,
+			debuff: 2,
+			debuffType: 'noBlock',
 			discard: true,
 		}
 	},
@@ -5487,7 +5490,7 @@ const commonCardList = {
 		class: cardClass.common,
 		rarity: rarity.uncommon,
 		type: type.skill,
-		func: '',
+		func: 'effectGetRandomCard',
 		image:'images/card/common_Temperance.jpg',
 		effect: `3枚のランダムなカードから1枚選び、手札に加える。このターン、そのコストは0。廃棄。`,
 		amount: {
@@ -5925,7 +5928,7 @@ function setupDeck(){
 			addCardToOriginalDeck(djeetaCardList.Defense, 5);
 			addCardToOriginalDeck(djeetaCardList.Bailout, 1);
 			addCardToOriginalDeck(commonCardList.Fireplime, 2);
-			addCardToOriginalDeck(commonCardList.BlackRabbit, 2);
+			addCardToOriginalDeck(commonCardList.Temperance, 2);
 			addCardToOriginalDeck(testCardList.testAttack, 2);
 		}
 		setLocalStorage(keyContinueOriginalDeck, myOriginalDeck);
@@ -6430,14 +6433,14 @@ function effectDefenseAndDebuff(amount){
 		actionBlock(amount.block);
 	}
 	if('debuff' in amount && 'debuffType' in amount ){
-		actionStatusDebuf(buffStatus[amount.debuffType], amount.debuff);
+		actionStatusDebuf(debuffStatus[amount.debuffType], amount.debuff);
 	}
 	endAction();
 	return true;
 }
-function effectBuffAndDebuff(amount){
+function effectBuffAndSelfDebuff(amount){
 	// 攻撃力アップ{F}を得る。ターン終了時に攻撃力アップ2を失う。
-	console.log('effectBuffAndDebuff');
+	console.log('effectBuffAndSelfDebuff');
 	if('buff' in amount && 'buffType' in amount ){
 		actionStatusBuf(buffStatus[amount.buffType], amount.buff);
 	}
@@ -7279,8 +7282,8 @@ function effectCostDown(amount){
 	// このターン、あなたのすべての手札のコストは1になる。
 	console.log('effectDrawAndDebuff');
 	myHand.forEach((hand) => {
-		if(hand.amount.cost !== 'X' || hand.amount.cost > 0){
-			hand.amount.tmpCost = 1;
+		if(hand.amount.cost !== 'X' || hand.amount.cost >= amount.changeCost){
+			hand.amount.tmpCost = amount.changeCost;
 		}
 	});
 
@@ -7303,8 +7306,13 @@ function effectReconfigureDeckAndDraw(amount){
 function effectRandomCardCostDown(amount){
 	// 戦闘終了まで、手札のランダムなカード1枚のコストを0にする。廃棄。
 	console.log('effectRandomCardCostDown');
-
-	actionRandomCardCostDown();
+	let randomIndex = Math.floor(Math.random() * myHand.length);
+	const card = myHand[randomIndex];
+	if (card === undefined) {
+		return false;
+	}
+	card.amount.changedCost = 0;
+	updateHandDom();
 
 	endAction();
 	return true;
@@ -7313,6 +7321,26 @@ function effectThreeDiscardCard(amount){
 	console.log('effectThreeDiscardCard');
 	// 手札から3枚まで選び、廃棄する。廃棄。
 	actionThreeDiscardCard();
+
+	return true;
+}
+function effectDefenseAndSelfDebuff(amount){
+	// {B}ブロックを得る。
+	console.log('effectDefenseAndSelfDebuff');
+	console.log(amount);
+	if('block' in amount){
+		actionBlock(amount.block);
+	}
+	if('debuff' in amount && 'debuffType' in amount ){
+		actionStatusBuf(debuffStatus[amount.debuffType], amount.debuff);
+	}
+	endAction();
+	return true;
+}
+function effectGetRandomCard(amount){
+	console.log('effectThreeDiscardCard');
+	// 手札から3枚まで選び、廃棄する。廃棄。
+	actionGetRandomCard();
 
 	return true;
 }
@@ -8238,6 +8266,8 @@ function reuseCard(){
 	if(tmpArea.length === 0){
 		return false;
 	}
+	$('.black-back-area').removeClass('active');
+	$('.return-decide-area').removeClass('active');
 	const reuseCard = shiftTemporaryArea();
 	if (reuseCard !== undefined) {
 		setLocalStorage(keyContinueTemporary, tmpArea);
@@ -8257,27 +8287,30 @@ function reuseCard(){
 		$.when(cardAddHandPromise).done(() => {
 			updateHandDom();
 		});
-		$('.black-back-area').removeClass('active');
-		$('.return-decide-area').removeClass('active');
 
 		updateDiscardDom();
 		startPhase(phase.action);
 	}
 	endAction();
 }
-/*******************************************************/
-/* 戦闘終了まで、手札のランダムなカード1枚のコストを0にする。
-/*******************************************************/
-function actionRandomCardCostDown(){
-	let randomIndex = Math.floor(Math.random() * myHand.length);
-	const card = myHand[randomIndex];
-	if (card === undefined) {
-		return false;
-	}
 
-	card.amount.changedCost = 0;
-	updateHandDom();
-}
 /*******************************************************/
 /* 3枚のランダムなカードから1枚選び、手札に加える。このターン、そのコストは0。廃棄。
 /*******************************************************/
+function actionGetRandomCard(){
+	startPhase(phase.choiceThreeCard);
+}
+function GetChoiceCard(choiceCard){
+
+	$('.black-back-area').removeClass('active');
+	$('.choice-decide-area').removeClass('active');
+	pushHand(choiceCard);
+	setLocalStorage(keyContinueHand, myHand);
+	removeLocalStorage(keyContinueChoice);
+	animatePlayerAddHand([choiceCard]);
+	$.when(cardAddHandPromise).done(() => {
+		updateHandDom();
+	});
+	startPhase(phase.action);
+	endAction();
+}

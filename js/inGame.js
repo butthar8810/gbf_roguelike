@@ -547,6 +547,22 @@ function startPhase(ph = false){
 				createReuseListDom();
 			});
 			break;
+		case phase.choiceThreeCard:
+			disabledEndBtn(true);
+			disabledMyHand(true);
+			updateHandDom();
+			updateChoiceDecideTitleDom('1枚選択してください');
+			$.when(
+				cardDrawPromise,
+				playerAbnormalityPromise,
+				playerGetBlockPromise,
+				enemyAbnormalityPromise,
+			).done(() => {
+				$('.black-back-area').addClass('active');
+				$('.choice-decide-area').addClass('active');
+				createChoiceCardDom();
+			});
+			break;
 		default:
 			break;
 	}

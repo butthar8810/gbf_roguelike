@@ -98,6 +98,7 @@ const debuffStatus = {
 	poison: {name: '毒', amount: '', effect: 'ターン開始時、HPを{X}失い、毒が1減少。', image: 'images/status/status_8.png'},
 	frozen: {name: '凍結', amount: '', effect: '{X}ターンの間「アタック」をプレイできない。', image: 'images/status/status_7297.png'},
 	sleep: {name: '眠り', amount: '', effect: 'この敵はまだ目覚めていない…', image: 'images/status/status_6327.png'},
+	noBlock: {name: 'ブロック不可', amount: '', effect: 'カードからブロックを得られない。{X}ターン有効。', image: 'images/status/status_6765.png'},
 	// 1ターン有効
 	noDraw: {name: 'ショート', amount: '', effect: 'ターン終了時までカードが引けない。1ターン有効', image: 'images/status/status_1472.png'},
 	invalidAttackUp: {name: '攻UP削除', amount: '',effect: 'ターン終了時、攻撃力アップを{X}下げる',image: 'images/status/status_9999.png'},
@@ -107,7 +108,6 @@ const debuffStatus = {
 
 	heat: {name: '灼熱', amount: '', effect: 'カードをプレイするたび、あなたは{X}ダメージを受ける。', image: 'images/status/status_83.png'},
 	petrification: {name: '石化', amount: '', effect: '', image: 'images/status/status_1241.png'},
-	noBlock: {name: 'ブロック不可', amount: '', effect: 'カードからブロックを得られない。{X}ターン有効。', image: 'images/status/status_6765.png'},
 	Fading: {name: '死の宣告', amount: '', effect: '{X}ターン経過後、死亡する。', image: 'images/status/status_100.png'},
 };
 // ステータス：志望
@@ -170,6 +170,7 @@ const keyContinueLevel = 'Babu.Continue.Level';
 const keyContinueReward = 'Babu.Continue.Reward';
 const keyContinueHold = 'Babu.Continue.hold';
 const keyContinuePhase = 'Babu.Continue.Phase';
+const keyContinueChoice = 'Babu.Continue.Choice.Card';
 
 
 /*****************************************************************************/
@@ -203,6 +204,7 @@ const phase = {
 	reproductionToNextTurn: 'ミラーフェイズ', // 複製をミラーエリアに
 	repair: 'リペアフェイズ', // 保留カード選定
 	caitSea: 'ケットシーフェイズ', // 捨てるカード選定
+	choiceThreeCard: '3枚カード選択フェイズ' //3枚生成＆選択
 };
 
 /*****************************************************************************/

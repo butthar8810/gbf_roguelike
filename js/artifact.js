@@ -830,7 +830,7 @@ const normalArtifact = {
 		rarity: artifactRarity.rare,
 		dedicated: artifactdedicated.common,
 		effect: 'カードを廃棄するたび、手札にランダムなカードを加える。', 
-		image: 'images/artifact/', 
+		image: 'images/artifact/JinyaoYaodai.png', 
 		firstFunc: '',
 		amount: {
 			draw: 2,
@@ -874,7 +874,7 @@ const normalArtifact = {
 		rarity: artifactRarity.rare,
 		dedicated: artifactdedicated.gran,
 		effect: '敵に防御ダウンを与えると恐怖1も与える。グラン専用', 
-		image: 'images/artifact/', 
+		image: 'images/artifact/JinyaoMianzhao.png', 
 		firstFunc: '',
 		amount: {
 			draw: 2,

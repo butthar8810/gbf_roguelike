@@ -77,7 +77,11 @@ function createCardDom(card){
 			ret = changeFunc(card.amount);
 		}
 	}
-	if('tmpCost' in card.amount && card.amount.cost !== 'X'){
+	if('changedCost' in card.amount && card.amount.cost !== 'X'){
+		costDiv
+			.addClass('costDown')
+			.html(card.amount.changedCost);
+	}else if('tmpCost' in card.amount && card.amount.cost !== 'X'){
 		costDiv
 			.addClass('costDown')
 			.html(card.amount.tmpCost);
@@ -1121,7 +1125,58 @@ function createReuseListDom(){
 function updateEnhanceTitleDom(text){
 	$('.enhance-title').html(text);
 }
+/*****************************************************/
+/* カード報酬選択関数
+/*****************************************************/
+function updateChoiceDecideTitleDom(text){
+	$('.choice-decide-title').html(text);
+}
+function createChoiceCardDom(){
+	console.log('createChoiceCardDom');
+	let selectCards = [];
+	const lastSelectCards = getLocalStorage(keyContinueChoice);
 
+	$(`.choice-card-list`).html('');
+	if(lastSelectCards){
+		selectCards = lastSelectCards;
+	}else{
+		const selectChara = getLocalStorage(keySelectChara);
+		let selectCardList = [];
+		if (selectChara) {
+			$('.name-space').html(selectChara);
+			if (selectChara == selectCharacter.gran.name){
+				selectCardList = Object.values(granCardList);
+			} else if (selectChara == selectCharacter.djeeta.name){
+				selectCardList = Object.values(djeetaCardList);
+			} else {
+				alert('別キャラが選択されています。');
+				window.location.href = 'index.html';
+			}
+		} else{
+			alert('キャラが選択されていません。');
+			window.location.href = 'index.html';
+		}
+		selectCards = shuffleArray(selectCardList)
+		.filter((card) => 
+			card.rarity === rarity.common ||
+			card.rarity === rarity.uncommon ||
+			card.rarity === rarity.rare
+		).slice(0, 3);
+		setLocalStorage(keyContinueChoice, selectCards);
+	}
+	console.log(selectCards);
+	selectCards.forEach((card) => {
+		const selectCardDiv = createCardDom(card);
+		selectCardDiv
+			.addClass('select-card')
+			.click(card ,() => {
+				GetChoiceCard(card);
+			});
+		$(`.choice-card-list`).append(selectCardDiv);
+	});
+	
+	$('.card-select').removeClass('hidden');
+}
 /*******************************************************/
 /* disabledMyHand：手札のdisabled化
 /*******************************************************/

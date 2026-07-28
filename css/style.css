@@ -525,16 +525,19 @@ body{
 	flex-direction: column;
 	align-items: center;
 	overflow-y: auto;
+	overflow-x: visible;
 }
 .artifacts-list.active{
 	display:flex;
 }
 .artifacts-contents{
-	width: 900px;
+	width: 1000px;
 	display:flex;
 	flex-direction: column;
 	justify-content: flex-start;
 	align-items: start;
+	padding-right: 200px;
+	margin: 50px 0;
 }
 .artifacts-contents>.title{
 	width: 100%;
@@ -1624,6 +1627,36 @@ header{
 	-webkit-text-stroke: 1px gray;
 }
 /*****************************************************************************/
+/* choice-decide-area: カード選択エリア
+/*****************************************************************************/
+.choice-decide-area{
+	width: 100%;
+	max-width: 900px;
+	height: 100%;
+	margin-top: 50px;
+	display:none;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+.choice-decide-area.active{
+	display:flex
+}
+.choice-decide-title{
+	font-size: 28px;
+	color: white;
+	font-weight: 900;
+	text-stroke: 1px gray;
+	-webkit-text-stroke: 1px gray;
+}
+.choice-card-list{
+	width: 100%;
+	height: 500px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+/*****************************************************************************/
 /* return-decide-area: ショップの商品選択エリア
 /*****************************************************************************/
 .shop-buy-area{
@@ -2165,7 +2198,7 @@ header{
 
 .select-cards-area{
 	width: 100%;
-	height: calc(100% - 90px - 90px);
+	height: 500px;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
