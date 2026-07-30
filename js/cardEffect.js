@@ -1020,7 +1020,7 @@ const granCardList = {
 		class: cardClass.gran,
 		rarity: rarity.rare,
 		type: type.attack,
-		func: 'effectAttackAndSeizure',
+		func: 'effectAttackAndCapture',
 		image:'images/card/gran_Ignorance.jpg',
 		effect: '{A}のダメージを与える。この攻撃で敵を倒すと、最大HPが3増える(戦闘終了後も有効)。廃棄。',
 		amount: {
@@ -2216,7 +2216,7 @@ const granEnhancedCardList = {
 		class: cardClass.gran,
 		rarity: rarity.rare,
 		type: type.attack,
-		func: 'effectAttackAndSeizure',
+		func: 'effectAttackAndCapture',
 		image:'images/card/gran_Ignorance.jpg',
 		effect: '<span class="upgrade">{A}</span>のダメージを与える。この攻撃で敵を倒すと、最大HPが<span class="upgrade">4</span>増える(戦闘終了後も有効)。廃棄。',
 		amount: {
@@ -5481,7 +5481,6 @@ const commonCardList = {
 			discard: true,
 		}
 	},
-	// 未実装
 	//発見
 	Temperance: {
 		No:522012,
@@ -5507,7 +5506,7 @@ const commonCardList = {
 		class: cardClass.common,
 		rarity: rarity.rare,
 		type: type.attack,
-		func: '',
+		func: 'effectAttackAndPayment',
 		image:'images/card/common_Charm.jpg',
 		effect: `{A}ダメージを与える。この攻撃でミニオン以外の敵を倒すと、20ゴールドを得る。`,
 		amount: {
@@ -5590,11 +5589,12 @@ const commonCardList = {
 		class: cardClass.common,
 		rarity: rarity.rare,
 		type: type.skill,
-		func: '',
+		func: 'effectDrawAndUnshiftDeck',
 		image:'images/card/common_Bangle.jpg',
 		effect: `カードを2枚引く。手札のカード1枚を山札の1番上に置く。廃棄。`,
 		amount: {
 			cost: 0,
+			draw: 2,
 			discard: true,
 		}
 	},
@@ -6753,9 +6753,9 @@ function effectBuffForAttack(amount){
 	return true;
 }
 
-function effectAttackAndSeizure(amount){
+function effectAttackAndCapture(amount){
 	// {A}のダメージを与える。この攻撃で敵を倒すと、最大HPが3増える(戦闘終了後も有効)。廃棄。
-	console.log('effectAttackAndSeizure');
+	console.log('effectAttackAndCapture');
 	if('attack' in amount){
 		actionAttack(amount.attack);
 	}
@@ -6869,7 +6869,7 @@ function effectReproductionToHand(amount){
 	return true;
 }
 function effectTwoReproductionToHand(amount){
-	// 手札にある「アタック」か「パワー」を複製し、1枚手札に加える。
+	// 手札にある「アタック」か「パワー」を複製し、2枚手札に加える。
 	console.log('effectTwoReproductionToHand');
 	actionTwoReproductionToHand();
 	
@@ -7342,6 +7342,18 @@ function effectGetRandomCard(amount){
 	// 手札から3枚まで選び、廃棄する。廃棄。
 	actionGetRandomCard();
 
+	return true;
+}
+function effectAttackAndPayment(amount){
+	// {A}ダメージを与える。この攻撃でミニオン以外の敵を倒すと、20ゴールドを得る。
+	console.log('effectAttackAndCapture');
+	if('attack' in amount){
+		actionAttack(amount.attack);
+	}
+	if(currentTarget.currentStatus.remainHP <= 0 && 'money' in amount){
+		playerStatus.money += amount.money;
+	}
+	endAction();
 	return true;
 }
 /*****************************************************/
