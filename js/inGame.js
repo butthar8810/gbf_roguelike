@@ -286,6 +286,10 @@ function setupBtn(){
 			case phase.reuseToHand:
 				reuseCard();
 				break;
+			case phase.sertchAttackToHand:
+			case phase.sertchSkillToHand:
+				sertchCard();
+				break;
 			default:
 				break;
 		}
@@ -545,6 +549,48 @@ function startPhase(ph = false){
 				$('.black-back-area').addClass('active');
 				$('.return-decide-area').addClass('active');
 				createReuseListDom();
+			});
+			break;
+		case phase.sertchAttackToHand:
+			if (myDeck.length <= 0) {
+				console.log('デッキがありません。');
+				startPhase(phase.action);
+				break;
+			}
+			disabledEndBtn(true);
+			disabledMyHand(true);
+			updateHandDom();
+			updateReturnDecideTitleDom('1枚選んでください。：アタックカード');
+			$.when(
+				cardDrawPromise,
+				playerAbnormalityPromise,
+				playerGetBlockPromise,
+				enemyAbnormalityPromise,
+			).done(() => {
+				$('.black-back-area').addClass('active');
+				$('.return-decide-area').addClass('active');
+				createSertchListDom();
+			});
+			break;
+		case phase.sertchSkillToHand:
+			if (myDeck.length <= 0) {
+				console.log('デッキがありません。');
+				startPhase(phase.action);
+				break;
+			}
+			disabledEndBtn(true);
+			disabledMyHand(true);
+			updateHandDom();
+			updateReturnDecideTitleDom('1枚選んでください。：スキルカード');
+			$.when(
+				cardDrawPromise,
+				playerAbnormalityPromise,
+				playerGetBlockPromise,
+				enemyAbnormalityPromise,
+			).done(() => {
+				$('.black-back-area').addClass('active');
+				$('.return-decide-area').addClass('active');
+				createSertchListDom();
 			});
 			break;
 		case phase.choiceThreeCard:
@@ -956,7 +1002,7 @@ function endTurn(){
 	const barrier = playerStatus.statuses
 		.find((status) => status.name === buffStatus.barrier.name);
 	if (barrier){
-		actionBlock(barrier.amount);
+		actionBlock(barrier.amount, otherPaly);
 	}
 	//「狂化」の効果発動
 	const madness = playerStatus.statuses
@@ -1119,7 +1165,7 @@ function playHandCard(index){
 	const wind = playerStatus.statuses
 		.find((status) => status.name === buffStatus.wind.name);
 	if (wind && card.type === type.attack){
-		actionBlock(wind.amount);
+		actionBlock(wind.amount, otherPaly);
 	}
 	//「連撃アップ」の効果
 	const attackCombo = playerStatus.statuses
@@ -1162,7 +1208,7 @@ function playHandCard(index){
 	const lamentation = playerStatus.statuses
 		.find((status) => status.name === buffStatus.lamentation.name);
 	if (lamentation && lamentation.amount > 0){
-		actionBlock(lamentation.amount);
+		actionBlock(lamentation.amount, otherPaly);
 	}
 	currentEnemies.forEach((enemy) => {
 		//「窒息」効果
@@ -1343,7 +1389,8 @@ function clickHandProcess(handCardDiv, hand){
 					}
 				} 
 			}
-			if (hand.amount.cost === 'X'){// コストXのカードの場合
+			if (hand.amount.cost === 'X'){
+				// コストXのカードの場合
 				hand.amount.variable = playerStatus.remainEnergy;
 				playerStatus.remainEnergy = 0;
 				updateEnergyDom();
@@ -1351,12 +1398,21 @@ function clickHandProcess(handCardDiv, hand){
 				playHandCard(index);
 				setLocalStorage(keyContinuePlayerStatus, playerStatus);
 			} else if ('changedCost' in hand.amount && playerStatus.remainEnergy >= hand.amount.changedCost) {
+				//仮コスト（戦闘終了時まで）
 				const index = findIndexHand('id', hand.id);
 				playerStatus.remainEnergy -= hand.amount.changedCost;
 				updateEnergyDom();
 				playHandCard(index);
 				setLocalStorage(keyContinuePlayerStatus, playerStatus);
+			} else if ('untilPlayCost' in hand.amount && playerStatus.remainEnergy >= hand.amount.untilPlayCost) {
+				//仮コスト（プレイするまで）
+				const index = findIndexHand('id', hand.id);
+				playerStatus.remainEnergy -= hand.amount.untilPlayCost;
+				updateEnergyDom();
+				playHandCard(index);
+				setLocalStorage(keyContinuePlayerStatus, playerStatus);
 			} else if ('tmpCost' in hand.amount && playerStatus.remainEnergy >= hand.amount.tmpCost) {
+				//仮コスト（このターンまで）
 				const index = findIndexHand('id', hand.id);
 				playerStatus.remainEnergy -= hand.amount.tmpCost;
 				updateEnergyDom();
@@ -1364,6 +1420,7 @@ function clickHandProcess(handCardDiv, hand){
 				playHandCard(index);
 				setLocalStorage(keyContinuePlayerStatus, playerStatus);
 			} else if (playerStatus.remainEnergy >= hand.amount.cost) {
+				//コスト消費
 				const index = findIndexHand('id', hand.id);
 				playerStatus.remainEnergy -= hand.amount.cost;
 				updateEnergyDom();
@@ -1551,6 +1608,7 @@ function clickTrashCardProcess(trashCardDiv, card){
 				spliceTemporaryArea(trashIndex);
 				trashCardDiv.removeClass("select");
 			}
+			console.log(tmpArea);
 			break;
 		default:
 			break;
@@ -1586,6 +1644,54 @@ function clickDiscardCardProcess(trashCardDiv, card){
 	return true;
 }
 /*******************************************************/
+/* clickDiscardCardProcess：デッキクリック時の処理
+/*******************************************************/
+function clickDeckCardProcess(deckCardDiv, card){
+	const discardIndex = findIndexTemporaryArea('id', card.id);
+	switch(currentPhase) {
+		case phase.sertchAttackToHand:
+			if(card.type === type.attack){
+				if (discardIndex === -1) {
+					if (tmpArea.length < 1){
+						pushTemporaryArea(card);
+						deckCardDiv.addClass("select");
+					} else {
+						const cancelCard = shiftTemporaryArea();
+						$(`#deck-card${cancelCard.id}`).removeClass("select");
+						pushTemporaryArea(card);
+						deckCardDiv.addClass("select");
+					}
+				} else {
+					spliceTemporaryArea(discardIndex);
+					deckCardDiv.removeClass("select");
+				}
+			}
+			break;
+		case phase.sertchSkillToHand:
+			if(card.type === type.skill){
+				if (discardIndex === -1) {
+					if (tmpArea.length < 1){
+						pushTemporaryArea(card);
+						deckCardDiv.addClass("select");
+					} else {
+						spliceTemporaryArea(discardIndex);
+						$('.enhance-card').removeClass("select");
+						pushTemporaryArea(card);
+						deckCardDiv.addClass("select");
+					}
+				} else {
+					spliceTemporaryArea(discardIndex);
+					deckCardDiv.removeClass("select");
+				}
+			}
+			
+			break;
+		default:
+			break;
+	}
+	return true;
+}
+/*******************************************************/
 /* trashCardProcess：捨て札にする際の処理
 /*******************************************************/
 function trashCardProcess(trashCard){
@@ -1611,7 +1717,7 @@ function discardCardProcess(discardCard){
 	const painless = playerStatus.statuses
 		.find((status) => status.name === buffStatus.painless.name);
 	if(painless){
-		actionBlock(painless.amount);
+		actionBlock(painless.amount, otherPaly);
 		updatePlayerStatusDom(playerStatus);
 	}
 	//「慧眼」の効果

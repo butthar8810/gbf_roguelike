@@ -43,8 +43,13 @@ function damageHP(damage, playerInfo, animationFlag = false){
 /*******************************************************/
 function deepCopyCard(cardOjt){
 	const cloneOjt = {};
+	if('id' in cardOjt){
+		cloneOjt.id = cardOjt.id;
+	}
 	cloneOjt.No = cardOjt.No;
-	cloneOjt.key = cardOjt.key;
+	if('key' in cardOjt){
+		cloneOjt.key = cardOjt.key;
+	}
 	cloneOjt.name = cardOjt.name;
 	cloneOjt.class = cardOjt.class;
 	cloneOjt.rarity = cardOjt.rarity;
@@ -62,8 +67,13 @@ function deepCopyCardList(arrayCard){
 	const cloneArray = [];
 	arrayCard.forEach((cardOjt) => {
 		const cloneOjt = {};
+		if('id' in cardOjt){
+			cloneOjt.id = cardOjt.id;
+		}
 		cloneOjt.No = cardOjt.No;
-		cloneOjt.key = cardOjt.key;
+		if('key' in cardOjt){
+			cloneOjt.key = cardOjt.key;
+		}
 		cloneOjt.name = cardOjt.name;
 		cloneOjt.class = cardOjt.class;
 		cloneOjt.rarity = cardOjt.rarity;
@@ -176,7 +186,7 @@ function spliceOriginalDeck(index){
 /* findIndexTrash：捨て札キューから検索する
 /*******************************************************/
 function findIndexOriginalDeck(id, key){
-	return myOriginalDeck.findIndex((card) => card[id] == key);
+	return myOriginalDeck.findIndex((card) => card[id] === key);
 }
 /*******************************************************/
 /* deleteAllOriginalDeck：デッキキューをすべて削除する
@@ -188,49 +198,58 @@ function deleteAllOriginalDeck(){
 /* pushDeck：デッキキューの末尾にカードを追加する
 /*******************************************************/
 function pushDeck(card){
-	if ('id' in card) {
-		myDeck.push({
-			No: card.No,
-			key: card.key,
-			name: card.name,
-			class: card.class,
-			rarity: card.rarity,
-			type: card.type,
-			func: card.func,
-			image: card.image,
-			effect: card.effect,
-			amount: card.amount
-		});
-	} else {
-		myDeck.push(card);
-	}
+	myDeck = myDeck.map((user, index) => ({
+		...user,
+		id: index + 1
+	}));
+	myDeck.push({
+		id: myDeck.length+1,
+		No: card.No,
+		key: card.key,
+		name: card.name,
+		class: card.class,
+		rarity: card.rarity,
+		type: card.type,
+		func: card.func,
+		image: card.image,
+		effect: card.effect,
+		amount: card.amount
+	});
+
 }
 /*******************************************************/
 /* unshiftDeck：デッキキューの先頭にデータを追加する
 /*******************************************************/
 function unshiftDeck(card){
-	if ('id' in card) {
-		myDeck.unshift({
-			No: card.No,
-			key: card.key,
-			name: card.name,
-			class: card.class,
-			rarity: card.rarity,
-			type: card.type,
-			func: card.func,
-			image: card.image,
-			effect: card.effect,
-			amount: card.amount
-		});
-	} else {
-		myDeck.unshift(card);
-	}
+	myDeck.unshift({
+		id: myDeck.length+1,
+		No: card.No,
+		key: card.key,
+		name: card.name,
+		class: card.class,
+		rarity: card.rarity,
+		type: card.type,
+		func: card.func,
+		image: card.image,
+		effect: card.effect,
+		amount: card.amount
+	});
+	myDeck = myDeck.map((user, index) => ({
+		...user,
+		id: index + 1
+	}));
 }
 /*******************************************************/
 /* shiftDeck：デッキキューの先頭からデータを取り出す
 /*******************************************************/
 function shiftDeck(){
 	return myDeck.shift();
+}
+/*******************************************************/
+/* findIndexDeck：デッキキューから検索する
+/*******************************************************/
+function findIndexDeck(id, key){
+	return myDeck.findIndex((card) => card[id] === key);
 }
 /*******************************************************/
 /* spliceDeck：デッキキューのIndex番目のデータを取り出す

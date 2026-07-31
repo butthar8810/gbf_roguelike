@@ -5525,10 +5525,11 @@ const commonCardList = {
 		class: cardClass.common,
 		rarity: rarity.rare,
 		type: type.skill,
-		func: '',
+		func: 'effectAttackToHandInDeck',
 		image:'images/card/common_BrightSpirits.jpg',
 		effect: `山札から「アタック」を1枚選び、手札に加える。廃棄。`,
 		amount: {
+			conditions: 'conditionsAttackInDeck', // 発動条件
 			cost: 0,
 			discard: true,
 		}
@@ -5541,17 +5542,18 @@ const commonCardList = {
 		class: cardClass.common,
 		rarity: rarity.rare,
 		type: type.skill,
-		func: '',
+		func: 'effectSkillToHandInDeck',
 		image:'images/card/common_MurkySpirits.jpg',
 		effect: `山札から「スキル」を1枚選び、手札に加える。廃棄。`,
 		amount: {
+			conditions: 'conditionsSkillInDeck', // 発動条件
 			cost: 0,
 			discard: true,
 		}
 	},
 	//羽化
 	Longxin: {
-		No:532004,
+		No:532003,
 		key: 'Longxin',
 		name: '無主の龍心',
 		class: cardClass.common,
@@ -5567,7 +5569,7 @@ const commonCardList = {
 	},
 	//サナギ
 	Yupei: {
-		No:532003,
+		No:532004,
 		key: 'Yupei',
 		name: '無主の玲瓏佩',
 		class: cardClass.common,
@@ -5922,13 +5924,14 @@ function setupDeck(){
 			addCardToOriginalDeck(granCardList.Wide, 5);
 			addCardToOriginalDeck(granCardList.Defense, 4);
 			addCardToOriginalDeck(granCardList.PowerSwing, 1);
+			addCardToOriginalDeck(granCardList.Heavy, 2);
 
 		} else if (selectChara == selectCharacter.djeeta.name){
 			addCardToOriginalDeck(djeetaCardList.Wide, 5);
 			addCardToOriginalDeck(djeetaCardList.Defense, 5);
-			addCardToOriginalDeck(djeetaCardList.Bailout, 1);
-			addCardToOriginalDeck(commonCardList.Fireplime, 2);
-			addCardToOriginalDeck(commonCardList.Temperance, 2);
+			addCardToOriginalDeck(djeetaCardList.Pulverizer, 1);
+			addCardToOriginalDeck(commonCardList.Bright, 2);
+			addCardToOriginalDeck(commonCardList.Murky, 2);
 			addCardToOriginalDeck(testCardList.testAttack, 2);
 		}
 		setLocalStorage(keyContinueOriginalDeck, myOriginalDeck);
@@ -6172,7 +6175,7 @@ function effectAttackAndDefense(amount){
 	// {B}のブロックを得る。{A}のダメージを与える。
 	console.log('effectAttackAndDefense');
 	if('block' in amount){
-		actionBlock(amount.block);
+		actionBlock(amount.block, cardPlay);
 	}
 	if('attack' in amount){
 		actionAttack(amount.attack);
@@ -6311,7 +6314,7 @@ function effectDefense(amount){
 	// {B}ブロックを得る。
 	console.log('effectDefense');
 	if('block' in amount){
-		actionBlock(amount.block);
+		actionBlock(amount.block, cardPlay);
 	}
 	endAction();
 	return true;
@@ -6320,7 +6323,7 @@ function effectDefense(amount){
 function effectTwiceDefense(amount){
 	// 現在のブロックの値を2倍にする。
 	console.log('effectDefenseDouble');
-	actionBlock(playerStatus.block);
+	actionBlock(playerStatus.block, cardPlay);
 	endAction();
 	return true;
 }
@@ -6363,7 +6366,7 @@ function effectDefenseAndBuff(amount){
 	console.log('effectDefenseAndBuff');
 	console.log(amount);
 	if('block' in amount){
-		actionBlock(amount.block);
+		actionBlock(amount.block, cardPlay);
 	}
 	if('buff' in amount && 'buffType' in amount ){
 		actionStatusBuf(buffStatus[amount.buffType], amount.buff);
@@ -6430,7 +6433,7 @@ function effectDefenseAndDebuff(amount){
 	// 恐怖{D}を与える。{B}のブロックを得る。
 	console.log('effectDefenseAndBuff');
 	if('block' in amount){
-		actionBlock(amount.block);
+		actionBlock(amount.block, cardPlay);
 	}
 	if('debuff' in amount && 'debuffType' in amount ){
 		actionStatusDebuf(debuffStatus[amount.debuffType], amount.debuff);
@@ -6455,7 +6458,7 @@ function effectDefenseAndDraw(amount){
 	// {B}ブロックを得る。カードを1枚引く。
 	console.log('effectDefenseAndDraw');
 	if('block' in amount){
-		actionBlock(amount.block);
+		actionBlock(amount.block, cardPlay);
 	}
 	if('draw' in amount){
 		const cards = drawCardFromDeck(amount.draw);
@@ -6470,7 +6473,7 @@ function effectDefenseAndTrash(amount){
 	// {B}ブロックを得る。カードを1枚捨てる。
 	console.log('effectDefenseAndTrash');
 	if('block' in amount){
-		actionBlock(amount.block);
+		actionBlock(amount.block, cardPlay);
 	}
 	actionTrashCard();
 	return true;
@@ -6479,7 +6482,7 @@ function effectDefenseAndDiscard(amount){
 	// {B}ブロックを得る。手札を1枚廃棄する。
 	console.log('effectDefenseAndDiscard');
 	if('block' in amount){
-		actionBlock(amount.block);
+		actionBlock(amount.block, cardPlay);
 	}
 	actionDiscardCard();
 	return true;
@@ -6488,7 +6491,7 @@ function effectDefenseAndRandomDiscard(amount){
 	// {B}ブロックを得る。手札をランダムで1枚廃棄する。
 	console.log('effectDefenseAndRandomDiscard');
 	if('block' in amount){
-		actionBlock(amount.block);
+		actionBlock(amount.block, cardPlay);
 	}
 	actionDiscardRandomCard();
 	endAction();
@@ -6506,7 +6509,7 @@ function effectDefenseAndAbnormal(amount){
 		animatePlayerAddTrash(abnormal);
 	}
 	if('block' in amount){
-		actionBlock(amount.block);
+		actionBlock(amount.block, cardPlay);
 	}
 	endAction();
 	return true;
@@ -6610,7 +6613,7 @@ function effectDefenseAndAddCommonCard(amount){
 	// CommonCardを{C}枚手札に加える。
 	console.log('effectDefenseAndAddCommonCard');
 	if('block' in amount){
-		actionBlock(amount.block);
+		actionBlock(amount.block, cardPlay);
 	}
 	if('commonCard' in amount && 'count' in amount){
 		const commonCard = [];
@@ -6698,7 +6701,7 @@ function effectDefenseAndNoAttackDiscard(amount){
 	});
 	if('block' in amount){
 		const totalBlock = amount.block * noAttack.length;
-		actionBlock(totalBlock);
+		actionBlock(totalBlock, cardPlay);
 	}
 	endAction();
 	return true;
@@ -6835,7 +6838,7 @@ function effectDefenseAndUpGrade(amount){
 	// {B}ブロックを得る。戦闘終了まで手札のカード1枚をアップグレードする。
 	console.log('effectDefenseAndUpGrade');
 	if('block' in amount){
-		actionBlock(amount.block);
+		actionBlock(amount.block, cardPlay);
 	}
 	actionUpGradeCard();
 	return true;
@@ -6844,7 +6847,7 @@ function effectDefenseAndAllUpGrade(amount){
 	// {B}ブロックを得る。戦闘終了まで手札のカードすべてをアップグレードする。
 	console.log('effectDefenseAndUpGrade');
 	if('block' in amount){
-		actionBlock(amount.block);
+		actionBlock(amount.block, cardPlay);
 	}
 	actionAllUpGradeCard();
 	return true;
@@ -7053,7 +7056,7 @@ function effectDrawAndSkillDefense(amount){
 		cards.forEach((card) => {
 			animateDrawDeck(card);
 			if(card.type === type.skill){
-				actionBlock(amount.block);
+				actionBlock(amount.block, cardPlay);
 			}
 		});
 	}
@@ -7329,7 +7332,7 @@ function effectDefenseAndSelfDebuff(amount){
 	console.log('effectDefenseAndSelfDebuff');
 	console.log(amount);
 	if('block' in amount){
-		actionBlock(amount.block);
+		actionBlock(amount.block, cardPlay);
 	}
 	if('debuff' in amount && 'debuffType' in amount ){
 		actionStatusBuf(debuffStatus[amount.debuffType], amount.debuff);
@@ -7356,6 +7359,53 @@ function effectAttackAndPayment(amount){
 	endAction();
 	return true;
 }
+function effectAttackToHandInDeck(amount){
+	console.log('effectAttackToHandInDeck');
+	actionSertchAttackCard();
+	return true;
+}
+function effectSkillToHandInDeck(amount){
+	console.log('effectSkillToHandInDeck');
+	actionSertchSkillCard();
+	return true;
+}
+function effectAddRandomCard(amount){
+	// ランダムな「アタック」を3枚山札に加える。この戦闘中それらのコストは0。廃棄
+	console.log('effectAddRandomThreeCard');
+	const selectChara = getLocalStorage(keySelectChara);
+	if('count' in amount){
+		const commonCard = [];
+		for(let i = 0; i < amount.count; i++){
+			let selectCardList = [];
+			if (selectChara) {
+				$('.name-space').html(selectChara);
+				if (selectChara == selectCharacter.gran.name){
+					selectCardList = Object.values(granCardList);
+				} else if (selectChara == selectCharacter.djeeta.name){
+					selectCardList = Object.values(djeetaCardList);
+				} else {
+					alert('別キャラが選択されています。');
+					window.location.href = 'index.html';
+				}
+			} else{
+				alert('キャラが選択されていません。');
+				window.location.href = 'index.html';
+			}
+			selectCards = shuffleArray(selectCardList)
+			.filter((card) => 
+				card.rarity === rarity.common ||
+				card.rarity === rarity.uncommon ||
+				card.rarity === rarity.rare
+			).slice(0, 1);
+			selectCards = deepCopyCard(selectCards);
+			pushHand(selectCards);
+			commonCard.push(selectCards);
+		}
+		animatePlayerAddHand(commonCard);
+	}
+	endAction();
+	return true;
+}
 /*****************************************************/
 /* 発動条件用関数
 /*****************************************************/
@@ -7375,6 +7425,20 @@ function conditionsNoAttack(){
 	});
 	console.log(`myHand Attack: ${Attack.length}`);
 	return Attack.length === 0 ? true : false;
+}
+function conditionsAttackInDeck(){
+	const Attack = myDeck.filter((card) => {
+		return card.type === type.attack;
+	});
+	console.log(`myDeck Attack: ${Attack.length}`);
+	return Attack.length !== 0 ? true : false;
+}
+function conditionsSkillInDeck(){
+	const Skill = myDeck.filter((card) => {
+		return card.type === type.skill;
+	});
+	console.log(`myDeck Skill: ${Skill.length}`);
+	return Skill.length !== 0 ? true : false;
 }
 /*****************************************************/
 /* コスト変動条件用関数
@@ -7396,6 +7460,7 @@ function changeCostDownEveryTrash(amount){
 		amount.cost = 0;
 	}
 }
+
 /*****************************************************/
 /* ドロー条件用関数
 /*****************************************************/
@@ -7633,7 +7698,7 @@ function actionAllAttackSimple(attackCount, attackCardFlag = true){
 /*******************************************************/
 // ブロック計算
 /*******************************************************/
-function calcBlock(blockCount){
+function calcBlock(blockCount, is_card){
 	let totalBlock = blockCount;
 	// 回避率アップの効果
 	const dexterity = playerStatus.statuses
@@ -7661,7 +7726,7 @@ function calcBlock(blockCount){
 
 	const noBlock = playerStatus.statuses
 		.find((status) => status.name === debuffStatus.noBlock.name);
-	if (noBlock){
+	if (noBlock && is_card){
 		totalBlock = 0;
 	}
 	return totalBlock;
@@ -7669,8 +7734,8 @@ function calcBlock(blockCount){
 /*******************************************************/
 /* ブロック関数
 /*******************************************************/
-function actionBlock(blockCount, animateFlag = true){
-	playerStatus.block += calcBlock(blockCount);
+function actionBlock(blockCount, is_card, animateFlag = true){
+	playerStatus.block += calcBlock(blockCount, is_card);
 	//「創世の翼」の効果
 	const bahamut = playerStatus.statuses
 		.find((status) => status.name === buffStatus.bahamut.name);
@@ -8019,9 +8084,10 @@ function pushDeckCard(costZeroFlag = false){
 		}
 		if ('tmpCost' in card.amount){
 			delete card.amount.tmpCost
+			delete card.amount.untilPlayCost
 		}
 		if(costZeroFlag){
-			card.amount.tmpCost = 0;
+			card.amount.untilPlayCost = 0;
 		}
 		pushDeck(card);
 		setLocalStorage(keyContinueDeck, myDeck);
@@ -8305,7 +8371,47 @@ function reuseCard(){
 	}
 	endAction();
 }
+/*******************************************************/
+/* 廃棄札1枚を手札に戻す関数
+/*******************************************************/
+function actionSertchAttackCard(){
+	startPhase(phase.sertchAttackToHand);
+}
+function actionSertchSkillCard(){
+	startPhase(phase.sertchSkillToHand);
+}
+function sertchCard(){
+	console.log('sertchCard');
+	if(tmpArea.length === 0){
+		return false;
+	}
+	$('.black-back-area').removeClass('active');
+	$('.return-decide-area').removeClass('active');
+	const sertchCard = shiftTemporaryArea();
+	if (sertchCard !== undefined) {
+		setLocalStorage(keyContinueTemporary, tmpArea);
 
+		const index = findIndexDeck('No', sertchCard.No);
+		if (index === -1) {
+			return false;
+		}
+		const card = spliceDeck(index);
+		if (card === undefined) {
+			return false;
+		}
+		pushHand(card);
+		setLocalStorage(keyContinueHand, myHand);
+		setLocalStorage(keyContinueDeck, myDeck);
+		animatePlayerAddHand([card]);
+		$.when(cardAddHandPromise).done(() => {
+			updateHandDom();
+		});
+
+		updateDeckDom();
+		startPhase(phase.action);
+	}
+	endAction();
+}
 /*******************************************************/
 /* 3枚のランダムなカードから1枚選び、手札に加える。このターン、そのコストは0。廃棄。
 /*******************************************************/

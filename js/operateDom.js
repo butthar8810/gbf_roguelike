@@ -81,6 +81,10 @@ function createCardDom(card){
 		costDiv
 			.addClass('costDown')
 			.html(card.amount.changedCost);
+	}else if('untilPlayCost' in card.amount && card.amount.cost !== 'X'){
+		costDiv
+			.addClass('costDown')
+			.html(card.amount.untilPlayCost);
 	}else if('tmpCost' in card.amount && card.amount.cost !== 'X'){
 		costDiv
 			.addClass('costDown')
@@ -570,29 +574,7 @@ function updateDiscardDom(){
 function updateEnergyDom(){
 	$(`.energy-count`).html(`${playerStatus.remainEnergy}/${playerStatus.maxEnergy}`);
 }
-/*******************************************************/
-/* updateEnergyDom：手札用DOMを生成
-/*******************************************************/
-function updateHandDom(){
-	console.log('updateHandDom');
-	$(`.hand-area`).html('');
-	myHand.forEach((hand, i) => {
-		let attackDamage = 0;
-		let blockCount = 0;
-		const handCardDiv = createCardDom(hand);
-		handCardDiv
-			.attr('id', `hand-card${hand.id}`)
-			.addClass('hand-card')
-			// 手札クリック時の処理登録
-			.click(hand ,() => {
-				clickHandProcess(handCardDiv, hand);
-			});
-		$(`.hand-area`).append(handCardDiv);
-	});
-}
-function hiddenHandDom(){
-	$(`.hand-area`).html('');
-}
+
 /*******************************************************/
 /* updatePlayerAreaDom：プレイヤーエリアを生成
 /*******************************************************/
@@ -1044,6 +1026,27 @@ function updateReturnDecideTitleDom(text){
 	$('.return-decide-title').html(text);
 }
 /*******************************************************/
+/* updateEnergyDom：手札用DOMを生成
+/*******************************************************/
+function updateHandDom(){
+	console.log('updateHandDom');
+	$(`.hand-area`).html('');
+	myHand.forEach((hand) => {
+		const handCardDiv = createCardDom(hand);
+		handCardDiv
+			.attr('id', `hand-card${hand.id}`)
+			.addClass('hand-card')
+			// 手札クリック時の処理登録
+			.click(hand ,() => {
+				clickHandProcess(handCardDiv, hand);
+			});
+		$(`.hand-area`).append(handCardDiv);
+	});
+}
+function hiddenHandDom(){
+	$(`.hand-area`).html('');
+}
+/*******************************************************/
 /* createDeckListDom：デッキ一覧のDOM生成
 /*******************************************************/
 function createDeckListDom(){
@@ -1090,33 +1093,56 @@ function createDiscardListDom(){
 	});
 }
 /*******************************************************/
-/* createRestoreListDom：捨て札一覧のDOM生成
+/* createDeckListDom：デッキ一覧のDOM生成(カード効果用)
 /*******************************************************/
-function createRestoreListDom(){
-	$('.card-list').html('');
-	myTrash.forEach((card) => {
-		const restoreCardDiv = createCardDom(card);
-		restoreCardDiv
+function createSertchListDom(){
+	$('.return-card-list').html('');
+	const copyDeck = deepCopyCardList(myDeck);
+	copyDeck.sort((a, b) => {
+		return a.No > b.No ? 1 : -1;
+	});
+	copyDeck.forEach((card) => {
+		const sertchCardDiv = createCardDom(card);
+		sertchCardDiv
+			.attr('id', `deck-card${card.id}`)
 			.addClass('enhance-card')
-			.click(() => {
-				clickTrashCardProcess(restoreCardDiv, card);
+			.click(card, () => {
+				console.log(sertchCardDiv);
+				clickDeckCardProcess(sertchCardDiv, card);
 			});
-		$('.card-list').append(restoreCardDiv);
+		$('.return-card-list').append(sertchCardDiv);
 	});
 }
 /*******************************************************/
-/* createReuseListDom：廃棄札一覧のDOM生成
+/* createRestoreListDom：捨て札一覧のDOM生成(カード効果用)
+/*******************************************************/
+function createRestoreListDom(){
+	$('.return-card-list').html('');
+	myTrash.forEach((card) => {
+		const restoreCardDiv = createCardDom(card);
+		restoreCardDiv
+			.attr('id', `trash-card${card.id}`)
+			.addClass('enhance-card')
+			.click(card, () => {
+				clickTrashCardProcess(restoreCardDiv, card);
+			});
+		$('.return-card-list').append(restoreCardDiv);
+	});
+}
+/*******************************************************/
+/* createReuseListDom：廃棄札一覧のDOM生成(カード効果用)
 /*******************************************************/
 function createReuseListDom(){
-	$('.card-list').html('');
+	$('.return-card-list').html('');
 	discard.forEach((card) => {
 		const reuseCardDiv = createCardDom(card);
 		reuseCardDiv
+			.attr('id', `discard-card${card.id}`)
 			.addClass('enhance-card')
-			.click(() => {
+			.click(card, () => {
 				clickDiscardCardProcess(reuseCardDiv, card);
 			});
-		$('.card-list').append(reuseCardDiv);
+		$('.return-card-list').append(reuseCardDiv);
 	});
 }
 /*******************************************************/

@@ -1479,7 +1479,7 @@ function effectRecoveryBoss(amount){
 function effectDefenseTurn(amount){
 	console.log('effectDefenseTurn');
 	if('block' in amount && 'turn' in amount && currentTurn === amount.turn){
-		actionBlock(amount.block);
+		actionBlock(amount.block, otherPaly);
 	}
 	return true;
 }
@@ -1563,7 +1563,7 @@ function effectDefenseEveryAttack(amount){
 	console.log('effectDefenseEveryAttack');
 	if('block' in amount &&
 		playerStatus.Count.playAttackPerTurn%3 === 0){
-		actionBlock(amount.block);
+		actionBlock(amount.block, otherPaly);
 	}
 	return true;
 }

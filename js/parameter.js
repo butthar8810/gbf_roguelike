@@ -136,6 +136,8 @@ const initialEnergy = 3;
 const initialMap = {row: 16, column: 5};
 const mapColumns = 11;
 const mapRows = 16;
+const cardPlay = true;
+const otherPaly = false;
 const omenFadeInWaitTime = 1000;
 const omenFadeOutWaitTime = 1000;
 const moneyReward = {
@@ -195,6 +197,8 @@ const phase = {
 	fiveDiscard: '5枚廃棄フェイズ',// 手札を廃棄
 	restore: 'レストアフェイズ', // 捨て札をデッキに
 	reuseToHand: 'リユースフェイズ', // 廃棄札を手札に
+	sertchAttackToHand: 'アタックサーチフェイズ', // デッキから手札に
+	sertchSkillToHand: 'スキルサーチフェイズ', // デッキから手札に
 	upGrade: 'アップグレードフェイズ', // 手札をアップグレード
 	unshiftDeck: 'アンシフトデッキフェイズ', // 手札をデッキに
 	unshiftDeckAndZero: 'アンシフトデッキアンドゼロフェイズ', // 手札をデッキに
