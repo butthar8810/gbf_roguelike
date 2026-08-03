@@ -1287,9 +1287,9 @@ function setupArtifact(){
 			getArtifact(normalArtifact.recovery);
 		} else if (selectChara == selectCharacter.djeeta.name){
 			getArtifact(normalArtifact.startDraw);
-			getArtifact(normalArtifact.threeSkillAllD);
-			getArtifact(normalArtifact.threeAttackPower);
-			getArtifact(normalArtifact.secondTurnBlock);
+//			getArtifact(normalArtifact.threeSkillAllD);
+//			getArtifact(normalArtifact.threeAttackPower);
+//			getArtifact(normalArtifact.secondTurnBlock);
 		}
 		setLocalStorage(keyContinueArtifact, myArtifacts);
 	}

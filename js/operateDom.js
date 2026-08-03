@@ -859,7 +859,7 @@ function updateEnemyAreaDom(argEnemies, omenFlag = false){
 			enemyAreaDiv.append(omenDiv);
 		}
 		$(`.enemies-area`).append(enemyAreaDiv);
-		if(enemy.currentStatus.status.some(status => status.name === dead.name)){
+		if(enemy.currentStatus.status.some(status => status.id === dead.id)){
 			enemyAreaDiv.addClass('defeated');
 		} else {
 			enemyAreaDiv.click(enemy, (e) => {
@@ -1219,7 +1219,7 @@ function disabledEndBtn(flag){
 		$('.end-btn').off();
 		$('.end-btn').click((e) => {
 			const repair = playerStatus.statuses
-				.find((status) => status.name === buffStatus.repair.name);
+				.find((status) => status.id === buffStatus.repair.id);
 			if (repair){
 				startPhase(phase.repair);
 			}else{

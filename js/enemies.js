@@ -467,7 +467,7 @@ function enemyAttackAndDebuf(enemyInfo, playerInfo, animationFlag){
 		animationFlag, 
 		enemyInfo.currentStatus.nextAction.damage,
 	);
-	enemyActionStatusDebuf(
+	enemyActionStatusDebuff(
 		enemyInfo, 
 		playerInfo, 
 		animationFlag, 
@@ -504,7 +504,7 @@ function enemyBlockAndDebuf(enemyInfo, playerInfo, animationFlag){
 		animationFlag, 
 		enemyInfo.currentStatus.nextAction.block,
 	);
-	enemyActionStatusDebuf(
+	enemyActionStatusDebuff(
 		enemyInfo, 
 		playerInfo, 
 		animationFlag, 
@@ -538,7 +538,7 @@ function enemyDoubleBuff(enemyInfo, playerInfo, animationFlag){
 }
 function enemyDebuf(enemyInfo, playerInfo, animationFlag){
 	// デバフ
-	enemyActionStatusDebuf(
+	enemyActionStatusDebuff(
 		enemyInfo, 
 		playerInfo, 
 		animationFlag, 
@@ -548,14 +548,14 @@ function enemyDebuf(enemyInfo, playerInfo, animationFlag){
 }
 function enemyDoubleDebuf(enemyInfo, playerInfo, animationFlag){
 	// デバフ
-	enemyActionStatusDebuf(
+	enemyActionStatusDebuff(
 		enemyInfo, 
 		playerInfo, 
 		animationFlag, 
 		debuffStatus[enemyInfo.currentStatus.nextAction.debuffType1], 
 		enemyInfo.currentStatus.nextAction.debuff1,
 	);
-	enemyActionStatusDebuf(
+	enemyActionStatusDebuff(
 		enemyInfo, 
 		playerInfo, 
 		animationFlag, 
@@ -571,7 +571,7 @@ function enemyBuffAndDebuf(enemyInfo, playerInfo, animationFlag){
 		buffStatus[enemyInfo.currentStatus.nextAction.buffType], 
 		enemyInfo.currentStatus.nextAction.buff,
 	);
-	enemyActionStatusDebuf(
+	enemyActionStatusDebuff(
 		enemyInfo, 
 		playerInfo, 
 		animationFlag, 
@@ -1200,7 +1200,7 @@ function actionIkelos(statuses){
 	];
 	console.log(statuses);
 	const sleep = statuses.status
-		.find((status) => status.name === debuffStatus.sleep.name);
+		.find((status) => status.id === debuffStatus.sleep.id);
 	if (sleep){
 		return actions[0].omen;
 	}
@@ -1364,25 +1364,25 @@ function calcEnemyDamage(attackCount, enemyInfo, playerInfo){
 	let magnification = 1;
 	// 恐怖（攻撃力25%減少）
 	const weakness = enemyInfo.currentStatus.status
-		.find((status) => status.name === debuffStatus.weak.name);
+		.find((status) => status.id === debuffStatus.weak.id);
 	if (weakness){magnification -= 0.25;}
 	// 防御力ダウン（被ダメ50%上昇）
 	const defenseUp = playerStatus.statuses
-		.find((status) => status.name === buffStatus.defenseUp.name);
+		.find((status) => status.id === buffStatus.defenseUp.id);
 	if (defenseUp){magnification -= 0.5;}
 	// 防御力アップ（被ダメ50%減少）
 	const defenseDown = playerStatus.statuses
-		.find((status) => status.name === debuffStatus.defenseDown.name);
+		.find((status) => status.id === debuffStatus.defenseDown.id);
 	if (defenseDown){magnification += 0.5;}
 	totalAttack = Math.floor(totalAttack * magnification);
 		
 	// エネミーの状態異常の確認
 	enemyInfo.currentStatus.status.forEach((status) => {
-		switch(status.name){
-			case buffStatus.attackUp.name:// 攻撃力アップ（攻撃ダメージが+X。）
+		switch(status.id){
+			case buffStatus.attackUp.id:// 攻撃力アップ（攻撃ダメージが+X。）
 				totalAttack += status.amount;
 				break;
-			case debuffStatus.attackDown.name:// 攻撃力ダウン（攻撃ダメージがｰX。）
+			case debuffStatus.attackDown.id:// 攻撃力ダウン（攻撃ダメージがｰX。）
 				if (totalAttack > status.amount){
 					totalAttack -= status.amount;
 				} else {
@@ -1395,9 +1395,9 @@ function calcEnemyDamage(attackCount, enemyInfo, playerInfo){
 	});
 	// プレイヤーの状態異常を確認
 	playerInfo.statuses.forEach((status) => {
-		switch(status.name){
+		switch(status.id){
 			// 「ダメージカット」の効果発動
-			case buffStatus.damageCut.name:
+			case buffStatus.damageCut.id:
 				if (totalAttack > 0){
 					totalAttack = 1;
 				}
@@ -1429,7 +1429,7 @@ function enemyActionAttack(enemyInfo, playerInfo, animationFlag, attackCount){
 	}
 	// 「反射」の効果
 	const reflection = playerInfo.statuses
-		.find((status) => status.name === buffStatus.reflection.name);
+		.find((status) => status.id === buffStatus.reflection.id);
 	if(reflection){
 		let playerReflection = reflection.amount;
 		const enemyBlock = enemyInfo.currentStatus.block;
@@ -1446,7 +1446,7 @@ function enemyActionAttack(enemyInfo, playerInfo, animationFlag, attackCount){
 	}
 	// 「カウンター」の効果
 	const counter = playerInfo.statuses
-		.find((status) => status.name === buffStatus.counter.name);
+		.find((status) => status.id === buffStatus.counter.id);
 	if(counter){
 		let playerCounter = counter.amount;
 		const enemyBlock = enemyInfo.currentStatus.block;
@@ -1499,12 +1499,16 @@ function enemyActionStatusBuf(enemyInfo, animationFlag, buf, amountCount){
 	// すでに同じデバフがかかってないか確認
 	// 同じデバフは累積する
 	let sameBufFlag = false;
-	// すでに同じバフがかかってないか確認
-	// 同じバフは累積する
-	for (const status of enemyInfo.currentStatus.status) {
-		if (status.name == buf.name) {
-			status.amount += amountCount;
-			sameBufFlag = true;
+	if( buf.id !== buffStatus.bomb40.id && 
+		buf.id !== buffStatus.bomb50.id
+	){
+		// すでに同じバフがかかってないか確認
+		// 同じバフは累積する
+		for (const status of enemyInfo.currentStatus.status) {
+			if (status.id == buf.id) {
+				status.amount += amountCount;
+				sameBufFlag = true;
+			}
 		}
 	}
 	const receivedBuf = {...buf};
@@ -1519,11 +1523,11 @@ function enemyActionStatusBuf(enemyInfo, animationFlag, buf, amountCount){
 /*******************************************************/
 /* 状態異常を与える関数
 /*******************************************************/
-function enemyActionStatusDebuf(enemyInfo, playerInfo, animationFlag, debuf, amountCount){
+function enemyActionStatusDebuff(enemyInfo, playerInfo, animationFlag, debuf, amountCount){
 	let sameDebufFlag = false;
 	// 弱体無効がついていれば、無効になる
 	const mount = playerStatus.statuses
-		.find((status) => status.name === buffStatus.mount.name);
+		.find((status) => status.id === buffStatus.mount.id);
 	if (mount){
 		mount.amount--;
 		playerStatus.statuses = playerStatus.statuses.filter((status) => {
@@ -1535,7 +1539,7 @@ function enemyActionStatusDebuf(enemyInfo, playerInfo, animationFlag, debuf, amo
 	// すでに同じデバフがかかってないか確認
 	// 同じデバフは累積する
 	for (const status of playerInfo.statuses) {
-		if (status.name == debuf.name) {
+		if (status.id == debuf.id) {
 			status.amount += amountCount;
 			sameDebufFlag = true;
 		}

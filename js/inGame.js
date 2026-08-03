@@ -239,7 +239,7 @@ function setupBtn(){
 				break;
 			case phase.caitSea:
 				const caitSea = playerStatus.statuses
-					.find((status) => status.name === buffStatus.caitSea.name);
+					.find((status) => status.id === buffStatus.caitSea.id);
 				if(tmpArea.length < caitSea.amount){
 					break;
 				}
@@ -649,123 +649,136 @@ async function startTurn(){
 /* startTurnStatuses：ターン開始時のステータス処理を行う
 /*******************************************************/
 function startTurnStatuses(playerInfo, enemiesInfo, animateFlag){
-	//ターン開始時効果を発動する
+	
 	console.log(`endTurnStatuses`);
-	//「攻UP無効」で攻撃力アップが減る
-	const invalidAttackUp = playerInfo.statuses
-		.find((status) => status.name === debuffStatus.invalidAttackUp.name);
-	if (invalidAttackUp){
-		const attackUp = playerInfo.statuses
-			.find((status) => status.name === buffStatus.attackUp.name);
-		if(attackUp){
-			if(attackUp.amount > invalidAttackUp.amount){
-				attackUp.amount -= invalidAttackUp.amount;
-			} else {
-				attackUp.amount = 0;
-			}
-		}
-	}
-	//「防Down削除」で攻撃力ダウンが減る
-	const invalidAttackDown = playerInfo.statuses
-		.find((status) => status.name === debuffStatus.invalidAttackDown.name);
-	if (invalidAttackDown){
-		const attackDown = playerInfo.statuses
-			.find((status) => status.name === debuffStatus.attackDown.name);
-		if(attackDown){
-			if(attackDown.amount > invalidAttackDown.amount){
-				attackDown.amount -= invalidAttackDown.amount;
-			} else {
-				attackDown.amount = 0;
-			}
-		}
-	}
-	//「無限の飛刃」の効果発動
-	const infinite = playerInfo.statuses
-		.find((status) => status.name === buffStatus.infinite.name);
-	if (infinite){
-		if(animateFlag){
-			// アニメーション用
-			const commonCard = [];
-			for(let i = 0; i < infinite.amount; i++){
-				commonCard.push(commonCardList.Knife);
-			}
-			animatePlayerAddHand(commonCard);
-		}else {
-			// 内部処理用
-			for(let i = 0; i < infinite.amount; i++){
-				pushHand(commonCardList.Knife);
-			}	
-		}
-	}
 
-	//「怨念」の効果発動
-	const grudge = playerInfo.statuses
-		.find((status) => status.name === buffStatus.grudge.name);
-	if (grudge){
-		actionStatusAllDebufForAnimate(enemiesInfo, debuffStatus.poison, grudge.amount, animateFlag);
-	}
-	//「果ての力」の効果発動
-	const end = playerInfo.statuses
-		.find((status) => status.name === buffStatus.end.name);
-	if (end){
-		actionStatusBufForAnimate(playerInfo, buffStatus.attackUp, end.amount, animateFlag);
-	}
+	// ブロック処理関連
 	//「英雄の盾」がある場合はブロックを初期化しない
 	const hero = playerInfo.statuses
-		.find((status) => status.name === buffStatus.hero.name);
+		.find((status) => status.id === buffStatus.hero.id);
 	const lightWall = playerInfo.statuses
-		.find((status) => status.name === buffStatus.lightWall.name);
+		.find((status) => status.id === buffStatus.lightWall.id);
 	if (!hero && !lightWall){
 		// ブロックを解除する
 		playerInfo.block = 0;
 	}
 	// 「次ターンブロック」でブロックを得る
 	const nextTurnBlock = playerInfo.statuses
-		.find((status) => status.name === buffStatus.nextTurnBlock.name);
+		.find((status) => status.id === buffStatus.nextTurnBlock.id);
 	if (nextTurnBlock){
 		playerInfo.block += nextTurnBlock.amount;
 	}
+
 	// エネルギーを回復する
 	playerInfo.remainEnergy = playerInfo.maxEnergy;
 	// 「活性」で追加回復
 	const activity = playerInfo.statuses
-		.find((status) => status.name === buffStatus.activity.name);
+		.find((status) => status.id === buffStatus.activity.id);
 	if (activity){
 		playerInfo.remainEnergy += activity.amount;
 	}
 	// 「活性化」で追加回復
 	const energized = playerInfo.statuses
-		.find((status) => status.name === buffStatus.energized.name);
+		.find((status) => status.id === buffStatus.energized.id);
 	if (energized){
 		playerInfo.remainEnergy += energized.amount;
 	}
-	
-	// ターン制の状態変化のターンを進める
-	// プレイヤーの状態変化処理
-	playerInfo.statuses.forEach((status, index) => {
-		switch(status.name){
-			case buffStatus.defenseUp.name:
-			case buffStatus.doubleDamage.name:
-			case buffStatus.damageCut.name:
-			case debuffStatus.defenseDown.name:
-			case debuffStatus.frail.name:
-			case debuffStatus.weak.name:
-			case debuffStatus.frozen.name:
+
+	//「ダブルアタック」のターンカウントは独立している
+	const doubleDamage = playerInfo.statuses
+		.find((status) => status.id === buffStatus.doubleDamage.id);
+	if (doubleDamage){
+		doubleDamage.amount--;
+	}
+	//ターン開始時効果を発動する
+	playerInfo.statuses.forEach((status) => {
+		switch(status.id){
+			case debuffStatus.invalidAttackUp.id://「攻UP無効」で攻撃力アップが減る
+				const attackUp = playerInfo.statuses
+					.find((status2) => status2.id === buffStatus.attackUp.id);
+				if(attackUp){
+					if(attackUp.amount > status.amount){
+						attackUp.amount -= status.amount;
+					} else {
+						attackUp.amount = 0;
+					}
+				}
+				break;
+			case debuffStatus.invalidAttackDown.id://「防Down削除」で攻撃力ダウンが減る
+				const attackDown = playerInfo.statuses
+					.find((status2) => status2.id === debuffStatus.attackDown.id);
+				if(attackDown){
+					if(attackDown.amount > status.amount){
+						attackDown.amount -= status.amount;
+					} else {
+						attackDown.amount = 0;
+					}
+				}
+				break;
+			case buffStatus.infinite.id://「無限の飛刃」の効果発動
+				if(animateFlag){
+					// アニメーション用
+					const commonCard = [];
+					for(let i = 0; i < status.amount; i++){
+						commonCard.push(commonCardList.Knife);
+					}
+					animatePlayerAddHand(commonCard);
+				}else {
+					// 内部処理用
+					for(let i = 0; i < status.amount; i++){
+						pushHand(commonCardList.Knife);
+					}	
+				}
+				break;
+			case buffStatus.moon.id://「月の雫」の効果発動
+				if(animateFlag){
+					// アニメーション用
+					const displayCard = deleteAllTemporaryArea();
+					animatePlayerAddHand(displayCard);
+				}else {
+					// 内部処理用
+					for(let i = 0; i < status.amount; i++){
+						let selectCard = shuffleArray(Object.values(commonCardList))
+							.filter((card) => 
+								card.rarity === rarity.uncommon ||
+								card.rarity === rarity.rare
+							).slice(0, 1)[0];
+						pushHand(selectCard);
+						pushTemporaryArea(selectCard);
+					}	
+				}
+				break;
+			case buffStatus.grudge.id://「怨念」の効果発動
+				actionStatusAllDebufForAnimate(enemiesInfo, debuffStatus.poison, status.amount, animateFlag);
+				break;
+			case buffStatus.end.id://「果ての力」の効果発動
+				actionStatusBufForAnimate(playerInfo, buffStatus.attackUp, status.amount, animateFlag);
+				break;
+			case buffStatus.damageCut.id:
+				actionStatusBufForAnimate(playerInfo, buffStatus.doubleDamage, 1, animateFlag);
 				status.amount--;
 				break;
-			case buffStatus.reflection.name:
-			case buffStatus.wind.name:
-			case buffStatus.attackCombo.name:
-			case buffStatus.skillCombo.name:
-			case buffStatus.activity.name:
-			case buffStatus.lightWall.name:
-			case buffStatus.nextTurnBlock.name:
-			case buffStatus.nextTurnDraw.name:
-			case buffStatus.reproduction.name:
-			case debuffStatus.noDraw.name:
-			case debuffStatus.invalidAttackUp.name:
-			case debuffStatus.invalidAttackDown.name:
-			case debuffStatus.suffocation.name:
+			case buffStatus.defenseUp.id:
+			case buffStatus.damageCut.id:
+			case debuffStatus.defenseDown.id:
+			case debuffStatus.frail.id:
+			case debuffStatus.weak.id:
+			case debuffStatus.frozen.id:
+				status.amount--;// ターン制の状態変化のターンを進める
+				break;
+			case buffStatus.reflection.id:
+			case buffStatus.wind.id:
+			case buffStatus.attackCombo.id:
+			case buffStatus.skillCombo.id:
+			case buffStatus.activity.id:
+			case buffStatus.lightWall.id:
+			case buffStatus.nextTurnBlock.id:
+			case buffStatus.nextTurnDraw.id:
+			case buffStatus.reproduction.id:
+			case debuffStatus.noDraw.id:
+			case debuffStatus.invalidAttackUp.id:
+			case debuffStatus.invalidAttackDown.id:
+			case debuffStatus.suffocation.id:
 				status.amount = 0;
 				break;
 			default:
@@ -776,72 +789,53 @@ function startTurnStatuses(playerInfo, enemiesInfo, animateFlag){
 	playerInfo.statuses = playerInfo.statuses.filter((status) => {
 		return status.amount !== 0;
 	});
-	const Ereshkigal = playerInfo.statuses
-		.find((status) => status.name === buffStatus.Ereshkigal.name);
-	if (Ereshkigal){
-		actionStatusBufForAnimate(playerInfo, buffStatus.doubleDamage, 1, animateFlag);
-		Ereshkigal.amount--;
-	}
-	// 効果が切れた状態変化を削除する
-	playerInfo.statuses = playerInfo.statuses.filter((status) => {
-		return status.amount !== 0;
-	});
-	
-	// エネミーの状態変化処理
+
+	// エネミーの状態変化処理(敵のターン終了時点)
 	enemiesInfo.forEach((enemy) => {
-		//「攻Down削除」で攻撃力ダウンが減る
-		const invalidAttackDown = enemy.currentStatus.status
-			.find((status) => status.name === debuffStatus.invalidAttackDown.name);
-		if (invalidAttackDown){
-			const attackDown = enemy.currentStatus.status
-				.find((status) => status.name === debuffStatus.attackDown.name);
-			if(attackDown){
-				if(attackDown.amount > invalidAttackDown.amount){
-					attackDown.amount -= invalidAttackDown.amount;
-				} else {
-					attackDown.amount = 0;
-				}
-			}
-		}
-		// 「激怒」の効果
-		const rage = enemy.currentStatus.status
-			.find((status) => status.name === buffStatus.rage.name);
-		if (rage){
-			enemyStatusBuf(enemy, animateFlag, buffStatus.attackUp, rage.amount);
-		}
-		// 「バリア」の効果
-		const barrier = enemy.currentStatus.status
-			.find((status) => status.name === buffStatus.barrier.name);
-		if (barrier){
-			enemyActionBlock(enemy, animateFlag, barrier.amount);
-		}
 		enemy.currentStatus.status.forEach((status) => {
-			switch(status.name){
-				case buffStatus.defenseUp.name:
-				case buffStatus.damageCut.name:
-				case debuffStatus.defenseDown.name:
-				case debuffStatus.frail.name:
-				case debuffStatus.weak.name:
+			switch(status.id){
+				case debuffStatus.invalidAttackDown.id://「攻Down削除」で攻撃力ダウンが減る
+					const attackDown = enemy.currentStatus.status
+						.find((status2) => status2.id === debuffStatus.attackDown.id);
+					if(attackDown){
+						if(attackDown.amount > status.amount){
+							attackDown.amount -= status.amount;
+						} else {
+							attackDown.amount = 0;
+						}
+					}
+					break;
+				case buffStatus.rage.id:// 「激怒」の効果
+					enemyStatusBuf(enemy, animateFlag, buffStatus.attackUp, status.amount);
+					break;
+				case buffStatus.barrier.id:// 「バリア」の効果
+					enemyActionBlock(enemy, animateFlag, status.amount);
+					break;
+				case buffStatus.defenseUp.id:
+				case buffStatus.damageCut.id:
+				case debuffStatus.defenseDown.id:
+				case debuffStatus.frail.id:
+				case debuffStatus.weak.id:
 					status.amount--;
 					break;
-				case buffStatus.reflection.name:
-				case buffStatus.wind.name:
-				case buffStatus.attackCombo.name:
-				case buffStatus.activity.name:
-				case buffStatus.lightWall.name:
-				case buffStatus.nextTurnBlock.name:
-				case buffStatus.nextTurnDraw.name:
-				case debuffStatus.noDraw.name:
-				case debuffStatus.invalidAttackUp.name:
-				case debuffStatus.invalidAttackDown.name:
-				case debuffStatus.suffocation.name:
-				case debuffStatus.fainting.name:
+				case buffStatus.reflection.id:
+				case buffStatus.wind.id:
+				case buffStatus.attackCombo.id:
+				case buffStatus.activity.id:
+				case buffStatus.lightWall.id:
+				case buffStatus.nextTurnBlock.id:
+				case buffStatus.nextTurnDraw.id:
+				case debuffStatus.noDraw.id:
+				case debuffStatus.invalidAttackUp.id:
+				case debuffStatus.invalidAttackDown.id:
+				case debuffStatus.suffocation.id:
+				case debuffStatus.fainting.id:
 					status.amount = 0;
 					break;
-				case debuffStatus.sleep.name:// 
+				case debuffStatus.sleep.id:
 					status.amount--;
 					const barrier = enemy.currentStatus.status
-						.find((status) => status.name === buffStatus.barrier.name);
+						.find((status) => status.id === buffStatus.barrier.id);
 					if(barrier && status.amount === 0){
 						barrier.amount = 0;
 					}
@@ -881,6 +875,7 @@ function startTurnStatuses(playerInfo, enemiesInfo, animateFlag){
 	}
 	// 捨て札の枚数をリセットする
 	playerInfo.Count.trashCountPerTurn = 0;
+	playerInfo.Count.playCardPerTurn = 0;
 	playerInfo.Count.playAttackPerTurn = 0;
 	playerInfo.Count.playSkillPerTurn = 0;
 }
@@ -892,20 +887,20 @@ function startTurnProcess(){
 	//ドロー処理
 	//「フルンティング」の効果発動
 	const hrunting = playerStatus.statuses
-		.find((status) => status.name === buffStatus.hrunting.name);
+		.find((status) => status.id === buffStatus.hrunting.id);
 	if (hrunting){
 		damageHP(1, playerStatus);
 		drawCardFromDeck(hrunting.amount);
 	}
 	// 「ヘイスト」で追加2枚
 	const nextTurnDraw = playerStatus.statuses
-		.find((status) => status.name === buffStatus.nextTurnDraw.name);
+		.find((status) => status.id === buffStatus.nextTurnDraw.id);
 	if (nextTurnDraw){
 		drawCardFromDeck(nextTurnDraw.amount);
 	}
 	// 「ケット・シー」で追加1枚
 	const caitSea = playerStatus.statuses
-		.find((status) => status.name === buffStatus.caitSea.name);
+		.find((status) => status.id === buffStatus.caitSea.id);
 	if (caitSea){
 		drawCardFromDeck(caitSea.amount);
 	}
@@ -978,7 +973,7 @@ function endTurn(){
 		updateDiscardDom();
 		updateTrashDom();
 	});
-	// アーティファクトの効果を発動
+	// アーティファクトの効果を発動（turnEndFunc）
 	myArtifacts.forEach((artifact) => {
 		if('turnEndFunc' in artifact){
 			if (artifact.turnEndFunc !== '') {
@@ -989,51 +984,58 @@ function endTurn(){
 			}
 		}
 	});
-	// 「再生」の効果発動
-	const regeneration = playerStatus.statuses
-		.find((status) => status.name === buffStatus.regeneration.name);
-	if (regeneration){
-		recoveryHP(regeneration.amount);
-		updatePlayerStatusDom(playerStatus);
-		regeneration.amount = 0;
-	}
 	// ターン終了時効果の発動
-	// 「バリア」の効果発動
-	const barrier = playerStatus.statuses
-		.find((status) => status.name === buffStatus.barrier.name);
-	if (barrier){
-		actionBlock(barrier.amount, otherPaly);
-	}
-	//「狂化」の効果発動
-	const madness = playerStatus.statuses
-		.find((status) => status.name === buffStatus.madness.name);
-	if (madness){
-		damageHP(1, playerStatus);
-		actionAllAttackSimple(madness.amount, false);
-	}
-	//「鈍化」の効果発動
-	const slowing = playerStatus.statuses
-		.find((status) => status.name === debuffStatus.slowing.name);
-	if (slowing){
-		actionStatusBuf(debuffStatus.dexterityDown, slowing.amount);
-	}
-	//「激怒」の効果
-	const rage = playerStatus.statuses
-		.find((status) => status.name === buffStatus.rage.name);
-	if (rage){
-		actionStatusBuf(debuffStatus.attackUp, rage.amount);
-	}
+	playerStatus.statuses.forEach((status) => {
+		switch(status.id){
+			case buffStatus.regeneration.id://「再生」の効果
+				recoveryHP(status.amount);
+				updatePlayerStatusDom(playerStatus);
+				status.amount = 0;
+				break;
+			case buffStatus.barrier.id://「バリア」の効果
+				actionBlock(status.amount, otherPaly);
+				break;
+			case buffStatus.madness.id://「狂化」の効果
+				damageHP(1, playerStatus);
+				actionAllAttackSimple(status.amount, false);
+				break;
+			case debuffStatus.slowing.id://「鈍化」の効果
+				actionStatusBuf(debuffStatus.dexterityDown, status.amount);
+				break;
+			case buffStatus.rage.id://「激怒」の効果
+				actionStatusBuf(debuffStatus.attackUp, status.amount);
+				break;
+			case buffStatus.bomb40.id://「爆弾」の効果
+				status.amount--;
+				if(status.amount === 0){
+					actionAllAttackSimple(40, false);
+				}
+				break;
+			case buffStatus.bomb50.id://「爆弾」の効果
+				status.amount--;
+				if(status.amount === 0){
+					actionAllAttackSimple(50, false);
+				}
+				break;
+			default:
+				break;
+		}
+	});
+	// 効果が切れた状態変化を削除する
+	playerStatus.statuses = playerStatus.statuses.filter((status) => {
+		return status.amount !== 0;
+	});
 	// エネミーの状態変化処理
 	currentEnemies.forEach((enemy) => {
 		// ブロックの初期化
 		const tears = enemy.currentStatus.status
-			.find((status) => status.name === buffStatus.tears.name);
+			.find((status) => status.id === buffStatus.tears.id);
 		if (!tears){
 			enemy.currentStatus.block = 0;
 		}
 		// 「毒」の効果発動
 		const poison = enemy.currentStatus.status
-			.find((status) => status.name === debuffStatus.poison.name);
+			.find((status) => status.id === debuffStatus.poison.id);
 		if (poison){
 			enemy.currentStatus.remainHP -= poison.amount;
 			poison.amount--;
@@ -1056,7 +1058,7 @@ function drawCardFromDeck(count = 1){
 	const drawCards = [];
 	if(
 		playerStatus.statuses
-		.find((status) => status.name === debuffStatus.noDraw.name)
+		.find((status) => status.id === debuffStatus.noDraw.id)
 	){
 		console.log('デバフによって引けません');
 		return true;
@@ -1082,17 +1084,17 @@ function drawCardFromDeck(count = 1){
 			if(card.type === type.abnormal){
 				// 「弾幕」の効果
 				const barrage = playerStatus.statuses
-					.find((status) => status.name === buffStatus.barrage.name);
+					.find((status) => status.id === buffStatus.barrage.id);
 				if(barrage){
 					actionAllAttackSimple(barrage.amount, false);
 				}
 				// 「逆境」の効果
 				const adversity = playerStatus.statuses
-					.find((status) => status.name === buffStatus.adversity.name);
+					.find((status) => status.id === buffStatus.adversity.id);
 				if(adversity){
 					const cards = drawCardFromDeck(adversity.amount);
-					cards.forEach((drawcard) => {
-						drawCards.push(drawcard);
+					cards.forEach((drawCard) => {
+						drawCards.push(drawCard);
 					});
 				}
 			}
@@ -1161,74 +1163,7 @@ function playHandCard(index){
 		amount: card.amount,
 	});
 	pushPlayArea(card);
-	//「風の加護」効果
-	const wind = playerStatus.statuses
-		.find((status) => status.name === buffStatus.wind.name);
-	if (wind && card.type === type.attack){
-		actionBlock(wind.amount, otherPaly);
-	}
-	//「連撃アップ」の効果
-	const attackCombo = playerStatus.statuses
-		.find((status) => status.name === buffStatus.attackCombo.name);
-	if (attackCombo && attackCombo.amount > 0 && card.type === type.attack){
-		pushStackCards({
-			func: card.func,
-			amount: card.amount,
-		});
-		attackCombo.amount--;
-	}
-	const skillCombo = playerStatus.statuses
-		.find((status) => status.name === buffStatus.skillCombo.name);
-	if (skillCombo && skillCombo.amount > 0 && card.type === type.skill){
-		pushStackCards({
-			func: card.func,
-			amount: card.amount,
-		});
-		skillCombo.amount--;
-	}
-	const Bonus = playerStatus.statuses
-		.find((status) => status.name === buffStatus.Bonus.name);
-	if (Bonus && Bonus.amount > 0){
-		currentEnemies.forEach((enemy) => {
-			let totalAttack = Bonus.amount;
-			// ブロック計算
-			const enemyBlock = enemy.currentStatus.block;
-			if(enemyBlock > 0){
-				if(enemyBlock >= totalAttack){
-					enemy.currentStatus.block -= totalAttack;
-					totalAttack = 0;
-				} else if (enemyBlock < totalAttack){
-					enemy.currentStatus.block = 0;
-					totalAttack = totalAttack - enemyBlock;
-				}
-			}
-			enemy.currentStatus.remainHP -= totalAttack;
-		});
-	}
-	const lamentation = playerStatus.statuses
-		.find((status) => status.name === buffStatus.lamentation.name);
-	if (lamentation && lamentation.amount > 0){
-		actionBlock(lamentation.amount, otherPaly);
-	}
-	currentEnemies.forEach((enemy) => {
-		//「窒息」効果
-		const suffocation = enemy.currentStatus.status
-			.find((status) => status.name === debuffStatus.suffocation.name);
-		if (suffocation){
-			//ブロック無視
-			enemy.currentStatus.remainHP -= suffocation.amount;
-		}
-		//「激怒」効果
-		const strategy = enemy.currentStatus.status
-			.find((status) => status.name === buffStatus.strategy.name);
-		if (strategy && card.type === type.skill){
-			enemyStatusBuf(enemy, true, buffStatus.attackUp, strategy.amount);
-		}
-	});
-	playerStatus.statuses = playerStatus.statuses.filter((status) => {
-		return status.amount > 0;
-	});
-
+	playerStatus.Count.playCardPerTurn++;
 	// アーティファクトの効果を発動
 	myArtifacts.forEach((artifact) => {
 		if('playFunc' in artifact){
@@ -1240,9 +1175,41 @@ function playHandCard(index){
 			}
 		}
 	});
+	const Parazonium = playerStatus.statuses
+		.find((status) => status.id === buffStatus.Parazonium.id);
+	if (Parazonium){
+		actionAllAttackSimple(Parazonium.amount, false);
+	}
+	const cosmic = playerStatus.statuses
+		.find((status) => status.id === buffStatus.cosmic.id);
+	if (cosmic && playCardPerTurn%5 === 0){
+		actionAllAttackSimple(cosmic.amount, false);
+	}
+	const lamentation = playerStatus.statuses
+		.find((status) => status.id === buffStatus.lamentation.id);
+	if (lamentation && lamentation.amount > 0){
+		actionBlock(lamentation.amount, otherPaly);
+	}
+
+	// アタックカードプレイの場合
 	if(card.type === type.attack){
 		playerStatus.Count.playAttackPerTurn++;
-		
+		//「風の加護」効果
+		const wind = playerStatus.statuses
+			.find((status) => status.id === buffStatus.wind.id);
+		if (wind){
+			actionBlock(wind.amount, otherPaly);
+		}
+		//「連撃アップ」の効果
+		const attackCombo = playerStatus.statuses
+			.find((status) => status.id === buffStatus.attackCombo.id);
+		if (attackCombo && attackCombo.amount > 0){
+			pushStackCards({
+				func: card.func,
+				amount: card.amount,
+			});
+			attackCombo.amount--;
+		}
 		// アーティファクトの効果を発動
 		myArtifacts.forEach((artifact) => {
 			if('attackFunc' in artifact){
@@ -1255,9 +1222,19 @@ function playHandCard(index){
 			}
 		});
 	}
+	// スキルカードプレイの場合
 	if(card.type === type.skill){
 		playerStatus.Count.playSkillPerTurn++;
-		
+		//「連撃アップ」の効果
+		const skillCombo = playerStatus.statuses
+			.find((status) => status.id === buffStatus.skillCombo.id);
+		if (skillCombo && skillCombo.amount > 0 && card.type === type.skill){
+			pushStackCards({
+				func: card.func,
+				amount: card.amount,
+			});
+			skillCombo.amount--;
+		}
 		// アーティファクトの効果を発動
 		myArtifacts.forEach((artifact) => {
 			if('skillFunc' in artifact){
@@ -1270,6 +1247,28 @@ function playHandCard(index){
 			}
 		});
 	}
+
+
+	currentEnemies.forEach((enemy) => {
+		//「窒息」効果
+		const suffocation = enemy.currentStatus.status
+			.find((status) => status.id === debuffStatus.suffocation.id);
+		if (suffocation){
+			//ブロック無視
+			enemy.currentStatus.remainHP -= suffocation.amount;
+		}
+		//「激怒」効果
+		const strategy = enemy.currentStatus.status
+			.find((status) => status.id === buffStatus.strategy.id);
+		if (strategy && card.type === type.skill){
+			enemyStatusBuf(enemy, true, buffStatus.attackUp, strategy.amount);
+		}
+	});
+	playerStatus.statuses = playerStatus.statuses.filter((status) => {
+		return status.amount > 0;
+	});
+
+	
 	setLocalStorage(keyContinueHand, myHand);
 	setLocalStorage(keyContinueStack, stackCards);
 	setLocalStorage(keyContinuePlayerStatus, playerStatus);
@@ -1373,7 +1372,7 @@ function clickHandProcess(handCardDiv, hand){
 	switch(currentPhase) {
 		case phase.action:
 			const frozen = playerStatus.statuses
-				.find((status) => status.name === debuffStatus.frozen.name);
+				.find((status) => status.id === debuffStatus.frozen.id);
 			if(frozen && hand.type === type.attack){
 				alert('デバフによりアタックが使えません');
 				break;
@@ -1548,7 +1547,7 @@ function clickHandProcess(handCardDiv, hand){
 			break;
 		case phase.repair:
 			const repair = playerStatus.statuses
-				.find((status) => status.name === buffStatus.repair.name);
+				.find((status) => status.id === buffStatus.repair.id);
 			if (index === -1 && repair) {
 				if (tmpArea.length < repair.amount){
 					pushTemporaryArea(hand);
@@ -1566,7 +1565,7 @@ function clickHandProcess(handCardDiv, hand){
 			break;
 		case phase.caitSea:
 			const caitSea = playerStatus.statuses
-				.find((status) => status.name === buffStatus.caitSea.name);
+				.find((status) => status.id === buffStatus.caitSea.id);
 			if (index === -1 && caitSea) {
 				if (tmpArea.length < caitSea.amount){
 					pushTemporaryArea(hand);
@@ -1715,14 +1714,14 @@ function trashCardProcess(trashCard){
 function discardCardProcess(discardCard){
 	//「無痛」の効果
 	const painless = playerStatus.statuses
-		.find((status) => status.name === buffStatus.painless.name);
+		.find((status) => status.id === buffStatus.painless.id);
 	if(painless){
 		actionBlock(painless.amount, otherPaly);
 		updatePlayerStatusDom(playerStatus);
 	}
 	//「慧眼」の効果
 	const eye = playerStatus.statuses
-		.find((status) => status.name === buffStatus.eye.name);
+		.find((status) => status.id === buffStatus.eye.id);
 	if(eye){
 		const drawCards = drawCardFromDeck(eye.amount);
 		drawCards.forEach((card) => {
@@ -1848,8 +1847,8 @@ async function startEnemiesTurn(){
 	// 敵の予測した攻撃を内部的に行う
 	for (const enemy of currentEnemies) {
 		if(
-			!enemy.currentStatus.status.some(status => status.name === dead.name) ||
-			!enemy.currentStatus.status.some(status => status.name === debuffStatus.fainting.name)
+			!enemy.currentStatus.status.some(status => status.id === dead.id) ||
+			!enemy.currentStatus.status.some(status => status.id === debuffStatus.fainting.id)
 		){
 			const nextAction = enemy.currentStatus.nextAction;
 			if (Object.keys(nextAction).length > 0) {
@@ -1875,12 +1874,12 @@ async function startEnemiesTurn(){
 	
 	// 攻撃のアニメーションを行う
 	for (const enemy of animateCurrentEnemies) {
-		if(!enemy.currentStatus.status.some(status => status.name === dead.name)){
+		if(!enemy.currentStatus.status.some(status => status.id === dead.id)){
 			const nextAction = enemy.currentStatus.nextAction;
 			if (Object.keys(nextAction).length > 0) {
 				fadeOutEnemyOmenDom(enemy);
 				await sleep(omenFadeOutWaitTime);
-				if(!enemy.currentStatus.status.some(status => status.name === debuffStatus.fainting.name)){
+				if(!enemy.currentStatus.status.some(status => status.id === debuffStatus.fainting.id)){
 					const storedFunc = globalThis[nextAction.func];
 					if( typeof storedFunc === 'function'){
 						ret = await storedFunc(enemy, animatePlayerStatus, true);
@@ -1910,7 +1909,7 @@ async function startEnemiesTurn(){
 /*******************************************************/
 function decideNextAction(){
 	currentEnemies.forEach((enemy) => {
-		if(!enemy.currentStatus.status.some(status => status.name === dead.name)){
+		if(!enemy.currentStatus.status.some(status => status.id === dead.id)){
 			const actionFunc = enemy.actionAlgorithm;
 			if (actionFunc !== '') {
 				const storedFunc = globalThis[actionFunc];
@@ -1930,11 +1929,11 @@ function checkEnemyDefeated(Enemies, playerInfo, animationFlag = true){
 	allDefeatedFlag = true;
 	let autophagyFlag = false;
 	Enemies.forEach((enemy) => {
-		if(!enemy.currentStatus.status.some(status => status.name === dead.name)){
+		if(!enemy.currentStatus.status.some(status => status.id === dead.id)){
 			if(enemy.currentStatus.remainHP <= 0){
 				//「自壊因子」の効果発動
 				const autophagy = enemy.currentStatus.status
-					.find((status) => status.name === debuffStatus.autophagy.name);
+					.find((status) => status.id === debuffStatus.autophagy.id);
 				if (autophagy){
 					autophagyFlag = true;
 					for(const targetenemy of currentEnemies){
@@ -1955,9 +1954,9 @@ function checkEnemyDefeated(Enemies, playerInfo, animationFlag = true){
 				}
 				//「花粉」の効果発動
 				const pollen = enemy.currentStatus.status
-					.find((status) => status.name === buffStatus.pollen.name);
+					.find((status) => status.id === buffStatus.pollen.id);
 				if (pollen){
-					enemyActionStatusDebuf(enemy, playerInfo, animationFlag, debuffStatus.defenseDown, pollen.amount);
+					enemyActionStatusDebuff(enemy, playerInfo, animationFlag, debuffStatus.defenseDown, pollen.amount);
 				}
 				animateDefeated(enemy);
 				enemy.currentStatus.status.splice(0);
@@ -1978,7 +1977,7 @@ function checkEnemyDefeated(Enemies, playerInfo, animationFlag = true){
 /*******************************************************/
 function targetingEnemy(){
 	currentEnemies.forEach((enemy) => {
-		if(!enemy.currentStatus.status.some(status => status.name === dead.name)){
+		if(!enemy.currentStatus.status.some(status => status.id === dead.id)){
 			currentTarget = enemy;
 		}
 	});
