@@ -257,6 +257,7 @@ function setupBtn(){
 				unshiftDeckCard(true);
 				break;
 			case phase.pushDeckAndZero:
+			case phase.selectPushDeckAndZero:
 				pushDeckCard(true);
 				break;
 			case phase.upGrade:
@@ -440,6 +441,7 @@ function startPhase(ph = false){
 		case phase.unshiftDeck:
 		case phase.unshiftDeckAndZero:
 		case phase.pushDeckAndZero:
+		case phase.selectPushDeckAndZero:
 			if (myHand.length <= 0) {
 				console.log('手札がありません。');
 				startPhase(phase.action);
@@ -1314,6 +1316,7 @@ function endAction(){
 		} 
 	}
 	checkEnemyDefeated(currentEnemies, playerStatus);
+	setLocalStorage(keyContinueDeck, myDeck);
 	setLocalStorage(keyContinueHand, myHand);
 	setLocalStorage(keyContinueTrash, myTrash);
 	setLocalStorage(keyContinueDiscard, discard);
@@ -1440,6 +1443,7 @@ function clickHandProcess(handCardDiv, hand){
 		case phase.unshiftDeckAndZero:
 		case phase.pushDeckAndZero:
 		case phase.reproductionToNextTurn:
+			//手札を1枚選択
 			if (index === -1) {
 				if (tmpArea.length < 1){
 					pushTemporaryArea(hand);
@@ -1456,6 +1460,7 @@ function clickHandProcess(handCardDiv, hand){
 			}
 			break;
 		case phase.twoTrash:
+			//手札を2枚選択
 			if (index === -1) {
 				if (tmpArea.length < 2){
 					pushTemporaryArea(hand);
@@ -1473,6 +1478,7 @@ function clickHandProcess(handCardDiv, hand){
 			break;
 		case phase.threeTrash:
 		case phase.threeDiscard:
+			//手札を3枚選択
 			if (index === -1) {
 				if (tmpArea.length < 3){
 					pushTemporaryArea(hand);
@@ -1489,6 +1495,7 @@ function clickHandProcess(handCardDiv, hand){
 			}
 			break;
 		case phase.fiveDiscard:
+			//手札を5枚選択
 			if (index === -1) {
 				if (tmpArea.length < 5){
 					pushTemporaryArea(hand);
@@ -1504,7 +1511,18 @@ function clickHandProcess(handCardDiv, hand){
 				handCardDiv.removeClass("select");
 			}
 			break;
+		case phase.selectPushDeckAndZero:
+			//手札を好きな枚数選択
+			if (index === -1) {
+				pushTemporaryArea(hand);
+				handCardDiv.addClass("select");
+			} else {
+				spliceTemporaryArea(index);
+				handCardDiv.removeClass("select");
+			}
+			break;
 		case phase.upGrade:
+			//手札を1枚選択（アップグレード可能なカード限定）
 			if (index === -1) {
 				if('key' in hand && hand.key !== undefined){
 					if (tmpArea.length < 1){
@@ -1526,6 +1544,7 @@ function clickHandProcess(handCardDiv, hand){
 			break;
 		case phase.reproductionToHand:
 		case phase.twoReproductionToHand:
+			//手札を1枚選択（アタック・パワー限定）
 			if(hand.type === type.attack || hand.type === type.power){
 				if (index === -1) {
 					if (tmpArea.length < 1){
@@ -1546,6 +1565,7 @@ function clickHandProcess(handCardDiv, hand){
 			}
 			break;
 		case phase.repair:
+			//手札をX枚選択
 			const repair = playerStatus.statuses
 				.find((status) => status.id === buffStatus.repair.id);
 			if (index === -1 && repair) {
@@ -1564,6 +1584,7 @@ function clickHandProcess(handCardDiv, hand){
 			}
 			break;
 		case phase.caitSea:
+			//手札をX枚選択
 			const caitSea = playerStatus.statuses
 				.find((status) => status.id === buffStatus.caitSea.id);
 			if (index === -1 && caitSea) {
@@ -1581,6 +1602,7 @@ function clickHandProcess(handCardDiv, hand){
 				handCardDiv.removeClass("select");
 			}
 			break;
+
 		default:
 			break;
 	}

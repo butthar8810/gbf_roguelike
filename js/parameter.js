@@ -207,6 +207,7 @@ const phase = {
 	unshiftDeck: 'アンシフトデッキフェイズ', // 手札をデッキに
 	unshiftDeckAndZero: 'アンシフトデッキアンドゼロフェイズ', // 手札をデッキに
 	pushDeckAndZero: 'プッシュデッキアンドゼロフェイズ', // 手札をデッキに
+	selectPushDeckAndZero: '好きなカードをプッシュデッキアンドゼロフェイズ', // 手札をデッキに
 	reproductionToHand: '複製フェイズ', // 複製を手札に
 	twoReproductionToHand: '2枚複製フェイズ', // 複製を手札に
 	reproductionToNextTurn: 'ミラーフェイズ', // 複製をミラーエリアに

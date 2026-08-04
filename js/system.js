@@ -396,13 +396,13 @@ function pushDiscard(card){
 	});
 }
 /*******************************************************/
-/* findIndexHand：手札キューから検索する
+/* findIndexDiscard：廃棄札キューから検索する
 /*******************************************************/
 function findIndexDiscard(id, key){
 	return discard.findIndex((card) => card[id] == key);
 }
 /*******************************************************/
-/* spliceTrash：捨て札キューのIndex番目のデータを取り出す
+/* spliceDiscard：廃棄札キューのIndex番目のデータを取り出す
 /*******************************************************/
 function spliceDiscard(index){
 	return discard.splice(index, 1)[0];

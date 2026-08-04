@@ -684,7 +684,7 @@ const granCardList = {
 		class: cardClass.gran,
 		rarity: rarity.uncommon,
 		type: type.skill,
-		func: 'effectALLDebuff',
+		func: 'effectAllDebuff',
 		image:'images/card/gran_KillKnife.jpg',
 		effect: '敵全体に恐怖{D}を与える。廃棄。',
 		amount: {
@@ -1905,7 +1905,7 @@ const granEnhancedCardList = {
 		class: cardClass.gran,
 		rarity: rarity.uncommon,
 		type: type.skill,
-		func: 'effectALLDebuff',
+		func: 'effectAllDebuff',
 		image:'images/card/gran_KillKnife.jpg',
 		effect: '敵全体に恐怖<span class="upgrade">{D}</span>を与える。廃棄。',
 		amount: {
@@ -5105,7 +5105,7 @@ const commonCardList = {
 			cost: 1,
 			attack: 7,
 			recovery: 2,
-			discard: true,
+			discard: false,
 		}
 	},
 	//******************************スキル******************************//
@@ -5125,7 +5125,7 @@ const commonCardList = {
 			buff: 2,
 			buffType: 'attackUp',
 			harm: 3,
-			discard: true,
+			discard: false,
 		}
 	},
 	//幻姿
@@ -5251,6 +5251,7 @@ const commonCardList = {
 		effect: `ランダムな無色のカードを1枚手札に加える。廃棄。`,
 		amount: {
 			cost: 0,
+			count: 1,
 			discard: true,
 		}
 	},
@@ -5264,7 +5265,7 @@ const commonCardList = {
 		type: type.skill,
 		func: 'effectBuff',
 		image:'images/card/common_Ointment.jpg',
-		effect: `弱体無効1を得る。廃棄。`,
+		effect: `弱体無効{F}を得る。廃棄。`,
 		amount: {
 			cost: 0,
 			buff: 1,
@@ -5313,7 +5314,7 @@ const commonCardList = {
 		class: cardClass.common,
 		rarity: rarity.uncommon,
 		type: type.skill,
-		func: 'effectCostDown',
+		func: 'effectCostDownInTurn',
 		image:'images/card/common_Dragonblood.jpg',
 		effect: `このターン、あなたのすべての手札のコストは1になる。`,
 		amount: {
@@ -5350,7 +5351,7 @@ const commonCardList = {
 		type: type.skill,
 		func: 'effectReconfigureDeckAndDraw',
 		image:'images/card/common_Truefeather.jpg',
-		effect: `捨て札のカードを山札に戻す。カードを1枚引く。`,
+		effect: `捨て札のカードを山札に戻す。カードを{Dr}枚引く。`,
 		amount: {
 			cost: 0,
 			draw: 1, 
@@ -5452,7 +5453,7 @@ const commonCardList = {
 		type: type.skill,
 		func: 'effectDoubleDebuff',
 		image:'images/card/common_Death.jpg',
-		effect: `ターン終了時まで、敵が攻撃力ダウン9を与える。廃棄。`,
+		effect: `ターン終了時まで、敵が攻撃力ダウン{D1}を与える。廃棄。`,
 		amount: {
 			cost: 0,
 			debuff1: 9,
@@ -5472,7 +5473,7 @@ const commonCardList = {
 		type: type.skill,
 		func: 'effectDefenseAndSelfDebuff',
 		image:'images/card/common_Judgement.jpg',
-		effect: `30ブロックを得る。次の2ターンの間、カードからブロックを得ることができない。廃棄。`,
+		effect: `{B}ブロックを得る。次の2ターンの間、カードからブロックを得ることができない。廃棄。`,
 		amount: {
 			cost: 0,
 			block: 30,
@@ -5513,7 +5514,7 @@ const commonCardList = {
 			cost: 2,
 			attack: 20,
 			money: 20,
-			discard: true,
+			discard: false,
 		}
 	},
 	//******************************スキル******************************//
@@ -5631,7 +5632,7 @@ const commonCardList = {
 		type: type.skill,
 		func: 'effectDraw',
 		image:'images/card/common_NibelungGlas.jpg',
-		effect: `カードを3枚引く。廃棄。`,
+		effect: `カードを{Dr}枚引く。廃棄。`,
 		amount: {
 			cost: 0,
 			draw: 3,
@@ -5648,7 +5649,7 @@ const commonCardList = {
 		type: type.skill,
 		func: 'effectRandomAttackToHandInDeck',
 		image:'images/card/common_BahamutClaw.jpg',
-		effect: `山札から3枚のランダムな「アタック」を手札に加える。廃棄。`,
+		effect: `山札から{C}枚のランダムな「アタック」を手札に加える。廃棄。`,
 		amount: {
 			cost: 0,
 			count: 3,
@@ -5681,11 +5682,11 @@ const commonCardList = {
 		class: cardClass.common,
 		rarity: rarity.rare,
 		type: type.skill,
-		func: '',
+		func: 'effectAllCardsUpgrade',
 		image:'images/card/common_Mantle.jpg',
 		effect: `戦闘終了まですべてのカードをアップグレードする。廃棄。`,
 		amount: {
-			cost: 0,
+			cost: 2,
 			discard: true,
 		}
 	},
@@ -5700,7 +5701,7 @@ const commonCardList = {
 		type: type.power,
 		func: 'effectBuff',
 		image:'images/card/common_ExtinctionVestige.jpg',
-		effect: `敵1体にデバフを与えるたび、その敵に5ダメージを与える。`,
+		effect: `敵1体にデバフを与えるたび、その敵に{F}ダメージを与える。`,
 		amount: {
 			cost: 0,
 			buff: 5,
@@ -5717,7 +5718,7 @@ const commonCardList = {
 		type: type.power,
 		func: 'effectBuff',
 		image:'images/card/common_CosmicSword.jpg',
-		effect: `1回のターンで5枚のカードをプレイするたび、すべての敵に10ダメージを与える。`,
+		effect: `1回のターンで5枚のカードをプレイするたび、すべての敵に{F}ダメージを与える。`,
 		amount: {
 			cost: 0,
 			buff: 10,
@@ -5734,7 +5735,7 @@ const commonCardList = {
 		type: type.power,
 		func: 'effectBuff',
 		image:'images/card/common_Reflection.jpg',
-		effect: `ターン開始時に、ランダムな無色のカードを1枚手札に加える。`,
+		effect: `ターン開始時に、ランダムな無色のカードを{F}枚手札に加える。`,
 		amount: {
 			cost: 2,
 			buff: 1,
@@ -5774,6 +5775,673 @@ const commonEnhancedCardList = {
 			attack: 6,
 			originAttack: 6,
 			discard: true,
+		}
+	},
+	CaveBat: {
+		No:611002,
+		key: 'CaveBat',
+		name: '<span class="upgrade">ケイブ・バット+</span>',
+		class: cardClass.common,
+		rarity: rarity.common,
+		type: type.attack,
+		func: 'effectAttackAndRecovery',
+		image:'images/card/common_CaveBat.jpg',
+		effect: `<span class="upgrade">{A}</span>ダメージを与える。HPを<span class="upgrade">{R}</span>回復する。`,
+		amount: {
+			cost: 1,
+			attack: 8,
+			recovery: 3,
+			discard: false,
+		}
+	},
+	//******************************スキル******************************//
+	//J.A.X.
+	Doping: {
+		No:612001,
+		key: 'Doping',
+		name: '<span class="upgrade">ドーピング+</span>',
+		class: cardClass.common,
+		rarity: rarity.common,
+		type: type.skill,
+		func: 'effectBuffAndSelfHarm',
+		image:'images/card/common_Doping.jpg',
+		effect: `HPを{HP}失う。筋力<span class="upgrade">{F}</span>を得る。`,
+		amount: {
+			cost: 1,
+			buff: 3,
+			buffType: 'attackUp',
+			harm: 3,
+			discard: false,
+		}
+	},
+	//幻姿
+	Ghost: {
+		No:612001,
+		key: 'Ghost',
+		name: '<span class="upgrade">スピリット+</span>',
+		class: cardClass.common,
+		rarity: rarity.common,
+		type: type.skill,
+		func: 'effectBuff',
+		image:'images/card/common_Ghost.jpg',
+		effect: `ダメージカット{F}を得る。廃棄。`,
+		amount: {
+			cost: 1,
+			buff: 1,
+			buffType: 'damageCut',
+			discard: true,
+		}
+	},
+	/********************************************* アンコモン *********************************************/
+	//******************************アタック******************************//
+	//スイフトストライク
+	Zangetsu: {
+		No:621001,
+		key: 'Zangetsu',
+		name: '<span class="upgrade">残月+</span>',
+		class: cardClass.common,
+		rarity: rarity.uncommon,
+		type: type.attack,
+		func: 'effectAttack',
+		image:'images/card/common_Zangetsu.jpg',
+		effect: `<span class="upgrade">{A}</span>ダメージを与える。`,
+		amount: {
+			cost: 0,
+			attack: 10,
+			discard: false,
+		}
+	},
+	//マインドブラスト
+	Cubism: {
+		No:621002,
+		key: 'Cubism',
+		name: '<span class="upgrade">キュービズム+</span>',
+		class: cardClass.common,
+		rarity: rarity.uncommon,
+		type: type.attack,
+		func: 'effectAttackByDeckNum',
+		image:'images/card/common_Cubism.jpg',
+		effect: `天賦。山札にあるカードの枚数に等しいダメージを与える。`,
+		amount: {
+			gift: true,
+			cost: 1,
+			discard: false,
+		}
+	},
+	//剣の一閃
+	Meteoric: {
+		No:621003,
+		key: 'Meteoric',
+		name: '<span class="upgrade">コンドリュール+</span>',
+		class: cardClass.common,
+		rarity: rarity.uncommon,
+		type: type.attack,
+		func: 'effectAttackAndDraw',
+		image:'images/card/common_Meteoric.jpg',
+		effect: `<span class="upgrade">{A}</span>ダメージを与える。カードを{Dr}枚引く。`,
+		amount: {
+			cost: 0,
+			attack: 6,
+			draw: 1,
+			discard: false,
+		}
+	},
+	//劇的な入場
+	Star: {
+		No:621004,
+		key: 'Star',
+		name: '<span class="upgrade">ザ・スター+</span>',
+		class: cardClass.common,
+		rarity: rarity.uncommon,
+		type: type.attack,
+		func: 'effectAllAttack',
+		image:'images/card/common_Star.jpg',
+		effect: `天賦。敵全体に<span class="upgrade">{A}</span>ダメージを与える。廃棄。`,
+		amount: {
+			gift: true,
+			cost: 0,
+			attack: 12,
+			discard: true,
+		}
+	},
+	//******************************スキル******************************//
+	//つまずき
+	Celeste: {
+		No:622001,
+		key: 'Celeste',
+		name: '<span class="upgrade">セレスト+</span>',
+		class: cardClass.common,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: 'effectAllDebuff',
+		image:'images/card/common_Celeste.jpg',
+		effect: `<span class="upgrade">すべての敵に</span>防御力ダウン2を与える。`,
+		amount: {
+			cost: 0,
+			debuff: 2,
+			debuffType: 'defenseDown',
+			discard: false,
+		}
+	},
+	//よろず屋
+	WhiteRabbit: {
+		No:622002,
+		key: 'WhiteRabbit',
+		name: '<span class="upgrade">ホワイトラビット+</span>',
+		class: cardClass.common,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: 'effectGetCommonCardRandom',
+		image:'images/card/common_WhiteRabbit.jpg',
+		effect: `ランダムな無色のカードを<span class="upgrade">2</span>枚手札に加える。廃棄。`,
+		amount: {
+			cost: 0,
+			count: 2,
+			discard: true,
+		}
+	},
+	//万能薬
+	Ointment: {
+		No:622003,
+		key: 'Ointment',
+		name: '<span class="upgrade">チスイの軟膏+</span>',
+		class: cardClass.common,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: 'effectBuff',
+		image:'images/card/common_Ointment.jpg',
+		effect: `弱体無効<span class="upgrade">{F}</span>を得る。廃棄。`,
+		amount: {
+			cost: 0,
+			buff: 2,
+			buffType: 'mount',
+			discard: true,
+		}
+	},
+	//用心
+	Luminiera: {
+		No:622004,
+		key: 'Luminiera',
+		name: '<span class="upgrade">シュヴァリエ+</span>',
+		class: cardClass.common,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: 'effectSelectCardDeckBottom',
+		image:'images/card/common_Luminiera.jpg',
+		effect: `手札のカードを<span class="upgrade">好きな枚数</span>山札の底に置く。プレイするまでそのコストは0。`,
+		amount: {
+			cost: 0,
+			discard: false,
+		}
+	},
+	//包帯
+	Bandage: {
+		No:622005,
+		key: 'Bandage',
+		name: '<span class="upgrade">治療具+</span>',
+		class: cardClass.common,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: 'effectRecovery',
+		image:'images/card/common_Bandage.jpg',
+		effect: `HPを<span class="upgrade">{R}</span>回復する。廃棄。`,
+		amount: {
+			cost: 0,
+			recovery: 6,
+			discard: true,
+		}
+	},
+	//啓発
+	Dragonblood: {
+		No:622006,
+		key: 'Dragonblood',
+		name: '<span class="upgrade">龍血の小瓶+</span>',
+		class: cardClass.common,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: 'effectCostDown',
+		image:'images/card/common_Dragonblood.jpg',
+		effect: `<span class="upgrade">戦闘終了まで</span>、あなたのすべての手札のコストは1になる。`,
+		amount: {
+			cost: 0,
+			changeCost: 1,
+			discard: false,
+		}
+	},
+	//技巧
+	Tower: {
+		No:622007,
+		key: 'Tower',
+		name: '<span class="upgrade">ザ・タワー+</span>',
+		class: cardClass.common,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: 'effectDefenseAndDraw',
+		image:'images/card/common_Tower.jpg',
+		effect: `<span class="upgrade">{B}</span>ブロックを得る。カードを{Dr}枚引く。`,
+		amount: {
+			cost: 0,
+			block: 4,
+			draw: 1,
+			discard: false,
+		}
+	},
+	//深呼吸
+	Truefeather: {
+		No:622008,
+		key: 'Truefeather',
+		name: '<span class="upgrade">陵光真羽+</span>',
+		class: cardClass.common,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: 'effectReconfigureDeckAndDraw',
+		image:'images/card/common_Truefeather.jpg',
+		effect: `捨て札のカードを山札に戻す。カードを<span class="upgrade">{Dr}</span>枚引く。`,
+		amount: {
+			cost: 0,
+			draw: 2, 
+			discard: false,
+		}
+	},
+	//焦燥
+	Tiamat: {
+		No:622009,
+		key: 'Tiamat',
+		name: '<span class="upgrade">ティアマト+</span>',
+		class: cardClass.common,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: 'effectDraw',
+		image:'images/card/common_Tiamat.jpg',
+		effect: `手札にアタックカードが1枚も無い場合、カードを<span class="upgrade">{Dr}</span>枚引く。`,
+		amount: {
+			conditions: 'conditionsNoAttack', // 発動条件
+			cost: 0,
+			draw: 3,
+			discard: false,
+		}
+	},
+	//狂気
+	Fireplime: {
+		No:622010,
+		key: 'Fireplime',
+		name: '<span class="upgrade">火焔羽の化石+</span>',
+		class: cardClass.common,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: 'effectRandomCardCostDown',
+		image:'images/card/common_Fireplime.jpg',
+		effect: `戦闘終了まで、手札のランダムなカード1枚のコストを0にする。廃棄。`,
+		amount: {
+			cost: 0,
+			discard: true,
+		}
+	},
+	//目くらまし
+	Moon: {
+		No:622011,
+		key: 'Moon',
+		name: '<span class="upgrade">ザ・ムーン+</span>',
+		class: cardClass.common,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: 'effectAllDebuff',
+		image:'images/card/common_Moon.jpg',
+		effect: `<span class="upgrade">すべての敵に</span>恐怖2を与える。`,
+		amount: {
+			cost: 0,
+			debuff: 3,
+			debuffType: 'weak',
+			discard: false,
+		}
+	},
+	//直感
+	Sylphid: {
+		No:622013,
+		key: 'Sylphid',
+		name: '<span class="upgrade">シルフィードベル+</span>',
+		class: cardClass.common,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: 'effectDefense',
+		image:'images/card/common_Sylphid.jpg',
+		effect: `<span class="upgrade">{B}</span>ブロックを得る。`,
+		amount: {
+			cost: 0,
+			block: 9,
+			discard: false,
+		}
+	},
+	//祓い清め
+	BlackRabbit: {
+		No:622014,
+		key: 'BlackRabbit',
+		name: '<span class="upgrade">ブラックラビット+</span>',
+		class: cardClass.common,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: 'effectFiveDiscardCard',
+		image:'images/card/common_BlackRabbit.jpg',
+		effect: `手札から<span class="upgrade">5</span>枚まで選び、廃棄する。廃棄。`,
+		amount: {
+			cost: 0,
+			discard: true,
+		}
+	},
+	//闇の足枷
+	Death: {
+		No:622015,
+		key: 'Death',
+		name: '<span class="upgrade">ザ・デス+</span>',
+		class: cardClass.common,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: 'effectDoubleDebuff',
+		image:'images/card/common_Death.jpg',
+		effect: `ターン終了時まで、敵が攻撃力ダウン<span class="upgrade">{D1}</span>を与える。廃棄。`,
+		amount: {
+			cost: 0,
+			debuff1: 15,
+			debuffType1: 'attackDown',
+			debuff2: 15,
+			debuffType2: 'invalidAttackDown',
+			discard: true,
+		}
+	},
+	//非常ボタン
+	Judgement: {
+		No:622016,
+		key: 'Judgement',
+		name: '<span class="upgrade">ザ・ジャッジメント+</span>',
+		class: cardClass.common,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: 'effectDefenseAndSelfDebuff',
+		image:'images/card/common_Judgement.jpg',
+		effect: `<span class="upgrade">{B}</span>ブロックを得る。次の2ターンの間、カードからブロックを得ることができない。廃棄。`,
+		amount: {
+			cost: 0,
+			block: 40,
+			debuff: 2,
+			debuffType: 'noBlock',
+			discard: true,
+		}
+	},
+	//発見
+	Temperance: {
+		No:622012,
+		key: 'Temperance',
+		name: '<span class="upgrade">ザ・テンペランス+</span>',
+		class: cardClass.common,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: 'effectGetRandomCard',
+		image:'images/card/common_Temperance.jpg',
+		effect: `3枚のランダムなカードから1枚選び、手札に加える。このターン、そのコストは0。`,
+		amount: {
+			cost: 1,
+			discard: false,
+		}
+	},
+	/********************************************* レア *********************************************/
+	//強欲の手
+	Charm: {
+		No:631001,
+		key: 'Charm',
+		name: '<span class="upgrade">くるりん祈願の金箱お守り+</span>',
+		class: cardClass.common,
+		rarity: rarity.rare,
+		type: type.attack,
+		func: 'effectAttackAndPayment',
+		image:'images/card/common_Charm.jpg',
+		effect: `<span class="upgrade">{A}</span>ダメージを与える。この攻撃でミニオン以外の敵を倒すと、<span class="upgrade">25</span>ゴールドを得る。`,
+		amount: {
+			cost: 2,
+			attack: 25,
+			money: 25,
+			discard: false,
+		}
+	},
+	//******************************スキル******************************//
+	//シークレットウェポン
+	Bright: {
+		No:632001,
+		key: 'Bright',
+		name: '<span class="upgrade">白き魂+</span>',
+		class: cardClass.common,
+		rarity: rarity.rare,
+		type: type.skill,
+		func: 'effectAttackToHandInDeck',
+		image:'images/card/common_BrightSpirits.jpg',
+		effect: `山札から「アタック」を1枚選び、手札に加える。`,
+		amount: {
+			conditions: 'conditionsAttackInDeck', // 発動条件
+			cost: 0,
+			discard: false,
+		}
+	},
+	//シークレットテクニック
+	Murky: {
+		No:632002,
+		key: 'Murky',
+		name: '<span class="upgrade">黒き魂+</span>',
+		class: cardClass.common,
+		rarity: rarity.rare,
+		type: type.skill,
+		func: 'effectSkillToHandInDeck',
+		image:'images/card/common_MurkySpirits.jpg',
+		effect: `山札から「スキル」を1枚選び、手札に加える。`,
+		amount: {
+			conditions: 'conditionsSkillInDeck', // 発動条件
+			cost: 0,
+			discard: false,
+		}
+	},
+	//羽化
+	Longxin: {
+		No:632003,
+		key: 'Longxin',
+		name: '<span class="upgrade">無主の龍心+</span>',
+		class: cardClass.common,
+		rarity: rarity.rare,
+		type: type.skill,
+		func: 'effectAddRandomCard',
+		image:'images/card/common_MasterlessLongxin.jpg',
+		effect: `ランダムな「アタック」を<span class="upgrade">{C}</span>枚山札に加える。この戦闘中それらのコストは0。廃棄`,
+		amount: {
+			cost: 2,
+			count: 5,
+			type: type.attack,
+			discard: true,
+		}
+	},
+	//サナギ
+	Yupei: {
+		No:632004,
+		key: 'Yupei',
+		name: '<span class="upgrade">無主の玲瓏佩+</span>',
+		class: cardClass.common,
+		rarity: rarity.rare,
+		type: type.skill,
+		func: 'effectAddRandomCard',
+		image:'images/card/common_MasterlessYupei.jpg',
+		effect: `ランダムな「スキル」を<span class="upgrade">{C}</span>枚山札に加える。この戦闘中それらのコストは0。廃棄`,
+		amount: {
+			cost: 2,
+			count: 5,
+			type: type.skill,
+			discard: true,
+		}
+	},
+	//予測
+	Bangle: {
+		No:632005,
+		key: 'Bangle',
+		name: '<span class="upgrade">預言者の腕輪+</span>',
+		class: cardClass.common,
+		rarity: rarity.rare,
+		type: type.skill,
+		func: 'effectDrawAndUnshiftDeck',
+		image:'images/card/common_Bangle.jpg',
+		effect: `カードを2枚引く。手札のカード1枚を山札の1番上に置く。`,
+		amount: {
+			cost: 0,
+			draw: 2,
+			discard: false,
+		}
+	},
+	//変異
+	ImmaculateSoul: {
+		No:632006,
+		key: 'ImmaculateSoul',
+		name: '<span class="upgrade">純然たる魂魄+</span>',
+		class: cardClass.common,
+		rarity: rarity.rare,
+		type: type.skill,
+		func: 'effectAddRandomCommonEnhanceCard',
+		image:'images/card/common_ImmaculateSoul.jpg',
+		effect: `ランダムな<span class="upgrade">アップグレードした</span>無色のカードをX枚手札に加える。このターンそれらのカードのコストは0。廃棄。`,
+		amount: {
+			cost: 'X',
+			variable: 0,
+			discard: true,
+		}
+	},
+	//戦略家
+	NibelungGlas: {
+		No:632007,
+		key: 'NibelungGlas',
+		name: '<span class="upgrade">ニーベルングラス+</span>',
+		class: cardClass.common,
+		rarity: rarity.rare,
+		type: type.skill,
+		func: 'effectDraw',
+		image:'images/card/common_NibelungGlas.jpg',
+		effect: `カードを<span class="upgrade">{Dr}</span>枚引く。廃棄。`,
+		amount: {
+			cost: 0,
+			draw: 4,
+			discard: true,
+		}
+	},
+	//暴力
+	BahamutClaw: {
+		No:632008,
+		key: 'BahamutClaw',
+		name: '<span class="upgrade">バハムートの鉤爪+</span>',
+		class: cardClass.common,
+		rarity: rarity.rare,
+		type: type.skill,
+		func: 'effectRandomAttackToHandInDeck',
+		image:'images/card/common_BahamutClaw.jpg',
+		effect: `山札から<span class="upgrade">{C}</span>枚のランダムな「アタック」を手札に加える。廃棄。`,
+		amount: {
+			cost: 0,
+			count: 4,
+			discard: true,
+		}
+	},
+	//爆弾
+	PumpkinBomb: {
+		No:632009,
+		key: 'PumpkinBomb',
+		name: '<span class="upgrade">爆弾カボチャ+</span>',
+		class: cardClass.common,
+		rarity: rarity.rare,
+		type: type.skill,
+		func: 'effectBuff',
+		image:'images/card/common_PumpkinBomb.jpg',
+		effect: `3ターン後、すべての敵に<span class="upgrade">50</span>ダメージを与える。`,
+		amount: {
+			cost: 2,
+			buff: 3,
+			buffType: 'bomb50',
+			discard: true,
+		}
+	},
+	//神格化
+	Mantle: {
+		No:632010,
+		key: 'Mantle',
+		name: '<span class="upgrade">雄偉者たちの羽織物+</span>',
+		class: cardClass.common,
+		rarity: rarity.rare,
+		type: type.skill,
+		func: 'effectAllCardsUpgrade',
+		image:'images/card/common_Mantle.jpg',
+		effect: `戦闘終了まですべてのカードをアップグレードする。廃棄。`,
+		amount: {
+			cost: 1,
+			discard: true,
+		}
+	},
+	//******************************パワー******************************//
+	//加虐性
+	Extinction: {
+		No:633001,
+		key: 'Extinction',
+		name: '<span class="upgrade">滅尽の残気+</span>',
+		class: cardClass.common,
+		rarity: rarity.rare,
+		type: type.power,
+		func: 'effectBuff',
+		image:'images/card/common_ExtinctionVestige.jpg',
+		effect: `敵1体にデバフを与えるたび、その敵に<span class="upgrade">{F}</span>ダメージを与える。`,
+		amount: {
+			cost: 0,
+			buff: 7,
+			buffType: 'extinction',
+		}
+	},
+	//威風堂々
+	CosmicSword: {
+		No:633002,
+		key: 'CosmicSword',
+		name: '<span class="upgrade">ソード・オブ・コスモス+</span>',
+		class: cardClass.common,
+		rarity: rarity.rare,
+		type: type.power,
+		func: 'effectBuff',
+		image:'images/card/common_CosmicSword.jpg',
+		effect: `1回のターンで5枚のカードをプレイするたび、すべての敵に<span class="upgrade">{F}</span>ダメージを与える。`,
+		amount: {
+			cost: 0,
+			buff: 14,
+			buffType: 'cosmic',
+		}
+	},
+	//磁性
+	Reflection: {
+		No:633003,
+		key: 'Reflection',
+		name: '<span class="upgrade">リフレクトオブザムーン+</span>',
+		class: cardClass.common,
+		rarity: rarity.rare,
+		type: type.power,
+		func: 'effectBuff',
+		image:'images/card/common_Reflection.jpg',
+		effect: `ターン開始時に、ランダムな無色のカードを1枚手札に加える。`,
+		amount: {
+			cost: 1,
+			buff: 1,
+			buffType: 'moon',
+		}
+	},
+	//騒乱
+	Deathcannon: {
+		No:633004,
+		key: 'Deathcannon',
+		name: '<span class="upgrade">禁栄の絶砲+</span>',
+		class: cardClass.common,
+		rarity: rarity.rare,
+		type: type.power,
+		func: 'effectBuff',
+		image:'images/card/common_Deathcannon.jpg',
+		effect: `ターン開始時、山札の一番上のカードをプレイする。`,
+		amount: {
+			cost: 1,
+			buff: 1,
+			buffType: 'deathcannon',
 		}
 	},
 };
@@ -5939,8 +6607,8 @@ function setupDeck(){
 			addCardToOriginalDeck(djeetaCardList.Wide, 5);
 			addCardToOriginalDeck(djeetaCardList.Defense, 5);
 			addCardToOriginalDeck(djeetaCardList.Pulverizer, 1);
-			addCardToOriginalDeck(commonCardList.BahamutClaw, 2);
-			addCardToOriginalDeck(commonCardList.PumpkinBomb, 2);
+			addCardToOriginalDeck(commonEnhancedCardList.Mantle, 2);
+			addCardToOriginalDeck(commonEnhancedCardList.Dragonblood, 2);
 			addCardToOriginalDeck(testCardList.testAttack, 2);
 		}
 		setLocalStorage(keyContinueOriginalDeck, myOriginalDeck);
@@ -6417,9 +7085,9 @@ function effectTimesDebuff(amount){
 	endAction();
 	return true;
 }
-function effectALLDebuff(amount){
+function effectAllDebuff(amount){
 	// 敵全体に恐怖{D}を与える。
-	console.log('effectALLDebuff');
+	console.log('effectAllDebuff');
 	if('debuff' in amount && 'debuffType' in amount ){
 		actionStatusAllDebuf(debuffStatus[amount.debuffType], amount.debuff);
 	}
@@ -7048,7 +7716,7 @@ function effectPutCardDeckTop(amount){
 }
 function effectTimesRandomDebuff(amount){
 	// ランダムな敵に毒3を3回与える。
-	console.log('effectALLDebuff');
+	console.log('effectAllDebuff');
 	if('debuff' in amount && 'debuffType' in amount && 'count' in amount){
 		for(let i = 0; i < amount.count; i++){
 			actionStatusRandomDebuf(debuffStatus[amount.debuffType], amount.debuff);
@@ -7286,16 +7954,34 @@ function effectGetCommonCardRandom(){
 }
 function effectPutCardDeckBottom(amount){
 	// 手札のカード1枚を山札の1番上に置く。プレイされるまでそのコストは0
+	console.log('effectPutCardDeckBottom');
 	actionPushDeckAndCostDown();
+	return true;
+}
+function effectSelectCardDeckBottom(amount){
+	// 手札のカード1枚を山札の1番上に置く。プレイされるまでそのコストは0
+	console.log('effectSelectCardDeckBottom');
+	actionSelectPushDeckAndCostDown();
+	return true;
+}
+function effectCostDownInTurn(amount){
+	// このターン、あなたのすべての手札のコストは1になる。
+	console.log('effectCostDownInTurn');
+	myHand.forEach((hand) => {
+		if(hand.amount.cost !== 'X' || hand.amount.cost >= amount.changeCost){
+			hand.amount.tmpCost = amount.changeCost;
+		}
+	});
+
 	endAction();
 	return true;
 }
 function effectCostDown(amount){
-	// このターン、あなたのすべての手札のコストは1になる。
-	console.log('effectDrawAndDebuff');
+	//戦闘終了まで、あなたのすべての手札のコストは1になる。
+		console.log('effectCostDown');
 	myHand.forEach((hand) => {
 		if(hand.amount.cost !== 'X' || hand.amount.cost >= amount.changeCost){
-			hand.amount.tmpCost = amount.changeCost;
+			hand.amount.changedCost = amount.changeCost;
 		}
 	});
 
@@ -7333,6 +8019,13 @@ function effectThreeDiscardCard(amount){
 	console.log('effectThreeDiscardCard');
 	// 手札から3枚まで選び、廃棄する。廃棄。
 	actionThreeDiscardCard();
+
+	return true;
+}
+function effectFiveDiscardCard(amount){
+	console.log('effectFiveDiscardCard');
+	// 手札から3枚まで選び、廃棄する。廃棄。
+	actionFiveDiscardCard();
 
 	return true;
 }
@@ -7427,8 +8120,8 @@ function effectAddRandomCard(amount){
 	return true;
 }
 function effectAddRandomCommonCard(amount){
-	// ランダムな「アタック」を3枚山札に加える。この戦闘中それらのコストは0。廃棄
-	console.log('effectAddRandomCard');
+	// ランダムな無色のカードをX枚手札に加える。このターンそれらのカードのコストは0。
+	console.log('effectAddRandomCommonCard');
 	const selectChara = getLocalStorage(keySelectChara);
 	if('variable' in amount){
 		const displayCard = [];
@@ -7449,6 +8142,100 @@ function effectAddRandomCommonCard(amount){
 	}
 	endAction();
 	return true;
+}
+function effectAddRandomCommonEnhanceCard(amount){
+	// ランダムな「アタック」を3枚山札に加える。この戦闘中それらのコストは0。廃棄
+	console.log('effectAddRandomCommonEnhanceCard');
+	const selectChara = getLocalStorage(keySelectChara);
+	if('variable' in amount){
+		const displayCard = [];
+		for(let i = 0; i < amount.variable; i++){
+			let selectCard = shuffleArray(Object.values(commonEnhancedCardList))
+				.filter((card) => 
+					card.rarity === rarity.uncommon ||
+					card.rarity === rarity.rare
+				).slice(0, 1)[0];
+			console.log(selectCard);
+			selectCard = deepCopyCard(selectCard);
+			//この戦闘中それらのコストは0
+			selectCard.tmpCost = 0;
+			pushHand(selectCard);
+			displayCard.push(selectCard);
+		}
+		animatePlayerAddHand(displayCard);
+	}
+	endAction();
+	return true;
+}
+function effectAllCardsUpgrade(amount){
+	//戦闘終了まですべてのカードをアップグレードする。廃棄。
+	console.log('effectAllCardsUpgrade');
+	//デッキすべてのカードをアップグレード
+	const upgradeDeck = deleteAllDeck();
+	upgradeDeck.forEach((card) => {
+		if('key' in card && card.key !== undefined){
+			if(card.class === cardClass.gran){
+				pushDeck(granEnhancedCardList[card.key]);
+			} else if(card.class === cardClass.djeeta){
+				pushDeck(djeetaEnhancedCardList[card.key]);
+			} else if(card.class === cardClass.common){
+				pushDeck(commonEnhancedCardList[card.key]);
+			}
+		}else{
+			pushDeck(card);
+		}
+	});
+	setLocalStorage(keyContinueDeck, myDeck);
+	//手札すべてのカードをアップグレード
+	const upgradeHand = deleteAllHand();
+	upgradeHand.forEach((card) => {
+		if('key' in card && card.key !== undefined){
+			if(card.class === cardClass.gran){
+				pushHand(granEnhancedCardList[card.key]);
+			} else if(card.class === cardClass.djeeta){
+				pushHand(djeetaEnhancedCardList[card.key]);
+			} else if(card.class === cardClass.common){
+				pushHand(commonEnhancedCardList[card.key]);
+			}
+		}else{
+			pushHand(card);
+		}
+	});
+	setLocalStorage(keyContinueHand, myHand);
+	//捨て札すべてのカードをアップグレード
+	const upgradeTrash = deleteAllTrash();
+	upgradeTrash.forEach((card) => {
+		if('key' in card && card.key !== undefined){
+			if(card.class === cardClass.gran){
+				pushTrash(granEnhancedCardList[card.key]);
+			} else if(card.class === cardClass.djeeta){
+				pushTrash(djeetaEnhancedCardList[card.key]);
+			} else if(card.class === cardClass.common){
+				pushTrash(commonEnhancedCardList[card.key]);
+			}
+		}else{
+			pushTrash(card);
+		}
+	});
+	setLocalStorage(keyContinueTrash, myTrash);
+	//廃棄札すべてのカードをアップグレード
+	const upgradeDiscard = deleteAllDiscard();
+	upgradeDiscard.forEach((card) => {
+		if('key' in card && card.key !== undefined){
+			if(card.class === cardClass.gran){
+				pushDiscard(granEnhancedCardList[card.key]);
+			} else if(card.class === cardClass.djeeta){
+				pushDiscard(djeetaEnhancedCardList[card.key]);
+			} else if(card.class === cardClass.common){
+				pushDiscard(commonEnhancedCardList[card.key]);
+			}
+		}else{
+			pushDiscard(card);
+		}
+	});
+	setLocalStorage(keyContinueDiscard, discard);
+
+
 }
 /*****************************************************/
 /* 発動条件用関数
@@ -8116,6 +8903,9 @@ function unshiftDeckCard(costZeroFlag = false){
 /*******************************************************/
 function actionPushDeckAndCostDown(){
 	startPhase(phase.pushDeckAndZero);
+}
+function actionSelectPushDeckAndCostDown(){
+	startPhase(phase.selectPushDeckAndZero);
 }
 function pushDeckCard(costZeroFlag = false){
 	console.log('pushDeckCard');

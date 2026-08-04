@@ -119,7 +119,7 @@ const normalArtifact = {
 		dedicated: artifactdedicated.common,
 		effect: '戦闘開始時、敵全体に恐怖1を与える。',
 		image: 'images/artifact/ProofOfMage.png', 
-		firstFunc: 'effectALLDebuff',
+		firstFunc: 'effectAllDebuff',
 		amount: {
 			debuff: 1,
 			debuffType: 'weak',
@@ -1263,7 +1263,7 @@ const normalArtifact = {
 		dedicated: artifactdedicated.djeeta,
 		effect: '戦闘開始時、すべての敵に毒4を与える。ジータ専用', 
 		image: 'images/artifact/SlimyShroom.png', 
-		firstFunc: 'effectALLDebuff',
+		firstFunc: 'effectAllDebuff',
 		amount: {
 			debuff: 4,
 			debuffType: 'poison',
