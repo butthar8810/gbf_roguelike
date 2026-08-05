@@ -1256,13 +1256,31 @@ header{
 /* show-area: カード表示エリア要素
 /*****************************************************************************/
 .show-area{
-	width: 900px;
+	width: 100%;
 	height: 200px;
 	position: absolute;
 	bottom: 40px;
 	left: 0px;
 }
 .show-area-inner{
+	width: 100%;
+	height: 100%;
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+/*****************************************************************************/
+/* show-area: カード表示エリア要素
+/*****************************************************************************/
+.play-area{
+	width: 100%;
+	height: 200px;
+	position: absolute;
+	top: 140px;
+	left: 0px;
+}
+.play-area-inner{
 	width: 100%;
 	height: 100%;
 	position: relative;
@@ -1888,23 +1906,23 @@ header{
 	justify-content: flex-start;
 	align-items: start;
 }
-.enhance-card{
+.show-card{
 	font-size: 15px;
 	width: 165px;
 	margin: 10px 7px;
 	border-radius: 10px;
 }
-.enhance-card.select{
+.show-card.select{
 	background-color: rgba(254, 197, 105);
 	box-shadow: 1px 1px 5px red;
 }
-.enhance-card.is-small{
+.show-card.is-small{
 	font-size: 12px;
 }
-.enhance-card:hover{
+.show-card:hover{
 	transform: scale(1.1);
 }
-.enhance-card p{
+.show-card p{
 	font-size: 12px;
 }
 /* enhance-decide-content */
@@ -2401,7 +2419,8 @@ header{
 .card-list{
 	width: 100%;
 	max-width: 1100px;
-	height: 700px;
+	height: auto;
+	max-height: 700px;
 	overflow-y: auto;
 	display: flex;
 	flex-wrap: wrap;

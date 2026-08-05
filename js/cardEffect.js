@@ -858,22 +858,24 @@ const granCardList = {
 			discardFunc: 'effectGetEnergy'
 		}
 	},
-/*	//非道の刃
+	//非道の刃
 	Yorishiro: {
 		key: 'Yorishiro',
 		name: '依代の刃',
 		class: cardClass.gran,
 		rarity: rarity.uncommon,
 		type: type.skill,
-		func: '',
+		func: 'effectAddRandomCardAndCostDown',
 		image:'images/card/gran_Yorishiro.jpg',
 		effect: 'ランダムな「アタック」を1枚手札に加える。このターンそのカードのコストは0。廃棄。',
 		amount: {
 			cost: 1, 
+			count: 1,
+			type: type.attack,
 			discard: true,
 		}
 	},
-*/
+
 	//******************************パワー******************************//
 	// 炎の吐息
 	Samsara: {
@@ -2065,21 +2067,23 @@ const granEnhancedCardList = {
 			discardFunc: 'effectGetEnergy'
 		}
 	},
-/*	//非道の刃
+	//非道の刃
 	Yorishiro: {
+		key: 'Yorishiro',
 		name: '<span class="upgrade">依代の刃+</span>',
 		class: cardClass.gran,
 		rarity: rarity.uncommon,
 		type: type.skill,
-		func: '',
+		func: 'effectAddRandomCardAndCostDown',
 		image:'images/card/gran_Yorishiro.jpg',
 		effect: 'ランダムな「アタック」を1枚手札に加える。このターンそのカードのコストは0。廃棄。',
 		amount: {
 			cost: 0, 
+			count: 1,
+			type: type.attack,
 			discard: true,
 		}
 	},
-*/
 	//******************************パワー******************************//
 	// 炎の吐息
 	Samsara: {
@@ -2530,7 +2534,7 @@ const djeetaCardList = {
 	Pulverizer: {
 		No: 312002,
 		key: 'Pulverizer',
-		name: 'パルバライザー',
+		name: 'ライトバックラー',
 		class: cardClass.djeeta,
 		rarity: rarity.starter,
 		type: type.skill,
@@ -3200,6 +3204,23 @@ const djeetaCardList = {
 			discard: true,
 		}
 	},
+	//動揺
+	Yorishiro: {
+		key: 'Yorishiro',
+		name: '依代の杖',
+		class: cardClass.djeeta,
+		rarity: rarity.uncommon,
+		type: type.skill,
+		func: 'effectAddRandomCardAndCostDown',
+		image:'images/card/djeeta_Yorishiro.jpg',
+		effect: 'ランダムな「スキル」を1枚手札に加える。このターンそのカードのコストは0。廃棄',
+		amount: {
+			cost: 1, 
+			count: 1,
+			type: type.skill,
+			discard: true,
+		}
+	},
 	//反射
 	Tactics: {
 		No: 332005,
@@ -3362,23 +3383,7 @@ const djeetaCardList = {
 			discard: false,
 		}
 	},
-	
-/*	//動揺
-	test1: {
-		key: '',
-		name: '',
-		class: cardClass.djeeta,
-		rarity: rarity.uncommon,
-		type: type.skill,
-		func: '',
-		image:'images/card/djeeta_.jpg',
-		effect: `ランダムな「スキル」を1枚手札に加える。このターンそのカードのコストは0。廃棄`,
-		amount: {
-			cost: 0,
-			discard: true,
-		}
-	},
-*/
+
 	//******************************パワー******************************//
 	//まきびし
 	Aura: {
@@ -3861,7 +3866,7 @@ const djeetaEnhancedCardList = {
 	//サバイバー
 	Pulverizer: {
 		No:412002,
-		name: '<span class="upgrade">パルバライザー+</span>',
+		name: '<span class="upgrade">ライトバックラー+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.starter,
 		type: type.skill,
@@ -4495,21 +4500,23 @@ const djeetaEnhancedCardList = {
 			discard: true,
 		}
 	},
-/*	//動揺
-	test1: {
-		name: '',
+	//動揺
+	Yorishiro: {
+		key: 'Yorishiro',
+		name: '<span class="upgrade">依代の杖+</span>',
 		class: cardClass.djeeta,
 		rarity: rarity.uncommon,
 		type: type.skill,
-		func: '',
-		image:'images/card/djeeta_.jpg',
-		effect: `ランダムな「スキル」を1枚手札に加える。このターンそのカードのコストは0。廃棄`,
+		func: 'effectAddRandomCardAndCostDown',
+		image:'images/card/djeeta_Yorishiro.jpg',
+		effect: 'ランダムな「スキル」を1枚手札に加える。このターンそのカードのコストは0。廃棄',
 		amount: {
-			cost: 0,
+			cost: 0, 
+			count: 1,
+			type: type.skill,
 			discard: true,
 		}
 	},
-*/
 	//反射
 	Tactics: {
 		No:432005,
@@ -5560,7 +5567,7 @@ const commonCardList = {
 		class: cardClass.common,
 		rarity: rarity.rare,
 		type: type.skill,
-		func: 'effectAddRandomCard',
+		func: 'effectAddRandomCardAndChangeCost',
 		image:'images/card/common_MasterlessLongxin.jpg',
 		effect: `ランダムな「アタック」を{C}枚山札に加える。この戦闘中それらのコストは0。廃棄`,
 		amount: {
@@ -5578,7 +5585,7 @@ const commonCardList = {
 		class: cardClass.common,
 		rarity: rarity.rare,
 		type: type.skill,
-		func: 'effectAddRandomCard',
+		func: 'effectAddRandomCardAndChangeCost',
 		image:'images/card/common_MasterlessYupei.jpg',
 		effect: `ランダムな「スキル」を{C}枚山札に加える。この戦闘中それらのコストは0。廃棄`,
 		amount: {
@@ -6245,7 +6252,7 @@ const commonEnhancedCardList = {
 		class: cardClass.common,
 		rarity: rarity.rare,
 		type: type.skill,
-		func: 'effectAddRandomCard',
+		func: 'effectAddRandomCardAndChangeCost',
 		image:'images/card/common_MasterlessLongxin.jpg',
 		effect: `ランダムな「アタック」を<span class="upgrade">{C}</span>枚山札に加える。この戦闘中それらのコストは0。廃棄`,
 		amount: {
@@ -6263,7 +6270,7 @@ const commonEnhancedCardList = {
 		class: cardClass.common,
 		rarity: rarity.rare,
 		type: type.skill,
-		func: 'effectAddRandomCard',
+		func: 'effectAddRandomCardAndChangeCost',
 		image:'images/card/common_MasterlessYupei.jpg',
 		effect: `ランダムな「スキル」を<span class="upgrade">{C}</span>枚山札に加える。この戦闘中それらのコストは0。廃棄`,
 		amount: {
@@ -6601,7 +6608,7 @@ function setupDeck(){
 			addCardToOriginalDeck(granCardList.Wide, 5);
 			addCardToOriginalDeck(granCardList.Defense, 4);
 			addCardToOriginalDeck(granCardList.PowerSwing, 1);
-			addCardToOriginalDeck(granCardList.Heavy, 2);
+			addCardToOriginalDeck(granCardList.OverPower, 2);
 
 		} else if (selectChara == selectCharacter.djeeta.name){
 			addCardToOriginalDeck(djeetaCardList.Wide, 5);
@@ -7307,6 +7314,47 @@ function effectRecovery(amount){
 	console.log('effectRecovery');
 	if('recovery' in amount){
 		recoveryHP(amount.recovery);
+	}
+	endAction();
+	return true;
+}
+function effectAddRandomCardAndCostDown(amount){
+	// ランダムな「アタック」を1枚手札に加える。このターンそのカードのコストは0。
+	console.log('effectAddRandomCardAndChangeCost');
+	const selectChara = getLocalStorage(keySelectChara);
+	if('count' in amount && 'type' in amount){
+		const displayCard = [];
+		for(let i = 0; i < amount.count; i++){
+			let selectCardList = [];
+			if (selectChara) {
+				if (selectChara == selectCharacter.gran.name){
+					selectCardList = Object.values(granCardList);
+				} else if (selectChara == selectCharacter.djeeta.name){
+					selectCardList = Object.values(djeetaCardList);
+				} else {
+					alert('別キャラが選択されています。');
+					window.location.href = 'index.html';
+				}
+			} else{
+				alert('キャラが選択されていません。');
+				window.location.href = 'index.html';
+			}
+			let selectCard = shuffleArray(selectCardList)
+			.filter((card) => 
+				card.rarity === rarity.common ||
+				card.rarity === rarity.uncommon ||
+				card.rarity === rarity.rare
+			).filter((card) => 
+				card.type === amount.type
+			).slice(0, 1)[0];
+			console.log(selectCard);
+			selectCard = deepCopyCard(selectCard);
+			//この戦闘中それらのコストは0
+			selectCard.tmpCost = 0;
+			pushHand(selectCard);
+			displayCard.push(selectCard);
+		}
+		animatePlayerAddHand(displayCard);
 	}
 	endAction();
 	return true;
@@ -8079,9 +8127,9 @@ function effectRandomAttackToHandInDeck(amount){
 	}
 	return true;
 }
-function effectAddRandomCard(amount){
+function effectAddRandomCardAndChangeCost(amount){
 	// ランダムな「アタック」を3枚山札に加える。この戦闘中それらのコストは0。廃棄
-	console.log('effectAddRandomCard');
+	console.log('effectAddRandomCardAndChangeCost');
 	const selectChara = getLocalStorage(keySelectChara);
 	if('count' in amount && 'type' in amount){
 		const displayCard = [];
@@ -9129,11 +9177,8 @@ function actionDeckTopPlay(){
 	const card = shiftDeck();
 	if (card !== undefined){
 		card.amount.tmpDiscard = true;
-		pushStackCards({
-			func: card.func,
-			amount: card.amount,
-		});
-		pushPlayArea(card);
+		playEffectCard(card, false)
+		animatePlayDeckCard([card]);
 	}else{
 		console.log("shiftDeck undefined");
 	}

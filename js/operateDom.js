@@ -161,19 +161,19 @@ function createTopPageCardListDom(){
 	$('#panel1').html('');
 	Object.values(granCardList).forEach((card) => {
 		const cardDiv = createCardDom(card);
-		cardDiv.addClass('enhance-card');
+		cardDiv.addClass('show-card');
 		$('#panel1').append(cardDiv);
 	});
 	$('#panel2').html('');
 	Object.values(djeetaCardList).forEach((card) => {
 		const cardDiv = createCardDom(card);
-		cardDiv.addClass('enhance-card');
+		cardDiv.addClass('show-card');
 		$('#panel2').append(cardDiv);
 	});
 	$('#panel3').html('');
 	Object.values(commonCardList).forEach((card) => {
 		const cardDiv = createCardDom(card);
-		cardDiv.addClass('enhance-card');
+		cardDiv.addClass('show-card');
 		$('#panel3').append(cardDiv);
 	});
 }
@@ -181,19 +181,19 @@ function createTopPageEnhancedCardListDom(){
 	$('#panel1').html('');
 	Object.values(granEnhancedCardList).forEach((card) => {
 		const cardDiv = createCardDom(card);
-		cardDiv.addClass('enhance-card');
+		cardDiv.addClass('show-card');
 		$('#panel1').append(cardDiv);
 	});
 	$('#panel2').html('');
 	Object.values(djeetaEnhancedCardList).forEach((card) => {
 		const cardDiv = createCardDom(card);
-		cardDiv.addClass('enhance-card');
+		cardDiv.addClass('show-card');
 		$('#panel2').append(cardDiv);
 	});
 	$('#panel3').html('');
 	Object.values(commonEnhancedCardList).forEach((card) => {
 		const cardDiv = createCardDom(card);
-		cardDiv.addClass('enhance-card');
+		cardDiv.addClass('show-card');
 		$('#panel3').append(cardDiv);
 	});
 }
@@ -380,7 +380,7 @@ function setupOriginalDeckBtnDom(){
 			myOriginalDeck.forEach((card) => {
 				const CardDiv = createCardDom(card);
 				CardDiv
-					.addClass('enhance-card');
+					.addClass('show-card');
 				$('.card-list').append(CardDiv);
 			});
 		});
@@ -1053,13 +1053,17 @@ function createDeckListDom(){
 	$('.list-area').addClass('active');
 	$('.card-list').html('');
 	const copyDeck = deepCopyCardList(myDeck);
-	copyDeck.sort((a, b) => {
-		return a.No > b.No ? 1 : -1;
-	});
+	const eye = myArtifacts.find((artifact) => 
+		artifact.name === normalArtifact.eye.name);
+	if(!eye){
+		copyDeck.sort((a, b) => {
+			return a.No > b.No ? 1 : -1;
+		});
+	}
 	copyDeck.forEach((card) => {
 		const deckCardDiv = createCardDom(card);
 		deckCardDiv
-			.addClass('enhance-card');
+			.addClass('show-card');
 		$('.card-list').append(deckCardDiv);
 	});
 }
@@ -1073,7 +1077,7 @@ function createTrashListDom(){
 	myTrash.forEach((card) => {
 		const trashCardDiv = createCardDom(card);
 		trashCardDiv
-			.addClass('enhance-card');
+			.addClass('show-card');
 		$('.card-list').append(trashCardDiv);
 	});
 }
@@ -1087,7 +1091,7 @@ function createDiscardListDom(){
 	discard.forEach((card) => {
 		const discardCardDiv = createCardDom(card);
 		discardCardDiv
-			.addClass('enhance-card');
+			.addClass('show-card');
 		$('.card-list').append(discardCardDiv);
 	});
 }
@@ -1104,7 +1108,7 @@ function createSertchListDom(){
 		const sertchCardDiv = createCardDom(card);
 		sertchCardDiv
 			.attr('id', `deck-card${card.id}`)
-			.addClass('enhance-card')
+			.addClass('show-card')
 			.click(card, () => {
 				console.log(sertchCardDiv);
 				clickDeckCardProcess(sertchCardDiv, card);
@@ -1121,7 +1125,7 @@ function createRestoreListDom(){
 		const restoreCardDiv = createCardDom(card);
 		restoreCardDiv
 			.attr('id', `trash-card${card.id}`)
-			.addClass('enhance-card')
+			.addClass('show-card')
 			.click(card, () => {
 				clickTrashCardProcess(restoreCardDiv, card);
 			});
@@ -1137,7 +1141,7 @@ function createReuseListDom(){
 		const reuseCardDiv = createCardDom(card);
 		reuseCardDiv
 			.attr('id', `discard-card${card.id}`)
-			.addClass('enhance-card')
+			.addClass('show-card')
 			.click(card, () => {
 				clickDiscardCardProcess(reuseCardDiv, card);
 			});

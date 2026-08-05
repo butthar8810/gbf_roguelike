@@ -7,6 +7,9 @@ const coordinateTrashForHandArea = {top: '50px', left: '970px', width: '80px', s
 const coordinateShowForShowArea = {top: '0px', left: '500px', width: '150px', size: '12px'};
 const coordinateTrashForShowArea = {top: '290px', left: '1040px', width: '80px', size: '8px'};
 const coordinateHandForShowArea = {top: '240px', left: '500px', width: '150px', size: '12px'};
+const coordinatePlayForPlayArea = {top: '0px', left: '550px', width: '150px', size: '12px'};
+const coordinateTrashForPlayArea = {top: '510px', left: '1040px', width: '80px', size: '8px'};
+
 const coordinateOriginDeckForInsertArea = {top: '-100px', left: '1000px', width: '100px', size: '8px'};
 
 const playerAttackWaitTime = 1500;
@@ -174,34 +177,37 @@ function animateHandToDeck(card){
 /* animatePlayerAddTrash：捨て札にカードを追加するアニメーション
 /*******************************************************/
 function animatePlayerAddTrash(cards){
-	$('.show-area').removeClass('hidden');
-	$('.show-area-inner').html('');
-	cards.forEach((card, i) => {
-		const showCardDiv = createCardDom(card);
-		showCardDiv
-			.addClass('hand-card')
-			.addClass('is-hover-disabled');
-		$('.show-area-inner').append(showCardDiv);
-	});
-	setTimeout(() => {
-		const showCards = $('.show-area-inner').children('.hand-card');
-		showCards
-			.prop('disabled', true)
-			.css('position', 'absolute')
-			.css('top', coordinateShowForShowArea.top)
-			.css('left', coordinateShowForShowArea.left);
-
-		cardShowPromise = showCards.animate({
-			left: coordinateTrashForShowArea.left, 
-			top: coordinateTrashForShowArea.top,
-			width: coordinateTrashForShowArea.width,
-			fontSize: coordinateTrashForShowArea.size
-		}, trashWaitTime);
-		$.when(cardShowPromise).done(() => {
-			$('.show-area').addClass('hidden');
-			$('.show-area-inner').html('');
+	cardAddTrashPromise = new Promise((resolve) => {
+		$('.show-area').removeClass('hidden');
+		$('.show-area-inner').html('');
+		cards.forEach((card, i) => {
+			const showCardDiv = createCardDom(card);
+			showCardDiv
+				.addClass('hand-card')
+				.addClass('is-hover-disabled');
+			$('.show-area-inner').append(showCardDiv);
 		});
-	}, showWaitTime);
+		setTimeout(() => {
+			const showCards = $('.show-area-inner').children('.hand-card');
+			showCards
+				.prop('disabled', true)
+				.css('position', 'absolute')
+				.css('top', coordinateShowForShowArea.top)
+				.css('left', coordinateShowForShowArea.left);
+
+			cardShowPromise = showCards.animate({
+				left: coordinateTrashForShowArea.left, 
+				top: coordinateTrashForShowArea.top,
+				width: coordinateTrashForShowArea.width,
+				fontSize: coordinateTrashForShowArea.size
+			}, trashWaitTime);
+			$.when(cardShowPromise).done(() => {
+				$('.show-area').addClass('hidden');
+				$('.show-area-inner').html('');
+				resolve();
+			});
+		}, showWaitTime);
+	});
 }
 /*******************************************************/
 /* animatePlayerAddTrash：手札にカードを追加するアニメーション
@@ -240,7 +246,43 @@ function animatePlayerAddHand(cards){
 		}, showWaitTime);
 	});
 }
+/*******************************************************/
+/* animatePlayDeckCard：デッキのカードをプレイするアニメーション
+/*******************************************************/
+function animatePlayDeckCard(cards){
+	cardAddHandPromise = new Promise((resolve) => {
+		console.log(cards);
+		$('.play-area').removeClass('hidden');
+		$('.play-area-inner').html('');
+		cards.forEach((card) => {
+			const showCardDiv = createCardDom(card);
+			showCardDiv
+				.addClass('hand-card')
+				.addClass('is-hover-disabled');
+			$('.play-area-inner').append(showCardDiv);
+		});
+		setTimeout(() => {
+			const showCards = $('.play-area-inner').children('.hand-card');
+			showCards
+				.prop('disabled', true)
+				.css('position', 'absolute')
+				.css('top', coordinatePlayForPlayArea.top)
+				.css('left', coordinatePlayForPlayArea.left);
 
+			cardShowPromise = showCards.animate({
+				left: coordinateTrashForPlayArea.left, 
+				top: coordinateTrashForPlayArea.top,
+				width: coordinateTrashForPlayArea.width,
+				fontSize: coordinateTrashForPlayArea.size
+			}, trashWaitTime);
+			$.when(cardShowPromise).done(() => {
+				$('.play-area').addClass('hidden');
+				$('.play-area-inner').html('');
+				resolve();
+			});
+		}, showWaitTime);
+	});
+}
 /*******************************************************/
 /* animatePlayCard：カードをプレイするアニメーション
 /*******************************************************/

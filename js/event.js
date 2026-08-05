@@ -68,7 +68,7 @@ function selectRestAction(){
 			}
 			const enhanceCardDiv = createCardDom(card);
 			enhanceCardDiv
-				.addClass('enhance-card')
+				.addClass('show-card')
 				.click(card ,() => {
 					decideEnhanceCardDom(card);
 				});

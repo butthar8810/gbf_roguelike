@@ -752,8 +752,8 @@ function startTurnStatuses(playerInfo, enemiesInfo, animateFlag){
 				break;
 			case buffStatus.deathcannon.id://「砲撃」の効果発動
 				if(animateFlag){
-					const cannonCard = cannonQueue.splice(0, cannonQueue.length);
-					console.log(cannonCard);
+					const cannonCards = cannonQueue.splice(0, cannonQueue.length);
+					animatePlayDeckCard(cannonCards);
 				}else{
 					// 内部処理用
 					if (myDeck.length <= 0) {
@@ -763,12 +763,11 @@ function startTurnStatuses(playerInfo, enemiesInfo, animateFlag){
 					// デッキからカードを引く
 					const card = shiftDeck();
 					if (card !== undefined){
-						playEffectCard(card, false)
+						playEffectCard(card, false);
 						cannonQueue.push(card);
 					}else{
 						console.log("shiftDeck undefined");
 					}
-					
 				}
 				break;
 			case buffStatus.grudge.id://「怨念」の効果発動
@@ -1183,17 +1182,17 @@ function reconfigureDeck(){
 /*******************************************************/
 /* playEffectCard：カードをプレイする
 /*******************************************************/
-function playEffectCard(hand, useCost = true){
+function playEffectCard(card, useCost = true){
 	//「凍結」の効果
 	const frozen = playerStatus.statuses
 		.find((status) => status.id === debuffStatus.frozen.id);
-	if(frozen && hand.type === type.attack){
+	if(frozen && card.type === type.attack){
 		alert('デバフによりアタックが使えません');
 		return false
 	}
 	//発動条件
-	if ('conditions' in hand.amount && hand.amount.conditions !== '') {
-		const conditionsFunc = globalThis[hand.amount.conditions];
+	if ('conditions' in card.amount && card.amount.conditions !== '') {
+		const conditionsFunc = globalThis[card.amount.conditions];
 		if( typeof conditionsFunc === 'function'){
 			if(!conditionsFunc()){
 				alert("発動条件を満たしていません。");
@@ -1205,28 +1204,28 @@ function playEffectCard(hand, useCost = true){
 	}
 	//コスト消費
 	if(useCost){
-		if (hand.amount.cost === 'X'){
+		if (card.amount.cost === 'X'){
 			// コストXのカードの場合
-			hand.amount.variable = playerStatus.remainEnergy;
+			card.amount.variable = playerStatus.remainEnergy;
 			playerStatus.remainEnergy = 0;
 			updateEnergyDom();
-		} else if ('changedCost' in hand.amount && playerStatus.remainEnergy >= hand.amount.changedCost) {
+		} else if ('changedCost' in card.amount && playerStatus.remainEnergy >= card.amount.changedCost) {
 			//仮コスト（戦闘終了時まで）
-			playerStatus.remainEnergy -= hand.amount.changedCost;
+			playerStatus.remainEnergy -= card.amount.changedCost;
 			updateEnergyDom();
-		} else if ('untilPlayCost' in hand.amount && playerStatus.remainEnergy >= hand.amount.untilPlayCost) {
+		} else if ('untilPlayCost' in card.amount && playerStatus.remainEnergy >= card.amount.untilPlayCost) {
 			//仮コスト（プレイするまで）
-			playerStatus.remainEnergy -= hand.amount.untilPlayCost;
+			playerStatus.remainEnergy -= card.amount.untilPlayCost;
 			updateEnergyDom();
-			delete hand.amount.untilPlayCost;
-		} else if ('tmpCost' in hand.amount && playerStatus.remainEnergy >= hand.amount.tmpCost) {
+			delete card.amount.untilPlayCost;
+		} else if ('tmpCost' in card.amount && playerStatus.remainEnergy >= card.amount.tmpCost) {
 			//仮コスト（このターンまで）
-			playerStatus.remainEnergy -= hand.amount.tmpCost;
+			playerStatus.remainEnergy -= card.amount.tmpCost;
 			updateEnergyDom();
-			delete hand.amount.tmpCost;
-		} else if (playerStatus.remainEnergy >= hand.amount.cost) {
+			delete card.amount.tmpCost;
+		} else if (playerStatus.remainEnergy >= card.amount.cost) {
 			//コスト消費
-			playerStatus.remainEnergy -= hand.amount.cost;
+			playerStatus.remainEnergy -= card.amount.cost;
 			updateEnergyDom();
 		} else {
 			alert("エネルギーが足りません");
@@ -1235,20 +1234,12 @@ function playEffectCard(hand, useCost = true){
 			return false;
 		}
 	} else {
-		if (hand.amount.cost === 'X'){
-			hand.amount.variable = playerStatus.remainEnergy;
+		if (card.amount.cost === 'X'){
+			card.amount.variable = playerStatus.remainEnergy;
 		}
 	}
 	
-	const index = findIndexHand('id', hand.id);
-	const card = spliceHand(index);
-	// 手札表示の更新
-	updateHandDom();
-	pushStackCards({
-		func: card.func,
-		amount: card.amount,
-	});
-	pushPlayArea(card);
+
 	playerStatus.Count.playCardPerTurn++;
 	// アーティファクトの効果を発動
 	myArtifacts.forEach((artifact) => {
@@ -1261,16 +1252,19 @@ function playEffectCard(hand, useCost = true){
 			}
 		}
 	});
+	//カードを1枚プレイするたび、敵全体に{X}ダメージを与える。
 	const Parazonium = playerStatus.statuses
 		.find((status) => status.id === buffStatus.Parazonium.id);
 	if (Parazonium){
 		actionAllAttackSimple(Parazonium.amount, false);
 	}
+	//このターンにカードを5枚プレイするたび、敵全体に{X}ダメージを与える。
 	const cosmic = playerStatus.statuses
 		.find((status) => status.id === buffStatus.cosmic.id);
 	if (cosmic && playCardPerTurn%5 === 0){
 		actionAllAttackSimple(cosmic.amount, false);
 	}
+	//カードを1枚プレイするたび、{X}ブロックを得る。
 	const lamentation = playerStatus.statuses
 		.find((status) => status.id === buffStatus.lamentation.id);
 	if (lamentation && lamentation.amount > 0){
@@ -1280,13 +1274,13 @@ function playEffectCard(hand, useCost = true){
 	// アタックカードプレイの場合
 	if(card.type === type.attack){
 		playerStatus.Count.playAttackPerTurn++;
-		//「風の加護」効果
+		//「アタック」をプレイするたび{X}ブロックを得る。1ターン有効。
 		const wind = playerStatus.statuses
 			.find((status) => status.id === buffStatus.wind.id);
 		if (wind){
 			actionBlock(wind.amount, otherPaly);
 		}
-		//「連撃アップ」の効果
+		//次の{X}枚の「アタック」を2回プレイする。1ターン有効。
 		const attackCombo = playerStatus.statuses
 			.find((status) => status.id === buffStatus.attackCombo.id);
 		if (attackCombo && attackCombo.amount > 0){
@@ -1311,7 +1305,7 @@ function playEffectCard(hand, useCost = true){
 	// スキルカードプレイの場合
 	if(card.type === type.skill){
 		playerStatus.Count.playSkillPerTurn++;
-		//「連撃アップ」の効果
+		//次の{X}枚の「スキル」を2回プレイする。1ターン有効。
 		const skillCombo = playerStatus.statuses
 			.find((status) => status.id === buffStatus.skillCombo.id);
 		if (skillCombo && skillCombo.amount > 0 && card.type === type.skill){
@@ -1354,6 +1348,12 @@ function playEffectCard(hand, useCost = true){
 	});
 
 	
+	// 手札表示の更新
+	pushStackCards({
+		func: card.func,
+		amount: card.amount,
+	});
+	pushPlayArea(card);
 	setLocalStorage(keyContinueHand, myHand);
 	setLocalStorage(keyContinueStack, stackCards);
 	setLocalStorage(keyContinuePlayerStatus, playerStatus);
@@ -1455,7 +1455,10 @@ function clickHandProcess(handCardDiv, hand){
 	const index = findIndexTemporaryArea('id', hand.id);
 	switch(currentPhase) {
 		case phase.action:
-			playEffectCard(hand);
+			const handIndex = findIndexHand('id', hand.id);
+			const card = spliceHand(handIndex);
+			updateHandDom();
+			playEffectCard(card);
 			endAction();
 			break;
 		case phase.enemy:
@@ -1644,7 +1647,7 @@ function clickTrashCardProcess(trashCardDiv, card){
 					trashCardDiv.addClass("select");
 				} else {
 					spliceTemporaryArea(trashIndex);
-					$('.enhance-card').removeClass("select");
+					$('.show-card').removeClass("select");
 					pushTemporaryArea(card);
 					trashCardDiv.addClass("select");
 				}
@@ -1672,7 +1675,7 @@ function clickDiscardCardProcess(trashCardDiv, card){
 					trashCardDiv.addClass("select");
 				} else {
 					spliceTemporaryArea(discardIndex);
-					$('.enhance-card').removeClass("select");
+					$('.show-card').removeClass("select");
 					pushTemporaryArea(card);
 					trashCardDiv.addClass("select");
 				}
@@ -1719,7 +1722,7 @@ function clickDeckCardProcess(deckCardDiv, card){
 						deckCardDiv.addClass("select");
 					} else {
 						spliceTemporaryArea(discardIndex);
-						$('.enhance-card').removeClass("select");
+						$('.show-card').removeClass("select");
 						pushTemporaryArea(card);
 						deckCardDiv.addClass("select");
 					}

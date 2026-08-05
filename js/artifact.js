@@ -1287,7 +1287,7 @@ function setupArtifact(){
 			getArtifact(normalArtifact.recovery);
 		} else if (selectChara == selectCharacter.djeeta.name){
 			getArtifact(normalArtifact.startDraw);
-//			getArtifact(normalArtifact.threeSkillAllD);
+			getArtifact(normalArtifact.eye);
 //			getArtifact(normalArtifact.threeAttackPower);
 //			getArtifact(normalArtifact.secondTurnBlock);
 		}
