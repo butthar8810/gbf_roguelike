@@ -5324,15 +5324,15 @@ const commonCardList = {
 		}
 	},
 	//技巧
-	Tower: {
+	Judgement: {
 		No:522007,
-		key: 'Tower',
-		name: 'ザ・タワー',
+		key: 'Judgement',
+		name: 'ザ・ジャッジメント',
 		class: cardClass.common,
 		rarity: rarity.uncommon,
 		type: type.skill,
 		func: 'effectDefenseAndDraw',
-		image:'images/card/common_Tower.jpg',
+		image:'images/card/common_Judgement.jpg',
 		effect: `{B}ブロックを得る。カードを{Dr}枚引く。`,
 		amount: {
 			cost: 0,
@@ -5464,15 +5464,15 @@ const commonCardList = {
 		}
 	},
 	//非常ボタン
-	Judgement: {
+	Tower: {
 		No:522016,
-		key: 'Judgement',
-		name: 'ザ・ジャッジメント',
+		key: 'Tower',
+		name: 'ザ・タワー',
 		class: cardClass.common,
 		rarity: rarity.uncommon,
 		type: type.skill,
 		func: 'effectDefenseAndSelfDebuff',
-		image:'images/card/common_Judgement.jpg',
+		image:'images/card/common_Tower.jpg',
 		effect: `{B}ブロックを得る。次の2ターンの間、カードからブロックを得ることができない。廃棄。`,
 		amount: {
 			cost: 0,
@@ -5562,7 +5562,7 @@ const commonCardList = {
 		type: type.skill,
 		func: 'effectAddRandomCard',
 		image:'images/card/common_MasterlessLongxin.jpg',
-		effect: `ランダムな「アタック」を3枚山札に加える。この戦闘中それらのコストは0。廃棄`,
+		effect: `ランダムな「アタック」を{C}枚山札に加える。この戦闘中それらのコストは0。廃棄`,
 		amount: {
 			cost: 2,
 			count: 3,
@@ -5580,7 +5580,7 @@ const commonCardList = {
 		type: type.skill,
 		func: 'effectAddRandomCard',
 		image:'images/card/common_MasterlessYupei.jpg',
-		effect: `ランダムな「スキル」を3枚山札に加える。この戦闘中それらのコストは0。廃棄`,
+		effect: `ランダムな「スキル」を{C}枚山札に加える。この戦闘中それらのコストは0。廃棄`,
 		amount: {
 			cost: 2,
 			count: 3,
@@ -5598,7 +5598,7 @@ const commonCardList = {
 		type: type.skill,
 		func: 'effectDrawAndUnshiftDeck',
 		image:'images/card/common_Bangle.jpg',
-		effect: `カードを2枚引く。手札のカード1枚を山札の1番上に置く。廃棄。`,
+		effect: `カードを{Dr}枚引く。手札のカード1枚を山札の1番上に置く。廃棄。`,
 		amount: {
 			cost: 0,
 			draw: 2,
@@ -6009,15 +6009,15 @@ const commonEnhancedCardList = {
 		}
 	},
 	//技巧
-	Tower: {
+	Judgement: {
 		No:622007,
-		key: 'Tower',
-		name: '<span class="upgrade">ザ・タワー+</span>',
+		key: 'Judgement',
+		name: '<span class="upgrade">ザ・ジャッジメント+</span>',
 		class: cardClass.common,
 		rarity: rarity.uncommon,
 		type: type.skill,
 		func: 'effectDefenseAndDraw',
-		image:'images/card/common_Tower.jpg',
+		image:'images/card/common_Judgement.jpg',
 		effect: `<span class="upgrade">{B}</span>ブロックを得る。カードを{Dr}枚引く。`,
 		amount: {
 			cost: 0,
@@ -6149,15 +6149,15 @@ const commonEnhancedCardList = {
 		}
 	},
 	//非常ボタン
-	Judgement: {
+	Tower: {
 		No:622016,
-		key: 'Judgement',
-		name: '<span class="upgrade">ザ・ジャッジメント+</span>',
+		key: 'Tower',
+		name: '<span class="upgrade">ザ・タワー+</span>',
 		class: cardClass.common,
 		rarity: rarity.uncommon,
 		type: type.skill,
 		func: 'effectDefenseAndSelfDebuff',
-		image:'images/card/common_Judgement.jpg',
+		image:'images/card/common_Tower.jpg',
 		effect: `<span class="upgrade">{B}</span>ブロックを得る。次の2ターンの間、カードからブロックを得ることができない。廃棄。`,
 		amount: {
 			cost: 0,
@@ -6283,7 +6283,7 @@ const commonEnhancedCardList = {
 		type: type.skill,
 		func: 'effectDrawAndUnshiftDeck',
 		image:'images/card/common_Bangle.jpg',
-		effect: `カードを2枚引く。手札のカード1枚を山札の1番上に置く。`,
+		effect: `カードを{Dr}枚引く。手札のカード1枚を山札の1番上に置く。`,
 		amount: {
 			cost: 0,
 			draw: 2,
@@ -6420,7 +6420,7 @@ const commonEnhancedCardList = {
 		type: type.power,
 		func: 'effectBuff',
 		image:'images/card/common_Reflection.jpg',
-		effect: `ターン開始時に、ランダムな無色のカードを1枚手札に加える。`,
+		effect: `ターン開始時に、ランダムな無色のカードを{F}枚手札に加える。`,
 		amount: {
 			cost: 1,
 			buff: 1,
@@ -6607,8 +6607,8 @@ function setupDeck(){
 			addCardToOriginalDeck(djeetaCardList.Wide, 5);
 			addCardToOriginalDeck(djeetaCardList.Defense, 5);
 			addCardToOriginalDeck(djeetaCardList.Pulverizer, 1);
-			addCardToOriginalDeck(commonEnhancedCardList.Mantle, 2);
-			addCardToOriginalDeck(commonEnhancedCardList.Dragonblood, 2);
+			addCardToOriginalDeck(commonCardList.Reflection, 2);
+			addCardToOriginalDeck(commonCardList.Deathcannon, 2);
 			addCardToOriginalDeck(testCardList.testAttack, 2);
 		}
 		setLocalStorage(keyContinueOriginalDeck, myOriginalDeck);
@@ -7968,7 +7968,7 @@ function effectCostDownInTurn(amount){
 	// このターン、あなたのすべての手札のコストは1になる。
 	console.log('effectCostDownInTurn');
 	myHand.forEach((hand) => {
-		if(hand.amount.cost !== 'X' || hand.amount.cost >= amount.changeCost){
+		if(hand.amount.cost !== 'X' && hand.amount.cost > amount.changeCost){
 			hand.amount.tmpCost = amount.changeCost;
 		}
 	});
@@ -7980,7 +7980,8 @@ function effectCostDown(amount){
 	//戦闘終了まで、あなたのすべての手札のコストは1になる。
 		console.log('effectCostDown');
 	myHand.forEach((hand) => {
-		if(hand.amount.cost !== 'X' || hand.amount.cost >= amount.changeCost){
+		console.log(`${hand.amount.cost}：${amount.changeCost}`)
+		if(hand.amount.cost !== 'X' && hand.amount.cost > amount.changeCost){
 			hand.amount.changedCost = amount.changeCost;
 		}
 	});
@@ -9128,7 +9129,10 @@ function actionDeckTopPlay(){
 	const card = shiftDeck();
 	if (card !== undefined){
 		card.amount.tmpDiscard = true;
-		pushStackCards(card);
+		pushStackCards({
+			func: card.func,
+			amount: card.amount,
+		});
 		pushPlayArea(card);
 	}else{
 		console.log("shiftDeck undefined");

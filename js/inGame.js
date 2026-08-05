@@ -653,7 +653,7 @@ async function startTurn(){
 function startTurnStatuses(playerInfo, enemiesInfo, animateFlag){
 	
 	console.log(`endTurnStatuses`);
-
+	const animateQueue = [];
 	// ブロック処理関連
 	//「英雄の盾」がある場合はブロックを初期化しない
 	const hero = playerInfo.statuses
@@ -720,11 +720,9 @@ function startTurnStatuses(playerInfo, enemiesInfo, animateFlag){
 			case buffStatus.infinite.id://「無限の飛刃」の効果発動
 				if(animateFlag){
 					// アニメーション用
-					const commonCard = [];
 					for(let i = 0; i < status.amount; i++){
-						commonCard.push(commonCardList.Knife);
+						animateQueue.push(commonCardList.Knife);
 					}
-					animatePlayerAddHand(commonCard);
 				}else {
 					// 内部処理用
 					for(let i = 0; i < status.amount; i++){
@@ -735,8 +733,9 @@ function startTurnStatuses(playerInfo, enemiesInfo, animateFlag){
 			case buffStatus.moon.id://「月の雫」の効果発動
 				if(animateFlag){
 					// アニメーション用
-					const displayCard = deleteAllTemporaryArea();
-					animatePlayerAddHand(displayCard);
+					moonQueue.splice(0, moonQueue.length).forEach((card) => {
+						animateQueue.push(card);
+					});
 				}else {
 					// 内部処理用
 					for(let i = 0; i < status.amount; i++){
@@ -746,8 +745,30 @@ function startTurnStatuses(playerInfo, enemiesInfo, animateFlag){
 								card.rarity === rarity.rare
 							).slice(0, 1)[0];
 						pushHand(selectCard);
-						pushTemporaryArea(selectCard);
+						console.log(selectCard);
+						moonQueue.push(selectCard);
 					}	
+				}
+				break;
+			case buffStatus.deathcannon.id://「砲撃」の効果発動
+				if(animateFlag){
+					const cannonCard = cannonQueue.splice(0, cannonQueue.length);
+					console.log(cannonCard);
+				}else{
+					// 内部処理用
+					if (myDeck.length <= 0) {
+						// 捨て札をデッキに再構築する
+						reconfigureDeck();
+					}
+					// デッキからカードを引く
+					const card = shiftDeck();
+					if (card !== undefined){
+						playEffectCard(card, false)
+						cannonQueue.push(card);
+					}else{
+						console.log("shiftDeck undefined");
+					}
+					
 				}
 				break;
 			case buffStatus.grudge.id://「怨念」の効果発動
@@ -853,14 +874,20 @@ function startTurnStatuses(playerInfo, enemiesInfo, animateFlag){
 	});
 
 	//保留したカードを手札に加える
-	if(animateFlag){
+	if(animateFlag && holdCard.length > 0){
 		// アニメーション用
-		animatePlayerAddHand(holdCard.splice(0, holdCard.length));
+		holdCard.splice(0, holdCard.length).forEach((card) => {
+			animateQueue.push(card);
+		});	
 	}else {
 		// 内部処理用
 		holdCard.forEach((card) => {
 			pushHand(card);
 		});	
+	}
+	//ターン開始時に手札に加えるアニメーション
+	if(animateFlag && animateQueue.length > 0){
+		animatePlayerAddHand(animateQueue);
 	}
 	if(!animateFlag){
 		// アーティファクトの効果を発動
@@ -1154,9 +1181,66 @@ function reconfigureDeck(){
 	setLocalStorage(keyContinueTrash, myTrash);
 }
 /*******************************************************/
-/* playHandCard：カードをプレイする
+/* playEffectCard：カードをプレイする
 /*******************************************************/
-function playHandCard(index){
+function playEffectCard(hand, useCost = true){
+	//「凍結」の効果
+	const frozen = playerStatus.statuses
+		.find((status) => status.id === debuffStatus.frozen.id);
+	if(frozen && hand.type === type.attack){
+		alert('デバフによりアタックが使えません');
+		return false
+	}
+	//発動条件
+	if ('conditions' in hand.amount && hand.amount.conditions !== '') {
+		const conditionsFunc = globalThis[hand.amount.conditions];
+		if( typeof conditionsFunc === 'function'){
+			if(!conditionsFunc()){
+				alert("発動条件を満たしていません。");
+				return false
+			}else{
+				console.log('発動可能');
+			}
+		} 
+	}
+	//コスト消費
+	if(useCost){
+		if (hand.amount.cost === 'X'){
+			// コストXのカードの場合
+			hand.amount.variable = playerStatus.remainEnergy;
+			playerStatus.remainEnergy = 0;
+			updateEnergyDom();
+		} else if ('changedCost' in hand.amount && playerStatus.remainEnergy >= hand.amount.changedCost) {
+			//仮コスト（戦闘終了時まで）
+			playerStatus.remainEnergy -= hand.amount.changedCost;
+			updateEnergyDom();
+		} else if ('untilPlayCost' in hand.amount && playerStatus.remainEnergy >= hand.amount.untilPlayCost) {
+			//仮コスト（プレイするまで）
+			playerStatus.remainEnergy -= hand.amount.untilPlayCost;
+			updateEnergyDom();
+			delete hand.amount.untilPlayCost;
+		} else if ('tmpCost' in hand.amount && playerStatus.remainEnergy >= hand.amount.tmpCost) {
+			//仮コスト（このターンまで）
+			playerStatus.remainEnergy -= hand.amount.tmpCost;
+			updateEnergyDom();
+			delete hand.amount.tmpCost;
+		} else if (playerStatus.remainEnergy >= hand.amount.cost) {
+			//コスト消費
+			playerStatus.remainEnergy -= hand.amount.cost;
+			updateEnergyDom();
+		} else {
+			alert("エネルギーが足りません");
+			deleteAllTemporaryArea();
+			setLocalStorage(keyContinueTemporary, tmpArea);
+			return false;
+		}
+	} else {
+		if (hand.amount.cost === 'X'){
+			hand.amount.variable = playerStatus.remainEnergy;
+		}
+	}
+	
+	const index = findIndexHand('id', hand.id);
 	const card = spliceHand(index);
 	// 手札表示の更新
 	updateHandDom();
@@ -1250,7 +1334,6 @@ function playHandCard(index){
 		});
 	}
 
-
 	currentEnemies.forEach((enemy) => {
 		//「窒息」効果
 		const suffocation = enemy.currentStatus.status
@@ -1275,8 +1358,6 @@ function playHandCard(index){
 	setLocalStorage(keyContinueStack, stackCards);
 	setLocalStorage(keyContinuePlayerStatus, playerStatus);
 	setLocalStorage(keyContinueArtifact, myArtifacts);
-
-	endAction();
 }
 /*******************************************************/
 /* endAction：プレイしたカードの終了処理をする
@@ -1374,66 +1455,8 @@ function clickHandProcess(handCardDiv, hand){
 	const index = findIndexTemporaryArea('id', hand.id);
 	switch(currentPhase) {
 		case phase.action:
-			const frozen = playerStatus.statuses
-				.find((status) => status.id === debuffStatus.frozen.id);
-			if(frozen && hand.type === type.attack){
-				alert('デバフによりアタックが使えません');
-				break;
-			}
-			if ('conditions' in hand.amount && hand.amount.conditions !== '') {
-				const conditionsFunc = globalThis[hand.amount.conditions];
-				if( typeof conditionsFunc === 'function'){
-					if(!conditionsFunc()){
-						alert("発動条件を満たしていません。");
-						return false
-					}else{
-						console.log('発動可能');
-					}
-				} 
-			}
-			if (hand.amount.cost === 'X'){
-				// コストXのカードの場合
-				hand.amount.variable = playerStatus.remainEnergy;
-				playerStatus.remainEnergy = 0;
-				updateEnergyDom();
-				const index = findIndexHand('id', hand.id);
-				playHandCard(index);
-				setLocalStorage(keyContinuePlayerStatus, playerStatus);
-			} else if ('changedCost' in hand.amount && playerStatus.remainEnergy >= hand.amount.changedCost) {
-				//仮コスト（戦闘終了時まで）
-				const index = findIndexHand('id', hand.id);
-				playerStatus.remainEnergy -= hand.amount.changedCost;
-				updateEnergyDom();
-				playHandCard(index);
-				setLocalStorage(keyContinuePlayerStatus, playerStatus);
-			} else if ('untilPlayCost' in hand.amount && playerStatus.remainEnergy >= hand.amount.untilPlayCost) {
-				//仮コスト（プレイするまで）
-				const index = findIndexHand('id', hand.id);
-				playerStatus.remainEnergy -= hand.amount.untilPlayCost;
-				updateEnergyDom();
-				playHandCard(index);
-				setLocalStorage(keyContinuePlayerStatus, playerStatus);
-			} else if ('tmpCost' in hand.amount && playerStatus.remainEnergy >= hand.amount.tmpCost) {
-				//仮コスト（このターンまで）
-				const index = findIndexHand('id', hand.id);
-				playerStatus.remainEnergy -= hand.amount.tmpCost;
-				updateEnergyDom();
-				delete hand.amount.tmpCost;
-				playHandCard(index);
-				setLocalStorage(keyContinuePlayerStatus, playerStatus);
-			} else if (playerStatus.remainEnergy >= hand.amount.cost) {
-				//コスト消費
-				const index = findIndexHand('id', hand.id);
-				playerStatus.remainEnergy -= hand.amount.cost;
-				updateEnergyDom();
-				playHandCard(index);
-				setLocalStorage(keyContinuePlayerStatus, playerStatus);
-			} else {
-				alert("エネルギーが足りません");
-				deleteAllTemporaryArea();
-				setLocalStorage(keyContinueTemporary, tmpArea);
-				return false;
-			}
+			playEffectCard(hand);
+			endAction();
 			break;
 		case phase.enemy:
 			break;
@@ -1911,7 +1934,6 @@ async function startEnemiesTurn(){
 						animateEnemyAttack(enemy);
 						await sleep(enemyAttackGoWaitTime);
 						animatePlayerDamage();
-						console.log(animatePlayerStatus);
 						updatePlayerStatusDom(animatePlayerStatus);
 					}
 					await sleep(1500);

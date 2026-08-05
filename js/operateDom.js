@@ -713,7 +713,6 @@ function updatePlayerStatusDom(argPlayerStatus){
 	$('.player-statuses').html('');
 	$('.player-modals').html('');
 	argPlayerStatus.statuses.forEach((status) => {
-		console.log(status);
 		// ステータス[status]の要素
 		const statusImage = $('<img>')
 			.attr('src', status.image);

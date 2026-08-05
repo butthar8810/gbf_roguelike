@@ -208,9 +208,10 @@ function animatePlayerAddTrash(cards){
 /*******************************************************/
 function animatePlayerAddHand(cards){
 	cardAddHandPromise = new Promise((resolve) => {
+		console.log(cards);
 		$('.show-area').removeClass('hidden');
 		$('.show-area-inner').html('');
-		cards.forEach((card, i) => {
+		cards.forEach((card) => {
 			const showCardDiv = createCardDom(card);
 			showCardDiv
 				.addClass('hand-card')

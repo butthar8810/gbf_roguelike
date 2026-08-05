@@ -100,6 +100,7 @@ function deepCopyPlayerStatus(player){
 	cloneOjt.statuses = [];
 	player.statuses.forEach((status) => {
 		const cloneStatus = {};
+		cloneStatus.id = status.id;
 		cloneStatus.name = status.name;
 		cloneStatus.amount = status.amount;
 		cloneStatus.effect = status.effect;
@@ -131,6 +132,7 @@ function deepCopyEnemies(arrayEnemies){
 		cloneCurrentStatus.status = [];
 		EnemyOjt.currentStatus.status.forEach((status) => {
 			const cloneStatus = {};
+			cloneStatus.id = status.id;
 			cloneStatus.name = status.name;
 			cloneStatus.amount = status.amount;
 			cloneStatus.effect = status.effect;
