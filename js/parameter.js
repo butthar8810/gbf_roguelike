@@ -56,7 +56,6 @@ const buffStatus = {
 	cosmic: {id: '0028', name: '均衡の秩序', amount: '', effect: 'このターンにカードを5枚プレイするたび、敵全体に{X}ダメージを与える。', image: 'images/status/status_3295.png'},
 	moon: {id: '0029', name: '月の雫', amount: '', effect: 'ターン開始時、{X}枚のランダムな無色のカードを手札に加える。', image: 'images/status/status_6427.png'},
 	deathcannon: {id: '0030', name: '砲撃', amount: '', effect: 'ターン開始時、山札の上から{X}枚のカードをプレイする。', image: 'images/status/status_6622.png'},
-
 	firstAttackUp: {id: '0031', name: '気力', amount: '', effect: '次にプレイするアタックが{X}の追加ダメージを与える。', image: 'images/status/status_62.png'},
 	// ターン制
 	defenseUp: {id: '0101', name: '防御力アップ', amount: '', effect: 'アタックで受けるダメージが50%減少。{X}ターン有効。',image: 'images/status/status_1019.png'},

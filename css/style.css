@@ -2262,6 +2262,7 @@ header{
 }
 .select-skip-btn{
 	width: 200px;
+	margin: 0 20px;
 	display: flex;
 	justify-content: center;
 	align-items: center;

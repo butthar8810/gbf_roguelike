@@ -284,7 +284,7 @@ const normalArtifact = {
 		dedicated: artifactdedicated.common,
 		effect: '休憩時にカードを1枚獲得する。', 
 		image: 'images/artifact/Codex.png',
-		restFunc: 'effectChooseCards',
+		breakFunc: 'effectChooseCards',
 	},
 	restRecovery: {
 		name: 'キャンプセット', 
@@ -292,7 +292,7 @@ const normalArtifact = {
 		dedicated: artifactdedicated.common,
 		effect: '休憩時に追加で15HPが回復する。', 
 		image: 'images/artifact/Camp.png',
-		restFunc: 'effectRecovery',
+		breakFunc: 'effectRecovery',
 		amount: {
 			recovery: 15,
 		}
@@ -504,7 +504,6 @@ const normalArtifact = {
 		dedicated: artifactdedicated.common,
 		effect: '敵を倒すと、1エナジーを得て、カードを1枚引く。', 
 		image: 'images/artifact/OminousAmulet.png', 
-		firstFunc: '',
 		amount: {
 			draw: 1,
 			energy: 1,
@@ -529,6 +528,10 @@ const normalArtifact = {
 		dedicated: artifactdedicated.common,
 		effect: '戦闘終了時のHPが50％以下の場合、HP12回復', 
 		image: 'images/artifact/OminousGoblet.png',
+		endFunc: 'effectRecoveryIfHalfLife',
+		amount: {
+			recovery: 12,
+		}
 	},
 	skipBonus: {
 		name: 'オミナス・ホーン', 
@@ -543,11 +546,12 @@ const normalArtifact = {
 		dedicated: artifactdedicated.common,
 		effect: 'デッキのカード5枚ごとに、HP3回復。(休憩場所入室時に発動)', 
 		image: 'images/artifact/OminousPendant.png', 
-		restFunc: '',
+		restFunc: 'effectRecoveryEveryDeck',
 		amount: {
 			recovery: 3,
 		}
 	},
+	//未実装
 	getcurseHP: {
 		name: 'オミナス・リング', 
 		rarity: artifactRarity.uncommon,
@@ -561,6 +565,7 @@ const normalArtifact = {
 		dedicated: artifactdedicated.common,
 		effect: '「パワー」をプレイ時、このターンの間手札のランダムなカード1枚のコストが0になる。', 
 		image: 'images/artifact/OminousStone.png', 
+		powerFunc: 'effectRandomCostDown',
 	},
 	playCurse: {
 		name: 'オミナス・ホイッスル', 
@@ -575,6 +580,9 @@ const normalArtifact = {
 		dedicated: artifactdedicated.common,
 		effect: '次に開封する2つ目の宝箱まで、2つのレリックが入っている。(ボスの宝箱を除く)', 
 		image: 'images/artifact/Key.png', 
+		amount: {
+			Count: 2,
+		}
 	},
 	fourChoice: {
 		name: 'ラジエルの書', 
@@ -1288,7 +1296,7 @@ function setupArtifact(){
 		} else if (selectChara == selectCharacter.djeeta.name){
 			getArtifact(normalArtifact.startDraw);
 			getArtifact(normalArtifact.eye);
-//			getArtifact(normalArtifact.threeAttackPower);
+			getArtifact(normalArtifact.skipBonus);
 //			getArtifact(normalArtifact.secondTurnBlock);
 		}
 		setLocalStorage(keyContinueArtifact, myArtifacts);
@@ -1456,20 +1464,31 @@ function decideBossArtifactReward(){
 /* アーティファクト効果
 /*****************************************************************************/
 /*******************************************************/
-/* 戦闘終了時、HP6回復。
-/*******************************************************/
-function effectRecovery(amount){
-	if('recovery' in amount){
-		recoveryHP(amount.recovery);
-	}
-	return true;
-}
-/*******************************************************/
 /* ボスとの戦闘開始時、HP〇回復。
 /*******************************************************/
 function effectRecoveryBoss(amount){
 	if('recovery' in amount && currentLevel === stageLevel.boss){
 		recoveryHP(amount.recovery);
+	}
+	return true;
+}
+/*******************************************************/
+/* 戦闘終了時のHPが50％以下の場合、HP12回復
+/*******************************************************/
+function effectRecoveryIfHalfLife(amount){
+	if( 'recovery' in amount && 
+		playerStatus.remainHP/playerStatus.maxHP <= 0.5){
+		recoveryHP(amount.recovery);
+	}
+	return true;
+}
+
+/*******************************************************/
+/* デッキのカード5枚ごとに、HP3回復。
+/*******************************************************/
+function effectRecoveryEveryDeck(amount){
+	if( 'recovery' in amount ){
+		recoveryHP(Math.ceil(myOriginalDeck.length/5) * amount.recovery);
 	}
 	return true;
 }
@@ -1527,7 +1546,7 @@ function effectGetEnergyEvery(amount){
 /* カードを10枚プレイするたび、カードを1枚引く。
 /*******************************************************/
 function effectDrawEvery(amount){
-	console.log('effectGetEnergyEvery');
+	console.log('effectDrawEvery');
 	if('draw' in amount && 'Count' in amount && 'every' in amount){
 		amount.Count++;
 		if(amount.Count >= amount.every){
@@ -1571,7 +1590,7 @@ function effectDefenseEveryAttack(amount){
 /* 1ターンに3枚の「アタック」をプレイするたび、攻撃力アップ1を得る。
 /*******************************************************/
 function effectBuffEveryAttack(amount){
-	console.log('effectAttackEveryskill');
+	console.log('effectBuffEveryAttack');
 	if('buff' in amount && 'buffType' in amount &&
 		playerStatus.Count.playAttackPerTurn%3 === 0){
 		actionStatusBuf(buffStatus[amount.buffType], amount.buff);
@@ -1644,19 +1663,20 @@ function effectRandomUpgrade(amount){
 	console.log('effectRandomUpgrade');
 	let enhancedCard = [];
 	if('type' in amount && 'count' in amount ){
-		const filteringDeck = myOriginalDeck.filter((card) => {
-			return card.type === amount.type &&
-			 'key' in card && card.key !== undefined;
-		});
+		const filteringDeck = myOriginalDeck.filter((card) => 
+			card.type === amount.type &&
+			'key' in card && 
+			card.key !== undefined
+		);
 		const UpgradeCards = shuffleArray(filteringDeck).splice(0, amount.count);
 		for(const card of UpgradeCards){
 			if('key' in card && card.key !== undefined){
 				if(card.class === cardClass.gran){
-					enhancedCard.push(granEnhancedCardList[card.key]);
+					enhancedCard.push(deepCopyCard(granEnhancedCardList[card.key]));
 				} else if(card.class === cardClass.djeeta){
-					enhancedCard.push(djeetaEnhancedCardList[card.key]);
+					enhancedCard.push(deepCopyCard(djeetaEnhancedCardList[card.key]));
 				} else if(card.class === cardClass.common){
-					enhancedCard.push(commonEnhancedCardList[card.key]);
+					enhancedCard.push(deepCopyCard(commonEnhancedCardList[card.key]));
 				}
 				myOriginalDeck = myOriginalDeck.filter((deckCard) => {
 					return deckCard.id !== card.id;
@@ -1669,5 +1689,19 @@ function effectRandomUpgrade(amount){
 		});
 		setupOriginalDeckBtnDom();
 	}
+	return true;
+}
+
+/*******************************************************/
+/* 獲得時に、ランダムな2枚の「〇〇」をアップグレードする。
+/*******************************************************/
+function effectRandomCostDown(amount){
+	console.log('effectRandomCostDown');
+	let randomIndex = Math.floor(Math.random() * myHand.length);
+	const card = myHand[randomIndex];
+	if (card === undefined) {
+		return false;
+	}
+	card.amount.tmpCost = 0;
 	return true;
 }

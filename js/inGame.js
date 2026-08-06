@@ -1084,8 +1084,7 @@ function endTurn(){
 /*******************************************************/
 function drawCardFromDeck(count = 1){
 	const drawCards = [];
-	if(
-		playerStatus.statuses
+	if(	playerStatus.statuses
 		.find((status) => status.id === debuffStatus.noDraw.id)
 	){
 		console.log('デバフによって引けません');
@@ -1238,8 +1237,7 @@ function playEffectCard(card, useCost = true){
 			card.amount.variable = playerStatus.remainEnergy;
 		}
 	}
-	
-
+	//カードプレイのカウント
 	playerStatus.Count.playCardPerTurn++;
 	// アーティファクトの効果を発動
 	myArtifacts.forEach((artifact) => {
@@ -1273,6 +1271,7 @@ function playEffectCard(card, useCost = true){
 
 	// アタックカードプレイの場合
 	if(card.type === type.attack){
+		//アタックカードのカウント
 		playerStatus.Count.playAttackPerTurn++;
 		//「アタック」をプレイするたび{X}ブロックを得る。1ターン有効。
 		const wind = playerStatus.statuses
@@ -1304,6 +1303,7 @@ function playEffectCard(card, useCost = true){
 	}
 	// スキルカードプレイの場合
 	if(card.type === type.skill){
+		//スキルカードのカウント
 		playerStatus.Count.playSkillPerTurn++;
 		//次の{X}枚の「スキル」を2回プレイする。1ターン有効。
 		const skillCombo = playerStatus.statuses
@@ -1327,7 +1327,20 @@ function playEffectCard(card, useCost = true){
 			}
 		});
 	}
-
+	// パワーカードプレイの場合
+	if(card.type === type.power){
+		// アーティファクトの効果を発動
+		myArtifacts.forEach((artifact) => {
+			if('powerFunc' in artifact){
+				if (artifact.powerFunc !== '') {
+					const storedFunc = globalThis[artifact.powerFunc];
+					if( typeof storedFunc === 'function'){
+						ret = storedFunc(artifact.amount);
+					} 
+				}
+			}
+		});
+	}
 	currentEnemies.forEach((enemy) => {
 		//「窒息」効果
 		const suffocation = enemy.currentStatus.status
@@ -2004,6 +2017,19 @@ function checkEnemyDefeated(Enemies, playerInfo, animationFlag = true){
 					.find((status) => status.id === buffStatus.pollen.id);
 				if (pollen){
 					enemyActionStatusDebuff(enemy, playerInfo, animationFlag, debuffStatus.defenseDown, pollen.amount);
+				}
+				//敵を倒すと、1エナジーを得て、カードを1枚引く。
+				const knockEnergyAndDraw = myArtifacts.find((artifact) => 
+					artifact.name === normalArtifact.knockEnergyAndDraw.name);
+				if(knockEnergyAndDraw){
+					if(!animationFlag){
+						const drawCard = drawCardFromDeck(knockEnergyAndDraw.amount.draw);
+						drawCard.forEach((card) => {
+							animateDrawDeck(card);
+						});
+					}
+					
+					playerInfo.remainEnergy += knockEnergyAndDraw.amount.energy;
 				}
 				animateDefeated(enemy);
 				enemy.currentStatus.status.splice(0);

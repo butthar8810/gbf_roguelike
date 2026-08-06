@@ -3233,7 +3233,8 @@ const djeetaCardList = {
 		image:'images/card/djeeta_Tactics.jpg',
 		effect: `使用不可。このカードを捨てたとき、カードを{Dr}枚引く。`,
 		amount: {
-			cost: 99,
+			conditions: 'conditionsNotAvailable',
+			cost: '',
 			draw: 2,
 			discard: false,
 			trashFunc: 'effectDraw',
@@ -3269,7 +3270,8 @@ const djeetaCardList = {
 		image:'images/card/djeeta_Supply.jpg',
 		effect: `使用不可。このカードを捨てた時、{E}エナジーを得る。`,
 		amount: {
-			cost: 99,
+			conditions: 'conditionsNotAvailable',
+			cost: '',
 			energy: 1,
 			discard: false,
 			trashFunc: 'effectGetEnergy'
@@ -4528,7 +4530,8 @@ const djeetaEnhancedCardList = {
 		image:'images/card/djeeta_Tactics.jpg',
 		effect: `使用不可。このカードを捨てたとき、カードを<span class="upgrade">{Dr}</span>枚引く。`,
 		amount: {
-			cost: 99,
+			conditions: 'conditionsNotAvailable',
+			cost: '',
 			draw: 3,
 			discard: false,
 			trashFunc: 'effectDraw',
@@ -4562,7 +4565,8 @@ const djeetaEnhancedCardList = {
 		image:'images/card/djeeta_Supply.jpg',
 		effect: `使用不可。このカードを捨てた時、<span class="upgrade">{E}</span>エナジーを得る。`,
 		amount: {
-			cost: 99,
+			conditions: 'conditionsNotAvailable',
+			cost: '',
 			energy: 2,
 			discard: false,
 			trashFunc: 'effectGetEnergy'
@@ -5079,7 +5083,9 @@ const djeetaEnhancedCardList = {
 	},
 };
 
-
+/*****************************************************************************************/
+/* 無色カードリスト
+/*****************************************************************************************/
 const commonCardList = {
 	Knife: {
 		No:511001,
@@ -6478,7 +6484,8 @@ const abnormalCardList = {
 		image:'images/card/abnormal_Injury.jpg',
 		effect: `使用不可。`,
 		amount: {
-			cost: 99,
+			conditions: 'conditionsNotAvailable',
+			cost: '',
 			discard: true,
 		}
 	},
@@ -6493,7 +6500,8 @@ const abnormalCardList = {
 		image:'images/card/abnormal_Curse.jpg',
 		effect: `使用不可。このカードを引いたとき、エナジーを1失う。エセリアル。`,
 		amount: {
-			cost: 99,
+			conditions: 'conditionsNotAvailable',
+			cost: '',
 			discard: true,
 		}
 	},
@@ -6507,7 +6515,8 @@ const abnormalCardList = {
 		image:'images/card/abnormal_Burn.jpg',
 		effect: `使用不可。ターン終了時に2ダメージを受ける。`,
 		amount: {
-			cost: 99,
+			conditions: 'conditionsNotAvailable',
+			cost: '',
 			discard: true,
 		}
 	},
@@ -6521,7 +6530,8 @@ const abnormalCardList = {
 		image:'images/card/abnormal_Dizziness.jpg',
 		effect: `使用不可。エセリアル。`,
 		amount: {
-			cost: 99,
+			conditions: 'conditionsNotAvailable',
+			cost: '',
 			discard: true,
 			ethereal: true,
 		}
@@ -6603,12 +6613,13 @@ function setupDeck(){
 		// 続きからの場合
 		myOriginalDeck = lastOriginalDeck;
 	} else {
-		// プレイヤーに初期デッキとなる10枚のカードを配る
+		// プレイヤーに初期デッキとなるカードを配る
 		if (selectChara == selectCharacter.gran.name){
 			addCardToOriginalDeck(granCardList.Wide, 5);
 			addCardToOriginalDeck(granCardList.Defense, 4);
 			addCardToOriginalDeck(granCardList.PowerSwing, 1);
 			addCardToOriginalDeck(granCardList.OverPower, 2);
+			addCardToOriginalDeck(testCardList.testAttack, 2);
 
 		} else if (selectChara == selectCharacter.djeeta.name){
 			addCardToOriginalDeck(djeetaCardList.Wide, 5);
@@ -7311,6 +7322,7 @@ function effectDefenseAndAddCommonCard(amount){
 	return true;
 }
 function effectRecovery(amount){
+	//回復
 	console.log('effectRecovery');
 	if('recovery' in amount){
 		recoveryHP(amount.recovery);
@@ -7950,9 +7962,6 @@ function effectAllTrashAndGetUGCommonCard(amount){
 	}
 	return true;
 }
-
-
-
 /*************************************************************************************/
 /* 共通のカード専用効果関数
 /*************************************************************************************/
@@ -8073,7 +8082,7 @@ function effectThreeDiscardCard(amount){
 }
 function effectFiveDiscardCard(amount){
 	console.log('effectFiveDiscardCard');
-	// 手札から3枚まで選び、廃棄する。廃棄。
+	// 手札から5枚まで選び、廃棄する。廃棄。
 	actionFiveDiscardCard();
 
 	return true;
@@ -8223,13 +8232,15 @@ function effectAllCardsUpgrade(amount){
 	const upgradeDeck = deleteAllDeck();
 	upgradeDeck.forEach((card) => {
 		if('key' in card && card.key !== undefined){
+			let enhancedCard = {};
 			if(card.class === cardClass.gran){
-				pushDeck(granEnhancedCardList[card.key]);
+				enhancedCard = deepCopyCard(granEnhancedCardList[card.key]);
 			} else if(card.class === cardClass.djeeta){
-				pushDeck(djeetaEnhancedCardList[card.key]);
+				enhancedCard = deepCopyCard(djeetaEnhancedCardList[card.key]);
 			} else if(card.class === cardClass.common){
-				pushDeck(commonEnhancedCardList[card.key]);
+				enhancedCard = deepCopyCard(commonEnhancedCardList[card.key]);
 			}
+			pushDeck(enhancedCard);
 		}else{
 			pushDeck(card);
 		}
@@ -8239,13 +8250,15 @@ function effectAllCardsUpgrade(amount){
 	const upgradeHand = deleteAllHand();
 	upgradeHand.forEach((card) => {
 		if('key' in card && card.key !== undefined){
+			let enhancedCard = {};
 			if(card.class === cardClass.gran){
-				pushHand(granEnhancedCardList[card.key]);
+				enhancedCard = deepCopyCard(granEnhancedCardList[card.key]);
 			} else if(card.class === cardClass.djeeta){
-				pushHand(djeetaEnhancedCardList[card.key]);
+				enhancedCard = deepCopyCard(djeetaEnhancedCardList[card.key]);
 			} else if(card.class === cardClass.common){
-				pushHand(commonEnhancedCardList[card.key]);
+				enhancedCard = deepCopyCard(commonEnhancedCardList[card.key]);
 			}
+			pushHand(enhancedCard);
 		}else{
 			pushHand(card);
 		}
@@ -8255,13 +8268,15 @@ function effectAllCardsUpgrade(amount){
 	const upgradeTrash = deleteAllTrash();
 	upgradeTrash.forEach((card) => {
 		if('key' in card && card.key !== undefined){
+			let enhancedCard = {};
 			if(card.class === cardClass.gran){
-				pushTrash(granEnhancedCardList[card.key]);
+				enhancedCard = deepCopyCard(granEnhancedCardList[card.key]);
 			} else if(card.class === cardClass.djeeta){
-				pushTrash(djeetaEnhancedCardList[card.key]);
+				enhancedCard = deepCopyCard(djeetaEnhancedCardList[card.key]);
 			} else if(card.class === cardClass.common){
-				pushTrash(commonEnhancedCardList[card.key]);
+				enhancedCard = deepCopyCard(commonEnhancedCardList[card.key]);
 			}
+			pushTrash(enhancedCard);
 		}else{
 			pushTrash(card);
 		}
@@ -8271,24 +8286,45 @@ function effectAllCardsUpgrade(amount){
 	const upgradeDiscard = deleteAllDiscard();
 	upgradeDiscard.forEach((card) => {
 		if('key' in card && card.key !== undefined){
+			let enhancedCard = {};
 			if(card.class === cardClass.gran){
-				pushDiscard(granEnhancedCardList[card.key]);
+				enhancedCard = deepCopyCard(granEnhancedCardList[card.key]);
 			} else if(card.class === cardClass.djeeta){
-				pushDiscard(djeetaEnhancedCardList[card.key]);
+				enhancedCard = deepCopyCard(djeetaEnhancedCardList[card.key]);
 			} else if(card.class === cardClass.common){
-				pushDiscard(commonEnhancedCardList[card.key]);
+				enhancedCard = deepCopyCard(commonEnhancedCardList[card.key]);
 			}
+			pushDiscard(enhancedCard);
 		}else{
 			pushDiscard(card);
 		}
 	});
 	setLocalStorage(keyContinueDiscard, discard);
-
-
+	endAction();
+	return true;
+}
+/*************************************************************************************/
+/* 呪いのカード専用効果関数
+/*************************************************************************************/
+function effectPlayCurse(amount){
+	recoveryHP(1);
+	endAction();
+	return true;
 }
 /*****************************************************/
 /* 発動条件用関数
 /*****************************************************/
+//使用不可
+function conditionsNotAvailable(){return false;}
+//呪いは使用不可（アーティファクトで使用可）
+function conditionsCurse(){
+	const playCurse = myArtifacts.find((artifact) => 
+		artifact.name === normalArtifact.playCurse.name);
+	if(playCurse){
+		return true;
+	}
+	return false;
+}
 function conditionsStraight(){
 	const noAttack = myHand.filter((card) => {
 		return card.type !== type.attack;
@@ -8320,6 +8356,7 @@ function conditionsSkillInDeck(){
 	console.log(`myDeck Skill: ${Skill.length}`);
 	return Skill.length !== 0 ? true : false;
 }
+
 /*****************************************************/
 /* コスト変動条件用関数
 /*****************************************************/
@@ -8429,7 +8466,15 @@ function calcKnifeDamage(attackCount, targetEnemy){
 /*******************************************************/
 /* 与ダメージ計算関数
 /*******************************************************/
-function calcAttackDamageToTarget(totalAttack, target, attackCardFlag){
+function calcAttackDamageToTarget(AttackDamage, target, attackCardFlag){
+	let totalAttack = AttackDamage;
+	const firstAttackUp = playerStatus.statuses
+		.find((status) => status.id === buffStatus.firstAttackUp.id);
+	if(firstAttackUp && attackCardFlag){
+		totalAttack += firstAttackUp.amount;
+		firstAttackUp.amount = 0;
+	}
+
 	const enemyBlock = target.currentStatus.block;
 	if(enemyBlock > 0){
 		if(enemyBlock >= totalAttack){
@@ -8440,6 +8485,7 @@ function calcAttackDamageToTarget(totalAttack, target, attackCardFlag){
 			target.currentStatus.block = 0;
 		}
 	}
+	//自分がアタックで与える、ブロックされなかった4以下のダメージを5ダメージに増加する。
 	const damageBuff = myArtifacts.find((Artifact) => 
 		Artifact.name === normalArtifact.damageBuff.name);
 	if(damageBuff && attackCardFlag && totalAttack < 5 && totalAttack > 0){
@@ -8468,10 +8514,10 @@ function calcAttackDamageToTarget(totalAttack, target, attackCardFlag){
 		if(lich){
 			actionStatusDebufToTarget(debuffStatus.poison, lich.amount, target);
 		}
-		playerStatus.statuses = playerStatus.statuses.filter((status) => {
-			return status.amount !== 0;
-		});
 	}
+	playerStatus.statuses = playerStatus.statuses.filter((status) => {
+		return status.amount !== 0;
+	});
 	target.currentStatus.status = target.currentStatus.status.filter((status) => {
 		return status.amount !== 0;
 	});
@@ -8932,7 +8978,7 @@ function unshiftDeckCard(costZeroFlag = false){
 			delete card.amount.tmpCost
 		}
 		if(costZeroFlag){
-			card.amount.tmpCost = 0;
+			card.amount.untilPlayCost = 0;
 		}
 		unshiftDeck(card);
 		setLocalStorage(keyContinueDeck, myDeck);

@@ -25,6 +25,17 @@ function startRestEvent(){
 /* 休憩イベント
 /*******************************************************/
 function selectRestAction(){
+	// アーティファクトの効果を発動
+	myArtifacts.forEach((artifact) => {
+		if('restFunc' in artifact){
+			if (artifact.restFunc !== '') {
+				const storedFunc = globalThis[artifact.restFunc];
+				if( typeof storedFunc === 'function'){
+					ret = storedFunc(artifact.amount);
+				} 
+			}
+		}
+	});
 	recoveryCount = Math.floor(playerStatus.maxHP * 0.3);
 	const firstBtn = appendTalkingBtn(`休憩する（HP30%[${recoveryCount}]回復）`);
 	firstBtn.click((e) => {
@@ -42,9 +53,9 @@ function selectRestAction(){
 		});
 		// アーティファクトの効果を発動
 		myArtifacts.forEach((artifact) => {
-			if('restFunc' in artifact){
-				if (artifact.restFunc !== '') {
-					const storedFunc = globalThis[artifact.restFunc];
+			if('breakFunc' in artifact){
+				if (artifact.breakFunc !== '') {
+					const storedFunc = globalThis[artifact.breakFunc];
 					if( typeof storedFunc === 'function'){
 						ret = storedFunc(artifact.amount);
 					} 

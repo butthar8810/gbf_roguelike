@@ -1259,6 +1259,8 @@ function decideEnhanceCardDom(card){
 		enhancedCard = granEnhancedCardList[card.key];
 	} else if(card.class === cardClass.djeeta){
 		enhancedCard = djeetaEnhancedCardList[card.key];
+	}else if(card.class === cardClass.common){
+		enhancedCard = commonEnhancedCardList[card.key];
 	}
 	console.log(enhancedCard);
 	const enhancedCardDiv = createCardDom(enhancedCard)
@@ -1273,7 +1275,6 @@ function decideEnhanceCardDom(card){
 		$('.enhance-content').removeClass('hidden');
 		$('.enhance-decide-content').addClass('hidden');
 		$('.enhance-btn-area').removeClass('active');
-		enhanceCardList();
 	});
 	$('.enhance-btn').click(() => {
 		$('.enhance-btn-area').removeClass('active');
@@ -1424,6 +1425,30 @@ function selectCardRewardDom(rewardCards){
 			$('.result-modal-body').removeClass('hidden');
 		});
 	$(`.select-skip`).append(selectSkipBtnDiv);
+	const skipBonus = myArtifacts.find((artifact) => 
+		artifact.name === normalArtifact.skipBonus.name);
+	if(skipBonus){
+		const bonusBtnImage = $('<img>')
+			.attr('src', 'images/btn2.png');
+		const bonusParagraph = $('<p>')
+			.html('MaxHP+2');
+		const selectBonusBtnDiv = $('<div>')
+		.addClass('select-skip-btn')
+		.append(bonusBtnImage)
+		.append(bonusParagraph)
+		.click((e) => {
+			playerStatus.maxHP += 2;
+			recoveryHP(2);
+			updateHPDom();
+			rewardCards.getFlag = false;
+			setLocalStorage(keyContinueReward, rewards);
+			setLocalStorage(keyContinuePlayerStatus, playerStatus);
+			updateResultContentDom();
+			$('.card-select').addClass('hidden');
+			$('.result-modal-body').removeClass('hidden');
+		});
+		$(`.select-skip`).append(selectBonusBtnDiv);
+	}
 	$('.result-modal-body').addClass('hidden');
 	$('.card-select').removeClass('hidden');
 }
