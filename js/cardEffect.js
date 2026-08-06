@@ -6690,7 +6690,15 @@ function decideCardReward(lotteryLevel){
 	}
 
 	let index = 0
-	while(index < 3){
+	let choiceCardsNum = 0;
+	const fourChoice = myArtifacts.find((artifact) => 
+		artifact.name === normalArtifact.fourChoice.name);
+	if(fourChoice){
+		choiceCardsNum = 4;
+	} else {
+		choiceCardsNum = 3;
+	}
+	while(index < choiceCardsNum){
 		// レアリティ抽選
 		let random = Math.floor(Math.random() * totalWeight);
 		for (const rarity of Object.values(level)) {
@@ -6701,8 +6709,11 @@ function decideCardReward(lotteryLevel){
 			random -= rarity.weight;
 		}
 		const selectCard = shuffleArray(
-			selectCardList.filter((card) => card.rarity === selectRarity.rarity)
-		).shift();
+			selectCardList
+			.filter((card) => card.rarity === selectRarity.rarity)
+			.filter((artifact) => {
+				return !myArtifacts.find((myArtifact) => myArtifact.name === artifact.name);;
+			})).shift();
 		if(!selectCards.find((card) => card.name === selectCard.name)){
 			selectCards.push(selectCard);
 			index++;
@@ -6758,6 +6769,7 @@ function decideShopExclusiveCardLineup(){
 				selectCards.push({
 					id: index,
 					card: selectCard,
+					originPrice: randomPrice,
 					price: randomPrice,
 					discount: false,
 				});
@@ -6766,7 +6778,7 @@ function decideShopExclusiveCardLineup(){
 		}
 	}
 	let randomDiscount = Math.floor(Math.random() * 5);
-	selectCards[randomDiscount].price = Math.floor(selectCards[randomDiscount].price/2);
+	selectCards[randomDiscount].originPrice = Math.floor(selectCards[randomDiscount].randomPrice/2);
 	selectCards[randomDiscount].discount = true;
 	return selectCards;
 }
@@ -6792,6 +6804,7 @@ function decideShopCommonCardLineup(){
 			selectCommonCards.push({
 				id: index,
 				card: selectCard,
+				originPrice: randomPrice,
 				price: randomPrice,
 				discount: false,
 			});

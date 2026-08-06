@@ -161,16 +161,10 @@ function shopCardList(){
 		//アーティファクトのラインナップ
 		const selectArtifacts = decideArtifactLineup();
 		//カード削除サービスのラインナップ
-		const shopService = myArtifacts.find((artifact) => 
-			artifact.name === normalArtifact.shopService.name);
-		let deletePrice = 0;
-		if(shopService){
-			deletePrice = 50;
-		} else {
-			deletePrice = 75 + (25 * playerStatus.Count.deleteServiceCount);
-		}
+		let deletePrice = 75 + (25 * playerStatus.Count.deleteServiceCount);
 		const deleteService = {
 			deleteFlag: true,
+			originPrice: deletePrice,
 			price: deletePrice,
 		}
 		selectCardsInfo = {
@@ -182,6 +176,8 @@ function shopCardList(){
 		setLocalStorage(keyContinueShopLineup, selectCardsInfo);
 	}
 	console.log(selectCardsInfo);
+	//値段を更新する
+	updateShopPrice(selectCardsInfo);
 	$('.shop-modal-body').html('');
 	//戻るボタン
 	$('.shop-cancel-btn')
@@ -338,6 +334,28 @@ function shopCardList(){
 	$(`.shop-modal-body`).append(selectDeleteWrapperDiv);
 }
 /*******************************************************/
+/* 値段更新関数
+/*******************************************************/
+function updateShopPrice(selectCardsInfo){
+	//商人のカード削除サービスの費用が50ゴールドに固定される。
+	const shopService = myArtifacts.find((artifact) => 
+		artifact.name === normalArtifact.shopService.name);
+	if(shopService){
+		selectCardsInfo.delete.price = 50;
+	}
+	selectCardsInfo
+	//価格は20％割引される。
+	const newArrival = myArtifacts.find((artifact) => 
+		artifact.name === normalArtifact.newArrival.name);
+	if(newArrival){
+	}
+	//全商品50％割引！
+	const card = myArtifacts.find((artifact) => 
+		artifact.name === normalArtifact.card.name);
+	if(card){
+	}
+}
+/*******************************************************/
 /* カード購入関数
 /*******************************************************/
 function buyCard(selectInfo, cardList, selectCardWrapperDiv){
@@ -474,6 +492,11 @@ function knockDownMimicEvent(){
 		},
 	}
 	let treasureBox = {};
+	const bonusInfo = {
+		common:{weight:75, rarity:artifactRarity.common},
+		uncommon:{weight:25, rarity:artifactRarity.uncommon},
+		rare:{weight:0, rarity:artifactRarity.rare},
+	}
 	const lastTreasureInfo = getLocalStorage(keyContinueTreasure);
 	const lastReward = getLocalStorage(keyContinueReward);
 	if(lastTreasureInfo && lastReward){
@@ -484,6 +507,8 @@ function knockDownMimicEvent(){
 		let selectRarity;
 		let selectRarityInfo = {};
 		let moneyGetFlag = false;
+		let bonusGetFlag = false;
+		rewards = [];
 		// 宝箱の種類抽選
 		const totalWeight = Object.values(treasuresInfo).reduce((sum, item) => sum + item.weight, 0);
 		let treasureRandom = Math.floor(Math.random() * totalWeight);
@@ -511,7 +536,6 @@ function knockDownMimicEvent(){
 			.filter((artifact) => {
 				return !myArtifacts.find((myArtifact) => myArtifact.name === artifact.name);;
 			});
-		console.log(filteringArtifact);
 		const treasureArtifact = shuffleArray(filteringArtifact).shift();
 		// ゴールドの封入抽選
 		let moneyAmount = 0;
@@ -522,10 +546,35 @@ function knockDownMimicEvent(){
 			);
 			moneyGetFlag = true;
 		}
-		rewards = [
-			{type: rewardType.money, getFlag: moneyGetFlag, amount: moneyAmount},
-			{type: rewardType.artifact, getFlag: true, amount: treasureArtifact},
-		];
+		rewards.push({type: rewardType.money, getFlag: moneyGetFlag, amount: moneyAmount});
+		rewards.push({type: rewardType.artifact, getFlag: true, amount: treasureArtifact});
+		//アーティファクトによる追加報酬
+		const bonusRelic = myArtifacts.find((artifact) => 
+			artifact.name === normalArtifact.bonusRelic.name);
+		if(bonusRelic && bonusRelic.amount.Count > 0){
+			// アーティファクトのレアリティ抽選
+			let selectBonusRarity = {};
+			const bonusWeight = Object.values(bonusInfo).reduce((sum, item) => sum + item.weight, 0);
+			let bonusRandom = Math.floor(Math.random() * bonusWeight);
+			for (const bonus of Object.values(bonusInfo)) {
+				if (bonusRandom < bonus.weight) {
+					selectBonusRarity = bonus.rarity;
+					break;
+				}
+				bonusRandom -= bonus.weight;
+			}
+			// アーティファクトの抽選
+			const filteringBonusArtifact = Object.values(normalArtifact)
+				.filter((artifact) => artifact.rarity === selectBonusRarity)
+				.filter((artifact) => {
+					return !myArtifacts.find((myArtifact) => myArtifact.name === artifact.name);;
+				})
+				.filter((artifact) => artifact.name !== treasureArtifact.name);
+			const BonusArtifact = shuffleArray(filteringBonusArtifact).shift();
+			bonusGetFlag = true;
+			rewards.push({type: rewardType.artifact, getFlag: bonusGetFlag, amount: BonusArtifact});
+			bonusRelic.amount.Count--;
+		}
 		setLocalStorage(keyContinueTreasure, treasureBox);
 		setLocalStorage(keyContinueReward, rewards);
 	}

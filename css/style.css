@@ -2206,7 +2206,7 @@ header{
 /* card-select: カード報酬選択の要素
 /*****************************************************************************/
 .card-select{
-	width: 900px;
+	width: 1000px;
 	height: 600px;
 }
 .card-select-title{

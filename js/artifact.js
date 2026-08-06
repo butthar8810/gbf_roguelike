@@ -1296,7 +1296,7 @@ function setupArtifact(){
 		} else if (selectChara == selectCharacter.djeeta.name){
 			getArtifact(normalArtifact.startDraw);
 			getArtifact(normalArtifact.eye);
-			getArtifact(normalArtifact.skipBonus);
+			getArtifact(normalArtifact.newArrival);
 //			getArtifact(normalArtifact.secondTurnBlock);
 		}
 		setLocalStorage(keyContinueArtifact, myArtifacts);
@@ -1385,6 +1385,7 @@ function decideArtifactLineup(){
 		selectArtifacts.push({
 			id: index,
 			artifact: artifact,
+			originPrice: randomPrice,
 			price: randomPrice,
 		});
 		index++;
