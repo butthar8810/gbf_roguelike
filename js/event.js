@@ -155,15 +155,18 @@ function shopCardList(){
 	const lastSelectCardsInfo = getLocalStorage(keyContinueShopLineup);
 	if(lastSelectCardsInfo){
 		selectCardsInfo = lastSelectCardsInfo;
+
 	}else{
+		//専用カードのラインナップ
 		const selectCards = decideShopExclusiveCardLineup();
+		//共通（無色）カードのラインナップ
 		const selectCommonCards = decideShopCommonCardLineup();
 		//アーティファクトのラインナップ
 		const selectArtifacts = decideArtifactLineup();
 		//カード削除サービスのラインナップ
 		let deletePrice = 75 + (25 * playerStatus.Count.deleteServiceCount);
 		const deleteService = {
-			deleteFlag: true,
+			stock: true,
 			originPrice: deletePrice,
 			price: deletePrice,
 		}
@@ -174,6 +177,12 @@ function shopCardList(){
 			delete: deleteService
 		}
 		setLocalStorage(keyContinueShopLineup, selectCardsInfo);
+	}
+	const newArrival = myArtifacts.find((artifact) => 
+		artifact.name === normalArtifact.newArrival.name);
+	if(newArrival){
+		RestockShopExclusiveCardLineup(selectCardsInfo.exclusive);
+		RestockShopCommonCardLineup(selectCardsInfo.common);
 	}
 	console.log(selectCardsInfo);
 	//値段を更新する
@@ -189,48 +198,50 @@ function shopCardList(){
 
 	// 専用カードのラインナップ
 	selectCardsInfo.exclusive.forEach((selectInfo) => {
-		const selectCardDiv = createCardDom(selectInfo.card);
-		selectCardDiv
-			.addClass('shop-card')
-			// 手札クリック時の処理登録
-			.click(() => {
-				buyCard(selectInfo, selectCardsInfo.exclusive, selectCardWrapperDiv);
-				setLocalStorage(keyContinueShopLineup, selectCardsInfo);
-				shopCardList();
-			});
-		const priceDiv = createCardPrice(selectInfo.price, selectInfo.discount);
-		if(selectInfo.price > playerStatus.money){
-			priceDiv.addClass('shop-shortage');
+		if(selectInfo.stock){
+			const selectCardDiv = createCardDom(selectInfo.card);
+			selectCardDiv
+				.addClass('shop-card')
+				.click(() => {
+					buyCard(selectInfo, selectCardWrapperDiv);
+					setLocalStorage(keyContinueShopLineup, selectCardsInfo);
+					shopCardList();
+				});
+			const priceDiv = createCardPrice(selectInfo.price, selectInfo.discount);
+			if(selectInfo.price > playerStatus.money){
+				priceDiv.addClass('shop-shortage');
+			}
+			const selectCardWrapperDiv = $('<div>')
+				.addClass('card-lineup')
+				.addClass('top-row')
+				.append(selectCardDiv)
+				.append(priceDiv);
+			$(`.shop-modal-body`).append(selectCardWrapperDiv);
 		}
-		const selectCardWrapperDiv = $('<div>')
-			.addClass('card-lineup')
-			.addClass('top-row')
-			.append(selectCardDiv)
-			.append(priceDiv);
-		$(`.shop-modal-body`).append(selectCardWrapperDiv);
 	});
 
 	// 共通カードのラインナップ
 	selectCardsInfo.common.forEach((selectInfo) => {
-		const selectCardDiv = createCardDom(selectInfo.card);
-		selectCardDiv
-			.addClass('shop-card')
-			// 手札クリック時の処理登録
-			.click(() => {
-				buyCard(selectInfo, selectCardsInfo.common, selectCardWrapperDiv);
-				setLocalStorage(keyContinueShopLineup, selectCardsInfo);
-				shopCardList();
-			});
-		const priceDiv = createCardPrice(selectInfo.price, selectInfo.discount);
-		if(selectInfo.price > playerStatus.money){
-			priceDiv.addClass('shop-shortage');
+		if(selectInfo.stock){
+			const selectCardDiv = createCardDom(selectInfo.card);
+			selectCardDiv
+				.addClass('shop-card')
+				.click(() => {
+					buyCard(selectInfo, selectCardWrapperDiv);
+					setLocalStorage(keyContinueShopLineup, selectCardsInfo);
+					shopCardList();
+				});
+			const priceDiv = createCardPrice(selectInfo.price, selectInfo.discount);
+			if(selectInfo.price > playerStatus.money){
+				priceDiv.addClass('shop-shortage');
+			}
+			const selectCardWrapperDiv = $('<div>')
+				.addClass('card-lineup')
+				.addClass('bottom-row')
+				.append(selectCardDiv)
+				.append(priceDiv);
+			$(`.shop-modal-body`).append(selectCardWrapperDiv);
 		}
-		const selectCardWrapperDiv = $('<div>')
-			.addClass('card-lineup')
-			.addClass('bottom-row')
-			.append(selectCardDiv)
-			.append(priceDiv);
-		$(`.shop-modal-body`).append(selectCardWrapperDiv);
 	});
 
 	// アーティファクトのラインナップ
@@ -241,22 +252,25 @@ function shopCardList(){
 		.append(artifactWrapperDiv);
 	$(`.shop-modal-body`).append(selectArtifactDiv);
 	selectCardsInfo.artifacts.forEach((selectInfo) => {
-		const artifactDiv = createArtifactDom(selectInfo.artifact);
-		artifactDiv
-			.addClass('shop-artifact')
-			.click(() => {
-				buyArtifact(selectInfo, selectCardsInfo.artifacts, selectArtifactsWrapperDiv);
-				setLocalStorage(keyContinueShopLineup, selectCardsInfo);
-				shopCardList();
-			});
-		const priceDiv = createCardPrice(selectInfo.price, false);
-		if(selectInfo.price > playerStatus.money){
-			priceDiv.addClass('shop-shortage');
+		if(selectInfo.stock){
+			const artifactDiv = createArtifactDom(selectInfo.artifact);
+			artifactDiv
+				.addClass('shop-artifact')
+				.click(() => {
+					buyArtifact(selectInfo, selectArtifactsWrapperDiv);
+					setLocalStorage(keyContinueShopLineup, selectCardsInfo);
+					shopCardList();
+				});
+			const priceDiv = createCardPrice(selectInfo.price, false);
+			if(selectInfo.price > playerStatus.money){
+				priceDiv.addClass('shop-shortage');
+			}
+			const selectArtifactsWrapperDiv = $('<div>')
+				.append(artifactDiv)
+				.append(priceDiv);
+			artifactWrapperDiv.append(selectArtifactsWrapperDiv);
 		}
-		const selectArtifactsWrapperDiv = $('<div>')
-			.append(artifactDiv)
-			.append(priceDiv);
-		artifactWrapperDiv.append(selectArtifactsWrapperDiv);
+
 	});
 
 	// カード削除のラインナップ
@@ -274,7 +288,7 @@ function shopCardList(){
 		.append(HukidashiImage)
 		.append(HukidashiText)
 		.append(deleteImage);
-	if(selectCardsInfo.delete.deleteFlag){
+	if(selectCardsInfo.delete.stock){
 		HukidashiText.html('カード削除サービス');
 		const deletePriceDiv = createCardPrice(selectCardsInfo.delete.price, false);
 		if(selectCardsInfo.delete.price > playerStatus.money){
@@ -337,40 +351,79 @@ function shopCardList(){
 /* 値段更新関数
 /*******************************************************/
 function updateShopPrice(selectCardsInfo){
+	//元の値段を設定
+	selectCardsInfo.exclusive.forEach((exclusive) => {
+		exclusive.price = exclusive.originPrice;
+	});
+	selectCardsInfo.common.forEach((common) => {
+		common.price = common.originPrice;
+	});
+	selectCardsInfo.artifacts.forEach((artifact) => {
+		artifact.price = artifact.originPrice;
+	});
+	selectCardsInfo.delete.price = selectCardsInfo.delete.originPrice;
+	//価格は20％割引される。
+	const newArrival = myArtifacts.find((artifact) => 
+		artifact.name === normalArtifact.newArrival.name);
+	if(newArrival){
+		selectCardsInfo.exclusive.forEach((exclusive) => {
+			exclusive.price = 
+				Math.floor(exclusive.price * 0.8);
+		});
+		selectCardsInfo.common.forEach((common) => {
+			common.price = 
+				Math.floor(common.price * 0.8);
+		});
+		selectCardsInfo.artifacts.forEach((artifact) => {
+			artifact.price = 
+				Math.floor(artifact.price * 0.8);
+		});
+		selectCardsInfo.delete.price = 
+			Math.floor(selectCardsInfo.delete.price * 0.8);
+	}
+	//全商品50％割引！
+	const card = myArtifacts.find((artifact) => 
+		artifact.name === normalArtifact.card.name);
+	if(card){
+		selectCardsInfo.exclusive.forEach((exclusive) => {
+			exclusive.price = 
+				Math.floor(exclusive.price * 0.5);
+		});
+		selectCardsInfo.common.forEach((common) => {
+			common.price = 
+				Math.floor(common.price * 0.5);
+		});
+		selectCardsInfo.artifacts.forEach((artifact) => {
+			artifact.price = 
+				Math.floor(artifact.price * 0.5);
+		});
+		selectCardsInfo.delete.price = 
+			Math.floor(selectCardsInfo.delete.originPrice * 0.5);
+	}
 	//商人のカード削除サービスの費用が50ゴールドに固定される。
 	const shopService = myArtifacts.find((artifact) => 
 		artifact.name === normalArtifact.shopService.name);
 	if(shopService){
 		selectCardsInfo.delete.price = 50;
 	}
-	selectCardsInfo
-	//価格は20％割引される。
-	const newArrival = myArtifacts.find((artifact) => 
-		artifact.name === normalArtifact.newArrival.name);
-	if(newArrival){
-	}
-	//全商品50％割引！
-	const card = myArtifacts.find((artifact) => 
-		artifact.name === normalArtifact.card.name);
-	if(card){
-	}
+	console.log(selectCardsInfo);
 }
 /*******************************************************/
 /* カード購入関数
 /*******************************************************/
-function buyCard(selectInfo, cardList, selectCardWrapperDiv){
+function buyCard(selectInfo, selectCardWrapperDiv){
+	console.log(selectInfo);
 	// 購入処理
 	if(selectInfo.price > playerStatus.money){
 		alert('お金が足りません');
 		return;
 	}
-	const index = cardList.findIndex(info => info.id === selectInfo.id);
-	const buyInfo = cardList.splice(index, 1)[0];
+	selectInfo.stock = false;
 	// 支払い
-	playerStatus.money -= buyInfo.price;
+	playerStatus.money -= selectInfo.price;
 	updateMoneyDom();
 	// 購入カードのデッキ挿入
-	addCardToOriginalDeck(buyInfo.card);
+	addCardToOriginalDeck(selectInfo.card);
 	//購入済み
 	selectCardWrapperDiv.addClass('purchased');
 	setupOriginalDeckBtnDom();
@@ -381,18 +434,18 @@ function buyCard(selectInfo, cardList, selectCardWrapperDiv){
 /*******************************************************/
 /* アーティファクト購入関数
 /*******************************************************/
-function buyArtifact(selectInfo, artifactList, selectArtifactWrapperDiv){
+function buyArtifact(selectInfo, selectArtifactWrapperDiv){
+	console.log(selectInfo);
 	// 購入処理
 	if(selectInfo.price > playerStatus.money){
 		alert('お金が足りません');
 		return;
 	}
-	const index = artifactList.findIndex(info => info.id === selectInfo.id);
-	const buyInfo = artifactList.splice(index, 1)[0];
+	selectInfo.stock = false;
 	// 支払い
-	playerStatus.money -= buyInfo.price;
+	playerStatus.money -= selectInfo.price;
 	updateMoneyDom();
-	// 購入カードのデッキ挿入
+	// 購入アーティファクトのデッキ挿入
 	getArtifact(selectInfo.artifact);
 	updateArtifactDom();
 	//購入済み
@@ -420,7 +473,7 @@ function buyDeleteService(deleteInfo){
 			return false;
 		}
 	});
-	deleteInfo.deleteFlag = false;
+	deleteInfo.stock = false;
 	playerStatus.Count.deleteServiceCount++;
 	setLocalStorage(keyContinueOriginalDeck, myOriginalDeck);
 	setLocalStorage(keyContinuePlayerStatus, playerStatus);

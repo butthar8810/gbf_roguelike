@@ -1291,13 +1291,13 @@ function setupArtifact(){
 		myArtifacts = lastArtifact;
 	} else {
 		// プレイヤーに初期デッキとなる10枚のカードを配る
-		if (selectChara == selectCharacter.gran.name){
+		if (selectChara === selectCharacter.gran.name){
 			getArtifact(normalArtifact.recovery);
-		} else if (selectChara == selectCharacter.djeeta.name){
+		} else if (selectChara === selectCharacter.djeeta.name){
 			getArtifact(normalArtifact.startDraw);
 			getArtifact(normalArtifact.eye);
 			getArtifact(normalArtifact.newArrival);
-//			getArtifact(normalArtifact.secondTurnBlock);
+//			getArtifact(normalArtifact.card);
 		}
 		setLocalStorage(keyContinueArtifact, myArtifacts);
 	}
@@ -1344,18 +1344,17 @@ function decideArtifactLineup(){
 		return !myArtifacts.find((myArtifact) => myArtifact.name === artifact.name);
 	});
 	//キャラ別専用カードのフィルタリング
-	if (selectChara == selectCharacter.gran.name){
+	if (selectChara === selectCharacter.gran.name){
 		filteringArtifact = filteringArtifact.filter((artifact) => 
 			artifact.dedicated === artifactdedicated.common || 
 			artifact.dedicated === artifactdedicated.gran
 		);
-	} else if (selectChara == selectCharacter.djeeta.name){
+	} else if (selectChara === selectCharacter.djeeta.name){
 		filteringArtifact = filteringArtifact.filter((artifact) => 
 			artifact.dedicated === artifactdedicated.common || 
 			artifact.dedicated === artifactdedicated.djeeta
 		);
 	}
-	console.log(filteringArtifact);
 	const lineupArtifact = shuffleArray(filteringArtifact).splice(0, 2);
 	// ショップアーティファクトのフィルタリング
 	let shopArtifact = Object.values(normalArtifact).filter((artifact) => 
@@ -1364,12 +1363,12 @@ function decideArtifactLineup(){
 		return !myArtifacts.find((myArtifact) => myArtifact.name === artifact.name);
 	});
 	//キャラ別専用カードのフィルタリング
-	if (selectChara == selectCharacter.gran.name){
+	if (selectChara === selectCharacter.gran.name){
 		shopArtifact = shopArtifact.filter((artifact) => 
 			artifact.dedicated === artifactdedicated.common || 
 			artifact.dedicated === artifactdedicated.gran
 		);
-	} else if (selectChara == selectCharacter.djeeta.name){
+	} else if (selectChara === selectCharacter.djeeta.name){
 		shopArtifact = shopArtifact.filter((artifact) => 
 			artifact.dedicated === artifactdedicated.common || 
 			artifact.dedicated === artifactdedicated.djeeta
@@ -1384,6 +1383,7 @@ function decideArtifactLineup(){
 		);
 		selectArtifacts.push({
 			id: index,
+			stock: true,
 			artifact: artifact,
 			originPrice: randomPrice,
 			price: randomPrice,
@@ -1419,12 +1419,12 @@ function decideArtifactReward(){
 		.filter((artifact) => {
 			return !myArtifacts.find((myArtifact) => myArtifact.name === artifact.name);
 		});
-	if (selectChara == selectCharacter.gran.name){
+	if (selectChara === selectCharacter.gran.name){
 		filteringArtifact = filteringArtifact.filter((artifact) => 
 			artifact.dedicated === artifactdedicated.common || 
 			artifact.dedicated === artifactdedicated.gran
 		);
-	} else if (selectChara == selectCharacter.djeeta.name){
+	} else if (selectChara === selectCharacter.djeeta.name){
 		filteringArtifact = filteringArtifact.filter((artifact) => 
 			artifact.dedicated === artifactdedicated.common || 
 			artifact.dedicated === artifactdedicated.djeeta
@@ -1446,12 +1446,12 @@ function decideBossArtifactReward(){
 		.filter((artifact) => {
 			return !myArtifacts.find((myArtifact) => myArtifact.name === artifact.name);
 		});
-	if (selectChara == selectCharacter.gran.name){
+	if (selectChara === selectCharacter.gran.name){
 		filteringArtifact = filteringArtifact.filter((artifact) => 
 			artifact.dedicated === artifactdedicated.common || 
 			artifact.dedicated === artifactdedicated.gran
 		);
-	} else if (selectChara == selectCharacter.djeeta.name){
+	} else if (selectChara === selectCharacter.djeeta.name){
 		filteringArtifact = filteringArtifact.filter((artifact) => 
 			artifact.dedicated === artifactdedicated.common || 
 			artifact.dedicated === artifactdedicated.djeeta

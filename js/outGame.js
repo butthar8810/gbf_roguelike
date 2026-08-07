@@ -37,9 +37,9 @@ function setupCharaStatus(){
 
 	if (selectChara) {
 		$('.name-space').html(selectChara);
-		if (selectChara == selectCharacter.gran.name){
+		if (selectChara === selectCharacter.gran.name){
 			$('.player-character').attr('src', 'images/gifs/gran_idle.gif');
-		} else if (selectChara == selectCharacter.djeeta.name){
+		} else if (selectChara === selectCharacter.djeeta.name){
 			$('.player-character').attr('src', 'images/gifs/djeeta_idle.gif');
 		} else {
 			alert('別キャラが選択されています。');
@@ -56,12 +56,12 @@ function setupCharaStatus(){
 		playerStatus.money = lastPlayerStatus.money;
 		playerStatus.maxEnergy = lastPlayerStatus.maxEnergy;
 	} else{
-		if (selectChara == selectCharacter.gran.name){// グランの場合
+		if (selectChara === selectCharacter.gran.name){// グランの場合
 			playerStatus.remainHP = selectCharacter.gran.maxHP;
 			playerStatus.maxHP = selectCharacter.gran.maxHP;
 			playerStatus.money = selectCharacter.gran.money;
 			
-		} else if (selectChara == selectCharacter.djeeta.name){// ジータの場合
+		} else if (selectChara === selectCharacter.djeeta.name){// ジータの場合
 			playerStatus.remainHP = selectCharacter.djeeta.maxHP;
 			playerStatus.maxHP = selectCharacter.djeeta.maxHP;
 			playerStatus.money = selectCharacter.djeeta.money;

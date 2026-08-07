@@ -439,9 +439,9 @@ function displayGiftEventArea(){
 	$(`.player-area`).html('');
 	const playerImage = $('<img>')
 		.addClass('player-picture');
-	if (selectChara == selectCharacter.gran.name){
+	if (selectChara === selectCharacter.gran.name){
 		playerImage.attr('src', 'images/gifs/gran_idle.gif');
-	} else if (selectChara == selectCharacter.djeeta.name){
+	} else if (selectChara === selectCharacter.djeeta.name){
 		playerImage.attr('src', 'images/gifs/djeeta_idle.gif');
 	} else {
 		alert('別キャラが選択されています。');
@@ -617,9 +617,9 @@ function updatePlayerAreaDom(argPlayerStatus){
 	// プレイヤー立ち絵の要素
 	const playerImage = $('<img>')
 		.addClass('player-picture');
-	if (selectChara == selectCharacter.gran.name){
+	if (selectChara === selectCharacter.gran.name){
 		playerImage.attr('src', 'images/gifs/gran_idle.gif');
-	} else if (selectChara == selectCharacter.djeeta.name){
+	} else if (selectChara === selectCharacter.djeeta.name){
 		playerImage.attr('src', 'images/gifs/djeeta_idle.gif');
 	} else {
 		alert('別キャラが選択されています。');
@@ -1173,9 +1173,9 @@ function createChoiceCardDom(){
 		let selectCardList = [];
 		if (selectChara) {
 			$('.name-space').html(selectChara);
-			if (selectChara == selectCharacter.gran.name){
+			if (selectChara === selectCharacter.gran.name){
 				selectCardList = Object.values(granCardList);
-			} else if (selectChara == selectCharacter.djeeta.name){
+			} else if (selectChara === selectCharacter.djeeta.name){
 				selectCardList = Object.values(djeetaCardList);
 			} else {
 				alert('別キャラが選択されています。');

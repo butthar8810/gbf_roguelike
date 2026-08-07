@@ -6614,14 +6614,14 @@ function setupDeck(){
 		myOriginalDeck = lastOriginalDeck;
 	} else {
 		// プレイヤーに初期デッキとなるカードを配る
-		if (selectChara == selectCharacter.gran.name){
+		if (selectChara === selectCharacter.gran.name){
 			addCardToOriginalDeck(granCardList.Wide, 5);
 			addCardToOriginalDeck(granCardList.Defense, 4);
 			addCardToOriginalDeck(granCardList.PowerSwing, 1);
 			addCardToOriginalDeck(granCardList.OverPower, 2);
 			addCardToOriginalDeck(testCardList.testAttack, 2);
 
-		} else if (selectChara == selectCharacter.djeeta.name){
+		} else if (selectChara === selectCharacter.djeeta.name){
 			addCardToOriginalDeck(djeetaCardList.Wide, 5);
 			addCardToOriginalDeck(djeetaCardList.Defense, 5);
 			addCardToOriginalDeck(djeetaCardList.Pulverizer, 1);
@@ -6680,9 +6680,9 @@ function decideCardReward(lotteryLevel){
 			break;
 	}
 	const totalWeight = Object.values(level).reduce((sum, item) => sum + item.weight, 0);
-	if (selectChara == selectCharacter.gran.name){
+	if (selectChara === selectCharacter.gran.name){
 		selectCardList = deepCopyCardList(Object.values(granCardList));
-	} else if (selectChara == selectCharacter.djeeta.name){
+	} else if (selectChara === selectCharacter.djeeta.name){
 		selectCardList = deepCopyCardList(Object.values(djeetaCardList));	
 	} else {
 		alert('キャラが選択されていません。');
@@ -6724,23 +6724,24 @@ function decideCardReward(lotteryLevel){
 /*****************************************************/
 /* ショップラインナップ決定関数
 /*****************************************************/
+const exclusiveInfo = {
+	common:{weight:54, info:{rarity: rarity.common, minPrice: 48, maxPrice: 53}},
+	uncommon:{weight:37, info:{rarity: rarity.uncommon, minPrice: 71, maxPrice: 79}},
+	rare:{weight:9, info:{rarity: rarity.rare, minPrice: 143, maxPrice: 158}},
+}
+const lineupType = [type.attack, type.attack, type.skill, type.skill, type.power];
+
 function decideShopExclusiveCardLineup(){
 	const selectChara = getLocalStorage(keySelectChara);
 	const selectCards = [];
 	let selectCardList = [];
-	const exclusiveInfo = {
-		common:{weight:54, info:{rarity: rarity.common, minPrice: 48, maxPrice: 53}},
-		uncommon:{weight:37, info:{rarity: rarity.uncommon, minPrice: 71, maxPrice: 79}},
-		rare:{weight:9, info:{rarity: rarity.rare, minPrice: 143, maxPrice: 158}},
-	}
-	const lineupType = [type.attack, type.attack, type.skill, type.skill, type.power];
 	const totalWeight = Object.values(exclusiveInfo).reduce((sum, item) => sum + item.weight, 0);
 	let index = 0;
 	let selectRarityInfo = {};
 	//専用カードのラインナップ
-	if (selectChara == selectCharacter.gran.name){
+	if (selectChara === selectCharacter.gran.name){
 		selectCardList = deepCopyCardList(Object.values(granCardList));
-	} else if (selectChara == selectCharacter.djeeta.name){
+	} else if (selectChara === selectCharacter.djeeta.name){
 		selectCardList = deepCopyCardList(Object.values(djeetaCardList));	
 	} else {
 		alert('キャラが選択されていません。');
@@ -6762,12 +6763,16 @@ function decideShopExclusiveCardLineup(){
 		);
 		const filteringCardList = selectCardList
 			.filter((card) => card.rarity === selectRarityInfo.rarity)
-			.filter((card) => card.type === lineupType[index]);
+			.filter((card) => card.type === lineupType[index])
+			.filter((card) => {
+				return !selectCards.find((cardInfo) => cardInfo.card.name === card.name);
+			});
 		if(filteringCardList.length > 0){
 			const selectCard = shuffleArray(filteringCardList).shift();
-			if(!selectCards.find((card) => card.card.name === selectCard.name)){
+			if(selectCard !== undefined){
 				selectCards.push({
 					id: index,
+					stock: true,
 					card: selectCard,
 					originPrice: randomPrice,
 					price: randomPrice,
@@ -6778,19 +6783,71 @@ function decideShopExclusiveCardLineup(){
 		}
 	}
 	let randomDiscount = Math.floor(Math.random() * 5);
-	selectCards[randomDiscount].originPrice = Math.floor(selectCards[randomDiscount].randomPrice/2);
+	selectCards[randomDiscount].originPrice = Math.floor(selectCards[randomDiscount].originPrice/2);
 	selectCards[randomDiscount].discount = true;
 	return selectCards;
 }
 /*****************************************************/
+/* ショップラインナップ再入荷関数
+/*****************************************************/
+function RestockShopExclusiveCardLineup(CardsInfo){
+	const selectChara = getLocalStorage(keySelectChara);
+	let selectCardList = [];
+	let selectRarityInfo = {};
+	const totalWeight = Object.values(exclusiveInfo).reduce((sum, item) => sum + item.weight, 0);
+	//専用カードのラインナップ
+	if (selectChara === selectCharacter.gran.name){
+		selectCardList = deepCopyCardList(Object.values(granCardList));
+	} else if (selectChara === selectCharacter.djeeta.name){
+		selectCardList = deepCopyCardList(Object.values(djeetaCardList));	
+	} else {
+		alert('キャラが選択されていません。');
+		window.location.href = 'index.html';
+	}
+	CardsInfo.forEach((cardInfo) => {
+		while(!cardInfo.stock){
+			// レアリティ抽選
+			let random = Math.floor(Math.random() * totalWeight);
+			for (const rarity of Object.values(exclusiveInfo)) {
+				if (random < rarity.weight) {
+					selectRarityInfo = rarity.info;
+					break;
+				}
+				random -= rarity.weight;
+			}
+			let randomPrice = Math.floor(
+				Math.random() * 
+				(selectRarityInfo.maxPrice - selectRarityInfo.minPrice) + selectRarityInfo.minPrice
+			);
+			const filteringCardList = selectCardList
+				.filter((card) => card.rarity === selectRarityInfo.rarity)
+				.filter((card) => card.type === lineupType[cardInfo.id])
+				.filter((card) => {
+					return !CardsInfo.find((lineup) => lineup.card.name === card.name);
+				});
+			if(filteringCardList.length > 0){
+				const selectCard = shuffleArray(filteringCardList).shift();
+				if(selectCard !== undefined){
+					cardInfo.stock = true;
+					cardInfo.card = selectCard;
+					cardInfo.originPrice = randomPrice;
+					cardInfo.price = randomPrice;
+					cardInfo.discount = false;
+				}
+			}
+		}
+	});
+}
+
+/*****************************************************/
 /* ショップラインナップ決定関数
 /*****************************************************/
+const commonInfo = [
+	{rarity: rarity.uncommon, minPrice: 82, maxPrice: 90},
+	{rarity: rarity.rare, minPrice: 164, maxPrice: 182},
+];
 function decideShopCommonCardLineup(){
 	const selectCommonCards = [];
-	const commonInfo = [
-		{rarity: rarity.uncommon, minPrice: 82, maxPrice: 90},
-		{rarity: rarity.rare, minPrice: 164, maxPrice: 182},
-	];
 	let index = 0
 	//共通カードのラインナップ
 	commonInfo.forEach((info) => {
@@ -6803,6 +6860,7 @@ function decideShopCommonCardLineup(){
 			const selectCard = shuffleArray(filteringCardList).shift();
 			selectCommonCards.push({
 				id: index,
+				stock: true,
 				card: selectCard,
 				originPrice: randomPrice,
 				price: randomPrice,
@@ -6813,6 +6871,50 @@ function decideShopCommonCardLineup(){
 	});
 
 	return selectCommonCards;
+}
+/*****************************************************/
+/* ショップラインナップ再入荷関数
+/*****************************************************/
+function RestockShopCommonCardLineup(CardsInfo){
+	console.log(CardsInfo);
+	let selectCardList = [];
+	let selectRarityInfo = {};
+	const totalWeight = Object.values(exclusiveInfo).reduce((sum, item) => sum + item.weight, 0);
+	//共通カードのラインナップ
+	CardsInfo.forEach((cardInfo) => {
+		while(!cardInfo.stock){
+			// レアリティ抽選
+			let random = Math.floor(Math.random() * totalWeight);
+			for (const rarity of Object.values(exclusiveInfo)) {
+				if (random < rarity.weight) {
+					selectRarityInfo = rarity.info;
+					break;
+				}
+				random -= rarity.weight;
+			}
+			let randomPrice = Math.floor(
+				Math.random() * 
+				(selectRarityInfo.maxPrice - selectRarityInfo.minPrice) + selectRarityInfo.minPrice
+			);
+			const filteringCardList = selectCardList
+				.filter((card) => card.rarity === selectRarityInfo.rarity)
+				.filter((card) => card.type === lineupType[cardInfo.id])
+				.filter((card) => {
+					return !CardsInfo.find((lineup) => lineup.card.name === card.name);
+				});
+			console.log(filteringCardList);
+			if(filteringCardList.length > 0){
+				const selectCard = shuffleArray(filteringCardList).shift();
+				if(selectCard !== undefined){
+					cardInfo.stock = true;
+					cardInfo.card = selectCard;
+					cardInfo.originPrice = randomPrice;
+					cardInfo.price = randomPrice;
+					cardInfo.discount = false;
+				}
+			}
+		}
+	});
 }
 /*************************************************************************************/
 /* 各カード効果関数(アタック)
@@ -7352,9 +7454,9 @@ function effectAddRandomCardAndCostDown(amount){
 		for(let i = 0; i < amount.count; i++){
 			let selectCardList = [];
 			if (selectChara) {
-				if (selectChara == selectCharacter.gran.name){
+				if (selectChara === selectCharacter.gran.name){
 					selectCardList = Object.values(granCardList);
-				} else if (selectChara == selectCharacter.djeeta.name){
+				} else if (selectChara === selectCharacter.djeeta.name){
 					selectCardList = Object.values(djeetaCardList);
 				} else {
 					alert('別キャラが選択されています。');
@@ -8158,9 +8260,9 @@ function effectAddRandomCardAndChangeCost(amount){
 		for(let i = 0; i < amount.count; i++){
 			let selectCardList = [];
 			if (selectChara) {
-				if (selectChara == selectCharacter.gran.name){
+				if (selectChara === selectCharacter.gran.name){
 					selectCardList = Object.values(granCardList);
-				} else if (selectChara == selectCharacter.djeeta.name){
+				} else if (selectChara === selectCharacter.djeeta.name){
 					selectCardList = Object.values(djeetaCardList);
 				} else {
 					alert('別キャラが選択されています。');

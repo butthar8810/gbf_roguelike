@@ -123,7 +123,7 @@ const dead = {id: '9999', name: '討伐', amount: 1, effect: '討伐状態',imag
 /*****************************************************************************/
 const selectCharacter = {
 	gran:	{name: 'グラン', maxHP: 80, money: 99}, 
-	djeeta:	{name: 'ジータ', maxHP: 75, money: 99}
+	djeeta:	{name: 'ジータ', maxHP: 75, money: 9999}
 };
 
 

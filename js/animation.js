@@ -350,7 +350,7 @@ function animatePlayerAttack(){
 	const playerImage = $('.player-area-inner').children('.player-picture');
 	if (selectChara) {
 		$('.name-space').html(selectChara);
-		if (selectChara == selectCharacter.gran.name){
+		if (selectChara === selectCharacter.gran.name){
 			playerAttackPromise = new Promise((resolve) => {
 				let timestamp = new Date().getTime();
 				playerImage.attr('src', 'images/gifs/gran_attack.gif' + '?' + timestamp);
@@ -359,7 +359,7 @@ function animatePlayerAttack(){
 					resolve();
 				}, playerAttackWaitTime);
 			});
-		} else if (selectChara == selectCharacter.djeeta.name){
+		} else if (selectChara === selectCharacter.djeeta.name){
 			playerAttackPromise = new Promise((resolve) => {
 				let timestamp = new Date().getTime();
 				playerImage.attr('src', 'images/gifs/djeeta_attack.gif' + '?' + timestamp);
@@ -386,14 +386,14 @@ function animatePlayerPower(){
 	console.log('Attack Start');
 	if (selectChara) {
 		$('.name-space').html(selectChara);
-		if (selectChara == selectCharacter.gran.name){
+		if (selectChara === selectCharacter.gran.name){
 			let timestamp = new Date().getTime();
 			playerImage.attr('src', 'images/gifs/gran_ready.gif');
 			setTimeout(() => {
 				playerImage.attr('src', 'images/gifs/gran_idle.gif');
 				console.log('Attack end');
 			}, playerAttackWaitTime);
-		} else if (selectChara == selectCharacter.djeeta.name){
+		} else if (selectChara === selectCharacter.djeeta.name){
 			let timestamp = new Date().getTime();
 			playerImage.attr('src', 'images/gifs/djeeta_ready.gif');
 			setTimeout(() => {
@@ -417,12 +417,12 @@ function animatePlayerDamage(){
 	
 	if (selectChara) {
 		$('.name-space').html(selectChara);
-		if (selectChara == selectCharacter.gran.name){
+		if (selectChara === selectCharacter.gran.name){
 			playerImage.attr('src', 'images/gifs/gran_dmg.gif');
 			setTimeout(() => {
 				playerImage.attr('src', 'images/gifs/gran_idle.gif');
 			}, playerDamageWaitTime);
-		} else if (selectChara == selectCharacter.djeeta.name){
+		} else if (selectChara === selectCharacter.djeeta.name){
 			playerImage.attr('src', 'images/gifs/djeeta_dmg.gif');
 			setTimeout(() => {
 				playerImage.attr('src', 'images/gifs/djeeta_idle.gif');
