@@ -668,6 +668,9 @@ const normalArtifact = {
 		dedicated: artifactdedicated.common,
 		effect: '戦闘不能になりそうになると最大HPの50%を回復する(一度きり)', 
 		image: 'images/artifact/ProofOfWaves.png', 
+		amount: {
+			Count: 1,
+		}
 	},
 	thirdTurnBlock: {
 		name: '使役者の証', 
@@ -687,7 +690,13 @@ const normalArtifact = {
 		dedicated: artifactdedicated.common,
 		effect: '戦闘開始時、好きなカードを捨てて同じ枚数のカードを引く。', 
 		image: 'images/artifact/ProofOfKing.png',
+		firstFunc: 'effectRedraw',
+		amount: {
+			
+			count: 3,
+		}
 	},
+	//未実装
 	noCardDraw: {
 		name: '陰陽の証', 
 		rarity: artifactRarity.rare,
@@ -708,8 +717,11 @@ const normalArtifact = {
 		dedicated: artifactdedicated.common,
 		effect: '6ターン毎に、ダメージカット1を得る。', 
 		image: 'images/artifact/ProofOfAvenger.png', 
-		firstFunc: '',
+		firstFunc: 'effectBuffEvery',
+		turnFunc: 'effectBuffEvery',
 		amount: {
+			Count: 0,
+			every: 6,
 			buff: 1,
 			buffType: 'damageCut',
 		}
@@ -720,9 +732,9 @@ const normalArtifact = {
 		dedicated: artifactdedicated.common,
 		effect: '「パワー」をプレイするたび、HP2回復。', 
 		image: 'images/artifact/ProofOfPlayer.png', 
-		firstFunc: '',
+		powerFunc: 'effectRecovery',
 		amount: {
-			draw: 2,
+			recovery: 2,
 		}
 	},
 	AccumulationEnergy: {
@@ -738,6 +750,11 @@ const normalArtifact = {
 		dedicated: artifactdedicated.common,
 		effect: '戦闘開始時、プレートアーマー4を得る。', 
 		image: 'images/artifact/Omega.png', 
+		firstFunc: 'effectBuff',
+		amount: {
+			buff: 1,
+			buffType: 'damageCut',
+		}
 	},
 	retentionBlock: {
 		name: 'ガフスキー', 
@@ -1296,7 +1313,7 @@ function setupArtifact(){
 		} else if (selectChara === selectCharacter.djeeta.name){
 			getArtifact(normalArtifact.startDraw);
 			getArtifact(normalArtifact.eye);
-			getArtifact(normalArtifact.newArrival);
+			getArtifact(normalArtifact.redraw);
 //			getArtifact(normalArtifact.card);
 		}
 		setLocalStorage(keyContinueArtifact, myArtifacts);
@@ -1529,6 +1546,19 @@ function effectDefenseForNoBlock(amount){
 }
 
 /*******************************************************/
+/* 〇ターン毎に、Buffを得る。
+/*******************************************************/
+function effectBuffEvery(amount){
+	console.log('effectBuffEvery');
+	if( 'buff' in amount && 'buffType' in amount &&
+		'Count' in amount && 'every' in amount){
+		amount.Count++;
+		if(amount.Count >= amount.every){
+			actionStatusBuf(buffStatus[amount.buffType], amount.buff);
+		}
+	}
+}
+/*******************************************************/
 /* 〇ターンごとに、〇エナジーを得る。
 /*******************************************************/
 function effectGetEnergyEvery(amount){
@@ -1705,4 +1735,45 @@ function effectRandomCostDown(amount){
 	}
 	card.amount.tmpCost = 0;
 	return true;
+}
+/*******************************************************/
+/* 戦闘開始時、好きなカードを捨てて同じ枚数のカードを引く。
+/*******************************************************/
+function effectRedraw(amount){
+	startPhase(phase.selectTrashAndDraw);
+}
+function trashAndDrawCard(){
+	console.log('trashAndDrawCard');
+	closeHandDecideArea();
+	const trashCards = deleteAllTemporaryArea();
+	trashCards.forEach((trashCard) => {
+		setLocalStorage(keyContinueTemporary, tmpArea);
+		const index = findIndexHand('id', trashCard.id);
+		if (index === -1) {
+			return false;
+		}
+		const card = spliceHand(index);
+		if (card === undefined) {
+			return false;
+		}
+		trashCardProcess(card);
+		setLocalStorage(keyContinuePlayerStatus, playerStatus);
+		setLocalStorage(keyContinueHand, myHand);
+		setLocalStorage(keyContinueTrash, myTrash);
+		animateHandToTrash(card);
+	});
+	
+	$.when(cardTrashPromise).done(() => {
+		updateHandDom();
+		updateTrashDom();
+	});
+	const cards = drawCardFromDeck(trashCards.length);
+	cards.forEach((card) => {
+		animateDrawDeck(card);
+	});
+	$.when(cardDrawPromise).done(() => {
+		updateHandDom();
+		updateDeckDom();
+	});
+	startPhase(phase.action);
 }

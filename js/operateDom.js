@@ -515,7 +515,7 @@ function hiddenBattleArea(){
 	$('.hand-area').html('');
 }
 /*******************************************************/
-/* updateDeckDom：デッキ用DOMを生成
+/* changeBattleArea：バトルエリアを変更
 /*******************************************************/
 function changeBattleArea(select){
 	const back = $('battle-area').children('img');

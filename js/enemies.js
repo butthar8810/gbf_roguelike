@@ -1365,7 +1365,15 @@ function calcEnemyDamage(attackCount, enemyInfo, playerInfo){
 	// 恐怖（攻撃力25%減少）
 	const weakness = enemyInfo.currentStatus.status
 		.find((status) => status.id === debuffStatus.weak.id);
-	if (weakness){magnification -= 0.25;}
+	if (weakness){
+		const powerfulWeak = myArtifacts.find((artifact) => 
+			artifact.name === normalArtifact.powerfulWeak.name);
+		if(powerfulWeak){
+			magnification -= 0.4;
+		} else {
+			magnification -= 0.25;
+		}
+	}
 	// 防御力ダウン（被ダメ50%上昇）
 	const defenseUp = playerStatus.statuses
 		.find((status) => status.id === buffStatus.defenseUp.id);
@@ -1425,6 +1433,12 @@ function enemyActionAttack(enemyInfo, playerInfo, animationFlag, attackCount){
 		}
 	}
 	if(totalAttack > 0){
+		const mitigation = myArtifacts.find((artifact) => 
+			artifact.name === normalArtifact.mitigation.name);
+		if(mitigation && totalAttack <= 5){
+			totalAttack = 1;
+		}
+
 		damageHP(totalAttack, playerInfo, animationFlag);
 	}
 	// 「反射」の効果
@@ -1533,6 +1547,18 @@ function enemyActionStatusDebuff(enemyInfo, playerInfo, animationFlag, debuf, am
 		playerStatus.statuses = playerStatus.statuses.filter((status) => {
 			return status.amount > 0;
 		});
+		return;
+	}
+	//恐怖にならない
+	const invalidWeak = myArtifacts.find((artifact) => 
+		artifact.name === normalArtifact.invalidWeak.name);
+	if(invalidWeak && debuf.id === debuffStatus.weak.id){
+		return;
+	}
+	//脆弱化にならない。
+	const invalidFrail = myArtifacts.find((artifact) => 
+		artifact.name === normalArtifact.invalidFrail.name);
+	if(invalidFrail && debuf.id === debuffStatus.frail.id){
 		return;
 	}
 

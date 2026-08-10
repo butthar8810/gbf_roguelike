@@ -237,6 +237,9 @@ function setupBtn(){
 				}
 				trashCard();
 				break;
+			case phase.selectTrashAndDraw:
+				trashAndDrawCard();
+				break;
 			case phase.caitSea:
 				const caitSea = playerStatus.statuses
 					.find((status) => status.id === buffStatus.caitSea.id);
@@ -376,6 +379,24 @@ function startPhase(ph = false){
 			disabledMyHand(false);
 			updateHandDom();
 			updateHandDecideTitleDom('捨てるカードを選んでください:３枚');
+			$.when(
+				cardDrawPromise,
+				playerAbnormalityPromise,
+				enemyAbnormalityPromise,
+			).done(() => {
+				openHandDecideArea();
+			});
+			break;
+		case phase.selectTrashAndDraw:
+			if (myHand.length <= 0) {
+				console.log('手札がありません。');
+				startPhase(phase.action);
+				break;
+			}
+			disabledEndBtn(true);
+			disabledMyHand(false);
+			updateHandDom();
+			updateHandDecideTitleDom('捨てるカードを選んでください:好きな枚数');
 			$.when(
 				cardDrawPromise,
 				playerAbnormalityPromise,
@@ -951,14 +972,13 @@ function startAbility(){
 	// アーティファクトの効果を発動
 	myArtifacts.forEach((artifact) => {
 		if('firstFunc' in artifact){
-			if (artifact.firstFunc !== '') {
-				const storedFunc = globalThis[artifact.firstFunc];
-				if( typeof storedFunc === 'function'){
-					ret = storedFunc(artifact.amount);
-				} 
-			}
+			pushStackCards({
+				func: artifact.firstFunc,
+				amount: artifact.amount,
+			});
 		}
 	});
+	setLocalStorage(keyContinueStack, stackCards);
 	//エネミーの開始時効果発動
 	currentEnemies.forEach((enemy) => {
 		if (enemy.actionFirst !== '') {
@@ -1551,6 +1571,7 @@ function clickHandProcess(handCardDiv, hand){
 			}
 			break;
 		case phase.selectPushDeckAndZero:
+		case phase.selectTrashAndDraw:
 			//手札を好きな枚数選択
 			if (index === -1) {
 				pushTemporaryArea(hand);

@@ -34,9 +34,17 @@ function damageHP(damage, playerInfo, animationFlag = false){
 	if (playerInfo.remainHP > damage){
 		playerInfo.remainHP -= damage;
 	} else {
-		playerInfo.remainHP -= damage;
+		playerInfo.remainHP -= 0;
+		//戦闘不能になりそうになると最大HPの50%を回復する(一度きり)
+		const Reraise = myArtifacts.find((artifact) => 
+			artifact.name === normalArtifact.Reraise.name);
+		if(Reraise){
+			playerInfo.remainHP = Math.floor(playerInfo.maxHP / 2);
+			return true;
+		}
 		console.log('敗北処理');
 	}
+	return true;
 }
 /*******************************************************/
 /* deepCopySupply：カード単体をディープコピーする

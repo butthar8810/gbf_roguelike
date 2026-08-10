@@ -8982,6 +8982,7 @@ function trashCard(){
 		updateTrashDom();
 	});
 	startPhase(phase.action);
+	endAction();
 }
 
 /*******************************************************/
