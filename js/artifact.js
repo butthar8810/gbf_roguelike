@@ -611,9 +611,10 @@ const normalArtifact = {
 		dedicated: artifactdedicated.gran,
 		effect: 'HPが失われるたび、次のターン開始時に、3ブロックを得る。グラン専用', 
 		image: 'images/artifact/Mirror.png', 
-		firstFunc: '',
+		lossHPFunc: 'effectCount',
 		amount: {
 			flag: false,
+			Count: 0,
 			block: 3,
 		}
 	},
@@ -1313,8 +1314,8 @@ function setupArtifact(){
 		} else if (selectChara === selectCharacter.djeeta.name){
 			getArtifact(normalArtifact.startDraw);
 			getArtifact(normalArtifact.eye);
-			getArtifact(normalArtifact.redraw);
-//			getArtifact(normalArtifact.card);
+//			getArtifact(normalArtifact.newArrival);
+			getArtifact(normalArtifact.card);
 		}
 		setLocalStorage(keyContinueArtifact, myArtifacts);
 	}
@@ -1339,19 +1340,76 @@ function getArtifact(artifact){
 /*******************************************************/
 /* setupArtifact：ショップラインナップ決定関数
 /*******************************************************/
+const artifactLineupPrice = {
+	common:{minPrice: 149, maxPrice: 201},
+	uncommon:{minPrice: 191, maxPrice: 259},
+	rare:{minPrice: 234, maxPrice: 316},
+	shop:{minPrice: 170, maxPrice: 230},
+	boss:{minPrice: 9999, maxPrice: 9999},
+};
 function decideArtifactLineup(){
 	const selectChara = getLocalStorage(keySelectChara);
 	const selectArtifacts = [];
-	const lineupPrice = {
-		common:{minPrice: 149, maxPrice: 201},
-		uncommon:{minPrice: 191, maxPrice: 259},
-		rare:{minPrice: 234, maxPrice: 316},
-		shop:{minPrice: 170, maxPrice: 230},
-		boss:{minPrice: 9999, maxPrice: 9999},
-	};
 	let index = 0
 	// ラインナップ抽選
 	// 通常アーティファクトのフィルタリング
+	const filteringArtifact = filteringNormalArtifact();
+	const lineupArtifact = shuffleArray(filteringArtifact).splice(0, 2);
+	// ショップアーティファクトのフィルタリング
+	const shopArtifact = filteringShopArtifact();
+	lineupArtifact.push(shuffleArray(shopArtifact).splice(0, 1)[0]);
+	//レア度別に値段を決める
+	lineupArtifact.forEach((artifact) => {
+		const price = artifactLineupPrice[artifact.rarity];
+		let randomPrice = Math.floor(
+			Math.random() * (price.maxPrice - price.minPrice) + price.minPrice
+		);
+		selectArtifacts.push({
+			id: index,
+			stock: true,
+			artifact: artifact,
+			originPrice: randomPrice,
+			price: randomPrice,
+		});
+		index++;
+	});
+	return selectArtifacts;
+}
+
+/*******************************************************/
+/* restockArtifactLineup：ショップラインナップ再入荷関数
+/*******************************************************/
+function restockArtifactLineup(artifactsInfo){
+	const selectChara = getLocalStorage(keySelectChara);
+	const selectArtifacts = [];
+	// 通常アーティファクトのフィルタリング
+	const filteringArtifact = filteringNormalArtifact();
+	// ショップアーティファクトのフィルタリング
+	const shopArtifact = filteringShopArtifact();
+	const artifactLineup = [
+		filteringArtifact, filteringArtifact, shopArtifact
+	];
+	artifactsInfo.forEach((artifactInfo) => {
+		if(!artifactInfo.stock){
+			const selectArtifact = shuffleArray(artifactLineup[artifactInfo.id]).shift();
+			if(selectArtifact !== undefined){
+				const price = artifactLineupPrice[selectArtifact.rarity];
+				let randomPrice = Math.floor(
+					Math.random() * (price.maxPrice - price.minPrice) + price.minPrice
+				);
+				artifactInfo.stock = true;
+				artifactInfo.artifact = selectArtifact;
+				artifactInfo.originPrice = randomPrice;
+				artifactInfo.price = randomPrice;
+			}
+		}
+	});
+}
+/*******************************************************/
+/* filteringNormalArtifact：通常アーティファクトのフィルタリング
+/*******************************************************/
+function filteringNormalArtifact(){
+	const selectChara = getLocalStorage(keySelectChara);
 	let filteringArtifact = Object.values(normalArtifact).filter((artifact) => 
 		artifact.rarity === artifactRarity.common ||
 		artifact.rarity === artifactRarity.uncommon ||
@@ -1372,8 +1430,13 @@ function decideArtifactLineup(){
 			artifact.dedicated === artifactdedicated.djeeta
 		);
 	}
-	const lineupArtifact = shuffleArray(filteringArtifact).splice(0, 2);
-	// ショップアーティファクトのフィルタリング
+	return filteringArtifact;
+}
+/*******************************************************/
+/* filteringShopArtifact：ショップアーティファクトのフィルタリング
+/*******************************************************/
+function filteringShopArtifact(){
+	const selectChara = getLocalStorage(keySelectChara);
 	let shopArtifact = Object.values(normalArtifact).filter((artifact) => 
 		artifact.rarity === artifactRarity.shop
 	).filter((artifact) => {
@@ -1391,24 +1454,9 @@ function decideArtifactLineup(){
 			artifact.dedicated === artifactdedicated.djeeta
 		);
 	}
-	lineupArtifact.push(shuffleArray(shopArtifact).splice(0, 1)[0]);
-	//レア度別に値段を決める
-	lineupArtifact.forEach((artifact) => {
-		const price = lineupPrice[artifact.rarity];
-		let randomPrice = Math.floor(
-			Math.random() * (price.maxPrice - price.minPrice) + price.minPrice
-		);
-		selectArtifacts.push({
-			id: index,
-			stock: true,
-			artifact: artifact,
-			originPrice: randomPrice,
-			price: randomPrice,
-		});
-		index++;
-	});
-	return selectArtifacts;
+	return shopArtifact;
 }
+
 
 /*******************************************************/
 /* decideArtifactReward：報酬用アーティファクト決定関数
@@ -1481,6 +1529,13 @@ function decideBossArtifactReward(){
 /*****************************************************************************/
 /* アーティファクト効果
 /*****************************************************************************/
+
+function effectCount(amount){
+	if('Count' in amount){
+		amount.Count++;
+	}
+	return true;
+}
 /*******************************************************/
 /* ボスとの戦闘開始時、HP〇回復。
 /*******************************************************/

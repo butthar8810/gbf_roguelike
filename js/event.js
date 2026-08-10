@@ -178,11 +178,16 @@ function shopCardList(){
 		}
 		setLocalStorage(keyContinueShopLineup, selectCardsInfo);
 	}
+	//再入荷する（アーティファクトがある場合）
 	const newArrival = myArtifacts.find((artifact) => 
 		artifact.name === normalArtifact.newArrival.name);
 	if(newArrival){
-		RestockShopExclusiveCardLineup(selectCardsInfo.exclusive);
-		RestockShopCommonCardLineup(selectCardsInfo.common);
+		//専用カードの再入荷
+		restockShopExclusiveCardLineup(selectCardsInfo.exclusive);
+		//無色カードの再入荷
+		restockShopCommonCardLineup(selectCardsInfo.common);
+		//アーティファクトの再入荷
+		restockArtifactLineup(selectCardsInfo.artifacts)
 	}
 	console.log(selectCardsInfo);
 	//値段を更新する

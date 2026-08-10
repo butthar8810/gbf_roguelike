@@ -6724,7 +6724,7 @@ function decideCardReward(lotteryLevel){
 /*****************************************************/
 /* ショップラインナップ決定関数
 /*****************************************************/
-const exclusiveInfo = {
+const exclusiveLineupInfo = {
 	common:{weight:54, info:{rarity: rarity.common, minPrice: 48, maxPrice: 53}},
 	uncommon:{weight:37, info:{rarity: rarity.uncommon, minPrice: 71, maxPrice: 79}},
 	rare:{weight:9, info:{rarity: rarity.rare, minPrice: 143, maxPrice: 158}},
@@ -6735,7 +6735,7 @@ function decideShopExclusiveCardLineup(){
 	const selectChara = getLocalStorage(keySelectChara);
 	const selectCards = [];
 	let selectCardList = [];
-	const totalWeight = Object.values(exclusiveInfo).reduce((sum, item) => sum + item.weight, 0);
+	const totalWeight = Object.values(exclusiveLineupInfo).reduce((sum, item) => sum + item.weight, 0);
 	let index = 0;
 	let selectRarityInfo = {};
 	//専用カードのラインナップ
@@ -6750,7 +6750,7 @@ function decideShopExclusiveCardLineup(){
 	while(index < 5){
 		// レアリティ抽選
 		let random = Math.floor(Math.random() * totalWeight);
-		for (const rarity of Object.values(exclusiveInfo)) {
+		for (const rarity of Object.values(exclusiveLineupInfo)) {
 			if (random < rarity.weight) {
 				selectRarityInfo = rarity.info;
 				break;
@@ -6790,11 +6790,11 @@ function decideShopExclusiveCardLineup(){
 /*****************************************************/
 /* ショップラインナップ再入荷関数
 /*****************************************************/
-function RestockShopExclusiveCardLineup(CardsInfo){
+function restockShopExclusiveCardLineup(CardsInfo){
 	const selectChara = getLocalStorage(keySelectChara);
 	let selectCardList = [];
 	let selectRarityInfo = {};
-	const totalWeight = Object.values(exclusiveInfo).reduce((sum, item) => sum + item.weight, 0);
+	const totalWeight = Object.values(exclusiveLineupInfo).reduce((sum, item) => sum + item.weight, 0);
 	//専用カードのラインナップ
 	if (selectChara === selectCharacter.gran.name){
 		selectCardList = deepCopyCardList(Object.values(granCardList));
@@ -6808,7 +6808,7 @@ function RestockShopExclusiveCardLineup(CardsInfo){
 		while(!cardInfo.stock){
 			// レアリティ抽選
 			let random = Math.floor(Math.random() * totalWeight);
-			for (const rarity of Object.values(exclusiveInfo)) {
+			for (const rarity of Object.values(exclusiveLineupInfo)) {
 				if (random < rarity.weight) {
 					selectRarityInfo = rarity.info;
 					break;
@@ -6842,7 +6842,7 @@ function RestockShopExclusiveCardLineup(CardsInfo){
 /*****************************************************/
 /* ショップラインナップ決定関数
 /*****************************************************/
-const commonInfo = [
+const commonLineupInfo = [
 	{rarity: rarity.uncommon, minPrice: 82, maxPrice: 90},
 	{rarity: rarity.rare, minPrice: 164, maxPrice: 182},
 ];
@@ -6850,7 +6850,7 @@ function decideShopCommonCardLineup(){
 	const selectCommonCards = [];
 	let index = 0
 	//共通カードのラインナップ
-	commonInfo.forEach((info) => {
+	commonLineupInfo.forEach((info) => {
 		let randomPrice = Math.floor(
 			Math.random() * (info.maxPrice - info.minPrice) + info.minPrice
 		);
@@ -6875,34 +6875,20 @@ function decideShopCommonCardLineup(){
 /*****************************************************/
 /* ショップラインナップ再入荷関数
 /*****************************************************/
-function RestockShopCommonCardLineup(CardsInfo){
-	console.log(CardsInfo);
+function restockShopCommonCardLineup(CardsInfo){
 	let selectCardList = [];
 	let selectRarityInfo = {};
-	const totalWeight = Object.values(exclusiveInfo).reduce((sum, item) => sum + item.weight, 0);
+	const totalWeight = Object.values(exclusiveLineupInfo).reduce((sum, item) => sum + item.weight, 0);
 	//共通カードのラインナップ
 	CardsInfo.forEach((cardInfo) => {
 		while(!cardInfo.stock){
 			// レアリティ抽選
-			let random = Math.floor(Math.random() * totalWeight);
-			for (const rarity of Object.values(exclusiveInfo)) {
-				if (random < rarity.weight) {
-					selectRarityInfo = rarity.info;
-					break;
-				}
-				random -= rarity.weight;
-			}
 			let randomPrice = Math.floor(
 				Math.random() * 
-				(selectRarityInfo.maxPrice - selectRarityInfo.minPrice) + selectRarityInfo.minPrice
+				(commonLineupInfo[cardInfo.id].maxPrice - commonLineupInfo[cardInfo.id].minPrice) + commonLineupInfo[cardInfo.id].minPrice
 			);
-			const filteringCardList = selectCardList
-				.filter((card) => card.rarity === selectRarityInfo.rarity)
-				.filter((card) => card.type === lineupType[cardInfo.id])
-				.filter((card) => {
-					return !CardsInfo.find((lineup) => lineup.card.name === card.name);
-				});
-			console.log(filteringCardList);
+			const copyCardList = deepCopyCardList(Object.values(commonCardList));
+			const filteringCardList = copyCardList.filter((card) => card.rarity === commonLineupInfo[cardInfo.id].rarity);
 			if(filteringCardList.length > 0){
 				const selectCard = shuffleArray(filteringCardList).shift();
 				if(selectCard !== undefined){
@@ -8521,14 +8507,22 @@ function calcDamage(attackCount, targetEnemy, AttackUpMag = 1){
 		attackTwiceFlag = false;
 	}
 	if (Object.keys(targetEnemy).length !== 0) {
-		// 防御力ダウン（被ダメ50%上昇）
+		// 防御力アップ（被ダメ50%減少）
 		const defenseUp = targetEnemy.currentStatus.status
 			.find((status) => status.id === buffStatus.defenseUp.id);
 		if (defenseUp){magnification -= 0.5;}
-		// 防御力アップ（被ダメ50%減少）
+		// 防御力ダウン（被ダメ50%上昇）
 		const defenseDown = targetEnemy.currentStatus.status
 			.find((status) => status.id === debuffStatus.defenseDown.id);
-		if (defenseDown){magnification += 0.5;}
+		if (defenseDown){
+			const powerfulDefenseDown = myArtifacts.find((artifact) => 
+				artifact.name === normalArtifact.powerfulDefenseDown.name);
+			if(powerfulDefenseDown){
+				magnification += 0.75;
+			} else {
+				magnification += 0.5;
+			}
+		}
 	}
 	totalAttack = Math.floor(totalAttack * magnification);
 
