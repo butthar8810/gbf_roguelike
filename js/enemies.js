@@ -1433,12 +1433,17 @@ function enemyActionAttack(enemyInfo, playerInfo, animationFlag, attackCount){
 		}
 	}
 	if(totalAttack > 0){
+		//ブロックできなかった5以下のダメージを1に軽減する。
 		const mitigation = myArtifacts.find((artifact) => 
 			artifact.name === normalArtifact.mitigation.name);
 		if(mitigation && totalAttack <= 5){
 			totalAttack = 1;
 		}
-
+		const armor = playerInfo.statuses
+			.find((status) => status.id === buffStatus.armor.id);
+		if(armor){
+			armor.amount--;
+		}
 		damageHP(totalAttack, playerInfo, animationFlag);
 	}
 	// 「反射」の効果
@@ -1476,7 +1481,7 @@ function enemyActionAttack(enemyInfo, playerInfo, animationFlag, attackCount){
 		enemyInfo.currentStatus.remainHP -= playerCounter;
 	}
 	
-	// アーティファクトの効果
+	// ダメージを受けるたび、敵に3の反撃ダメージを与える。(アーティファクト)
 	const Counter = myArtifacts.find((artifact) => 
 		artifact.name === normalArtifact.Counter.name);
 	if(Counter){

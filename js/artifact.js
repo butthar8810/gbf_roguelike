@@ -749,12 +749,12 @@ const normalArtifact = {
 		name: 'オメガの器', 
 		rarity: artifactRarity.rare,
 		dedicated: artifactdedicated.common,
-		effect: '戦闘開始時、プレートアーマー4を得る。', 
+		effect: '戦闘開始時、ガード4を得る。', 
 		image: 'images/artifact/Omega.png', 
 		firstFunc: 'effectBuff',
 		amount: {
-			buff: 1,
-			buffType: 'damageCut',
+			buff: 4,
+			buffType: 'armor',
 		}
 	},
 	retentionBlock: {
@@ -770,7 +770,9 @@ const normalArtifact = {
 		dedicated: artifactdedicated.common,
 		effect: '7ターン目の終了時、すべての敵に52ダメージを与える。', 
 		image: 'images/artifact/StarFragment.png', 
+		turnEndFunc: 'effectAttackTurn',
 		amount: {
+			turn: 7,
 			attack: 52,
 		}
 	},
@@ -1562,6 +1564,16 @@ function effectRecoveryIfHalfLife(amount){
 function effectRecoveryEveryDeck(amount){
 	if( 'recovery' in amount ){
 		recoveryHP(Math.ceil(myOriginalDeck.length/5) * amount.recovery);
+	}
+	return true;
+}
+/*******************************************************/
+/* 〇ターン目終了時、〇ダメージを与える。
+/*******************************************************/
+function effectAttackTurn(amount){
+	console.log('effectDefenseTurn');
+	if('attack' in amount && 'turn' in amount && currentTurn === amount.turn){
+		actionAllAttackSimple(amount.attack, otherPaly)
 	}
 	return true;
 }

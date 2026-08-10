@@ -681,9 +681,17 @@ function startTurnStatuses(playerInfo, enemiesInfo, animateFlag){
 		.find((status) => status.id === buffStatus.hero.id);
 	const lightWall = playerInfo.statuses
 		.find((status) => status.id === buffStatus.lightWall.id);
-	if (!hero && !lightWall){
+	const retentionBlock = myArtifacts.find((artifact) => 
+		artifact.name === normalArtifact.retentionBlock.name);
+	if (!hero && !lightWall && !retentionBlock){
 		// ブロックを解除する
 		playerInfo.block = 0;
+	} else if(retentionBlock){
+		if(playerInfo.block < 15){
+			playerInfo.block = 0;
+		} else {
+			playerInfo.block -= 15;
+		}
 	}
 	// 「次ターンブロック」でブロックを得る
 	const nextTurnBlock = playerInfo.statuses
@@ -693,7 +701,14 @@ function startTurnStatuses(playerInfo, enemiesInfo, animateFlag){
 	}
 
 	// エネルギーを回復する
-	playerInfo.remainEnergy = playerInfo.maxEnergy;
+	const AccumulationEnergy = myArtifacts.find((artifact) => 
+		artifact.name === normalArtifact.AccumulationEnergy.name);
+	if(AccumulationEnergy){
+		//使用しなかったエナジーが蓄積されていく。
+		playerInfo.remainEnergy += playerInfo.maxEnergy;
+	}else{
+		playerInfo.remainEnergy = playerInfo.maxEnergy;
+	}
 	// 「活性」で追加回復
 	const activity = playerInfo.statuses
 		.find((status) => status.id === buffStatus.activity.id);
@@ -1041,6 +1056,9 @@ function endTurn(){
 				status.amount = 0;
 				break;
 			case buffStatus.barrier.id://「バリア」の効果
+				actionBlock(status.amount, otherPaly);
+				break;
+			case buffStatus.armor.id://「アーマー」の効果
 				actionBlock(status.amount, otherPaly);
 				break;
 			case buffStatus.madness.id://「狂化」の効果

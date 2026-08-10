@@ -8594,15 +8594,23 @@ function calcAttackDamageToTarget(AttackDamage, target, attackCardFlag){
 			target.currentStatus.block = 0;
 		}
 	}
-	//自分がアタックで与える、ブロックされなかった4以下のダメージを5ダメージに増加する。
-	const damageBuff = myArtifacts.find((Artifact) => 
-		Artifact.name === normalArtifact.damageBuff.name);
-	if(damageBuff && attackCardFlag && totalAttack < 5 && totalAttack > 0){
-		totalAttack = 5;
-	}
-	target.currentStatus.remainHP -= totalAttack;
 	//実ダメージを与えた場合
 	if(totalAttack > 0){
+		
+		//自分がアタックで与える、ブロックされなかった4以下のダメージを5ダメージに増加する。
+		const damageBuff = myArtifacts.find((Artifact) => 
+			Artifact.name === normalArtifact.damageBuff.name);
+		if(damageBuff && attackCardFlag && totalAttack < 5){
+			totalAttack = 5;
+		}
+		//ダメージ発生
+		target.currentStatus.remainHP -= totalAttack;
+
+		const armor = target.currentStatus.status
+			.find((status) => status.id === debuffStatus.armor.id);
+		if(armor){
+			armor.amount--;
+		}
 		const sleep = target.currentStatus.status
 			.find((status) => status.id === debuffStatus.sleep.id);
 		if(sleep){
