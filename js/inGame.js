@@ -2151,6 +2151,13 @@ function allEnemiesDefeated(){
 		const selectCards = decideCardReward(currentLevel);
 		rewards.push(selectCards);
 
+		//通常の敵が追加でカードをドロップするようになる。
+		const AdditionalRemuneration = myArtifacts.find((artifact) => 
+			artifact.name === normalArtifact.AdditionalRemuneration.name);
+		if(AdditionalRemuneration && currentLevel === stageLevel.normal){
+			const selectCards = decideCardReward(currentLevel);
+			rewards.push(selectCards);
+		}
 
 		// アーティファクト報酬
 		let selectArtifact;

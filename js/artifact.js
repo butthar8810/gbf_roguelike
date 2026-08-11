@@ -693,7 +693,6 @@ const normalArtifact = {
 		image: 'images/artifact/ProofOfKing.png',
 		firstFunc: 'effectRedraw',
 		amount: {
-			
 			count: 3,
 		}
 	},
@@ -782,9 +781,11 @@ const normalArtifact = {
 		dedicated: artifactdedicated.common,
 		effect: '休憩場所で筋力1を獲得。(最大3回)', 
 		image: 'images/artifact/FantosmikFenftooth.png', 
-		firstFunc: '',
+		firstFunc: 'effectBuffWithCount',
 		amount: {
-			draw: 2,
+			Count: 0,
+			max: 3,
+			buffType: 'attackUp',
 		}
 	},
 	AdditionalRemuneration: {
@@ -793,10 +794,6 @@ const normalArtifact = {
 		dedicated: artifactdedicated.common,
 		effect: '通常の敵が追加でカードをドロップするようになる。', 
 		image: 'images/artifact/FantosmikMaylet.png', 
-		firstFunc: '',
-		amount: {
-			draw: 2,
-		}
 	},
 	firstDisable: {
 		name: '幻麗の玉石', 
@@ -804,9 +801,10 @@ const normalArtifact = {
 		dedicated: artifactdedicated.common,
 		effect: '戦闘中、最初のHPの損失を無効化する。', 
 		image: 'images/artifact/FantosmikGemme.png', 
-		firstFunc: '',
+		firstFunc: 'effectBuff',
 		amount: {
-			draw: 2,
+			buff: 1,
+			buffType: 'illusion',
 		}
 	},
 	restRemove: {
@@ -820,6 +818,7 @@ const normalArtifact = {
 			draw: 2,
 		}
 	},
+	//未実装
 	cursePower: {
 		name: '幻麗の紋章', 
 		rarity: artifactRarity.rare,
@@ -1317,7 +1316,7 @@ function setupArtifact(){
 			getArtifact(normalArtifact.startDraw);
 			getArtifact(normalArtifact.eye);
 //			getArtifact(normalArtifact.newArrival);
-			getArtifact(normalArtifact.card);
+			getArtifact(normalArtifact.restRemove);
 		}
 		setLocalStorage(keyContinueArtifact, myArtifacts);
 	}
@@ -1531,11 +1530,26 @@ function decideBossArtifactReward(){
 /*****************************************************************************/
 /* アーティファクト効果
 /*****************************************************************************/
-
+/*******************************************************/
+/* カウントを増やす
+/*******************************************************/
 function effectCount(amount){
 	if('Count' in amount){
 		amount.Count++;
 	}
+	endAction();
+	return true;
+}
+/*******************************************************/
+/* ボスとの戦闘開始時、HP〇回復。
+/*******************************************************/
+function effectBuffWithCount(amount){
+	// 防御力ダウン{D}を与える。
+	console.log('effectBuff');
+	if('Count' in amount && 'buffType' in amount ){
+		actionStatusBuf(buffStatus[amount.buffType], amount.Count);
+	}
+	endAction();
 	return true;
 }
 /*******************************************************/
@@ -1545,6 +1559,7 @@ function effectRecoveryBoss(amount){
 	if('recovery' in amount && currentLevel === stageLevel.boss){
 		recoveryHP(amount.recovery);
 	}
+	endAction();
 	return true;
 }
 /*******************************************************/
@@ -1555,6 +1570,7 @@ function effectRecoveryIfHalfLife(amount){
 		playerStatus.remainHP/playerStatus.maxHP <= 0.5){
 		recoveryHP(amount.recovery);
 	}
+	endAction();
 	return true;
 }
 
@@ -1565,6 +1581,7 @@ function effectRecoveryEveryDeck(amount){
 	if( 'recovery' in amount ){
 		recoveryHP(Math.ceil(myOriginalDeck.length/5) * amount.recovery);
 	}
+	endAction();
 	return true;
 }
 /*******************************************************/
@@ -1575,6 +1592,7 @@ function effectAttackTurn(amount){
 	if('attack' in amount && 'turn' in amount && currentTurn === amount.turn){
 		actionAllAttackSimple(amount.attack, otherPaly)
 	}
+	endAction();
 	return true;
 }
 /*******************************************************/
@@ -1585,6 +1603,7 @@ function effectDefenseTurn(amount){
 	if('block' in amount && 'turn' in amount && currentTurn === amount.turn){
 		actionBlock(amount.block, otherPaly);
 	}
+	endAction();
 	return true;
 }
 /*******************************************************/
@@ -1598,6 +1617,7 @@ function effectGetMaxHP(amount){
 		setLocalStorage(keyContinuePlayerStatus, playerStatus);
 	}
 	updateHPDom();
+	endAction();
 	return true;
 }
 
@@ -1609,6 +1629,7 @@ function effectDefenseForNoBlock(amount){
 	if('block' in amount && playerStatus.block === 0){
 		actionBlockSimple(amount.block);
 	}
+	endAction();
 	return true;
 }
 
@@ -1624,6 +1645,8 @@ function effectBuffEvery(amount){
 			actionStatusBuf(buffStatus[amount.buffType], amount.buff);
 		}
 	}
+	endAction();
+	return true;
 }
 /*******************************************************/
 /* 〇ターンごとに、〇エナジーを得る。
@@ -1637,7 +1660,7 @@ function effectGetEnergyEvery(amount){
 			amount.Count = 0;
 		}
 	}
-	console.log(amount);
+	endAction();
 	return true;
 }
 /*******************************************************/
@@ -1655,7 +1678,7 @@ function effectDrawEvery(amount){
 			amount.Count = 0;
 		}
 	}
-	console.log(amount);
+	endAction();
 	return true;
 }
 /*******************************************************/
@@ -1670,7 +1693,7 @@ function effectAttaclTwiceEvery(amount){
 			amount.Count = 0;
 		}
 	}
-	console.log(amount);
+	endAction();
 	return true;
 }
 /*******************************************************/
@@ -1682,6 +1705,7 @@ function effectDefenseEveryAttack(amount){
 		playerStatus.Count.playAttackPerTurn%3 === 0){
 		actionBlock(amount.block, otherPaly);
 	}
+	endAction();
 	return true;
 }
 /*******************************************************/
@@ -1693,6 +1717,8 @@ function effectBuffEveryAttack(amount){
 		playerStatus.Count.playAttackPerTurn%3 === 0){
 		actionStatusBuf(buffStatus[amount.buffType], amount.buff);
 	}
+	endAction();
+	return true;
 }
 /*******************************************************/
 /* 1ターンの間に「スキル」を3枚プレイするたび、敵全体に5ダメージを与える。
@@ -1703,6 +1729,8 @@ function effectAttackEveryskill(amount){
 		playerStatus.Count.playSkillPerTurn%3 === 0){
 		actionAttack(amount.attack);
 	}
+	endAction();
+	return true;
 }
 /*******************************************************/
 /* このターン、「アタック」を1枚もプレイしなかった場合、次のターン開始時、1エナジーを得る。
@@ -1712,6 +1740,8 @@ function effectGetEnergyNoAttack(amount){
 	if('energy' in amount && playerStatus.Count.playAttackPerTurn === 0){
 		playerStatus.remainEnergy += amount.energy;
 	}
+	endAction();
+	return true;
 }
 /*******************************************************/
 /* 戦闘中初めてHPを失うと、カードを3枚引く。
@@ -1724,6 +1754,8 @@ function effectDrawLossHP(amount){
 			animateDrawDeck(card);
 		});
 	}
+	endAction();
+	return true;
 }
 
 /*******************************************************/
@@ -1735,6 +1767,7 @@ function effectGetEnergyFlag(amount){
 		playerStatus.remainEnergy += amount.energy;
 		amount.flag = false;
 	}
+	endAction();
 	return true;
 }
 /*******************************************************/
@@ -1753,6 +1786,8 @@ function effectChooseCards(amount){
 	}
 	selectCardRewardForArtifactDom(rewards[0]);
 	$('.result-modal').addClass('active');
+	endAction();
+	return true;
 }
 /*******************************************************/
 /* 獲得時に、ランダムな2枚の「〇〇」をアップグレードする。
@@ -1787,6 +1822,7 @@ function effectRandomUpgrade(amount){
 		});
 		setupOriginalDeckBtnDom();
 	}
+	endAction();
 	return true;
 }
 
@@ -1801,6 +1837,7 @@ function effectRandomCostDown(amount){
 		return false;
 	}
 	card.amount.tmpCost = 0;
+	endAction();
 	return true;
 }
 /*******************************************************/
@@ -1843,4 +1880,6 @@ function trashAndDrawCard(){
 		updateDeckDom();
 	});
 	startPhase(phase.action);
+	endAction();
+	return true;
 }

@@ -16,6 +16,7 @@ function recoveryHP(recovery){
 /*******************************************************/
 function damageHP(damage, playerInfo, animationFlag = false){
 	console.log(`Damage: ${damage}`);
+	let totalDamage = damage;
 	if(!animationFlag){
 		playerInfo.Count.HPDownCount++;
 		console.log(`HPDownCount: ${playerInfo.Count.HPDownCount}`);
@@ -30,20 +31,38 @@ function damageHP(damage, playerInfo, animationFlag = false){
 			}
 		});
 	}
-	setLocalStorage(keyContinuePlayerStatus, playerStatus);
-	if (playerInfo.remainHP > damage){
-		playerInfo.remainHP -= damage;
-	} else {
-		playerInfo.remainHP -= 0;
-		//戦闘不能になりそうになると最大HPの50%を回復する(一度きり)
-		const Reraise = myArtifacts.find((artifact) => 
-			artifact.name === normalArtifact.Reraise.name);
-		if(Reraise){
-			playerInfo.remainHP = Math.floor(playerInfo.maxHP / 2);
-			return true;
+
+	//次のHPの喪失を{X}回防ぐ。
+	const illusion = playerInfo.statuses
+		.find((status) => status.id === buffStatus.illusion.id);
+	if(illusion){
+		illusion.amount--;
+	}else if(totalDamage > 0){
+		const HPMitigation = myArtifacts.find((artifact) => 
+			artifact.name === normalArtifact.HPMitigation.name);
+		if(HPMitigation){
+			totalDamage--;
 		}
-		console.log('敗北処理');
+
+		//HPの喪失
+		setLocalStorage(keyContinuePlayerStatus, playerStatus);
+		if (playerInfo.remainHP > totalDamage){
+			playerInfo.remainHP -= totalDamage;
+		} else {
+			playerInfo.remainHP -= 0;
+			//戦闘不能になりそうになると最大HPの50%を回復する(一度きり)
+			const Reraise = myArtifacts.find((artifact) => 
+				artifact.name === normalArtifact.Reraise.name);
+			if(Reraise){
+				playerInfo.remainHP = Math.floor(playerInfo.maxHP / 2);
+				return true;
+			}
+			console.log('敗北処理');
+		}
 	}
+	playerInfo.statuses = playerInfo.statuses.filter((status) => {
+		return status.amount !== 0;
+	});
 	return true;
 }
 /*******************************************************/

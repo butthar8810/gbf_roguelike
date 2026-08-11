@@ -46,8 +46,8 @@ function selectRestAction(){
 		const btn = appendTalkingBtn('塔へ上る');
 		btn.click((e) => {
 			setLocalStorage(keyContinuePlayerStatus, playerStatus);
-			console.log(myOriginalDeck);
 			setLocalStorage(keyContinueOriginalDeck, myOriginalDeck);
+			setLocalStorage(keyContinueArtifact, myArtifacts);
 			removeLocalStorage(keyContinueReward);
 			climbTowerContinue();
 		});
@@ -86,6 +86,79 @@ function selectRestAction(){
 			$('.enhance-content').append(enhanceCardDiv);
 		});
 	});
+	const restAttackUp = myArtifacts.find((artifact) => 
+		artifact.name === normalArtifact.restAttackUp.name);
+	if(restAttackUp && restAttackUp.amount.Count < restAttackUp.amount.max){
+		const thirdBtn = appendTalkingBtn(`鍛錬する(筋力:${restAttackUp.amount.Count}/${restAttackUp.amount.max})`);
+		thirdBtn.click((e) => {
+			deleteTalkingBtn();
+			restAttackUp.amount.Count++;
+			updateArtifactDom();
+			const btn = appendTalkingBtn('塔へ上る');
+			btn.click((e) => {
+				setLocalStorage(keyContinuePlayerStatus, playerStatus);
+				setLocalStorage(keyContinueOriginalDeck, myOriginalDeck);
+				setLocalStorage(keyContinueArtifact, myArtifacts);
+				removeLocalStorage(keyContinueReward);
+				climbTowerContinue();
+			});
+		});
+	}
+	const restRemove = myArtifacts.find((artifact) => 
+		artifact.name === normalArtifact.restRemove.name);
+	if(restRemove){
+		const fourthBtn = appendTalkingBtn(`武器を解体する`);
+		fourthBtn.click((e) => {
+			$('.black-back-area').addClass('active');
+			$('.delete-area').addClass('active');
+			$('.delete-modal-body').html('');
+			myOriginalDeck.forEach((card) => {
+				const deleteCardDiv = createCardDom(card);
+				deleteCardDiv
+					.attr('id', `shop-card${card.id}`)
+					.addClass('shop-card')
+					.click(() => {
+						const index = findIndexTemporaryArea('id', card.id);
+						if (index === -1) {
+							if (tmpArea.length < 1){
+								pushTemporaryArea(card);
+								deleteCardDiv.addClass('select');
+							} else {
+								const cancelCard = shiftTemporaryArea();
+								$(`#shop-card${cancelCard.id}`).removeClass("select");
+								pushTemporaryArea(card);
+								deleteCardDiv.addClass("select");
+							}
+						} else {
+							spliceTemporaryArea(index);
+							deleteCardDiv.removeClass("select");
+						}
+					});
+				$('.delete-modal-body').append(deleteCardDiv);
+			});
+			$('.delete-cancel-btn').off();
+			$('.delete-cancel-btn')
+				.click(() => {
+					$('.black-back-area').removeClass('active');
+					$('.delete-area').removeClass('active');
+					$('.delete-modal-body').html('');
+				});
+			$('.delete-btn').off();
+			$('.delete-btn')
+				.click(() => {
+					deleteTalkingBtn();
+					deleteCardInRest();
+					const btn = appendTalkingBtn('塔へ上る');
+					btn.click((e) => {
+						setLocalStorage(keyContinuePlayerStatus, playerStatus);
+						setLocalStorage(keyContinueOriginalDeck, myOriginalDeck);
+						setLocalStorage(keyContinueArtifact, myArtifacts);
+						removeLocalStorage(keyContinueReward);
+						climbTowerContinue();
+					});
+				});
+		});
+	}
 }
 
 /*******************************************************/
@@ -100,7 +173,9 @@ function exchangeEnhancedCard(card, enhancedCard){
 	$('.before').addClass('hidden');
 	$('.arrow-icon').addClass('hidden');
 	setTimeout(() => {
+		setLocalStorage(keyContinuePlayerStatus, playerStatus);
 		setLocalStorage(keyContinueOriginalDeck, myOriginalDeck);
+		setLocalStorage(keyContinueArtifact, myArtifacts);
 		$('.black-back-area').removeClass('active');
 		$('.enhance-area').removeClass('active');
 		$('.enhance-content').html('');
@@ -111,7 +186,32 @@ function exchangeEnhancedCard(card, enhancedCard){
 		climbTowerContinue();
 	}, 1000);
 }
-
+/*******************************************************/
+/* 削除イベント（決定後）
+/*******************************************************/
+function deleteCardInRest(card, enhancedCard){
+	if(tmpArea.length === 0){
+		return false;
+	}
+	const deleteCards = deleteAllTemporaryArea();
+	setLocalStorage(keyContinueTemporary, tmpArea);
+	deleteCards.forEach((deleteCard) => {
+		const index = findIndexOriginalDeck('id', deleteCard.id);
+		if (index === -1) {
+			return false;
+		}
+		const card = spliceOriginalDeck(index);
+		if (card === undefined) {
+			return false;
+		}
+	});
+	setupOriginalDeckBtnDom();
+	
+	$('.black-back-area').removeClass('active');
+	$('.delete-area').removeClass('active');
+	$('.delete-modal-body').html('');
+	return true;
+}
 /*****************************************************************************************/
 /* ショップイベント
 /*****************************************************************************************/
@@ -478,6 +578,7 @@ function buyDeleteService(deleteInfo){
 			return false;
 		}
 	});
+	setupOriginalDeckBtnDom();
 	deleteInfo.stock = false;
 	playerStatus.Count.deleteServiceCount++;
 	setLocalStorage(keyContinueOriginalDeck, myOriginalDeck);

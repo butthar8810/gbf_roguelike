@@ -738,7 +738,7 @@ function updatePlayerStatusDom(argPlayerStatus){
 	});
 }
 /*******************************************************/
-/* updatePlayerStatusDom：エネミーエリアを生成
+/* updateEnemyAreaDom：エネミーエリアを生成
 /*******************************************************/
 function updateEnemyAreaDom(argEnemies, omenFlag = false){
 	console.log('updateEnemyAreaDom');

@@ -8607,7 +8607,7 @@ function calcAttackDamageToTarget(AttackDamage, target, attackCardFlag){
 		target.currentStatus.remainHP -= totalAttack;
 
 		const armor = target.currentStatus.status
-			.find((status) => status.id === debuffStatus.armor.id);
+			.find((status) => status.id === buffStatus.armor.id);
 		if(armor){
 			armor.amount--;
 		}
