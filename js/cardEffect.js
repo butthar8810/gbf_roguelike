@@ -6625,8 +6625,8 @@ function setupDeck(){
 			addCardToOriginalDeck(djeetaCardList.Wide, 5);
 			addCardToOriginalDeck(djeetaCardList.Defense, 5);
 			addCardToOriginalDeck(djeetaCardList.Pulverizer, 1);
-			addCardToOriginalDeck(commonCardList.Reflection, 2);
-			addCardToOriginalDeck(commonCardList.Deathcannon, 2);
+			addCardToOriginalDeck(commonCardList.Murky, 2);
+			addCardToOriginalDeck(commonCardList.BlackRabbit, 2);
 			addCardToOriginalDeck(testCardList.testAttack, 2);
 		}
 		setLocalStorage(keyContinueOriginalDeck, myOriginalDeck);
@@ -6924,7 +6924,15 @@ function effectAllAttack(amount){
 	endAction();
 	return true;
 }
-
+function effectRandomAttack(amount){
+	// ランダムな敵に{A}のダメージ与える。
+	console.log('effectRandomAttack');
+	if('attack' in amount){
+		actionRandomAttack(amount.attack, true);
+	}
+	endAction();
+	return true;
+}
 function effectAttackMagnification(amount){
 	// {A}のダメージを与える。このカードには3倍の筋力ボーナスが適用される。
 	console.log('effectAttackMagnification');
@@ -6936,7 +6944,7 @@ function effectAttackMagnification(amount){
 }
 function effectTimesAttack(amount){
 	// {A}のダメージを2回与える。
-	console.log('effectFourthAttack');
+	console.log('effectTimesAttack');
 	if('attack' in amount && 'count' in amount){
 		for(let i = 0; i < amount.count; i++){
 			actionAttack(amount.attack);
@@ -7426,7 +7434,7 @@ function effectRecovery(amount){
 	//回復
 	console.log('effectRecovery');
 	if('recovery' in amount){
-		recoveryHP(amount.recovery);
+		battleRecoveryHP(amount.recovery);
 	}
 	endAction();
 	return true;
@@ -8082,7 +8090,7 @@ function effectAttackAndRecovery(amount){
 		actionAttack(amount.attack);
 	}
 	if('recovery' in amount){
-		recoveryHP(amount.recovery);
+		battleRecoveryHP(amount.recovery);
 	}
 	endAction();
 	return true;
@@ -8303,7 +8311,7 @@ function effectAddRandomCommonCard(amount){
 	return true;
 }
 function effectAddRandomCommonEnhanceCard(amount){
-	// ランダムな「アタック」を3枚山札に加える。この戦闘中それらのコストは0。廃棄
+	// ランダムなアップグレードした無色のカードをX枚手札に加える。このターンそれらのカードのコストは0。
 	console.log('effectAddRandomCommonEnhanceCard');
 	const selectChara = getLocalStorage(keySelectChara);
 	if('variable' in amount){
@@ -8408,7 +8416,7 @@ function effectAllCardsUpgrade(amount){
 /* 呪いのカード専用効果関数
 /*************************************************************************************/
 function effectPlayCurse(amount){
-	recoveryHP(1);
+	battleDamageHP(1);
 	endAction();
 	return true;
 }
@@ -8676,7 +8684,7 @@ function actionAttackAndAbsorb(attackCount){
 	let totalAttack = calcDamage(attackCount, currentTarget);
 	// ブロック計算
 	const actualDamage = calcAttackDamageToTarget(totalAttack, currentTarget, true);
-	recoveryHP(actualDamage);
+	battleRecoveryHP(actualDamage);
 	// アニメーション
 	animatePlayerAttack();
 }
@@ -8698,7 +8706,7 @@ function actionAllAttackAndAbsorb(attackCount, attackCardFlag = true){
 	currentEnemies.forEach((enemy) => {
 		let totalAttack = calcDamage(attackCount, enemy);
 		const actualDamage = calcAttackDamageToTarget(totalAttack, enemy, attackCardFlag);
-		recoveryHP(actualDamage);
+		battleRecoveryHP(actualDamage);
 	});
 	// アニメーション
 	animatePlayerAttack();
@@ -8857,7 +8865,7 @@ function actionStatusBufForAnimate(playerInfo, buf, amountCount, animateFlag = t
 /* 自傷
 /*******************************************************/
 function actionLoseHP(loseHP){
-	damageHP(loseHP, playerStatus);
+	battleDamageHP(loseHP, playerStatus);
 	//「血の代償」の効果発動
 	const compensation = playerStatus.statuses
 		.find((status) => status.id === buffStatus.compensation.id);
@@ -8894,6 +8902,15 @@ function actionStatusDebufToTarget(debuf, amountCount, target, animateFlag = tru
 		if(AdditionalPoison){
 			// 毒の付与数を1増やす
 			totalAmount++;
+		}
+	}
+	// 防御ダウンの場合の追加効果
+	if(debuf.id === debuffStatus.defenseDown.id){
+		const defenseDownAndWeak = myArtifacts.find((artifact) => 
+			artifact.name === normalArtifact.defenseDownAndWeak.name);
+		if(defenseDownAndWeak){
+			// 恐怖を1付与する
+			actionStatusDebufToTarget(debuffStatus.weak, 1, target, animateFlag);
 		}
 	}
 	// すでに同じデバフがかかってないか確認

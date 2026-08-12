@@ -845,11 +845,11 @@ const normalArtifact = {
 		name: '金華名鏡', 
 		rarity: artifactRarity.rare,
 		dedicated: artifactdedicated.common,
-		effect: '300金貨獲得。', 
+		effect: '金貨300獲得。', 
 		image: 'images/artifact/JinyaoMingjing.png', 
-		firstFunc: '',
+		getFunc: 'effectGetMoney',
 		amount: {
-			draw: 2,
+			money: 300,
 		}
 	},
 	discardDraw: {
@@ -858,9 +858,9 @@ const normalArtifact = {
 		dedicated: artifactdedicated.common,
 		effect: 'カードを廃棄するたび、手札にランダムなカードを加える。', 
 		image: 'images/artifact/JinyaoYaodai.png', 
-		firstFunc: '',
+		discardFunc: 'effectAddRandomCard',
 		amount: {
-			draw: 2,
+			count: 1,
 		}
 	},
 	fewPlayDraw: {
@@ -869,11 +869,12 @@ const normalArtifact = {
 		dedicated: artifactdedicated.common,
 		effect: 'あなたが1ターンにプレイしたカードの枚数が3枚以下だったとき、次のターン開始時、カードを追加で3枚引く。', 
 		image: 'images/artifact/JinyaoQizhi.png', 
-		firstFunc: '',
+		turnFunc: 'effectDrawBelowThreePlay',
 		amount: {
-			draw: 2,
+			draw: 3,
 		}
 	},
+	//未実装
 	flying: {
 		name: '金華羽飾', 
 		rarity: artifactRarity.rare,
@@ -891,9 +892,9 @@ const normalArtifact = {
 		dedicated: artifactdedicated.gran,
 		effect: 'カードを廃棄するたび、敵全体に3ダメージを与える。グラン専用', 
 		image: 'images/artifact/JinyaoTongluo.png', 
-		firstFunc: '',
+		discardFunc: 'effectAllAttack',
 		amount: {
-			draw: 2,
+			attack: 3,
 		}
 	},
 	defenseDownAndWeak: {
@@ -902,10 +903,6 @@ const normalArtifact = {
 		dedicated: artifactdedicated.gran,
 		effect: '敵に防御ダウンを与えると恐怖1も与える。グラン専用', 
 		image: 'images/artifact/JinyaoMianzhao.png', 
-		firstFunc: '',
-		amount: {
-			draw: 2,
-		}
 	},
 	powerfulRecovery: {
 		name: '冷氷の葉', 
@@ -913,10 +910,6 @@ const normalArtifact = {
 		dedicated: artifactdedicated.gran,
 		effect: '戦闘中の回復を50％増加。グラン専用', 
 		image: 'images/artifact/FrozenFoliole.png', 
-		firstFunc: '',
-		amount: {
-			draw: 2,
-		}
 	},
 	everyTrashRandomAttack: {
 		name: '降引の像', 
@@ -924,6 +917,10 @@ const normalArtifact = {
 		dedicated: artifactdedicated.djeeta,
 		effect: 'ターン中にカードを1枚捨てるたび、ランダムな敵に3ダメージを与える。ジータ専用', 
 		image: 'images/artifact/GoddessFigurine.png', 
+		trashFunc: 'effectRandomAttack',
+		amount: {
+			attack: 3,
+		}
 	},
 	everyTrashBlock: {
 		name: '降呼の楔', 
@@ -931,6 +928,10 @@ const normalArtifact = {
 		dedicated: artifactdedicated.djeeta,
 		effect: 'ターン中にカードを1枚捨てるたび、3ブロックを得る。ジータ専用', 
 		image: 'images/artifact/HailingCusp.png', 
+		trashFunc: 'effectDefense',
+		amount: {
+			block: 3,
+		}
 	},
 	poisonInfection: {
 		name: 'ローズクリスタル', 
@@ -1315,8 +1316,8 @@ function setupArtifact(){
 		} else if (selectChara === selectCharacter.djeeta.name){
 			getArtifact(normalArtifact.startDraw);
 			getArtifact(normalArtifact.eye);
-//			getArtifact(normalArtifact.newArrival);
-			getArtifact(normalArtifact.restRemove);
+//			getArtifact(normalArtifact.discardDraw);
+			getArtifact(normalArtifact.fewPlayDraw);
 		}
 		setLocalStorage(keyContinueArtifact, myArtifacts);
 	}
@@ -1541,6 +1542,19 @@ function effectCount(amount){
 	return true;
 }
 /*******************************************************/
+/* 金貨を得る
+/*******************************************************/
+function effectGetMoney(amount){
+	console.log('effectGetMoney');
+	if('money' in amount){
+		playerStatus.money += amount.money;
+		
+	}
+	updateMoneyDom();
+	endAction();
+	return true;
+}
+/*******************************************************/
 /* ボスとの戦闘開始時、HP〇回復。
 /*******************************************************/
 function effectBuffWithCount(amount){
@@ -1557,7 +1571,7 @@ function effectBuffWithCount(amount){
 /*******************************************************/
 function effectRecoveryBoss(amount){
 	if('recovery' in amount && currentLevel === stageLevel.boss){
-		recoveryHP(amount.recovery);
+		battleRecoveryHP(amount.recovery);
 	}
 	endAction();
 	return true;
@@ -1568,7 +1582,7 @@ function effectRecoveryBoss(amount){
 function effectRecoveryIfHalfLife(amount){
 	if( 'recovery' in amount && 
 		playerStatus.remainHP/playerStatus.maxHP <= 0.5){
-		recoveryHP(amount.recovery);
+		battleRecoveryHP(amount.recovery);
 	}
 	endAction();
 	return true;
@@ -1882,4 +1896,54 @@ function trashAndDrawCard(){
 	startPhase(phase.action);
 	endAction();
 	return true;
+}
+/*******************************************************/
+/* 戦闘開始時、好きなカードを捨てて同じ枚数のカードを引く。
+/*******************************************************/
+function effectAddRandomCard(amount){
+	// ランダムな「アタック」を3枚山札に加える。この戦闘中それらのコストは0。廃棄
+	console.log('effectAddRandomCard');
+	const selectChara = getLocalStorage(keySelectChara);
+	if('count' in amount){
+		const displayCard = [];
+		for(let i = 0; i < amount.count; i++){
+			let selectCardList = [];
+			if (selectChara) {
+				if (selectChara === selectCharacter.gran.name){
+					selectCardList = Object.values(granCardList);
+				} else if (selectChara === selectCharacter.djeeta.name){
+					selectCardList = Object.values(djeetaCardList);
+				} else {
+					alert('別キャラが選択されています。');
+					window.location.href = 'index.html';
+				}
+			} else{
+				alert('キャラが選択されていません。');
+				window.location.href = 'index.html';
+			}
+			let selectCard = shuffleArray(selectCardList)
+			.filter((card) => 
+				card.rarity === rarity.common ||
+				card.rarity === rarity.uncommon ||
+				card.rarity === rarity.rare
+			).slice(0, 1)[0];
+			console.log(selectCard);
+			selectCard = deepCopyCard(selectCard);
+			pushHand(selectCard);
+			displayCard.push(selectCard);
+		}
+		animatePlayerAddHand(displayCard);
+	}
+	endAction();
+	return true;
+}
+
+function effectDrawBelowThreePlay(amount){
+	console.log('effectDrawBelowThreePlay');
+	if('draw' in amount && playerStatus.Count.playCardPerTurn <= 3){
+		const cards = drawCardFromDeck(amount.draw);
+		cards.forEach((card) => {
+			animateDrawDeck(card);
+		});
+	}
 }

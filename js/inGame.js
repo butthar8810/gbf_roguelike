@@ -1,4 +1,122 @@
 /*************************************************************************************/
+/* 戦闘中システム関数
+/*************************************************************************************/
+/*******************************************************/
+/* trashCardProcess：捨て札にする際の処理
+/*******************************************************/
+function trashCardProcess(trashCard){
+	console.log('trashCardProcess');
+	console.log(playerStatus);
+	if('trashFunc' in trashCard.amount && trashCard.amount.trashFunc !== ''){
+		pushStackCards({
+			func: trashCard.trashFunc,
+			amount: trashCard.amount,
+		});
+	}
+	if ('tmpCost' in trashCard.amount){
+		delete trashCard.amount.tmpCost
+	}
+
+	// 捨て誘発効果発動
+	myArtifacts.forEach((artifact) => {
+		if('trashFunc' in artifact){
+			if (artifact.trashFunc !== '') {
+				const storedFunc = globalThis[artifact.trashFunc];
+				if( typeof storedFunc === 'function'){
+					ret = storedFunc(artifact.amount);
+				} 
+			}
+		}
+	});
+	playerStatus.Count.trashCountPerTurn++;
+	pushTrash(trashCard);
+}
+/*******************************************************/
+/* discardCardProcess：廃棄する際の処理
+/*******************************************************/
+function discardCardProcess(discardCard){
+	//「無痛」の効果
+	const painless = playerStatus.statuses
+		.find((status) => status.id === buffStatus.painless.id);
+	if(painless){
+		actionBlock(painless.amount, otherPaly);
+		updatePlayerStatusDom(playerStatus);
+	}
+	//「慧眼」の効果
+	const eye = playerStatus.statuses
+		.find((status) => status.id === buffStatus.eye.id);
+	if(eye){
+		const drawCards = drawCardFromDeck(eye.amount);
+		drawCards.forEach((card) => {
+			animateDrawDeck(card);
+		});
+	}
+
+	if('discardFunc' in discardCard.amount && discardCard.amount.discardFunc !== ''){
+		pushStackCards({
+			func: discardCard.discardFunc,
+			amount: discardCard.amount,
+		});
+	}
+
+	// 廃棄誘発効果発動
+	myArtifacts.forEach((artifact) => {
+		if('discardFunc' in artifact){
+			if (artifact.discardFunc !== '') {
+				const storedFunc = globalThis[artifact.discardFunc];
+				if( typeof storedFunc === 'function'){
+					ret = storedFunc(artifact.amount);
+				} 
+			}
+		}
+	});
+	if ('tmpCost' in discardCard.amount){
+		delete discardCard.amount.tmpCost
+	}
+	pushDiscard(discardCard);
+}
+/*******************************************************/
+/* battleDamageHP：戦闘中の回復
+/*******************************************************/
+function battleRecoveryHP(recovery){
+	let totalRecovery = recovery;
+	const powerfulRecovery = myArtifacts.find((artifact) => 
+		artifact.name === normalArtifact.powerfulRecovery.name);
+	if(powerfulRecovery){
+		totalRecovery = Math.ceil(totalRecovery * 1.5);
+	}
+
+	recoveryHP(totalRecovery);
+}
+/*******************************************************/
+/* battleDamageHP：戦闘中のダメージ
+/*******************************************************/
+function battleDamageHP(damage, playerInfo, animationFlag = false){
+	let totalDamage = damage;
+	if(!animationFlag){
+		playerInfo.Count.HPDownCount++;
+		console.log(`HPDownCount: ${playerInfo.Count.HPDownCount}`);
+		myArtifacts.forEach((artifact) => {
+			if('lossHPFunc' in artifact){
+				if (artifact.lossHPFunc !== '') {
+					const storedFunc = globalThis[artifact.lossHPFunc];
+					if( typeof storedFunc === 'function'){
+						ret = storedFunc(artifact.amount);
+					} 
+				}
+			}
+		});
+	}
+	//次のHPの喪失を{X}回防ぐ。
+	const illusion = playerInfo.statuses
+		.find((status) => status.id === buffStatus.illusion.id);
+	if(illusion){
+		illusion.amount--;
+	}else if(totalDamage > 0){
+		damageHP(totalDamage, playerInfo);
+	}
+}
+/*************************************************************************************/
 /* 初期設定
 /*************************************************************************************/
 /*******************************************************/
@@ -864,7 +982,7 @@ function startTurnStatuses(playerInfo, enemiesInfo, animateFlag){
 					}
 					break;
 				case buffStatus.rage.id:// 「激怒」の効果
-					enemyStatusBuf(enemy, animateFlag, buffStatus.attackUp, status.amount);
+					enemyActionStatusBuf(enemy, animateFlag, buffStatus.attackUp, status.amount);
 					break;
 				case buffStatus.barrier.id:// 「バリア」の効果
 					enemyActionBlock(enemy, animateFlag, status.amount);
@@ -924,8 +1042,8 @@ function startTurnStatuses(playerInfo, enemiesInfo, animateFlag){
 	if(animateFlag && animateQueue.length > 0){
 		animatePlayerAddHand(animateQueue);
 	}
+	// アーティファクトの効果を発動
 	if(!animateFlag){
-		// アーティファクトの効果を発動
 		myArtifacts.forEach((artifact) => {
 			if('turnFunc' in artifact){
 				if (artifact.turnFunc !== '') {
@@ -953,7 +1071,7 @@ function startTurnProcess(){
 	const hrunting = playerStatus.statuses
 		.find((status) => status.id === buffStatus.hrunting.id);
 	if (hrunting){
-		damageHP(1, playerStatus);
+		battleDamageHP(1, playerStatus);
 		drawCardFromDeck(hrunting.amount);
 	}
 	// 「ヘイスト」で追加2枚
@@ -1051,7 +1169,7 @@ function endTurn(){
 	playerStatus.statuses.forEach((status) => {
 		switch(status.id){
 			case buffStatus.regeneration.id://「再生」の効果
-				recoveryHP(status.amount);
+				battleRecoveryHP(status.amount);
 				updatePlayerStatusDom(playerStatus);
 				status.amount = 0;
 				break;
@@ -1062,7 +1180,7 @@ function endTurn(){
 				actionBlock(status.amount, otherPaly);
 				break;
 			case buffStatus.madness.id://「狂化」の効果
-				damageHP(1, playerStatus);
+				battleDamageHP(1, playerStatus);
 				actionAllAttackSimple(status.amount, false);
 				break;
 			case debuffStatus.slowing.id://「鈍化」の効果
@@ -1391,7 +1509,7 @@ function playEffectCard(card, useCost = true){
 		const strategy = enemy.currentStatus.status
 			.find((status) => status.id === buffStatus.strategy.id);
 		if (strategy && card.type === type.skill){
-			enemyStatusBuf(enemy, true, buffStatus.attackUp, strategy.amount);
+			enemyActionStatusBuf(enemy, true, buffStatus.attackUp, strategy.amount);
 		}
 	});
 	playerStatus.statuses = playerStatus.statuses.filter((status) => {
@@ -1743,7 +1861,7 @@ function clickDiscardCardProcess(trashCardDiv, card){
 	return true;
 }
 /*******************************************************/
-/* clickDiscardCardProcess：デッキクリック時の処理
+/* clickDeckCardProcess：デッキクリック時の処理
 /*******************************************************/
 function clickDeckCardProcess(deckCardDiv, card){
 	const discardIndex = findIndexTemporaryArea('id', card.id);
@@ -1790,58 +1908,6 @@ function clickDeckCardProcess(deckCardDiv, card){
 	}
 	return true;
 }
-/*******************************************************/
-/* trashCardProcess：捨て札にする際の処理
-/*******************************************************/
-function trashCardProcess(trashCard){
-	console.log('trashCardProcess');
-	console.log(playerStatus);
-	if('trashFunc' in trashCard.amount && trashCard.amount.trashFunc !== ''){
-		pushStackCards({
-			func: trashCard.trashFunc,
-			amount: trashCard.amount,
-		});
-	}
-	if ('tmpCost' in trashCard.amount){
-		delete trashCard.amount.tmpCost
-	}
-	playerStatus.Count.trashCountPerTurn++;
-	pushTrash(trashCard);
-}
-/*******************************************************/
-/* discardCardProcess：廃棄する際の処理
-/*******************************************************/
-function discardCardProcess(discardCard){
-	//「無痛」の効果
-	const painless = playerStatus.statuses
-		.find((status) => status.id === buffStatus.painless.id);
-	if(painless){
-		actionBlock(painless.amount, otherPaly);
-		updatePlayerStatusDom(playerStatus);
-	}
-	//「慧眼」の効果
-	const eye = playerStatus.statuses
-		.find((status) => status.id === buffStatus.eye.id);
-	if(eye){
-		const drawCards = drawCardFromDeck(eye.amount);
-		drawCards.forEach((card) => {
-			animateDrawDeck(card);
-		});
-	}
-
-	if('discardFunc' in discardCard.amount && discardCard.amount.discardFunc !== ''){
-		pushStackCards({
-			func: discardCard.discardFunc,
-			amount: discardCard.amount,
-		});
-	}
-	if ('tmpCost' in discardCard.amount){
-		delete discardCard.amount.tmpCost
-	}
-	pushDiscard(discardCard);
-}
-
-
 /*************************************************************************************/
 /* エネミー関連
 /*************************************************************************************/
