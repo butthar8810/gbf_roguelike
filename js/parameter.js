@@ -164,6 +164,7 @@ const keyContinueOriginalDeck = 'Babu.Continue.Original.Deck';
 const keyContinueShopLineup = 'Babu.Continue.Shop.Lineup';
 const keyContinueTreasure = 'Babu.Continue.Treasure';
 const keyContinueTemporary = 'Babu.Continue.Temporary';
+const keyContinueArtifactPhase = 'Babu.Continue.Artifact.Phase';
 // 戦闘用ストレージキー
 const keyContinueDeck = 'Babu.Continue.Deck';
 const keyContinueHand = 'Babu.Continue.Hand';
@@ -218,6 +219,9 @@ const phase = {
 	choiceThreeCard: '3枚カード選択フェイズ' //3枚生成＆選択
 };
 
+const artifactPhase = {
+	twoRemove: 'ナーヴマテリアルフェイズ',
+}
 /*****************************************************************************/
 /* グローバル変数
 /*****************************************************************************/

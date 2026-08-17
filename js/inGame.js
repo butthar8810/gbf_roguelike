@@ -1519,6 +1519,7 @@ function playEffectCard(card, useCost = true){
 /* endAction：プレイしたカードの終了処理をする
 /*******************************************************/
 function endAction(){
+	console.log(`endAction`);
 	let ret = false;
 	if ( stackCards.length === 0 ){
 		const playCards = deleteAllPlayArea();
@@ -2226,6 +2227,7 @@ function allEnemiesDefeated(){
 	$('result-content').html('');
 	if (lastReward) {
 		rewards = lastReward;
+		continueArtifactPhase();
 	} else {
 		// 初期化
 		rewards = [];
@@ -2257,9 +2259,16 @@ function allEnemiesDefeated(){
 				});
 				break;
 			case stageLevel.boss:
-			case stageLevel.test:
 				const selectArtifact = decideBossArtifactReward();
 				rewards.push(selectArtifact);
+				break;
+			case stageLevel.test:
+				const Artifact = {
+					type: rewardType.artifact, 
+					getFlag: true, 
+					amount: normalArtifact.twoRemove
+				};
+				rewards.push(Artifact);
 				break;
 			default:
 				break;
@@ -2296,3 +2305,16 @@ function decideMoneyReward(){
 	return {type: rewardType.money, getFlag: true, amount: money};
 }
 
+/*******************************************************/
+/* startRewardPhase：報酬フェイスの開始
+/*******************************************************/
+function continueArtifactPhase(){
+	const lastRewardPhase = getLocalStorage(keyContinueArtifactPhase);
+	switch(lastRewardPhase){
+		case artifactPhase.twoRemove:
+			effectSelectRemove(normalArtifact.twoRemove.amount);
+			break;
+		default:
+			break;
+	}
+}

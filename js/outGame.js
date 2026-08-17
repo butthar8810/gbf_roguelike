@@ -8,23 +8,30 @@ function startGame(){
 	setupDeck();
 	setupArtifact();
 	setupOutGameInformation();
-	if (Continued === continueFlag.inGame) {
-		console.log('戦闘再開');
-		continueBattle();
-	} else if (Continued === continueFlag.restArea) {
-		console.log('休憩再開');
-		startRestEvent();
-	} else if (Continued === continueFlag.shopArea) {
-		console.log('ショップ再開');
-		startShopEvent();
-	} else if (Continued === continueFlag.giftArea) {
-		console.log('宝箱再開');
-		startGiftEvent();
-	} else if (Continued === continueFlag.outGame) {
-		console.log('再開');
-		climbTowerContinue();
-	}else {
-		getReady();
+	switch(Continued){
+		case continueFlag.inGame:
+			console.log('戦闘再開');
+			continueBattle();
+			break;
+		case continueFlag.restArea:
+			console.log('休憩再開');
+			startRestEvent();
+			break;
+		case continueFlag.shopArea:
+			console.log('ショップ再開');
+			startShopEvent();
+			break;
+		case continueFlag.giftArea:
+			console.log('宝箱再開');
+			startGiftEvent();
+			break;
+		case continueFlag.outGame:
+			console.log('再開');
+			climbTowerContinue();
+			break;
+		default:
+			getReady();
+			break;
 	}
 }
 /*******************************************************/
@@ -120,8 +127,8 @@ function climbTowerStart(){
 /*				mapDiv.html(`<img src='${stages.normal.image}'>`);
 				mapRows.push(stages.normal);
 */
-				mapDiv.html(`<img src='${stages.special.image}'>`);
-				mapRows.push(stages.special);
+				mapDiv.html(`<img src='${stages.test.image}'>`);
+				mapRows.push(stages.test);
 			} else {
 				let randomMap = mt.nextInt(0, totalWeight);
 				for (const stage of Object.values(stages)) {

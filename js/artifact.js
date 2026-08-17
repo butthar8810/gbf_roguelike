@@ -1083,9 +1083,7 @@ const normalArtifact = {
 		effect: '獲得時、2枚のカードをデッキから削除する。', 
 		image: 'images/artifact/NarveMaterial.png', 
 		getFunc: 'effectSelectRemove',
-		amount: {
-			
-		}
+		amount: {}
 	},
 	changeAndUpgrade: {
 		name: '祖なる欠片', 
@@ -1330,7 +1328,7 @@ function setupArtifact(){
 		} else if (selectChara === selectCharacter.djeeta.name){
 			getArtifact(normalArtifact.startDraw);
 			getArtifact(normalArtifact.eye);
-			getArtifact(normalArtifact.twoRemove);
+//			getArtifact(normalArtifact.twoRemove);
 //			getArtifact(normalArtifact.eliteAdditionalRemuneration);
 		}
 		setLocalStorage(keyContinueArtifact, myArtifacts);
@@ -1352,6 +1350,19 @@ function getArtifact(artifact){
 		}
 	}
 	myArtifacts.push(artifact);
+}
+/*******************************************************/
+/* continueArtifactPhase：アーティファクトフェイズの再開
+/*******************************************************/
+function continueArtifactPhase(){
+	const lastRewardPhase = getLocalStorage(keyContinueArtifactPhase);
+	switch(lastRewardPhase){
+		case artifactPhase.twoRemove:
+			effectSelectRemove(normalArtifact.twoRemove.amount);
+			break;
+		default:
+			break;
+	}
 }
 /*******************************************************/
 /* setupArtifact：ショップラインナップ決定関数
@@ -1716,6 +1727,7 @@ function effectGetEnergyAndEnemyBuff(amount){
 		actionStatusAllDebuf(buffStatus[amount.buffType], amount.buff);
 	}
 	endAction();
+	return true;
 }
 /*******************************************************/
 /* ボスとエリートとの戦闘において、ターン開始時に、1エナジーを得る。
@@ -1729,6 +1741,7 @@ function effectGetEnergyIfBossAndSpecial(amount){
 		playerStatus.remainEnergy += amount.energy;
 	}
 	endAction();
+	return true;
 }
 /*******************************************************/
 /* カードを10枚プレイするたび、カードを1枚引く。
@@ -1897,6 +1910,7 @@ function effectRandomUpgrade(amount){
 /*******************************************************/
 function effectSelectRemove(amount){
 	console.log('effectSelectRemove');
+	setLocalStorage(keyContinueArtifactPhase, artifactPhase.twoRemove);
 	$('.remove-area').addClass('active');
 	$('.remove-modal-body').html('');
 	myOriginalDeck.forEach((deckCard) => {
@@ -1905,9 +1919,49 @@ function effectSelectRemove(amount){
 			.attr('id', `remove-card${deckCard.id}`)
 			.addClass('remove-card')
 			.click(() => {
+				const index = findIndexTemporaryArea('id', deckCard.id);
+				if (index === -1) {
+					if (tmpArea.length < 2){
+						pushTemporaryArea(deckCard);
+						removeCardDiv.addClass("select");
+					} else {
+						const cancelCard = shiftTemporaryArea();
+						$(`#remove-card${cancelCard.id}`).removeClass("select");
+						pushTemporaryArea(deckCard);
+						removeCardDiv.addClass("select");
+					}
+				} else {
+					spliceTemporaryArea(index);
+					removeCardDiv.removeClass("select");
+				}
 			});
 			$('.remove-modal-body').append(removeCardDiv);
 	});
+	$('.remove-btn').off();
+	$('.remove-btn')
+		.click(() => {
+			if(tmpArea.length < 2){
+				return false;
+			}
+			const discardCards = deleteAllTemporaryArea();
+			discardCards.forEach((discardCard) => {
+				setLocalStorage(keyContinueTemporary, tmpArea);
+				const index = findIndexOriginalDeck('id', discardCard.id);
+				if (index === -1) {
+					return false;
+				}
+				const card = spliceOriginalDeck(index);
+				if (card === undefined) {
+					return false;
+				}
+				
+			});
+			$('.remove-area').removeClass('active');
+			$('.remove-modal-body').html('');
+			removeLocalStorage(keyContinueArtifactPhase);
+			endAction();
+		});
+	return true;
 }
 /*******************************************************/
 /* このターンの間手札のランダムなカード1枚のコストが0になる。
@@ -2019,5 +2073,7 @@ function effectDrawBelowThreePlay(amount){
 			animateDrawDeck(card);
 		});
 	}
+	endAction();
+	return true;
 }
 

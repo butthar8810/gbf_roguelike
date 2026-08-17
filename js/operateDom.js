@@ -1539,6 +1539,7 @@ function artifactRewardDom(rewardArtifact){
 			rewardArtifact.getFlag = false;
 			updateArtifactDom();
 			updateResultContentDom();
+			setLocalStorage(keyContinueOriginalDeck, myOriginalDeck);
 			setLocalStorage(keyContinueArtifact, myArtifacts);
 			setLocalStorage(keyContinueReward, rewards);
 		});

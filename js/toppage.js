@@ -31,12 +31,14 @@ function loadTopPage(){
 			removeLocalStorage(keyContinueOriginalDeck);
 			removeLocalStorage(keyContinueShopLineup);
 			removeLocalStorage(keyContinueTreasure);
+			removeLocalStorage(keyContinueTemporary);
+			removeLocalStorage(keyContinueRewardPhase);
 			
 			removeLocalStorage(keyContinueDeck);
 			removeLocalStorage(keyContinueHand);
 			removeLocalStorage(keyContinueTrash);
+			removeLocalStorage(keyContinuePlayArea);
 			removeLocalStorage(keyContinueDiscard);
-			removeLocalStorage(keyContinueTemporary);
 			removeLocalStorage(keyContinueStack);
 			removeLocalStorage(keyContinueTurn);
 			removeLocalStorage(keyContinueEnemy);
@@ -44,6 +46,7 @@ function loadTopPage(){
 			removeLocalStorage(keyContinueReward);
 			removeLocalStorage(keyContinueHold);
 			removeLocalStorage(keyContinuePhase);
+			removeLocalStorage(keyContinueChoice);
 			window.location.href = 'roguelike.html';
 		} else {
 			alert('キャラが選択されておりません');
