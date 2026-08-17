@@ -6,8 +6,8 @@ const enemyList = {
 	test:{
 		name: 'ういなす', 
 		size: 'small',
-		minHP: 50, 
-		maxHP: 100, 
+		minHP: 10, 
+		maxHP: 15, 
 		image: 'images/enemy/small/uinasu.png',
 		actionAlgorithm: 'actionTEST', 
 		actionFirst: 'testFirst',
@@ -320,7 +320,7 @@ const bossEnemyList = {
 };
 const testEnemies = [
 	{weight: 100, enemiesFunc(){
-		return [enemyList.Ikelos];
+		return [enemyList.test,enemyList.test,enemyList.test,enemyList.test,enemyList.test];
 	}},
 ];
 const easyEnemiesPool = [

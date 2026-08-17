@@ -2,6 +2,29 @@
 /* システム関数
 /***********************************************************************************/
 /*******************************************************/
+/* getMoney：金貨を得る
+/*******************************************************/
+function getMoney(money){
+	let ret = false;
+	const energyNoGold = myArtifacts.find((artifact) => 
+		artifact.name === normalArtifact.energyNoGold.name);
+	if(!energyNoGold){
+		playerStatus.money += money;
+		ret = true;
+	}
+	return ret;
+}
+/*******************************************************/
+/* payMoney：金貨を払う
+/*******************************************************/
+function payMoney(money){
+	if (playerStatus.money > money){
+		playerStatus.money -= money;
+	} else {
+		playerStatus.money = 0;
+	}
+}
+/*******************************************************/
 /* recoveryHP：HPを回復する
 /*******************************************************/
 function recoveryHP(recovery){

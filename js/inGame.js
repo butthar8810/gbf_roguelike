@@ -767,7 +767,6 @@ async function startTurn(){
 		enemyGetBlockPromise,
 		enemyAbnormalityPromise
 	).done(() => {
-		fadeInEnemyOmenDom();
 		updateEnemyAreaDom(currentEnemies, true);
 	});
 	$.when(
@@ -1229,8 +1228,10 @@ function endTurn(){
 			return status.amount !== 0;
 		});
 	});
+	checkEnemyDefeated(currentEnemies, playerStatus);
 	updatePlayerStatusDom(playerStatus);
 	updateEnemyStatusDom(currentEnemies);
+	
 	startEnemiesTurn();
 }
 
@@ -1338,25 +1339,7 @@ function reconfigureDeck(){
 /* playEffectCard：カードをプレイする
 /*******************************************************/
 function playEffectCard(card, useCost = true){
-	//「凍結」の効果
-	const frozen = playerStatus.statuses
-		.find((status) => status.id === debuffStatus.frozen.id);
-	if(frozen && card.type === type.attack){
-		alert('デバフによりアタックが使えません');
-		return false
-	}
-	//発動条件
-	if ('conditions' in card.amount && card.amount.conditions !== '') {
-		const conditionsFunc = globalThis[card.amount.conditions];
-		if( typeof conditionsFunc === 'function'){
-			if(!conditionsFunc()){
-				alert("発動条件を満たしていません。");
-				return false
-			}else{
-				console.log('発動可能');
-			}
-		} 
-	}
+	
 	//コスト消費
 	if(useCost){
 		if (card.amount.cost === 'X'){
@@ -1393,8 +1376,6 @@ function playEffectCard(card, useCost = true){
 			card.amount.variable = playerStatus.remainEnergy;
 		}
 	}
-	//カードプレイのカウント
-	playerStatus.Count.playCardPerTurn++;
 	// アーティファクトの効果を発動
 	myArtifacts.forEach((artifact) => {
 		if('playFunc' in artifact){
@@ -1402,7 +1383,7 @@ function playEffectCard(card, useCost = true){
 				const storedFunc = globalThis[artifact.playFunc];
 				if( typeof storedFunc === 'function'){
 					ret = storedFunc(artifact.amount);
-				} 
+				}
 			}
 		}
 	});
@@ -1443,6 +1424,8 @@ function playEffectCard(card, useCost = true){
 				func: card.func,
 				amount: card.amount,
 			});
+			//カードプレイのカウント
+			playerStatus.Count.playCardPerTurn++;
 			attackCombo.amount--;
 		}
 		// アーティファクトの効果を発動
@@ -1469,6 +1452,8 @@ function playEffectCard(card, useCost = true){
 				func: card.func,
 				amount: card.amount,
 			});
+			//カードプレイのカウント
+			playerStatus.Count.playCardPerTurn++;
 			skillCombo.amount--;
 		}
 		// アーティファクトの効果を発動
@@ -1522,6 +1507,8 @@ function playEffectCard(card, useCost = true){
 		func: card.func,
 		amount: card.amount,
 	});
+	//カードプレイのカウント
+	playerStatus.Count.playCardPerTurn++;
 	pushPlayArea(card);
 	setLocalStorage(keyContinueHand, myHand);
 	setLocalStorage(keyContinueStack, stackCards);
@@ -1624,6 +1611,31 @@ function clickHandProcess(handCardDiv, hand){
 	const index = findIndexTemporaryArea('id', hand.id);
 	switch(currentPhase) {
 		case phase.action:
+			//「凍結」の効果
+			const frozen = playerStatus.statuses
+				.find((status) => status.id === debuffStatus.frozen.id);
+			if(frozen && hand.type === type.attack){
+				alert('デバフによりアタックが使えません');
+				break;
+			}
+			//発動条件
+			if ('conditions' in hand.amount && hand.amount.conditions !== '') {
+				const conditionsFunc = globalThis[hand.amount.conditions];
+				if( typeof conditionsFunc === 'function'){
+					if(!conditionsFunc()){
+						alert("発動条件を満たしていません。");
+						break;
+					}else{
+						console.log('発動可能');
+					}
+				} 
+			}
+			const energySixPlay = myArtifacts.find((artifact) => 
+				artifact.name === normalArtifact.energySixPlay.name);
+			if(energySixPlay && playerStatus.Count.playCardPerTurn >= 6){
+				alert("これ以上カードをプレイできません。");
+				break;
+			}
 			const handIndex = findIndexHand('id', hand.id);
 			const card = spliceHand(handIndex);
 			updateHandDom();
@@ -2096,6 +2108,8 @@ function checkEnemyDefeated(Enemies, playerInfo, animationFlag = true){
 	Enemies.forEach((enemy) => {
 		if(!enemy.currentStatus.status.some(status => status.id === dead.id)){
 			if(enemy.currentStatus.remainHP <= 0){
+				enemy.currentStatus.status.splice(0);
+				enemy.currentStatus.status.push(dead);
 				//「自壊因子」の効果発動
 				const autophagy = enemy.currentStatus.status
 					.find((status) => status.id === debuffStatus.autophagy.id);
@@ -2123,6 +2137,14 @@ function checkEnemyDefeated(Enemies, playerInfo, animationFlag = true){
 				if (pollen){
 					enemyActionStatusDebuff(enemy, playerInfo, animationFlag, debuffStatus.defenseDown, pollen.amount);
 				}
+				//倒した敵に蓄積していた毒をランダムな敵に付与する。
+				const poison = enemy.currentStatus.status
+					.find((status) => status.id === debuffStatus.poison.id);
+				const poisonInfection = myArtifacts.find((artifact) => 
+					artifact.name === normalArtifact.poisonInfection.name);
+				if(poison && poisonInfection){
+					actionStatusRandomDebuf(debuffStatus.poison, poison.amount);
+				}
 				//敵を倒すと、1エナジーを得て、カードを1枚引く。
 				const knockEnergyAndDraw = myArtifacts.find((artifact) => 
 					artifact.name === normalArtifact.knockEnergyAndDraw.name);
@@ -2137,8 +2159,6 @@ function checkEnemyDefeated(Enemies, playerInfo, animationFlag = true){
 					playerInfo.remainEnergy += knockEnergyAndDraw.amount.energy;
 				}
 				animateDefeated(enemy);
-				enemy.currentStatus.status.splice(0);
-				enemy.currentStatus.status.push(dead);
 				targetingEnemy();
 			} else {
 				allDefeatedFlag = false;
@@ -2226,18 +2246,19 @@ function allEnemiesDefeated(){
 		}
 
 		// アーティファクト報酬
-		let selectArtifact;
 		switch (currentLevel) {
 			case stageLevel.normal:
 				//アーティファクト報酬なし
 				break;
 			case stageLevel.special:
-				selectArtifact = decideArtifactReward();
-				rewards.push(selectArtifact);
+				const selectArtifacts = decideArtifactsReward();
+				selectArtifacts.forEach((selectArtifact) => {
+					rewards.push(selectArtifact);
+				});
 				break;
 			case stageLevel.boss:
 			case stageLevel.test:
-				selectArtifact = decideBossArtifactReward();
+				const selectArtifact = decideBossArtifactReward();
 				rewards.push(selectArtifact);
 				break;
 			default:

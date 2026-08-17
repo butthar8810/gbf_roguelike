@@ -25,6 +25,7 @@ function startRestEvent(){
 /* 休憩イベント
 /*******************************************************/
 function selectRestAction(){
+	let selectFlag = true;
 	// アーティファクトの効果を発動
 	myArtifacts.forEach((artifact) => {
 		if('restFunc' in artifact){
@@ -36,56 +37,66 @@ function selectRestAction(){
 			}
 		}
 	});
-	recoveryCount = Math.floor(playerStatus.maxHP * 0.3);
-	const firstBtn = appendTalkingBtn(`休憩する（HP30%[${recoveryCount}]回復）`);
-	firstBtn.click((e) => {
-		deleteTalkingBtn();
-		recoveryHP(recoveryCount);
-		animateRestHeal();
-		updateHPDom();
-		const btn = appendTalkingBtn('塔へ上る');
-		btn.click((e) => {
-			setLocalStorage(keyContinuePlayerStatus, playerStatus);
-			setLocalStorage(keyContinueOriginalDeck, myOriginalDeck);
-			setLocalStorage(keyContinueArtifact, myArtifacts);
-			removeLocalStorage(keyContinueReward);
-			climbTowerContinue();
-		});
-		// アーティファクトの効果を発動
-		myArtifacts.forEach((artifact) => {
-			if('breakFunc' in artifact){
-				if (artifact.breakFunc !== '') {
-					const storedFunc = globalThis[artifact.breakFunc];
-					if( typeof storedFunc === 'function'){
-						ret = storedFunc(artifact.amount);
-					} 
+	const energyNoBreak = myArtifacts.find((artifact) => 
+		artifact.name === normalArtifact.energyNoBreak.name);
+	if(!energyNoBreak){
+		recoveryCount = Math.floor(playerStatus.maxHP * 0.3);
+		const firstBtn = appendTalkingBtn(`休憩する（HP30%[${recoveryCount}]回復）`);
+		firstBtn.click((e) => {
+			deleteTalkingBtn();
+			recoveryHP(recoveryCount);
+			animateRestHeal();
+			updateHPDom();
+			const btn = appendTalkingBtn('塔へ上る');
+			btn.click((e) => {
+				setLocalStorage(keyContinuePlayerStatus, playerStatus);
+				setLocalStorage(keyContinueOriginalDeck, myOriginalDeck);
+				setLocalStorage(keyContinueArtifact, myArtifacts);
+				removeLocalStorage(keyContinueReward);
+				climbTowerContinue();
+			});
+			// アーティファクトの効果を発動
+			myArtifacts.forEach((artifact) => {
+				if('breakFunc' in artifact){
+					if (artifact.breakFunc !== '') {
+						const storedFunc = globalThis[artifact.breakFunc];
+						if( typeof storedFunc === 'function'){
+							ret = storedFunc(artifact.amount);
+						} 
+					}
 				}
-			}
+			});
 		});
-	});
-	const secondBtn = appendTalkingBtn('鍛冶（武器を強化する）');
-	secondBtn.click((e) => {
-		deleteTalkingBtn();
-		$('.black-back-area').addClass('active');
-		$('.enhance-area').addClass('active');
-		$('.enhance-content').html('');
-		updateEnhanceTitleDom('強化する武器を選んでください');
-		// 強化前のカード一覧表示
-		myOriginalDeck.forEach((card) => {
-			if (!('key' in card) || card.key === undefined){
-				//強化済みのカードは除外
-				console.log(card);
-				return;
-			}
-			const enhanceCardDiv = createCardDom(card);
-			enhanceCardDiv
-				.addClass('show-card')
-				.click(card ,() => {
-					decideEnhanceCardDom(card);
-				});
-			$('.enhance-content').append(enhanceCardDiv);
+		selectFlag = false;
+	}
+	const energyNoBlackSmithing = myArtifacts.find((artifact) => 
+		artifact.name === normalArtifact.energyNoBlackSmithing.name);
+	if(!energyNoBlackSmithing){
+		const secondBtn = appendTalkingBtn('鍛冶（武器を強化する）');
+		secondBtn.click((e) => {
+			deleteTalkingBtn();
+			$('.black-back-area').addClass('active');
+			$('.enhance-area').addClass('active');
+			$('.enhance-content').html('');
+			updateEnhanceTitleDom('強化する武器を選んでください');
+			// 強化前のカード一覧表示
+			myOriginalDeck.forEach((card) => {
+				if (!('key' in card) || card.key === undefined){
+					//強化済みのカードは除外
+					console.log(card);
+					return;
+				}
+				const enhanceCardDiv = createCardDom(card);
+				enhanceCardDiv
+					.addClass('show-card')
+					.click(card ,() => {
+						decideEnhanceCardDom(card);
+					});
+				$('.enhance-content').append(enhanceCardDiv);
+			});
 		});
-	});
+		selectFlag = false;
+	}
 	const restAttackUp = myArtifacts.find((artifact) => 
 		artifact.name === normalArtifact.restAttackUp.name);
 	if(restAttackUp && restAttackUp.amount.Count < restAttackUp.amount.max){
@@ -103,6 +114,7 @@ function selectRestAction(){
 				climbTowerContinue();
 			});
 		});
+		selectFlag = false;
 	}
 	const restRemove = myArtifacts.find((artifact) => 
 		artifact.name === normalArtifact.restRemove.name);
@@ -157,6 +169,17 @@ function selectRestAction(){
 						climbTowerContinue();
 					});
 				});
+		});
+		selectFlag = false;
+	}
+	if(selectFlag){
+		const btn = appendTalkingBtn('塔へ上る');
+		btn.click((e) => {
+			setLocalStorage(keyContinuePlayerStatus, playerStatus);
+			setLocalStorage(keyContinueOriginalDeck, myOriginalDeck);
+			setLocalStorage(keyContinueArtifact, myArtifacts);
+			removeLocalStorage(keyContinueReward);
+			climbTowerContinue();
 		});
 	}
 }
@@ -525,7 +548,7 @@ function buyCard(selectInfo, selectCardWrapperDiv){
 	}
 	selectInfo.stock = false;
 	// 支払い
-	playerStatus.money -= selectInfo.price;
+	payMoney(selectInfo.price);
 	updateMoneyDom();
 	// 購入カードのデッキ挿入
 	addCardToOriginalDeck(selectInfo.card);
@@ -548,7 +571,7 @@ function buyArtifact(selectInfo, selectArtifactWrapperDiv){
 	}
 	selectInfo.stock = false;
 	// 支払い
-	playerStatus.money -= selectInfo.price;
+	payMoney(selectInfo.price);
 	updateMoneyDom();
 	// 購入アーティファクトのデッキ挿入
 	getArtifact(selectInfo.artifact);

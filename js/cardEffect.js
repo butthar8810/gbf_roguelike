@@ -6569,7 +6569,7 @@ function addCardToOriginalDeck(card, count = 1){
 		const insertDeckMoney = myArtifacts.find((artifact) => 
 			artifact.name === normalArtifact.insertDeckMoney.name);
 		if(insertDeckMoney){
-			playerStatus.money += insertDeckMoney.amount.money;
+			getMoney(insertDeckMoney.amount.money);
 		}
 		//カードを獲得するたび、それをアップグレードする。
 		const attackUpgrade = myArtifacts.find((artifact) => 
@@ -6625,8 +6625,8 @@ function setupDeck(){
 			addCardToOriginalDeck(djeetaCardList.Wide, 5);
 			addCardToOriginalDeck(djeetaCardList.Defense, 5);
 			addCardToOriginalDeck(djeetaCardList.Pulverizer, 1);
-			addCardToOriginalDeck(commonCardList.Murky, 2);
-			addCardToOriginalDeck(commonCardList.BlackRabbit, 2);
+			addCardToOriginalDeck(djeetaCardList.Cocktail, 2);
+//			addCardToOriginalDeck(commonCardList.Celeste, 12);
 			addCardToOriginalDeck(testCardList.testAttack, 2);
 		}
 		setLocalStorage(keyContinueOriginalDeck, myOriginalDeck);
@@ -6690,13 +6690,16 @@ function decideCardReward(lotteryLevel){
 	}
 
 	let index = 0
-	let choiceCardsNum = 0;
+	let choiceCardsNum = 3;
 	const fourChoice = myArtifacts.find((artifact) => 
 		artifact.name === normalArtifact.fourChoice.name);
 	if(fourChoice){
-		choiceCardsNum = 4;
-	} else {
-		choiceCardsNum = 3;
+		choiceCardsNum += 1;
+	} 
+	const energyChooseOne = myArtifacts.find((artifact) => 
+		artifact.name === normalArtifact.energyChooseOne.name);
+	if(energyChooseOne){
+		choiceCardsNum -= 2;
 	}
 	while(index < choiceCardsNum){
 		// レアリティ抽選
@@ -8223,7 +8226,7 @@ function effectAttackAndPayment(amount){
 		actionAttack(amount.attack);
 	}
 	if(currentTarget.currentStatus.remainHP <= 0 && 'money' in amount){
-		playerStatus.money += amount.money;
+		getMoney(amount.money);
 	}
 	endAction();
 	return true;
@@ -8497,6 +8500,19 @@ function drawReproduction(card){
 /* カードアクション用システム関数
 /*************************************************************************************/
 /*******************************************************/
+// エネミーランダムターゲット関数
+/*******************************************************/
+function enemyRandomSelect(number){
+	let random = 0;
+	console.log(currentEnemies[random]);
+	do {
+		random = Math.floor(Math.random() * number);
+		//すでに倒されているエネミーは省く
+	} while (currentEnemies[random].currentStatus.status.some(status => status.id === dead.id));
+	console.log(`Random Hit: ${random}`);
+	return random;
+}
+/*******************************************************/
 // バフ・デバフ計算
 /*******************************************************/
 function calcDamage(attackCount, targetEnemy, AttackUpMag = 1){
@@ -8715,21 +8731,18 @@ function actionAllAttackAndAbsorb(attackCount, attackCardFlag = true){
 /* 与ダメージ関数（ランダムダメージ）
 /*******************************************************/
 function actionRandomAttack(attackCount, attackCardFlag = true){
-	let random = Math.floor(Math.random() * currentEnemies.length);
-	console.log(`Random Hit: ${random}`);
-	const enemy = currentEnemies[random];
+	const enemy = currentEnemies[enemyRandomSelect(currentEnemies.length)];
 	let totalAttack = calcDamage(attackCount, enemy);
 	calcAttackDamageToTarget(totalAttack, enemy, attackCardFlag);
 	// アニメーション
 	animatePlayerAttack();
 }
+
 /*******************************************************/
 /* 与ダメージ関数(バフ・デバフ影響なし)（ランダムダメージ）
 /*******************************************************/
 function actionRandomAttackSimple(attackCount, attackCardFlag = true){
-	let random = Math.floor(Math.random() * currentEnemies.length);
-	console.log(`Random Hit: ${random}`);
-	const enemy = currentEnemies[random];
+	const enemy = currentEnemies[enemyRandomSelect(currentEnemies.length)];
 	let totalAttack = attackCount;
 	calcAttackDamageToTarget(totalAttack, enemy, attackCardFlag);
 	// アニメーション
@@ -8955,9 +8968,8 @@ function actionStatusAllDebufForAnimate(enemiesInfo, debuf, amountCount, animate
 /* 状態異常を与える関数(ランダムデバフ)
 /*******************************************************/
 function actionStatusRandomDebuf(debuf, amountCount){
-	let random = Math.floor(Math.random() * currentEnemies.length);
-	console.log(`Random Hit: ${random}`);
-	const enemy = currentEnemies[random];
+	console.log(`actionStatusRandomDebuf`);
+	const enemy = currentEnemies[enemyRandomSelect(currentEnemies.length)];
 
 	actionStatusDebufToTarget(debuf, amountCount, enemy, true);
 }

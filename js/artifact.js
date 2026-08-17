@@ -947,7 +947,8 @@ const normalArtifact = {
 		dedicated: artifactdedicated.common,
 		effect: 'ターン開始時に、1エナジーを得る。ゴールドを入手できなくなる。', 
 		image: 'images/artifact/Annihilation.png', 
-		turnFunc: '',
+		firstFunc: 'effectGetEnergy',
+		turnFunc: 'effectGetEnergy',
 		amount: {
 			energy: 1,
 		}
@@ -958,7 +959,8 @@ const normalArtifact = {
 		dedicated: artifactdedicated.common,
 		effect: 'ターン開始時に、1エナジーを得る。1ターンの間に、6枚までしかカードを使えなくなる。', 
 		image: 'images/artifact/Prison.png', 
-		turnFunc: '',
+		firstFunc: 'effectGetEnergy',
+		turnFunc: 'effectGetEnergy',
 		amount: {
 			energy: 1,
 		}
@@ -969,9 +971,12 @@ const normalArtifact = {
 		dedicated: artifactdedicated.common,
 		effect: 'ターン開始時に、1エナジーを得る。戦闘開始時、すべての敵は筋力1を得る。', 
 		image: 'images/artifact/Judgment.png', 
-		turnFunc: '',
+		firstFunc: 'effectGetEnergyAndEnemyBuff',
+		turnFunc: 'effectGetEnergy',
 		amount: {
 			energy: 1,
+			buff: 1,
+			buffType: 'attackUp',
 		}
 	},
 	energyChooseOne: {
@@ -980,18 +985,20 @@ const normalArtifact = {
 		dedicated: artifactdedicated.common,
 		effect: 'ターン開始時に、1エナジーを得る。報酬のカード選択画面で、選択できるカードが2枚減る。', 
 		image: 'images/artifact/Horse.png', 
-		turnFunc: '',
+		firstFunc: 'effectGetEnergy',
+		turnFunc: 'effectGetEnergy',
 		amount: {
 			energy: 1,
 		}
 	},
-	energyNotClear: {
+	energyNotOmen: {
 		name: '妃光の水晶', 
 		rarity: artifactRarity.boss,
 		dedicated: artifactdedicated.common,
 		effect: 'ターン開始時に、1エナジーを得る。敵の行動予測がわからなくなる。', 
 		image: 'images/artifact/Crystal.png', 
-		turnFunc: '',
+		firstFunc: 'effectGetEnergy',
+		turnFunc: 'effectGetEnergy',
 		amount: {
 			energy: 1,
 		}
@@ -1002,40 +1009,46 @@ const normalArtifact = {
 		dedicated: artifactdedicated.common,
 		effect: 'ターン開始時に、1エナジーを得る。休憩場所で休息ができなくなる。', 
 		image: 'images/artifact/Genma.png', 
-		turnFunc: '',
+		firstFunc: 'effectGetEnergy',
+		turnFunc: 'effectGetEnergy',
 		amount: {
 			energy: 1,
 		}
 	},
+	//未実装
 	energyNoPotion: {
 		name: '炎金環', 
 		rarity: artifactRarity.boss,
 		dedicated: artifactdedicated.common,
 		effect: 'ターン開始時に、1エナジーを得る。ポーションを入手できなくなる。', 
 		image: 'images/artifact/smolderingHoop.png', 
-		turnFunc: '',
+		firstFunc: 'effectGetEnergy',
+		turnFunc: 'effectGetEnergy',
 		amount: {
 			energy: 1,
 		}
 	},
+	// 未実装
 	energyCurse: {
 		name: 'テネブライ・ラピス', 
 		rarity: artifactRarity.boss,
 		dedicated: artifactdedicated.common,
 		effect: 'ターン開始時に、1エナジーを得る。宝箱を開けるたびに呪いを獲得。(ボスの宝箱は除く。)', 
 		image: 'images/artifact/TenebraeLapis.png', 
-		turnFunc: '',
+		firstFunc: 'effectGetEnergy',
+		turnFunc: 'effectGetEnergy',
 		amount: {
 			energy: 1,
 		}
 	},
-	energyNoBlacksmithing: {
+	energyNoBlackSmithing: {
 		name: 'プロミネンストーチ', 
 		rarity: artifactRarity.boss,
 		dedicated: artifactdedicated.common,
 		effect: 'ターン開始時、1エナジーを得る。休憩場所で鍛冶ができなくなる。', 
 		image: 'images/artifact/Prominence.png', 
-		turnFunc: '',
+		firstFunc: 'effectGetEnergy',
+		turnFunc: 'effectGetEnergy',
 		amount: {
 			energy: 1,
 		}
@@ -1046,7 +1059,8 @@ const normalArtifact = {
 		dedicated: artifactdedicated.common,
 		effect: 'ボスとエリートとの戦闘において、ターン開始時に、1エナジーを得る。', 
 		image: 'images/artifact/InfernalVajra.png', 
-		turnFunc: '',
+		firstFunc: 'effectGetEnergyIfBossAndSpecial',
+		turnFunc: 'effectGetEnergyIfBossAndSpecial',
 		amount: {
 			energy: 1,
 		}
@@ -1068,9 +1082,9 @@ const normalArtifact = {
 		dedicated: artifactdedicated.common,
 		effect: '獲得時、2枚のカードをデッキから削除する。', 
 		image: 'images/artifact/NarveMaterial.png', 
-		firstFunc: '',
+		getFunc: 'effectSelectRemove',
 		amount: {
-			draw: 2,
+			
 		}
 	},
 	changeAndUpgrade: {
@@ -1316,8 +1330,8 @@ function setupArtifact(){
 		} else if (selectChara === selectCharacter.djeeta.name){
 			getArtifact(normalArtifact.startDraw);
 			getArtifact(normalArtifact.eye);
-//			getArtifact(normalArtifact.discardDraw);
-			getArtifact(normalArtifact.fewPlayDraw);
+			getArtifact(normalArtifact.twoRemove);
+//			getArtifact(normalArtifact.eliteAdditionalRemuneration);
 		}
 		setLocalStorage(keyContinueArtifact, myArtifacts);
 	}
@@ -1463,8 +1477,9 @@ function filteringShopArtifact(){
 /*******************************************************/
 /* decideArtifactReward：報酬用アーティファクト決定関数
 /*******************************************************/
-function decideArtifactReward(){
+function decideArtifactsReward(){
 	const selectChara = getLocalStorage(keySelectChara);
+	const RewardsInfo = [];
 	let selectRarity = {};
 	let selectArtifact = {};
 	const artifactReward = {
@@ -1473,34 +1488,46 @@ function decideArtifactReward(){
 		rare:{weight:17, rarity: artifactRarity.rare},
 	};
 	const totalWeight = Object.values(artifactReward).reduce((sum, item) => sum + item.weight, 0);
-	let random = Math.floor(Math.random() * totalWeight);
-	for (const rarity of Object.values(artifactReward)) {
-		if (random < rarity.weight) {
-			selectRarity = rarity.rarity;
-			break;
+	let index = 0;
+	let RewardNum = 1;
+	//エリートを倒すと2個のレリックをドロップするようになる。
+	const eliteAdditionalRemuneration = myArtifacts.find((artifact) => 
+		artifact.name === normalArtifact.eliteAdditionalRemuneration.name);
+	if(eliteAdditionalRemuneration){RewardNum = 2;}
+	while(index < RewardNum){
+		let random = Math.floor(Math.random() * totalWeight);
+		for (const rarity of Object.values(artifactReward)) {
+			if (random < rarity.weight) {
+				selectRarity = rarity.rarity;
+				break;
+			}
+			random -= rarity.weight;
 		}
-		random -= rarity.weight;
+		let filteringArtifact = Object.values(normalArtifact)
+			.filter((artifact) => artifact.rarity === selectRarity)
+			.filter((artifact) => {
+				return !myArtifacts.find((myArtifact) => myArtifact.name === artifact.name);
+			})
+			.filter((artifact) => {
+				return !RewardsInfo.find((RewardInfo) => RewardInfo.amount.name === artifact.name);
+			});
+		if (selectChara === selectCharacter.gran.name){
+			filteringArtifact = filteringArtifact.filter((artifact) => 
+				artifact.dedicated === artifactdedicated.common || 
+				artifact.dedicated === artifactdedicated.gran
+			);
+		} else if (selectChara === selectCharacter.djeeta.name){
+			filteringArtifact = filteringArtifact.filter((artifact) => 
+				artifact.dedicated === artifactdedicated.common || 
+				artifact.dedicated === artifactdedicated.djeeta
+			);
+		}
+		console.log(filteringArtifact);
+		selectArtifact = shuffleArray(filteringArtifact).shift();
+		RewardsInfo.push({type: rewardType.artifact, getFlag: true, amount: selectArtifact});
+		index++;
 	}
-	let filteringArtifact = Object.values(normalArtifact)
-		.filter((artifact) => artifact.rarity === selectRarity)
-		.filter((artifact) => {
-			return !myArtifacts.find((myArtifact) => myArtifact.name === artifact.name);
-		});
-	if (selectChara === selectCharacter.gran.name){
-		filteringArtifact = filteringArtifact.filter((artifact) => 
-			artifact.dedicated === artifactdedicated.common || 
-			artifact.dedicated === artifactdedicated.gran
-		);
-	} else if (selectChara === selectCharacter.djeeta.name){
-		filteringArtifact = filteringArtifact.filter((artifact) => 
-			artifact.dedicated === artifactdedicated.common || 
-			artifact.dedicated === artifactdedicated.djeeta
-		);
-	}
-	console.log(filteringArtifact);
-	selectArtifact = shuffleArray(filteringArtifact).shift();
-
-	return {type: rewardType.artifact, getFlag: true, amount: selectArtifact};
+	return RewardsInfo;
 }
 /*******************************************************/
 /* decideBossArtifactReward：報酬用ボスアーティファクト決定関数
@@ -1547,8 +1574,7 @@ function effectCount(amount){
 function effectGetMoney(amount){
 	console.log('effectGetMoney');
 	if('money' in amount){
-		playerStatus.money += amount.money;
-		
+		getMoney(amount.money);
 	}
 	updateMoneyDom();
 	endAction();
@@ -1676,6 +1702,33 @@ function effectGetEnergyEvery(amount){
 	}
 	endAction();
 	return true;
+}
+/*******************************************************/
+/* 〇エナジーを得る。すべての敵は筋力1を得る。
+/*******************************************************/
+function effectGetEnergyAndEnemyBuff(amount){
+	// 2エナジーを得る。廃棄。
+	console.log('effectGetEnergyAndEnemyBuff');
+	if('energy' in amount){
+		playerStatus.remainEnergy += amount.energy;
+	}
+	if('buff' in amount && 'buffType' in amount ){
+		actionStatusAllDebuf(buffStatus[amount.buffType], amount.buff);
+	}
+	endAction();
+}
+/*******************************************************/
+/* ボスとエリートとの戦闘において、ターン開始時に、1エナジーを得る。
+/*******************************************************/
+function effectGetEnergyIfBossAndSpecial(amount){
+	// 2エナジーを得る。廃棄。
+	console.log('effectGetEnergyIfBossAndSpecial');
+	if( 'energy' in amount &&
+		(currentLevel === stageLevel.special || currentLevel === stageLevel.boss)
+	){
+		playerStatus.remainEnergy += amount.energy;
+	}
+	endAction();
 }
 /*******************************************************/
 /* カードを10枚プレイするたび、カードを1枚引く。
@@ -1839,9 +1892,25 @@ function effectRandomUpgrade(amount){
 	endAction();
 	return true;
 }
-
 /*******************************************************/
-/* 獲得時に、ランダムな2枚の「〇〇」をアップグレードする。
+/* 獲得時、2枚のカードをデッキから削除する。
+/*******************************************************/
+function effectSelectRemove(amount){
+	console.log('effectSelectRemove');
+	$('.remove-area').addClass('active');
+	$('.remove-modal-body').html('');
+	myOriginalDeck.forEach((deckCard) => {
+		const removeCardDiv = createCardDom(deckCard);
+		removeCardDiv
+			.attr('id', `remove-card${deckCard.id}`)
+			.addClass('remove-card')
+			.click(() => {
+			});
+			$('.remove-modal-body').append(removeCardDiv);
+	});
+}
+/*******************************************************/
+/* このターンの間手札のランダムなカード1枚のコストが0になる。
 /*******************************************************/
 function effectRandomCostDown(amount){
 	console.log('effectRandomCostDown');
@@ -1938,6 +2007,10 @@ function effectAddRandomCard(amount){
 	return true;
 }
 
+/*******************************************************/
+/* あなたが1ターンにプレイしたカードの枚数が3枚以下だったとき、
+/* 次のターン開始時、カードを追加で3枚引く。
+/*******************************************************/
 function effectDrawBelowThreePlay(amount){
 	console.log('effectDrawBelowThreePlay');
 	if('draw' in amount && playerStatus.Count.playCardPerTurn <= 3){
@@ -1947,3 +2020,4 @@ function effectDrawBelowThreePlay(amount){
 		});
 	}
 }
+

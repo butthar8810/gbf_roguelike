@@ -120,8 +120,8 @@ function climbTowerStart(){
 /*				mapDiv.html(`<img src='${stages.normal.image}'>`);
 				mapRows.push(stages.normal);
 */
-				mapDiv.html(`<img src='${stages.rest.image}'>`);
-				mapRows.push(stages.rest);
+				mapDiv.html(`<img src='${stages.special.image}'>`);
+				mapRows.push(stages.special);
 			} else {
 				let randomMap = mt.nextInt(0, totalWeight);
 				for (const stage of Object.values(stages)) {

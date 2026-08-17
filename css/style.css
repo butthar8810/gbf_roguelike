@@ -2380,6 +2380,73 @@ header{
 	transform: translate(-50%, -50%);
 	text-align: center;
 }
+
+/*****************************************************************************/
+/* remove-area: カード削除エリア
+/*****************************************************************************/
+.remove-area{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	margin: 40px 0px;
+	padding: 0 50px;
+	text-align: center;
+	background: rgba(0, 0, 0, 0.8);
+	visibility: hidden;
+	overflow: auto;
+	opacity: 0;
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+.remove-area.active{
+	visibility: visible;
+	opacity: 1;
+}
+.remove-modal-body{
+	max-width: 1100px;
+	max-height: 680px;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: flex-start;
+	align-items: center;
+	overflow-y: auto;
+}
+.remove-modal-body>div{
+	margin: 10px 16px;
+}
+.remove-title{
+	font-size: 28px;
+	color: white;
+	font-weight: 900;
+	text-stroke: 1px gray;
+	-webkit-text-stroke: 1px gray;
+}
+.remove-btn-area{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.remove-btn-area>div{
+	margin: 10px 20px;
+}
+.remove-card{
+	font-size: 17px;
+	width: 180px;
+	margin: 10px 7px;
+	border-radius: 12px;
+}
+.remove-card.select{
+	background-color: rgba(254, 197, 105);
+	box-shadow: 1px 1px 5px red;
+}
+.remove-card:hover{
+	transform: scale(1.1);
+}
 /*****************************************************************************/
 /* list-back-area: カード表示エリア
 /*****************************************************************************/

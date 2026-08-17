@@ -788,14 +788,8 @@ function updateEnemyAreaDom(argEnemies, omenFlag = false){
 			.hover(() => {
 				modalsDiv.addClass('hidden');
 			}, () => {});
-		const omenModalImage = $('<img>')
-			.attr('src', enemy.currentStatus.nextAction.image);
-		const omenName = $('<p>')
-			.append(enemy.currentStatus.nextAction.name)
-			.append(omenModalImage);
 		const omenModalDiv = $('<div>')
-			.addClass('enemy-modal')
-			.append(omenName);
+			.addClass('enemy-modal');
 		modalsDiv.append(omenModalDiv);
 		enemy.currentStatus.status.forEach((status) => {
 			// ステータス[status]の要素
@@ -835,27 +829,52 @@ function updateEnemyAreaDom(argEnemies, omenFlag = false){
 			}, () => {
 				modalsDiv.addClass('hidden');
 			});
+		
 		if (omenFlag || Object.keys(enemy.currentStatus.nextAction).length === 0){
-			// 予測攻撃[omen]の要素
-			const nextActionImage = $('<img>')
-				.attr('src', enemy.currentStatus.nextAction.image);
-			const omenInnerDiv = $('<div>')
-				.addClass('omen-inner')
-				.append(nextActionImage);
-			if(enemy.currentStatus.nextAction.damage > 0){
-				let totalAttack = calcEnemyDamage(enemy.currentStatus.nextAction.damage, enemy, playerStatus);
-				const damageDiv = $('<div>')
-					.addClass('damage')
-					.html(totalAttack);
-				omenInnerDiv.append(damageDiv);
-				omenModalDiv.append(omenText(enemy.currentStatus.nextAction, totalAttack));
-			} else {
-				omenModalDiv.append(omenText(enemy.currentStatus.nextAction));
+			const energyNotOmen = myArtifacts.find((artifact) => 
+				artifact.name === normalArtifact.energyNotOmen.name);
+			if(energyNotOmen){
+				const omenName = $('<p>')
+					.append('予測不能');
+				omenModalDiv.append(omenName);
+				const nextActionImage = $('<img>')
+					.attr('src', '');
+				const omenInnerDiv = $('<div>')
+					.addClass('omen-inner')
+					.append(nextActionImage);
+				omenModalDiv.append('この敵が予定している<br>行動を予測できません。');
+				const omenDiv = $('<div>')
+					.addClass('omen')
+					.append(omenInnerDiv);
+				enemyAreaDiv.append(omenDiv);
+			}else{
+				// 予測攻撃[omen]の要素
+				const omenModalImage = $('<img>')
+					.attr('src', enemy.currentStatus.nextAction.image);
+				const omenName = $('<p>')
+					.append(enemy.currentStatus.nextAction.name)
+					.append(omenModalImage);
+				omenModalDiv.append(omenName);
+				const nextActionImage = $('<img>')
+					.attr('src', enemy.currentStatus.nextAction.image);
+				const omenInnerDiv = $('<div>')
+					.addClass('omen-inner')
+					.append(nextActionImage);
+				if(enemy.currentStatus.nextAction.damage > 0){
+					let totalAttack = calcEnemyDamage(enemy.currentStatus.nextAction.damage, enemy, playerStatus);
+					const damageDiv = $('<div>')
+						.addClass('damage')
+						.html(totalAttack);
+					omenInnerDiv.append(damageDiv);
+					omenModalDiv.append(omenText(enemy.currentStatus.nextAction, totalAttack));
+				} else {
+					omenModalDiv.append(omenText(enemy.currentStatus.nextAction));
+				}
+				const omenDiv = $('<div>')
+					.addClass('omen')
+					.append(omenInnerDiv);
+				enemyAreaDiv.append(omenDiv);
 			}
-			const omenDiv = $('<div>')
-				.addClass('omen')
-				.append(omenInnerDiv);
-			enemyAreaDiv.append(omenDiv);
 		}
 		$(`.enemies-area`).append(enemyAreaDiv);
 		if(enemy.currentStatus.status.some(status => status.id === dead.id)){
@@ -917,16 +936,28 @@ function updateEnemyStatusDom(argEnemies){
 		const modalsDiv = 
 			$(`#${enemy.currentStatus.divId}`).children('.enemy-modals');
 		modalsDiv.html('');
-		const omenModalImage = $('<img>')
-			.attr('src', enemy.currentStatus.nextAction.image);
-		const omenName = $('<p>')
-			.append(enemy.currentStatus.nextAction.name)
-			.append(omenModalImage);
-		const omenModalDiv = $('<div>')
-			.addClass('enemy-modal')
-			.append(omenName)
-			.append(omenText(enemy.currentStatus.nextAction));
-		modalsDiv.append(omenModalDiv);
+		const energyNotOmen = myArtifacts.find((artifact) => 
+			artifact.name === normalArtifact.energyNotOmen.name);
+		if(energyNotOmen){
+			const omenName = $('<p>')
+				.append('予測不能');
+			const omenModalDiv = $('<div>')
+				.addClass('enemy-modal')
+				.append(omenName)
+				.append('この敵が予定している<br>行動を予測できません。');
+			modalsDiv.append(omenModalDiv);
+		}else{
+			const omenModalImage = $('<img>')
+				.attr('src', enemy.currentStatus.nextAction.image);
+			const omenName = $('<p>')
+				.append(enemy.currentStatus.nextAction.name)
+				.append(omenModalImage);
+			const omenModalDiv = $('<div>')
+				.addClass('enemy-modal')
+				.append(omenName)
+				.append(omenText(enemy.currentStatus.nextAction));
+			modalsDiv.append(omenModalDiv);
+		}
 		enemy.currentStatus.status.forEach((status) => {
 			// ステータス[status]の要素
 			const statusImage = $('<img>')
