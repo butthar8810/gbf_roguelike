@@ -96,6 +96,7 @@ const debuffStatus = {
 	dexterityDown: {id: '1002', name: '回避率ダウン', amount: '', effect: 'カードから得られるブロックが-{X}。', image: 'images/status/status_1566_2.png'},
 	autophagy: {id: '1003', name: '自壊因子', amount: '', effect: 'この敵が死亡した時、その最大HPの{X}倍に等しいダメージを敵全体に与える。', image: 'images/status/status_3096.png'},
 	slowing: {id: '1004', name: '鈍化', amount: '', effect: 'ターン終了時に回避率ダウン1を得る。', image: 'images/status/status_3270.png'},
+
 	// ターン制
 	defenseDown: {id: '1101', name: '防御力ダウン', amount: '', effect: 'アタックで受けるダメージが50%増加。{X}ターン有効。', image: 'images/status/status_1020.png'},
 	frail: {id: '1102', name: '脆弱化', amount: '', effect: 'カードから得られるブロックが25%減少。{X}ターン有効。', image: 'images/status/status_1011.png'},
@@ -110,7 +111,8 @@ const debuffStatus = {
 	invalidAttackDown: {id: '1203', name: '攻Down削除', amount: '',effect: 'ターン終了時、攻撃力ダウンを{X}下げる',image: 'images/status/status_9999_2.png'},
 	suffocation: {id: '1204', name: '窒息', amount: '', effect: 'カードをプレイするたび、HPを{X}失う。1ターン有効', image: 'images/status/status_1103.png'},
 	fainting: {id: '1205', name: '気絶', amount: '', effect: '行動を制限された状態。1ターン有効', image: 'images/status/status_1412.png'},
-
+	//未実装
+	confusion: {id: '1005', name: '混乱', amount: '', effect: 'カードを引くたび、そのコストはランダムに変化する。', image: 'images/status/status_7297.png'},
 	heat: {id: '1017', name: '灼熱', amount: '', effect: 'カードをプレイするたび、あなたは{X}ダメージを受ける。', image: 'images/status/status_83.png'},
 	petrification: {id: '1018', name: '石化', amount: '', effect: '', image: 'images/status/status_1241.png'},
 	Fading: {id: '1019', name: '死の宣告', amount: '', effect: '{X}ターン経過後、死亡する。', image: 'images/status/status_100.png'},
@@ -221,6 +223,7 @@ const phase = {
 
 const artifactPhase = {
 	twoRemove: 'ナーヴマテリアルフェイズ',
+	changeAndUpgrade: '祖なる欠片フェイズ',
 }
 /*****************************************************************************/
 /* グローバル変数
@@ -267,6 +270,7 @@ let currentPhase = phase.action;
 //カード処理用キュー
 const moonQueue = [];
 const cannonQueue = [];
+const drawCardQueue = [];
 //各種フラグ
 let enemyAttackWaitFlag = false;
 let allDefeatedFlag = false;

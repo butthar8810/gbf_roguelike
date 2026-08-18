@@ -32,7 +32,7 @@ function loadTopPage(){
 			removeLocalStorage(keyContinueShopLineup);
 			removeLocalStorage(keyContinueTreasure);
 			removeLocalStorage(keyContinueTemporary);
-			removeLocalStorage(keyContinueRewardPhase);
+			removeLocalStorage(keyContinueArtifactPhase);
 			
 			removeLocalStorage(keyContinueDeck);
 			removeLocalStorage(keyContinueHand);

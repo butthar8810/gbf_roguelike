@@ -1,7 +1,7 @@
 /*************************************************************************************/
 /* 各カード情報
 /*************************************************************************************/
-const cardClass = {gran: 'グラン', djeeta: 'ジータ', common: '共通', abnormal: '状態異常'};
+const cardClass = {gran: 'グラン', djeeta: 'ジータ', common: '共通', abnormal: '状態異常', curse: '呪い'};
 const rarity = {starter: '初期', common: 'レア', uncommon: 'スーパーレア', rare: 'SSレア'};
 const type = {attack: 'アタック', skill: 'スキル', power: 'パワー', abnormal: '状態異常'};
 
@@ -633,7 +633,7 @@ const granCardList = {
 		class: cardClass.gran,
 		rarity: rarity.uncommon,
 		type: type.skill,
-		func: 'effectDrawAndDebuff',
+		func: 'effectDrawAndSelfDebuff',
 		image:'images/card/gran_Script.jpg',
 		effect: 'カードを{Dr}枚引く。このターン、追加でカードを引くことができない。',
 		amount: {
@@ -1862,7 +1862,7 @@ const granEnhancedCardList = {
 		class: cardClass.gran,
 		rarity: rarity.uncommon,
 		type: type.skill,
-		func: 'effectDrawAndDebuff',
+		func: 'effectDrawAndSelfDebuff',
 		image:'images/card/gran_Script.jpg',
 		effect: 'カードを<span class="upgrade">{Dr}</span>枚引く。このターン、追加でカードを引くことができない。',
 		amount: {
@@ -2476,7 +2476,7 @@ const granEnhancedCardList = {
 	},
 };
 /*****************************************************************************************/
-/* ジータカードリスト
+/* ジータカードリスト(強化前)
 /*****************************************************************************************/
 const djeetaCardList = {
 	Wide: {
@@ -3815,7 +3815,9 @@ const djeetaCardList = {
 		}
 	},
 };
-
+/********************************************************************************************************/
+/* ジータカードリスト(強化後)
+/********************************************************************************************************/
 const djeetaEnhancedCardList = {
 	Wide: {
 		No:411001,
@@ -5084,7 +5086,7 @@ const djeetaEnhancedCardList = {
 };
 
 /*****************************************************************************************/
-/* 無色カードリスト
+/* 無色カードリスト(強化前)
 /*****************************************************************************************/
 const commonCardList = {
 	Knife: {
@@ -5773,6 +5775,9 @@ const commonCardList = {
 		}
 	},
 };
+/********************************************************************************************************/
+/* 無色カードリスト(強化後)
+/********************************************************************************************************/
 const commonEnhancedCardList = {
 	Knife: {
 		No:611001,
@@ -7375,9 +7380,9 @@ function effectReuseToHand(amount){
 	console.log('effectReuseToHand');
 	actionReuseCard();
 }
-function effectDrawAndDebuff(amount){
+function effectDrawAndSelfDebuff(amount){
 	// カードを{Dr}枚引く。このターン、追加でカードを引くことができない。
-	console.log('effectDrawAndDebuff');
+	console.log('effectDrawAndSelfDebuff');
 	if('draw' in amount){
 		const cards = drawCardFromDeck(amount.draw);
 		cards.forEach((card) => {
@@ -7392,7 +7397,7 @@ function effectDrawAndDebuff(amount){
 }
 function effectDrawAndDiscard(amount){
 	// カードを2枚引く。カードを1枚廃棄する。
-	console.log('effectDrawAndDebuff');
+	console.log('effectDrawAndDiscard');
 	if('draw' in amount){
 		const cards = drawCardFromDeck(amount.draw);
 		cards.forEach((card) => {
@@ -7899,7 +7904,7 @@ function effectTimesRandomDebuff(amount){
 }
 function effectDrawAndSkillDefense(amount){
 	// カードを1枚引く。引いたカードが「スキル」の場合、3ブロックを得る。
-	console.log('effectDraw');
+	console.log('effectDrawAndSkillDefense');
 	if('draw' in amount && 'block' in amount){
 		const cards = drawCardFromDeck(amount.draw);
 		cards.forEach((card) => {
@@ -7991,7 +7996,7 @@ function effectGetEnergyAndDrawXPlusOneTimes(amount){
 }
 function effectDebuffAndCostDown(amount){
 	// このターン、カードを引くことができない。このターン、あなたの手札のコストは0になる。
-	console.log('effectDrawAndDebuff');
+	console.log('effectDebuffAndCostDown');
 	myHand.forEach((hand) => {
 		if(hand.amount.cost !== 'X'){
 			hand.amount.tmpCost = 0;

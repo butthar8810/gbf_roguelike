@@ -1083,7 +1083,9 @@ const normalArtifact = {
 		effect: '獲得時、2枚のカードをデッキから削除する。', 
 		image: 'images/artifact/NarveMaterial.png', 
 		getFunc: 'effectSelectRemove',
-		amount: {}
+		amount: {
+			count: 2,
+		}
 	},
 	changeAndUpgrade: {
 		name: '祖なる欠片', 
@@ -1091,13 +1093,24 @@ const normalArtifact = {
 		dedicated: artifactdedicated.common,
 		effect: '獲得時、3枚のカードを選択して変化させ、それらをアップグレードする。', 
 		image: 'images/artifact/LineageFragment.png', 
+		getFunc: 'effectSelectChangeAndUpgrade',
+		amount: {
+			count: 3,
+		}
 	},
-	drawAndconfusion: {
+	drawAndConfusion: {
 		name: 'イグナイトラブル', 
 		rarity: artifactRarity.boss,
 		dedicated: artifactdedicated.common,
 		effect: 'ターン開始時、2枚カードを追加で引く。戦闘開始時に混乱。', 
 		image: 'images/artifact/SmolderingRubble.png', 
+		firstFunc: 'effectDrawAndSelfDebuff',
+		turnFunc: 'effectDraw',
+		amount: {
+			draw: 2,
+			debuff: '',
+			debuffType: 'confusion',
+		}
 	},
 	NoTrash: {
 		name: '機神の基板', 
@@ -1328,7 +1341,7 @@ function setupArtifact(){
 		} else if (selectChara === selectCharacter.djeeta.name){
 			getArtifact(normalArtifact.startDraw);
 			getArtifact(normalArtifact.eye);
-//			getArtifact(normalArtifact.twoRemove);
+			getArtifact(normalArtifact.NoTrash);
 //			getArtifact(normalArtifact.eliteAdditionalRemuneration);
 		}
 		setLocalStorage(keyContinueArtifact, myArtifacts);
@@ -1356,9 +1369,13 @@ function getArtifact(artifact){
 /*******************************************************/
 function continueArtifactPhase(){
 	const lastRewardPhase = getLocalStorage(keyContinueArtifactPhase);
+	console.log(`continueArtifactPhase:${lastRewardPhase}`);
 	switch(lastRewardPhase){
 		case artifactPhase.twoRemove:
 			effectSelectRemove(normalArtifact.twoRemove.amount);
+			break;
+		case artifactPhase.changeAndUpgrade:
+			effectSelectChangeAndUpgrade(normalArtifact.changeAndUpgrade.amount);
 			break;
 		default:
 			break;
@@ -1911,22 +1928,22 @@ function effectRandomUpgrade(amount){
 function effectSelectRemove(amount){
 	console.log('effectSelectRemove');
 	setLocalStorage(keyContinueArtifactPhase, artifactPhase.twoRemove);
-	$('.remove-area').addClass('active');
-	$('.remove-modal-body').html('');
+	$('.show-original-deck-area').addClass('active');
+	$('.show-original-deck-modal-body').html('');
 	myOriginalDeck.forEach((deckCard) => {
 		const removeCardDiv = createCardDom(deckCard);
 		removeCardDiv
-			.attr('id', `remove-card${deckCard.id}`)
-			.addClass('remove-card')
+			.attr('id', `show-original-deck-card${deckCard.id}`)
+			.addClass('show-original-deck-card')
 			.click(() => {
 				const index = findIndexTemporaryArea('id', deckCard.id);
 				if (index === -1) {
-					if (tmpArea.length < 2){
+					if (tmpArea.length < amount.count){
 						pushTemporaryArea(deckCard);
 						removeCardDiv.addClass("select");
 					} else {
 						const cancelCard = shiftTemporaryArea();
-						$(`#remove-card${cancelCard.id}`).removeClass("select");
+						$(`#show-original-deck-card${cancelCard.id}`).removeClass("select");
 						pushTemporaryArea(deckCard);
 						removeCardDiv.addClass("select");
 					}
@@ -1935,10 +1952,10 @@ function effectSelectRemove(amount){
 					removeCardDiv.removeClass("select");
 				}
 			});
-			$('.remove-modal-body').append(removeCardDiv);
+			$('.show-original-deck-modal-body').append(removeCardDiv);
 	});
-	$('.remove-btn').off();
-	$('.remove-btn')
+	$('.show-original-deck-btn').off();
+	$('.show-original-deck-btn')
 		.click(() => {
 			if(tmpArea.length < 2){
 				return false;
@@ -1956,8 +1973,90 @@ function effectSelectRemove(amount){
 				}
 				
 			});
-			$('.remove-area').removeClass('active');
-			$('.remove-modal-body').html('');
+			$('.show-original-deck-area').removeClass('active');
+			$('.show-original-deck-modal-body').html('');
+			setupOriginalDeckBtnDom();
+			setLocalStorage(keyContinueOriginalDeck, myOriginalDeck);
+			removeLocalStorage(keyContinueArtifactPhase);
+			endAction();
+		});
+	return true;
+}
+/*******************************************************/
+/* 3枚のカードを選択して変化させ、それらをアップグレードする。
+/*******************************************************/
+function effectSelectChangeAndUpgrade(amount){
+	console.log('effectSelectChangeAndUpgrade');
+	setLocalStorage(keyContinueArtifactPhase, artifactPhase.changeAndUpgrade);
+	$('.show-original-deck-area').addClass('active');
+	$('.show-original-deck-modal-body').html('');
+	myOriginalDeck.forEach((deckCard) => {
+		const changeCardDiv = createCardDom(deckCard);
+		changeCardDiv
+			.attr('id', `show-original-deck-card${deckCard.id}`)
+			.addClass('show-original-deck-card')
+			.click(() => {
+				const index = findIndexTemporaryArea('id', deckCard.id);
+				if (index === -1) {
+						if (tmpArea.length < amount.count){
+						pushTemporaryArea(deckCard);
+						changeCardDiv.addClass("select");
+					} else {
+						const cancelCard = shiftTemporaryArea();
+						$(`#show-original-deck-card${cancelCard.id}`).removeClass("select");
+						pushTemporaryArea(deckCard);
+						changeCardDiv.addClass("select");
+					}
+				} else {
+					spliceTemporaryArea(index);
+					changeCardDiv.removeClass("select");
+				}
+			});
+			$('.show-original-deck-modal-body').append(changeCardDiv);
+	});
+	$('.show-original-deck-btn').off();
+	$('.show-original-deck-btn')
+		.click(() => {
+			if(tmpArea.length < 2){
+				return false;
+			}
+			const discardCards = deleteAllTemporaryArea();
+			discardCards.forEach((discardCard) => {
+				setLocalStorage(keyContinueTemporary, tmpArea);
+				const index = findIndexOriginalDeck('id', discardCard.id);
+				if (index === -1) {
+					return false;
+				}
+				const card = spliceOriginalDeck(index);
+				if (card === undefined) {
+					return false;
+				}
+				console.log(card);
+				let selectEnhancedCardList = [];
+				//専用カードのラインナップ(強化後)
+				if (card.class == cardClass.gran) {
+					selectEnhancedCardList = deepCopyCardList(Object.values(granEnhancedCardList));
+				} else if (card.class == cardClass.djeeta) {
+					selectEnhancedCardList = deepCopyCardList(Object.values(djeetaEnhancedCardList));
+				} else if (card.class == cardClass.common) {
+					selectEnhancedCardList = deepCopyCardList(Object.values(commonEnhancedCardList));
+				} else if (card.class == cardClass.curse) {
+					selectEnhancedCardList = deepCopyCardList(Object.values(curseCardList));
+				}else {
+					selectEnhancedCardList = deepCopyCardList(Object.values(commonEnhancedCardList));
+				}
+				selectEnhancedCardList = selectEnhancedCardList.filter((card) => 
+					card.rarity === rarity.common || 
+					card.rarity === rarity.uncommon || 
+					card.rarity === rarity.rare
+				);
+				const selectCard = shuffleArray(selectEnhancedCardList).shift();
+				pushOriginalDeck(selectCard);
+			});
+			$('.show-original-deck-area').removeClass('active');
+			$('.show-original-deck-modal-body').html('');
+			setupOriginalDeckBtnDom();
+			setLocalStorage(keyContinueOriginalDeck, myOriginalDeck);
 			removeLocalStorage(keyContinueArtifactPhase);
 			endAction();
 		});

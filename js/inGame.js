@@ -303,8 +303,14 @@ function setupHandCard(){
 		// 続きからの場合
 		myHand = lastHand;
 	} else {
-		const giftCardsNum = giftDrawFromDeck();
-		drawCardFromDeck(initialHandNum - giftCardsNum);
+		drawCardQueue.splice(0, drawCardQueue.length);
+		const giftCards = giftDrawFromDeck()
+		giftCards.forEach((giftCard) => {
+			drawCardQueue.push(giftCard);
+		});
+		drawCardFromDeck(initialHandNum - giftCards.length).forEach((drawCard) => {
+			drawCardQueue.push(drawCard);
+		});
 		setLocalStorage(keyContinueHand, myHand);
 	}
 }
@@ -775,10 +781,13 @@ async function startTurn(){
 	).done(() => {
 		updatePlayerAreaDom(playerStatus);
 	});
-	for(const hand of myHand){
+	for(const hand of drawCardQueue){
 		await animateDrawDeck(hand);
 	}
-	$.when(cardDrawPromise,cardAddHandPromise).done(() => {
+	$.when(
+		cardDrawPromise,
+		cardAddHandPromise
+	).done(() => {
 		updateHandDom();
 		disabledMyHand(false);
 		updateDeckDom();
@@ -1130,29 +1139,37 @@ function endTurn(){
 	// カードに触れれなくする
 	disabledMyHand(true);
 	// 手札を捨て札エリアに格納
-	deleteAllHand().forEach((card) => {
-		//一時的なコストは削除
-		if ('tmpCost' in card.amount){
-			delete card.amount.tmpCost
-		}
-		if('ethereal' in card.amount && card.amount.ethereal){
-			// エセリアルは廃棄
-			discardCardProcess(card);
-			animateHandToDiscard(card);
-		} else {
-			pushTrash(card);
-			animateHandToTrash(card);
-		}
-	});
-	// トラッシュアニメーションが完了したら
-	$.when(
-		cardTrashPromise,
-		cardDiscardPromise
-	).done(() => {
-		hiddenHandDom();
+	const NoTrash = myArtifacts.find((artifact) => 
+		artifact.name === normalArtifact.NoTrash.name);
+	if(!NoTrash){
+		deleteAllHand().forEach((card) => {
+			//一時的なコストは削除
+			if ('tmpCost' in card.amount){
+				delete card.amount.tmpCost
+			}
+			if('ethereal' in card.amount && card.amount.ethereal){
+				// エセリアルは廃棄
+				discardCardProcess(card);
+				animateHandToDiscard(card);
+			} else {
+				pushTrash(card);
+				animateHandToTrash(card);
+			}
+		});
+	
+		// トラッシュアニメーションが完了したら
+		$.when(
+			cardTrashPromise,
+			cardDiscardPromise
+		).done(() => {
+			hiddenHandDom();
+			updateDiscardDom();
+			updateTrashDom();
+		});
+	} else {
 		updateDiscardDom();
 		updateTrashDom();
-	});
+	}
 	// アーティファクトの効果を発動（turnEndFunc）
 	myArtifacts.forEach((artifact) => {
 		if('turnEndFunc' in artifact){
@@ -1231,8 +1248,11 @@ function endTurn(){
 	checkEnemyDefeated(currentEnemies, playerStatus);
 	updatePlayerStatusDom(playerStatus);
 	updateEnemyStatusDom(currentEnemies);
-	
-	startEnemiesTurn();
+	if (allDefeatedFlag){
+		allEnemiesDefeated();
+	} else {
+		startEnemiesTurn();
+	}
 }
 
 
@@ -1240,6 +1260,7 @@ function endTurn(){
 /* drawDeckCard：デッキからカードをドローする
 /*******************************************************/
 function drawCardFromDeck(count = 1){
+	let drawCount = count;
 	const drawCards = [];
 	if(	playerStatus.statuses
 		.find((status) => status.id === debuffStatus.noDraw.id)
@@ -1247,7 +1268,11 @@ function drawCardFromDeck(count = 1){
 		console.log('デバフによって引けません');
 		return true;
 	}
-	for(let i = 0; i < count; i++){
+	if(myHand.length + drawCount >= 10){
+		drawCount = 10 - myHand.length;
+	}
+	console.log(`draw: ${drawCount}`);
+	for(let i = 0; i < drawCount; i++){
 		if (myDeck.length <= 0) {
 			// 捨て札をデッキに再構築する
 			reconfigureDeck();
@@ -1296,6 +1321,7 @@ function drawCardFromDeck(count = 1){
 /* giftDrawFromDeck：「天賦」のカードを引く
 /*******************************************************/
 function giftDrawFromDeck(){
+	const returnCard = [];
 	const giftCardIndex = myDeck.reduce((acc, current, index) => {
 		if ('gift' in current.amount && current.amount.gift) {
 			acc.push(index);
@@ -1307,9 +1333,10 @@ function giftDrawFromDeck(){
 	for(let i = giftCardIndex.length - 1; i >= 0; i--){
 		const giftCard = spliceDeck(giftCardIndex[i]);
 		pushHand(giftCard);
+		returnCard.push(giftCard);
 	}
 	console.log(`天賦：${giftCardIndex.length}枚`);
-	return giftCardIndex.length;
+	return returnCard;
 }
 /*******************************************************/
 /* reconfigureDeck：捨て札のカードをデッキに再構成する
@@ -2266,7 +2293,7 @@ function allEnemiesDefeated(){
 				const Artifact = {
 					type: rewardType.artifact, 
 					getFlag: true, 
-					amount: normalArtifact.twoRemove
+					amount: normalArtifact.changeAndUpgrade
 				};
 				rewards.push(Artifact);
 				break;
@@ -2303,18 +2330,4 @@ function decideMoneyReward(){
 			break;
 	}
 	return {type: rewardType.money, getFlag: true, amount: money};
-}
-
-/*******************************************************/
-/* startRewardPhase：報酬フェイスの開始
-/*******************************************************/
-function continueArtifactPhase(){
-	const lastRewardPhase = getLocalStorage(keyContinueArtifactPhase);
-	switch(lastRewardPhase){
-		case artifactPhase.twoRemove:
-			effectSelectRemove(normalArtifact.twoRemove.amount);
-			break;
-		default:
-			break;
-	}
 }
