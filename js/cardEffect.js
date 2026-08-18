@@ -8238,18 +8238,18 @@ function effectAttackAndPayment(amount){
 }
 function effectAttackToHandInDeck(amount){
 	console.log('effectAttackToHandInDeck');
-	actionSertchAttackCard();
+	actionSearchAttackCard();
 	return true;
 }
 function effectSkillToHandInDeck(amount){
 	console.log('effectSkillToHandInDeck');
-	actionSertchSkillCard();
+	actionSearchSkillCard();
 	return true;
 }
 function effectRandomAttackToHandInDeck(amount){
 	console.log('effectAttackToHandInDeck');
 	if('count' in amount){
-		actionSertchRandomAttackCard(amount.count);
+		actionSearchRandomAttackCard(amount.count);
 	}
 	return true;
 }
@@ -9464,24 +9464,24 @@ function reuseCard(){
 /*******************************************************/
 /* 山札からカードをサーチする関数
 /*******************************************************/
-function actionSertchAttackCard(){
-	startPhase(phase.sertchAttackToHand);
+function actionSearchAttackCard(){
+	startPhase(phase.searchAttackToHand);
 }
-function actionSertchSkillCard(){
-	startPhase(phase.sertchSkillToHand);
+function actionSearchSkillCard(){
+	startPhase(phase.searchSkillToHand);
 }
-function sertchCard(){
-	console.log('sertchCard');
+function searchCard(){
+	console.log('searchCard');
 	if(tmpArea.length === 0){
 		return false;
 	}
 	$('.black-back-area').removeClass('active');
 	$('.return-decide-area').removeClass('active');
-	const sertchCard = shiftTemporaryArea();
-	if (sertchCard !== undefined) {
+	const searchCard = shiftTemporaryArea();
+	if (searchCard !== undefined) {
 		setLocalStorage(keyContinueTemporary, tmpArea);
 
-		const index = findIndexDeck('id', sertchCard.id);
+		const index = findIndexDeck('id', searchCard.id);
 		if (index === -1) {
 			return false;
 		}
@@ -9505,7 +9505,7 @@ function sertchCard(){
 /*******************************************************/
 /* 山札からランダムなカードをサーチする関数
 /*******************************************************/
-function actionSertchRandomAttackCard(count){
+function actionSearchRandomAttackCard(count){
 	const filteringDeck = deepCopyCardList(myDeck)
 		.filter((card) => card.type === type.attack);
 	const cards = shuffleArray(filteringDeck).splice(0, count);
@@ -9513,8 +9513,8 @@ function actionSertchRandomAttackCard(count){
 		return false;
 	}
 	const displayCards = [];
-	cards.forEach((sertchCard) => {
-		const index = findIndexDeck('id', sertchCard.id);
+	cards.forEach((searchCard) => {
+		const index = findIndexDeck('id', searchCard.id);
 		if (index === -1) {
 			return false;
 		}

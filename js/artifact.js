@@ -1125,14 +1125,18 @@ const normalArtifact = {
 		dedicated: artifactdedicated.common,
 		effect: '特異な呪いとレリックx3を獲得する。', 
 		image: 'images/artifact/TearsOfApocalypse.png', 
+		getFunc: 'effectGetCurseAndGetArtifact',
 	},
+	//未実装
 	House: {
 		name: 'アルテマメモリ', 
 		rarity: artifactRarity.boss,
 		dedicated: artifactdedicated.common,
 		effect: 'ポーションを1個獲得する。ゴールド50獲得。カードを1枚獲得する。ランダムなカードを1枚アップグレードする。', 
 		image: 'images/artifact/UltimateMemory.png', 
+		getFunc: 'effectGet',
 	},
+	//未実装
 	twicePotion: {
 		name: '紺碧の怪水', 
 		rarity: artifactRarity.boss,
@@ -2060,6 +2064,16 @@ function effectSelectChangeAndUpgrade(amount){
 			removeLocalStorage(keyContinueArtifactPhase);
 			endAction();
 		});
+	return true;
+}
+/*******************************************************/
+/* 特異な呪いとレリックx3を獲得する。
+/*******************************************************/
+function effectGetCurseAndGetArtifact(amount){
+	console.log('effectGetCurseAndGetArtifact');
+	
+	
+	endAction();
 	return true;
 }
 /*******************************************************/

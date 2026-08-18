@@ -789,6 +789,7 @@ async function startTurn(){
 		cardAddHandPromise
 	).done(() => {
 		updateHandDom();
+		drawCardQueue.splice(0, drawCardQueue.length);
 		disabledMyHand(false);
 		updateDeckDom();
 	});
@@ -1080,22 +1081,30 @@ function startTurnProcess(){
 		.find((status) => status.id === buffStatus.hrunting.id);
 	if (hrunting){
 		battleDamageHP(1, playerStatus);
-		drawCardFromDeck(hrunting.amount);
+		drawCardFromDeck(hrunting.amount).forEach((drawCard) => {
+			drawCardQueue.push(drawCard);
+		});
 	}
 	// 「ヘイスト」で追加2枚
 	const nextTurnDraw = playerStatus.statuses
 		.find((status) => status.id === buffStatus.nextTurnDraw.id);
 	if (nextTurnDraw){
-		drawCardFromDeck(nextTurnDraw.amount);
+		drawCardFromDeck(nextTurnDraw.amount).forEach((drawCard) => {
+			drawCardQueue.push(drawCard);
+		});
 	}
 	// 「ケット・シー」で追加1枚
 	const caitSea = playerStatus.statuses
 		.find((status) => status.id === buffStatus.caitSea.id);
 	if (caitSea){
-		drawCardFromDeck(caitSea.amount);
+		drawCardFromDeck(caitSea.amount).forEach((drawCard) => {
+			drawCardQueue.push(drawCard);
+		});
 	}
 	// カードを5枚引く
-	drawCardFromDeck(initialHandNum);
+	drawCardFromDeck(initialHandNum).forEach((drawCard) => {
+		drawCardQueue.push(drawCard);
+	});
 	//フェイズを決定
 	if (caitSea){
 		changePhase(phase.caitSea);
@@ -1268,8 +1277,8 @@ function drawCardFromDeck(count = 1){
 		console.log('デバフによって引けません');
 		return true;
 	}
-	if(myHand.length + drawCount >= 10){
-		drawCount = 10 - myHand.length;
+	if(myHand.length + drawCount >= maxHandCardNum){
+		drawCount = maxHandCardNum - myHand.length;
 	}
 	console.log(`draw: ${drawCount}`);
 	for(let i = 0; i < drawCount; i++){

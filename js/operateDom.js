@@ -1129,22 +1129,22 @@ function createDiscardListDom(){
 /*******************************************************/
 /* createDeckListDom：デッキ一覧のDOM生成(カード効果用)
 /*******************************************************/
-function createSertchListDom(){
+function createSearchListDom(){
 	$('.return-card-list').html('');
 	const copyDeck = deepCopyCardList(myDeck);
 	copyDeck.sort((a, b) => {
 		return a.No > b.No ? 1 : -1;
 	});
 	copyDeck.forEach((card) => {
-		const sertchCardDiv = createCardDom(card);
-		sertchCardDiv
+		const searchCardDiv = createCardDom(card);
+		searchCardDiv
 			.attr('id', `deck-card${card.id}`)
 			.addClass('show-card')
 			.click(card, () => {
-				console.log(sertchCardDiv);
-				clickDeckCardProcess(sertchCardDiv, card);
+				console.log(searchCardDiv);
+				clickDeckCardProcess(searchCardDiv, card);
 			});
-		$('.return-card-list').append(sertchCardDiv);
+		$('.return-card-list').append(searchCardDiv);
 	});
 }
 /*******************************************************/

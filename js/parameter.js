@@ -112,7 +112,7 @@ const debuffStatus = {
 	suffocation: {id: '1204', name: '窒息', amount: '', effect: 'カードをプレイするたび、HPを{X}失う。1ターン有効', image: 'images/status/status_1103.png'},
 	fainting: {id: '1205', name: '気絶', amount: '', effect: '行動を制限された状態。1ターン有効', image: 'images/status/status_1412.png'},
 	//未実装
-	confusion: {id: '1005', name: '混乱', amount: '', effect: 'カードを引くたび、そのコストはランダムに変化する。', image: 'images/status/status_7297.png'},
+	confusion: {id: '1005', name: '混乱', amount: '', effect: 'カードを引くたび、そのコストはランダムに変化する。', image: 'images/status/status_1408.png'},
 	heat: {id: '1017', name: '灼熱', amount: '', effect: 'カードをプレイするたび、あなたは{X}ダメージを受ける。', image: 'images/status/status_83.png'},
 	petrification: {id: '1018', name: '石化', amount: '', effect: '', image: 'images/status/status_1241.png'},
 	Fading: {id: '1019', name: '死の宣告', amount: '', effect: '{X}ターン経過後、死亡する。', image: 'images/status/status_100.png'},
@@ -141,6 +141,7 @@ const fixedStageNormal = 15;
 const initialHandNum = 5;
 const initialEnergy = 3;
 const initialMap = {row: 16, column: 5};
+const maxHandCardNum = 10;
 const mapColumns = 11;
 const mapRows = 16;
 const cardPlay = true;
@@ -206,8 +207,8 @@ const phase = {
 	fiveDiscard: '5枚廃棄フェイズ',// 手札を廃棄
 	restore: 'レストアフェイズ', // 捨て札をデッキに
 	reuseToHand: 'リユースフェイズ', // 廃棄札を手札に
-	sertchAttackToHand: 'アタックサーチフェイズ', // デッキから手札に
-	sertchSkillToHand: 'スキルサーチフェイズ', // デッキから手札に
+	searchAttackToHand: 'アタックサーチフェイズ', // デッキから手札に
+	searchSkillToHand: 'スキルサーチフェイズ', // デッキから手札に
 	upGrade: 'アップグレードフェイズ', // 手札をアップグレード
 	unshiftDeck: 'アンシフトデッキフェイズ', // 手札をデッキに
 	unshiftDeckAndZero: 'アンシフトデッキアンドゼロフェイズ', // 手札をデッキに
