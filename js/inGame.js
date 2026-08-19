@@ -2302,7 +2302,7 @@ function allEnemiesDefeated(){
 				const Artifact = {
 					type: rewardType.artifact, 
 					getFlag: true, 
-					amount: normalArtifact.changeAndUpgrade
+					amount: normalArtifact.turnDraw
 				};
 				rewards.push(Artifact);
 				break;

@@ -65,6 +65,8 @@ async function animateDrawDeck(card){
 		drawCardDiv.addClass('common-card');
 	} else if (card.class == cardClass.abnormal) {
 		drawCardDiv.addClass('abnormal-card');
+	}else if (card.class == cardClass.curse) {
+		drawCardDiv.addClass('curse-card');
 	}
 	$('.hand-area').append(drawCardDiv);
 
@@ -130,6 +132,8 @@ function animateTrashToDeck(card){
 		restoreCardDiv.addClass('common-card');
 	} else if (card.class == cardClass.abnormal) {
 		restoreCardDiv.addClass('abnormal-card');
+	} else if (card.class == cardClass.curse) {
+		restoreCardDiv.addClass('curse-card');
 	}
 	$('.hand-area').append(restoreCardDiv);
 
@@ -163,6 +167,8 @@ function animateHandToDeck(card){
 		restoreCardDiv.addClass('common-card');
 	} else if (card.class == cardClass.abnormal) {
 		restoreCardDiv.addClass('abnormal-card');
+	} else if (card.class == cardClass.curse) {
+		restoreCardDiv.addClass('curse-card');
 	}
 	$('.hand-area').append(restoreCardDiv);
 

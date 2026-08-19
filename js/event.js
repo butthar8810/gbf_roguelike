@@ -278,7 +278,6 @@ function shopCardList(){
 	const lastSelectCardsInfo = getLocalStorage(keyContinueShopLineup);
 	if(lastSelectCardsInfo){
 		selectCardsInfo = lastSelectCardsInfo;
-
 	}else{
 		//専用カードのラインナップ
 		const selectCards = decideShopExclusiveCardLineup();

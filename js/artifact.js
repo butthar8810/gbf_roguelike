@@ -326,21 +326,17 @@ const normalArtifact = {
 			money: 9,
 		}
 	},
-	AdditionalPoison: {
-		name: 'アルナスルの矢じり', 
-		rarity: artifactRarity.common,
-		dedicated: artifactdedicated.djeeta,
-		effect: '敵に毒を与えるたび、追加で毒1を与える。ジータ専用', 
-		image: 'images/artifact/Arrowhead.png',
-	},
-	// 実装予定
 	curseMount: {
 		name: '八寒の護符', 
 		rarity: artifactRarity.common,
 		dedicated: artifactdedicated.common,
 		effect: '次に受ける「呪い」を2回まで無効にする。', 
 		image: 'images/artifact/CurseAmulet.png',
+		amount: {
+			Count: 2,
+		},
 	},
+	// 未実装
 	randomRoom: {
 		name: '封印櫃', 
 		rarity: artifactRarity.common,
@@ -348,6 +344,7 @@ const normalArtifact = {
 		effect: 'ランダム部屋4部屋毎に財宝部屋が出現する。', 
 		image: 'images/artifact/Sealed.png',
 	},
+	// 未実装
 	potionRecovery: {
 		name: '清らかな水', 
 		rarity: artifactRarity.common,
@@ -355,6 +352,7 @@ const normalArtifact = {
 		effect: 'ポーションを使用するたび、HP5回復。', 
 		image: 'images/artifact/FreshWater.png',
 	},
+	// 未実装
 	halfAttackUp: {
 		name: '渦琥珀', 
 		rarity: artifactRarity.common,
@@ -362,7 +360,13 @@ const normalArtifact = {
 		effect: 'HPが50％以下になると、筋力3を得る。グラン専用', 
 		image: 'images/artifact/Amber.png',
 	},
-
+	AdditionalPoison: {
+		name: 'アルナスルの矢じり', 
+		rarity: artifactRarity.common,
+		dedicated: artifactdedicated.djeeta,
+		effect: '敵に毒を与えるたび、追加で毒1を与える。ジータ専用', 
+		image: 'images/artifact/Arrowhead.png',
+	},
 	/*********************************アンコモン*************************************/
 	hitPoint10: {
 		name: '覇業の指輪', 
@@ -1126,6 +1130,10 @@ const normalArtifact = {
 		effect: '特異な呪いとレリックx3を獲得する。', 
 		image: 'images/artifact/TearsOfApocalypse.png', 
 		getFunc: 'effectGetCurseAndGetArtifact',
+		amount: {
+			curse: 'Wings',
+			count: 1,
+		}
 	},
 	//未実装
 	House: {
@@ -1148,6 +1156,7 @@ const normalArtifact = {
 		name: '銀の依代の剣', 
 		rarity: artifactRarity.boss,
 		dedicated: artifactdedicated.gran,
+		replace: 'recovery',
 		effect: '「剣の銀片」と置き換える。戦闘終了時、HP12回復。グラン専用', 
 		image: 'images/artifact/SwordRelic.png', 
 	},
@@ -1176,8 +1185,14 @@ const normalArtifact = {
 		name: '銀の依代の杖', 
 		rarity: artifactRarity.boss,
 		dedicated: artifactdedicated.djeeta,
+		replace: 'startDraw',
 		effect: '「杖の銀片」と置き換える。ターン開始時、追加でカードを1枚引く。ジータ専用', 
 		image: 'images/artifact/StaffRelic.png', 
+		firstFunc: 'effectDraw',
+		turnFunc: 'effectDraw',
+		amount: {
+			draw: 1,
+		}
 	},
 	firstTrashEnergy: {
 		name: '荒天の封石', 
@@ -1185,6 +1200,7 @@ const normalArtifact = {
 		dedicated: artifactdedicated.djeeta,
 		effect: '毎ターン、最初にカードを捨てたとき、1エナジーを得る。ジータ専用', 
 		image: 'images/artifact/SealedTempest.png', 
+		trashFunc: 'effectGetEnergyFirstTrash';
 	},
 	/*********************************Shop*************************************/
 	hitPoint7AndRecovery: {
@@ -1357,6 +1373,14 @@ function setupArtifact(){
 /* getArtifactEffect：アーティファクト獲得関数
 /*******************************************************/
 function getArtifact(artifact){
+	if('replace' in artifact){
+		const index = myArtifacts.findIndex((Artifact) => 
+			Artifact.name === normalArtifact[artifact.replace].name
+		);
+		if(index === -1){return false;}
+		const target = myArtifacts.splice(index, 1)[0];
+		console.log(target);
+	}
 	// 獲得時効果発動
 	if('getFunc' in artifact){
 		if (artifact.getFunc !== '') {
@@ -1367,6 +1391,7 @@ function getArtifact(artifact){
 		}
 	}
 	myArtifacts.push(artifact);
+	return true;
 }
 /*******************************************************/
 /* continueArtifactPhase：アーティファクトフェイズの再開
@@ -1569,6 +1594,15 @@ function decideBossArtifactReward(){
 	let selectArtifacts = {};
 	let filteringArtifact = Object.values(normalArtifact)
 		.filter((artifact) => artifact.rarity === artifactRarity.boss)
+		.filter((artifact) => {
+			if('replace' in artifact){
+				return myArtifacts.some((myArtifact) => 
+					myArtifact.name === normalArtifact[artifact.replace].name
+				);
+			} else {
+				return true;
+			}
+		})
 		.filter((artifact) => {
 			return !myArtifacts.find((myArtifact) => myArtifact.name === artifact.name);
 		});
@@ -2071,8 +2105,22 @@ function effectSelectChangeAndUpgrade(amount){
 /*******************************************************/
 function effectGetCurseAndGetArtifact(amount){
 	console.log('effectGetCurseAndGetArtifact');
-	
-	
+	if('curse' in amount && 'count' in amount){
+		for(let i = 0; i < amount.count; i++){
+			getCurseToOriginalDeck(amount.curse);
+		}
+	}
+	const Rarity = [artifactRarity.common, artifactRarity.uncommon, artifactRarity.rare];
+	//ノーマル、アンコモン、レアのレリックが各1個ずつ出る。
+	for(let i = 0; i < 3; i++){
+		const filteringArtifact = Object.values(normalArtifact)
+			.filter((artifact) => artifact.rarity === Rarity[i])
+			.filter((artifact) => {
+				return !myArtifacts.find((myArtifact) => myArtifact.name === artifact.name);
+			});
+		const selectArtifact = shuffleArray(filteringArtifact).shift();
+		getArtifact(selectArtifact);
+	}
 	endAction();
 	return true;
 }
@@ -2134,10 +2182,9 @@ function trashAndDrawCard(){
 	return true;
 }
 /*******************************************************/
-/* 戦闘開始時、好きなカードを捨てて同じ枚数のカードを引く。
+/* カードを廃棄するたび、手札にランダムなカードを加える。
 /*******************************************************/
 function effectAddRandomCard(amount){
-	// ランダムな「アタック」を3枚山札に加える。この戦闘中それらのコストは0。廃棄
 	console.log('effectAddRandomCard');
 	const selectChara = getLocalStorage(keySelectChara);
 	if('count' in amount){
@@ -2190,3 +2237,14 @@ function effectDrawBelowThreePlay(amount){
 	return true;
 }
 
+/*******************************************************/
+/* 毎ターン、最初にカードを捨てたとき、1エナジーを得る。
+/*******************************************************/
+function effectGetEnergyFirstTrash(amount){
+	console.log('effectGetEnergyFirstTrash');
+	if('energy' in amount && trashCountPerTurn === 0){
+		playerStatus.remainEnergy += amount.energy;
+	}
+	endAction();
+	return true;
+}

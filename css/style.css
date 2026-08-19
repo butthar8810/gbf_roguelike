@@ -113,6 +113,9 @@ body{
 .abnormal-card{
 	background-color: #676767;
 }
+.curse-card{
+	background-color: #303030;
+}
 .empty{
 	opacity: 0.3;
 }

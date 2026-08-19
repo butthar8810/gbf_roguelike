@@ -113,6 +113,8 @@ function createCardDom(card){
 		cardDiv.addClass('common-card');
 	} else if (card.class == cardClass.abnormal) {
 		cardDiv.addClass('abnormal-card');
+	} else if (card.class == cardClass.curse) {
+		cardDiv.addClass('curse-card');
 	}
 	return cardDiv;
 }

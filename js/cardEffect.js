@@ -3,7 +3,7 @@
 /*************************************************************************************/
 const cardClass = {gran: 'グラン', djeeta: 'ジータ', common: '共通', abnormal: '状態異常', curse: '呪い'};
 const rarity = {starter: '初期', common: 'レア', uncommon: 'スーパーレア', rare: 'SSレア'};
-const type = {attack: 'アタック', skill: 'スキル', power: 'パワー', abnormal: '状態異常'};
+const type = {attack: 'アタック', skill: 'スキル', power: 'パワー', abnormal: '状態異常', curse: '呪い'};
 
 /**************************************************************************/
 /* グランカードリスト(強化前)
@@ -6463,7 +6463,23 @@ const commonEnhancedCardList = {
 		}
 	},
 };
-
+const curseCardList = {
+	Wings: {
+		No:814001,
+		name: '福音の黒翼',
+		class: cardClass.curse,
+		rarity: rarity.common,
+		type: type.curse,
+		func: '',
+		image:'images/card/abnormal_Mucus.jpg',
+		effect: `使用不可。デッキから削除できない。`,
+		amount: {
+			conditions: 'conditionsCurse',
+			cost: 0,
+			discard: true,
+		}
+	},
+}
 const abnormalCardList = {
 	Mucus: {
 		No:914001,
@@ -6542,8 +6558,7 @@ const abnormalCardList = {
 		}
 	},
 };
-const curseCardList = {
-}
+
 const testCardList = {
 	testAttack: {
 		No:999999,
@@ -6729,6 +6744,9 @@ function decideCardReward(lotteryLevel){
 	}
 	return {type: rewardType.card, getFlag: true, amount: selectCards};
 }
+/*************************************************************************************/
+/* カードショップ抽選
+/*************************************************************************************/
 /*****************************************************/
 /* ショップラインナップ決定関数
 /*****************************************************/
@@ -6910,6 +6928,23 @@ function restockShopCommonCardLineup(CardsInfo){
 		}
 	});
 }
+/*************************************************************************************/
+/* カードショップ抽選
+/*************************************************************************************/
+function getCurseToOriginalDeck(curseName){
+	const curseMount = myArtifacts.find((artifact) => 
+		artifact.name === normalArtifact.curseMount.name);
+	if(curseMount && curseMount.amount.Count > 0){
+		//次に受ける「呪い」を2回まで無効にする。
+		curseMount.amount.Count--;
+		return true;
+	}
+	const insertCard = deepCopyCard(curseCardList[curseName]);
+	pushOriginalDeck(insertCard);
+	return true;
+}
+
+
 /*************************************************************************************/
 /* 各カード効果関数(アタック)
 /*************************************************************************************/
@@ -7358,7 +7393,6 @@ function effectGetEnergy(amount){
 	console.log('effectGetEnergy');
 	if('energy' in amount){
 		playerStatus.remainEnergy += amount.energy;
-		
 	}
 	endAction();
 	return true;
