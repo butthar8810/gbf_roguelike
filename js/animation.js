@@ -7,6 +7,7 @@ const coordinateTrashForHandArea = {top: '50px', left: '970px', width: '80px', s
 const coordinateShowForShowArea = {top: '0px', left: '500px', width: '150px', size: '12px'};
 const coordinateTrashForShowArea = {top: '290px', left: '1040px', width: '80px', size: '8px'};
 const coordinateHandForShowArea = {top: '240px', left: '500px', width: '150px', size: '12px'};
+const coordinateDeckForShowArea = {top: '280px', left: '-15px', width: '80px', size: '8px'};
 const coordinatePlayForPlayArea = {top: '0px', left: '550px', width: '150px', size: '12px'};
 const coordinateTrashForPlayArea = {top: '510px', left: '1040px', width: '80px', size: '8px'};
 
@@ -243,6 +244,43 @@ function animatePlayerAddHand(cards){
 				top: coordinateHandForShowArea.top,
 				width: coordinateHandForShowArea.width,
 				fontSize: coordinateHandForShowArea.size
+			}, trashWaitTime);
+			$.when(cardShowPromise).done(() => {
+				$('.show-area').addClass('hidden');
+				$('.show-area-inner').html('');
+				resolve();
+			});
+		}, showWaitTime);
+	});
+}
+/*******************************************************/
+/* animatePlayerAddTrash：手札にカードを追加するアニメーション
+/*******************************************************/
+function animatePlayerAddDeck(cards){
+	cardAddDeckPromise = new Promise((resolve) => {
+		console.log(cards);
+		$('.show-area').removeClass('hidden');
+		$('.show-area-inner').html('');
+		cards.forEach((card) => {
+			const showCardDiv = createCardDom(card);
+			showCardDiv
+				.addClass('hand-card')
+				.addClass('is-hover-disabled');
+			$('.show-area-inner').append(showCardDiv);
+		});
+		setTimeout(() => {
+			const showCards = $('.show-area-inner').children('.hand-card');
+			showCards
+				.prop('disabled', true)
+				.css('position', 'absolute')
+				.css('top', coordinateShowForShowArea.top)
+				.css('left', coordinateShowForShowArea.left);
+
+			cardShowPromise = showCards.animate({
+				left: coordinateDeckForShowArea.left, 
+				top: coordinateDeckForShowArea.top,
+				width: coordinateDeckForShowArea.width,
+				fontSize: coordinateDeckForShowArea.size
 			}, trashWaitTime);
 			$.when(cardShowPromise).done(() => {
 				$('.show-area').addClass('hidden');

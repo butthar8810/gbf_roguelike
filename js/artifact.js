@@ -1159,6 +1159,10 @@ const normalArtifact = {
 		replace: 'recovery',
 		effect: '「剣の銀片」と置き換える。戦闘終了時、HP12回復。グラン専用', 
 		image: 'images/artifact/SwordRelic.png', 
+		endFunc: 'effectRecovery',
+		amount: {
+			recovery: 12,
+		}
 	},
 	HpDownDraw: {
 		name: '壊祖の紋装甲', 
@@ -1166,6 +1170,10 @@ const normalArtifact = {
 		dedicated: artifactdedicated.gran,
 		effect: 'HPを失うたび、カードを1枚引く。グラン専用', 
 		image: 'images/artifact/Reminder.png', 
+		lossHPFunc: 'effectDraw',
+		amount: {
+			draw: 1,
+		}
 	},
 	energyAbnormalCard: {
 		name: '終炎の滅弾', 
@@ -1173,6 +1181,13 @@ const normalArtifact = {
 		dedicated: artifactdedicated.gran,
 		effect: 'ターン開始時に、1エナジーを得る。戦闘開始時に負傷を2枚山札に加える。グラン専用', 
 		image: 'images/artifact/Extinction.png', 
+		firstFunc: 'effectGetEnergyAndAbnormal',
+		turnFunc: 'effectGetEnergy',
+		amount: {
+			energy: 1,
+			abnormal: 'Injury',
+			count: 2,
+		}
 	},
 	costZeroAttack: {
 		name: '星海の刃屑', 
@@ -1200,7 +1215,10 @@ const normalArtifact = {
 		dedicated: artifactdedicated.djeeta,
 		effect: '毎ターン、最初にカードを捨てたとき、1エナジーを得る。ジータ専用', 
 		image: 'images/artifact/SealedTempest.png', 
-		trashFunc: 'effectGetEnergyFirstTrash';
+		trashFunc: 'effectGetEnergyFirstTrash',
+		amount: {
+			energy: 1,
+		}
 	},
 	/*********************************Shop*************************************/
 	hitPoint7AndRecovery: {
@@ -1361,7 +1379,7 @@ function setupArtifact(){
 		} else if (selectChara === selectCharacter.djeeta.name){
 			getArtifact(normalArtifact.startDraw);
 			getArtifact(normalArtifact.eye);
-			getArtifact(normalArtifact.NoTrash);
+			getArtifact(normalArtifact.energyAbnormalCard);
 //			getArtifact(normalArtifact.eliteAdditionalRemuneration);
 		}
 		setLocalStorage(keyContinueArtifact, myArtifacts);
@@ -1799,6 +1817,61 @@ function effectGetEnergyIfBossAndSpecial(amount){
 	return true;
 }
 /*******************************************************/
+/* このターン、「アタック」を1枚もプレイしなかった場合、次のターン開始時、1エナジーを得る。
+/*******************************************************/
+function effectGetEnergyNoAttack(amount){
+	console.log('effectGetEnergyNoAttack');
+	if('energy' in amount && playerStatus.Count.playAttackPerTurn === 0){
+		playerStatus.remainEnergy += amount.energy;
+	}
+	endAction();
+	return true;
+}
+/*******************************************************/
+/* 休憩場所を通過した次の戦闘において、2エナジーを得た状態でスタートする。
+/*******************************************************/
+function effectGetEnergyFlag(amount){
+	console.log('effectGetEnergyFlag');
+	if('energy' in amount && 'flag' in amount && amount.flag){
+		playerStatus.remainEnergy += amount.energy;
+		amount.flag = false;
+	}
+	endAction();
+	return true;
+}
+/*******************************************************/
+/* 毎ターン、最初にカードを捨てたとき、1エナジーを得る。
+/*******************************************************/
+function effectGetEnergyFirstTrash(amount){
+	console.log('effectGetEnergyFirstTrash');
+	if('energy' in amount && trashCountPerTurn === 0){
+		playerStatus.remainEnergy += amount.energy;
+	}
+	endAction();
+	return true;
+}
+/*******************************************************/
+/* ターン開始時に、1エナジーを得る。戦闘開始時に負傷を2枚山札に加える。
+/*******************************************************/
+function effectGetEnergyAndAbnormal(amount){
+	// 2エナジーを得る。廃棄。
+	console.log('effectGetEnergyAndAbnormal');
+	if( 'energy' in amount){
+		playerStatus.remainEnergy += amount.energy;
+	}
+	if('abnormal' in amount && 'count' in amount){
+		const abnormal = [];
+		for(let i = 0; i < amount.count; i++){
+			pushDeck(abnormalCardList[amount.abnormal]);
+			abnormal.push(abnormalCardList[amount.abnormal]);
+		}
+		animatePlayerAddDeck(abnormal);
+		myDeck = shuffleArray(myDeck);
+	}
+	endAction();
+	return true;
+}
+/*******************************************************/
 /* カードを10枚プレイするたび、カードを1枚引く。
 /*******************************************************/
 function effectDrawEvery(amount){
@@ -1867,17 +1940,7 @@ function effectAttackEveryskill(amount){
 	endAction();
 	return true;
 }
-/*******************************************************/
-/* このターン、「アタック」を1枚もプレイしなかった場合、次のターン開始時、1エナジーを得る。
-/*******************************************************/
-function effectGetEnergyNoAttack(amount){
-	console.log('effectGetEnergyNoAttack');
-	if('energy' in amount && playerStatus.Count.playAttackPerTurn === 0){
-		playerStatus.remainEnergy += amount.energy;
-	}
-	endAction();
-	return true;
-}
+
 /*******************************************************/
 /* 戦闘中初めてHPを失うと、カードを3枚引く。
 /*******************************************************/
@@ -1893,18 +1956,7 @@ function effectDrawLossHP(amount){
 	return true;
 }
 
-/*******************************************************/
-/* 休憩場所を通過した次の戦闘において、2エナジーを得た状態でスタートする。
-/*******************************************************/
-function effectGetEnergyFlag(amount){
-	console.log('effectGetEnergyFlag');
-	if('energy' in amount && 'flag' in amount && amount.flag){
-		playerStatus.remainEnergy += amount.energy;
-		amount.flag = false;
-	}
-	endAction();
-	return true;
-}
+
 /*******************************************************/
 /* カードを1枚獲得する。
 /*******************************************************/
@@ -2237,14 +2289,3 @@ function effectDrawBelowThreePlay(amount){
 	return true;
 }
 
-/*******************************************************/
-/* 毎ターン、最初にカードを捨てたとき、1エナジーを得る。
-/*******************************************************/
-function effectGetEnergyFirstTrash(amount){
-	console.log('effectGetEnergyFirstTrash');
-	if('energy' in amount && trashCountPerTurn === 0){
-		playerStatus.remainEnergy += amount.energy;
-	}
-	endAction();
-	return true;
-}

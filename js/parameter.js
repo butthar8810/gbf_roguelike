@@ -284,6 +284,7 @@ let cardRestorePromise = Promise.resolve();
 let cardShowPromise = Promise.resolve();
 let cardAddHandPromise = Promise.resolve();
 let cardAddTrashPromise = Promise.resolve();
+let cardAddDeckPromise = Promise.resolve();
 let playerAttackPromise = Promise.resolve();
 let playerAbnormalityPromise = Promise.resolve();
 let playerGetBlockPromise = Promise.resolve();

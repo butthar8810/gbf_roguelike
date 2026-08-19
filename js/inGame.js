@@ -2302,7 +2302,7 @@ function allEnemiesDefeated(){
 				const Artifact = {
 					type: rewardType.artifact, 
 					getFlag: true, 
-					amount: normalArtifact.turnDraw
+					amount: normalArtifact.energyAbnormalCard
 				};
 				rewards.push(Artifact);
 				break;
