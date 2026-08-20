@@ -10,7 +10,6 @@ const enemyList = {
 		maxHP: 15, 
 		image: 'images/enemy/small/uinasu.png',
 		actionAlgorithm: 'actionTEST', 
-		actionFirst: 'testFirst',
 		currentStatus:{
 			remainHP: 0, 
 			maxHP: 0, 

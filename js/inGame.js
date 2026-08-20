@@ -1381,6 +1381,11 @@ function playEffectCard(card, useCost = true){
 		if (card.amount.cost === 'X'){
 			// コストXのカードの場合
 			card.amount.variable = playerStatus.remainEnergy;
+			const XPlus = myArtifacts.find((artifact) => 
+				artifact.name === normalArtifact.XPlus.name);
+			if(XPlus){
+				card.amount.variable += 2;
+			}
 			playerStatus.remainEnergy = 0;
 			updateEnergyDom();
 		} else if ('changedCost' in card.amount && playerStatus.remainEnergy >= card.amount.changedCost) {
@@ -2302,7 +2307,7 @@ function allEnemiesDefeated(){
 				const Artifact = {
 					type: rewardType.artifact, 
 					getFlag: true, 
-					amount: normalArtifact.energyAbnormalCard
+					amount: normalArtifact.reproduction
 				};
 				rewards.push(Artifact);
 				break;

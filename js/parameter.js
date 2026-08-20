@@ -85,7 +85,7 @@ const buffStatus = {
 	// エネミー専用
 	rage: {id: '0401', name: '激怒', amount: '', effect: 'ターン終了時、攻撃力アップ{X}を得る。', image: 'images/status/status_9999_2.png'},
 	pollen: {id: '0402', name: '花粉', amount: '', effect: '死亡時、プレイヤーに防御力ダウン{X}を与える。', image: 'images/status/status_7176.png'},
-	strategy: {id: '0403', name: '戦略', amount: '', effect: '「スキル」を1枚プレイするたび、筋力{X}を得る', image: 'images/status/status_6022_1.png'},
+	strategy: {id: '0403', name: '戦略', amount: '', effect: '「スキル」を1枚プレイするたび、攻撃力アップ{X}を得る', image: 'images/status/status_6022_1.png'},
 	tears: {id: '0404', name: '涙の護り', amount: '', effect: 'ターン開始時にブロック値を失わない。', image: 'images/status/status_7343.png'},
 
 };
@@ -225,6 +225,7 @@ const phase = {
 const artifactPhase = {
 	twoRemove: 'ナーヴマテリアルフェイズ',
 	changeAndUpgrade: '祖なる欠片フェイズ',
+	reproduction: '魔獄のエンブレムフェイズ',
 }
 /*****************************************************************************/
 /* グローバル変数

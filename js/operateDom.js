@@ -5,19 +5,7 @@
 function createCardDom(card){
 	let effect = card.effect;
 	if('attack' in card.amount){
-		switch(card.name){
-			case granCardList.Dig.name:
-			case granEnhancedCardList.Dig.name:
-				attackDamage = calcDamage(card.amount.attack, currentTarget, card.amount.magnification);
-				break;
-			case commonCardList.Knife.name:
-			case commonEnhancedCardList.Knife.name:
-				attackDamage = calcKnifeDamage(card.amount.attack, currentTarget);
-				break;
-			default:
-				attackDamage = calcDamage(card.amount.attack, currentTarget);
-				break;
-		}
+		attackDamage = calcDamage(card.amount, currentTarget);
 		if (card.amount.attack > attackDamage) {
 			effect = effect.replace(/{A}/g, `<span class='down'>${attackDamage}</span>`);
 		} else if (card.amount.attack < attackDamage){

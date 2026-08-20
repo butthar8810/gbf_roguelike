@@ -100,7 +100,7 @@ function selectRestAction(){
 	const restAttackUp = myArtifacts.find((artifact) => 
 		artifact.name === normalArtifact.restAttackUp.name);
 	if(restAttackUp && restAttackUp.amount.Count < restAttackUp.amount.max){
-		const thirdBtn = appendTalkingBtn(`鍛錬する(筋力:${restAttackUp.amount.Count}/${restAttackUp.amount.max})`);
+		const thirdBtn = appendTalkingBtn(`鍛錬する(攻撃力アップ:${restAttackUp.amount.Count}/${restAttackUp.amount.max})`);
 		thirdBtn.click((e) => {
 			deleteTalkingBtn();
 			restAttackUp.amount.Count++;
