@@ -6474,7 +6474,7 @@ const curseCardList = {
 		class: cardClass.curse,
 		rarity: rarity.common,
 		type: type.curse,
-		func: '',
+		func: 'effectPlayCurse',
 		image:'images/card/curse_Wings.jpg',
 		effect: `使用不可。デッキから削除できない。`,
 		amount: {
@@ -6484,6 +6484,9 @@ const curseCardList = {
 		}
 	},
 }
+/********************************************************************************************************/
+/* 状態異常カードリスト
+/********************************************************************************************************/
 const abnormalCardList = {
 	Mucus: {
 		No:914001,
@@ -6509,8 +6512,8 @@ const abnormalCardList = {
 		image:'images/card/abnormal_Injury.jpg',
 		effect: `使用不可。`,
 		amount: {
-			conditions: 'conditionsNotAvailable',
-			cost: '',
+			conditions: 'conditionsAbnormal',
+			cost: 0,
 			discard: true,
 		}
 	},
@@ -6525,8 +6528,8 @@ const abnormalCardList = {
 		image:'images/card/abnormal_Curse.jpg',
 		effect: `使用不可。このカードを引いたとき、エナジーを1失う。エセリアル。`,
 		amount: {
-			conditions: 'conditionsNotAvailable',
-			cost: '',
+			conditions: 'conditionsAbnormal',
+			cost: 0,
 			discard: true,
 		}
 	},
@@ -6540,8 +6543,8 @@ const abnormalCardList = {
 		image:'images/card/abnormal_Burn.jpg',
 		effect: `使用不可。ターン終了時に2ダメージを受ける。`,
 		amount: {
-			conditions: 'conditionsNotAvailable',
-			cost: '',
+			conditions: 'conditionsAbnormal',
+			cost: 0,
 			discard: true,
 		}
 	},
@@ -6555,8 +6558,8 @@ const abnormalCardList = {
 		image:'images/card/abnormal_Dizziness.jpg',
 		effect: `使用不可。エセリアル。`,
 		amount: {
-			conditions: 'conditionsNotAvailable',
-			cost: '',
+			conditions: 'conditionsAbnormal',
+			cost: 0,
 			discard: true,
 			ethereal: true,
 		}
@@ -6704,13 +6707,24 @@ function decideCardReward(lotteryLevel){
 			break;
 	}
 	const totalWeight = Object.values(level).reduce((sum, item) => sum + item.weight, 0);
-	if (selectChara === selectCharacter.gran.name){
-		selectCardList = deepCopyCardList(Object.values(granCardList));
-	} else if (selectChara === selectCharacter.djeeta.name){
-		selectCardList = deepCopyCardList(Object.values(djeetaCardList));	
-	} else {
-		alert('キャラが選択されていません。');
-		window.location.href = 'index.html';
+
+	const prism = myArtifacts.find((artifact) => 
+		artifact.name === normalArtifact.prism.name);
+	if(prism){
+		selectCardList = [].concat(
+			Object.values(granCardList),
+			Object.values(djeetaCardList),
+			Object.values(commonCardList)
+		);
+	}else{
+		if (selectChara === selectCharacter.gran.name){
+			selectCardList = deepCopyCardList(Object.values(granCardList));
+		} else if (selectChara === selectCharacter.djeeta.name){
+			selectCardList = deepCopyCardList(Object.values(djeetaCardList));	
+		} else {
+			alert('キャラが選択されていません。');
+			window.location.href = 'index.html';
+		}
 	}
 
 	let index = 0
@@ -8474,6 +8488,15 @@ function conditionsCurse(){
 	}
 	return false;
 }
+//呪いは使用不可（アーティファクトで使用可）
+function conditionsAbnormal(){
+	const playAbnormal = myArtifacts.find((artifact) => 
+		artifact.name === normalArtifact.playAbnormal.name);
+	if(playAbnormal){
+		return true;
+	}
+	return false;
+}
 function conditionsStraight(){
 	const noAttack = myHand.filter((card) => {
 		return card.type !== type.attack;
@@ -9092,7 +9115,7 @@ function actionFiveDiscardCard(){
 	startPhase(phase.fiveDiscard);
 }
 function discardCard(){
-	console.log('trashCard');
+	console.log('discardCard');
 	if(tmpArea.length === 0){
 		return false;
 	}
@@ -9415,6 +9438,7 @@ function actionDeckTopPlay(){
 	// デッキからカードを引く
 	const card = shiftDeck();
 	if (card !== undefined){
+		//そのカードを廃棄する。
 		card.amount.tmpDiscard = true;
 		playEffectCard(card, false)
 		animatePlayDeckCard([card]);

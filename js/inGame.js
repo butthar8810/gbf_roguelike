@@ -1569,15 +1569,24 @@ function endAction(){
 			if(playCard.type === type.power){
 				// パワーは使用するとその戦闘中デッキから取り除かれる。この処理は廃棄ではない。
 				console.log(`「${playCard.name}」は取り除かれた。`);
-			}else if('tmpDiscard' in playCard.amount && playCard.amount.tmpDiscard){
-				delete playCard.amount.tmpDiscard;
-				discardCardProcess(playCard);
-				setLocalStorage(keyContinueDiscard, discard);
-				updateDiscardDom();
-			} else if('discard' in playCard.amount && playCard.amount.discard){
-				discardCardProcess(playCard);
-				setLocalStorage(keyContinueDiscard, discard);
-				updateDiscardDom();
+			}else if(
+				('tmpDiscard' in playCard.amount && playCard.amount.tmpDiscard) ||
+				('discard' in playCard.amount && playCard.amount.discard)
+			){
+				if('tmpDiscard' in playCard.amount){
+					delete playCard.amount.tmpDiscard;
+				}
+				const probabilityTrash = myArtifacts.find((artifact) => 
+					artifact.name === normalArtifact.probabilityTrash.name);
+				if(probabilityTrash && probability(50)){
+					pushTrash(playCard);
+					setLocalStorage(keyContinueTrash, myTrash);
+					updateTrashDom();
+				}else{
+					discardCardProcess(playCard);
+					setLocalStorage(keyContinueDiscard, discard);
+					updateDiscardDom();
+				}
 			} else {
 				pushTrash(playCard);
 				setLocalStorage(keyContinueTrash, myTrash);

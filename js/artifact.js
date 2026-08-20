@@ -1275,6 +1275,10 @@ const normalArtifact = {
 		dedicated: artifactdedicated.common,
 		effect: 'デッキをシャッフルするたび、6ブロックを得る。', 
 		image: 'images/artifact/SilverGorget.png', 
+		shuffleFunc: 'effectDefense',
+		amount: {
+			block: 6,
+		}
 	},
 	prism: {
 		name: '秩序の天秤', 
@@ -1388,7 +1392,7 @@ function setupArtifact(){
 		} else if (selectChara === selectCharacter.djeeta.name){
 			getArtifact(normalArtifact.startDraw);
 			getArtifact(normalArtifact.eye);
-			getArtifact(normalArtifact.eliteAttackUp);
+			getArtifact(normalArtifact.prism);
 			getArtifact(normalArtifact.XPlus);
 		}
 		setLocalStorage(keyContinueArtifact, myArtifacts);
